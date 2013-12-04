@@ -1,0 +1,45 @@
+a:6:{s:4:"save";a:3:{s:13:"extension_key";s:14:"smk_search_all";s:18:"print_wop_comments";s:1:"0";s:15:"overwrite_files";a:10:{s:9:"ChangeLog";s:1:"1";s:10:"README.txt";s:1:"1";s:12:"ext_icon.gif";s:1:"1";s:17:"ext_localconf.php";s:1:"1";s:14:"ext_tables.php";s:1:"1";s:16:"locallang_db.xml";s:1:"1";s:19:"doc/wizard_form.dat";s:1:"1";s:20:"doc/wizard_form.html";s:1:"1";s:33:"pi1/class.tx_smksearchall_pi1.php";s:1:"1";s:17:"pi1/locallang.xml";s:1:"1";}}s:9:"languages";a:1:{i:1;a:50:{s:2:"sq";s:1:"0";s:2:"ar";s:1:"0";s:2:"my";s:1:"0";s:2:"eu";s:1:"0";s:2:"ba";s:1:"0";s:2:"br";s:1:"0";s:2:"bg";s:1:"0";s:2:"ca";s:1:"0";s:2:"ch";s:1:"0";s:2:"hk";s:1:"0";s:2:"hr";s:1:"0";s:2:"cz";s:1:"0";s:2:"dk";s:1:"1";s:2:"nl";s:1:"0";s:2:"eo";s:1:"0";s:2:"et";s:1:"0";s:2:"fo";s:1:"0";s:2:"fi";s:1:"0";s:2:"fr";s:1:"0";s:2:"qc";s:1:"0";s:2:"ga";s:1:"0";s:2:"ge";s:1:"0";s:2:"de";s:1:"0";s:2:"gr";s:1:"0";s:2:"gl";s:1:"0";s:2:"he";s:1:"0";s:2:"hi";s:1:"0";s:2:"hu";s:1:"0";s:2:"is";s:1:"0";s:2:"it";s:1:"0";s:2:"jp";s:1:"0";s:2:"km";s:1:"0";s:2:"kr";s:1:"0";s:2:"lv";s:1:"0";s:2:"lt";s:1:"0";s:2:"no";s:1:"0";s:2:"fa";s:1:"0";s:2:"pl";s:1:"0";s:2:"pt";s:1:"0";s:2:"ro";s:1:"0";s:2:"ru";s:1:"0";s:2:"sr";s:1:"0";s:2:"sk";s:1:"0";s:2:"si";s:1:"0";s:2:"es";s:1:"0";s:2:"se";s:1:"0";s:2:"th";s:1:"0";s:2:"tr";s:1:"0";s:2:"ua";s:1:"0";s:2:"vn";s:1:"0";}}s:2:"pi";a:1:{i:1;a:10:{s:5:"title";s:34:"SMKs search in collection and site";s:8:"title_dk";s:0:"";s:13:"plus_user_obj";s:1:"1";s:23:"plus_not_staticTemplate";s:1:"1";s:7:"addType";s:9:"list_type";s:8:"plus_wiz";s:1:"0";s:20:"plus_wiz_description";s:0:"";s:23:"plus_wiz_description_dk";s:0:"";s:8:"tag_name";s:0:"";s:12:"plus_user_ex";s:1:"0";}}s:6:"emconf";a:1:{i:1;a:7:{s:5:"title";s:15:"SMKs search all";s:11:"description";s:35:"SMKs search in collections and site";s:8:"category";s:6:"plugin";s:5:"state";s:5:"alpha";s:12:"dependencies";s:0:"";s:6:"author";s:10:"S.Brossard";s:12:"author_email";s:25:"sebastien.brossard@smk.dk";}}s:2:"ts";a:0:{}s:8:"tsconfig";a:1:{i:1;a:2:{s:13:"page_TSconfig";s:2965:"
+page.includeCSS {	  
+  smk_soeg_collection_jquery = http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/themes/smoothness/jquery-ui.css
+  smk_soeg_collection_jquery.media = all
+  smk_soeg_collection_jquery.external = 1	
+  
+  smk_soeg_collection_soeg = EXT:smk_soeg_collection/pi1/css/soeg.css
+  smk_soeg_collection_soeg.media = screen		 	
+  smk_soeg_collection_art = EXT:smk_soeg_collection/pi1/css/art-and-artists.css
+  smk_soeg_collection_art.media = screen		
+  smk_soeg_collection_switch = EXT:smk_soeg_collection/pi1/css/switch.css
+  smk_soeg_collection_switch.media = screen			 	  	    
+}
+  
+page.includeJSFooter {	
+  smk_soeg_collection_jquery_172 = http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
+  smk_soeg_collection_jquery_172.external = 1
+  smk_soeg_collection_jquery_ui_1824 = http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js
+  smk_soeg_collection_jquery_ui_1824.external = 1
+
+  smk_soeg_collection_js_login = EXT:smk_soeg_collection/pi1/js/login.js
+  smk_soeg_collection_js_basic = EXT:smk_soeg_collection/pi1/managers/WidgetsManager.js
+  
+  smk_soeg_collection_core_core = EXT:smk_soeg_collection/pi1/core/Core.js
+  smk_soeg_collection_core_abstract = EXT:smk_soeg_collection/pi1/core/AbstractManager.js	
+  smk_soeg_collection_manager_jquery = EXT:smk_soeg_collection/pi1/managers/Manager.jquery.js
+  smk_soeg_collection_core_Parameter = EXT:smk_soeg_collection/pi1/core/Parameter.js	
+  smk_soeg_collection_core_ParameterStore = EXT:smk_soeg_collection/pi1/core/ParameterStore.js
+  smk_soeg_collection_core_smkParameterStore = EXT:smk_soeg_collection/pi1/core/smkParameterStore.js	
+  smk_soeg_collection_core_AbstractWidget = EXT:smk_soeg_collection/pi1/core/AbstractWidget.js	
+  smk_soeg_collection_widget_result = EXT:smk_soeg_collection/pi1/widgets/ResultWidget.js
+  smk_soeg_collection_js_pager = EXT:smk_soeg_collection/pi1/js/jquery/PagerWidget.js
+  smk_soeg_collection_core_AbstractFacetWidget= EXT:smk_soeg_collection/pi1/core/AbstractFacetWidget.js	
+  smk_soeg_collection_widget_tagcloud = EXT:smk_soeg_collection/pi1/widgets/TagcloudWidget.js
+  smk_soeg_collection_widget_current_search = EXT:smk_soeg_collection/pi1/widgets/CurrentSearchWidget.js
+  smk_soeg_collection_core_AbstractTextWidget = EXT:smk_soeg_collection/pi1/core/AbstractTextWidget.js	
+  smk_soeg_collection_widget_autocomplete = EXT:smk_soeg_collection/pi1/widgets/AutocompleteWidget.js  	
+    smk_soeg_collection_widget_autocomplete_title = EXT:smk_soeg_collection/pi1/widgets/AutocompleteTitleWidget.js
+  smk_soeg_collection_js_base_template_loader = EXT:smk_soeg_collection/pi1/js/BaseTemplateLoader.js
+  smk_soeg_collection_js_sprintf = EXT:smk_soeg_collection/pi1/js/sprintf.min.js
+  smk_soeg_collection_js_cookies = EXT:smk_soeg_collection/pi1/js/jquery.cookie.js
+  smk_soeg_collection_widget_grid_list_view_switch = EXT:smk_soeg_collection/pi1/widgets/GridListViewSwitchWidget.js
+
+} 
+";s:13:"user_TSconfig";s:0:"";}}}
