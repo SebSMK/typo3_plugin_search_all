@@ -21,7 +21,6 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	if (!self.manager.getShowDetail()){
 	//** search view
 		var $target = $(this.target);
-		var artwork_data = null;
 		
 		$target.empty();
 		
@@ -31,19 +30,50 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		
 		self.images_for_loading = this.manager.response.response.docs.length;		
 		
+		// load template		
 	    for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 	      var doc = this.manager.response.response.docs[i];
-	      artwork_data = {img_id: "img_" + doc.id,
+	      var artwork_data = {img_id: "img_" + doc.id,
 	  				ref_number: doc.id,
 	  				obj_date_earliest: doc.object_production_date_earliest,
+	  				img_data_bool: doc.medium_image_data != null ? true :  false,
 	  				img_data: doc.medium_image_data,
 	  				title: doc.title_first,	  				
 	  				artist_name_s: doc.artist_name_s,	  				
 	  				artist_auth: doc.artist_auth
 					};    
+	      //ררררררררר
+//	      $target.append(this.template(artwork_data));
+//	      self.getimage($target.find('#' + artwork_data.img_id), doc);
 	      
-	      $target.append(this.template(artwork_data));
-	      self.getimage($target.find('#' + artwork_data.img_id), doc);	      
+	      var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
+		  var url = rootsite.concat('pi1/templates/template_result_works.html');
+		  
+//		  $.get(url,$.proxy(function(template) {
+//			  var html = Mustache.to_html(template, artwork_data);
+//			  $target.append(html);
+//			  self.getimage($target.find('#' + artwork_data.img_id), doc);
+//		  }, self));	
+		  
+		  
+		  $.ajax({
+			  url: url,
+			  async:false,
+			  type:"get", //send it through get method
+			  data:artwork_data, 
+			  success: function(template) {
+				  var html = Mustache.to_html(template, artwork_data);
+				  $target.append(html);
+				  self.getimage($target.find('#' + artwork_data.img_id), doc);
+			  },
+			  error: function(xhr) {
+			    //Do Something to handle error
+			  }
+			});
+	      
+	      
+	      
+	      //ררררררררררררררר
 	    }			
 	} 
 	else{
@@ -106,13 +136,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	      
 	      $(this.template_detail(artwork_data)).appendTo($target_detail);
 	      
-	      
-//	      $.get('templates/template_result_works.html', function(template) {	    	  
-//	    	  $.tmpl(template, artwork_data).appendTo($target_detail);
-//	      });
-	      
-	      self.getimage_detail($target_detail.find('#' + artwork_data.img_id), doc);
-	      
+	      self.getimage_detail($target_detail.find('#' + artwork_data.img_id), doc);	      
 	    }
 },
   
@@ -127,9 +151,9 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
       return false;
   },
   
- 
   
-  template: function (artwork_data) {    
+  template: function (artwork_data) { 
+			  
 	    var output = '<li class="list-work">' 
 	    	    
 	    // image

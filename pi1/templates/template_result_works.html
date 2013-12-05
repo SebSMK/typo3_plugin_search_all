@@ -1,15 +1,13 @@
 <li class="list-work">
-  <div class="list-work-image image_loading" id="${img_id}">
-    <a href="http://cstest:8180/collectionspace/tenant/smk/download/${doc.medium_image_data}/Medium" class="work-image">
-      <img src="http://cstest:8180/collectionspace/tenant/smk/download/${doc.medium_image_data}/Thumbnail" style="display: block;">
+  <div class="list-work-image image_loading" id="{{ref_number}}">
+    <a href="http://cstest:8180/collectionspace/tenant/smk/download/{{img_data}}/Medium" class="work-image">
+      <img src="http://cstest:8180/collectionspace/tenant/smk/download/{{img_data}}/Thumbnail" style="display: block;">
     </a>
   </div>
-  <div class="list-work-text">
-    <div class="title-and-date">${doc.title_first}</div>
-    <div class="artist">
-      <div>
-        <span class="artist-name">${doc.artists_data}</span>
-      </div>
-    </div>
-  </div>
+  <div class="list-work-text">	    	            	    	    
+		    <div class="artist">			    
+			    <span class="artist-name">{{artist_name_s}}</span>
+			    <span class="artist_auth">({{artist_auth)}})</span>
+			  </div>
+  </div>      
 </li>
