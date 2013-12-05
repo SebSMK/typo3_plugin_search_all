@@ -24,6 +24,11 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		var artwork_data = null;
 		
 		$target.empty();
+		
+		// save in a global variable the total number of results (not faceted)
+		if (this.manager.store.values('fq').length == 0)
+			window.numresultstotal = this.manager.response.response.numFound;
+		
 		self.images_for_loading = this.manager.response.response.docs.length;		
 		
 	    for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {

@@ -35,15 +35,15 @@ var Manager;
         target: '#' + fields[i],
         field: fields[i]
       }));
-    };
-    var categories = [ 'category'];
-    for (var i = 0, l = fields.length; i < l; i++) {
-      Manager.addWidget(new AjaxSolr.CategoryWidget({
-        id: categories[i],
-        target: '#' + categories[i],
-        field: categories[i]
-      }));
-    };
+    };    
+    
+  Manager.addWidget(new AjaxSolr.CategoryWidget({
+    id: 'category',
+    target: '#category',
+    field: 'category',
+    multivalue:false
+  }));
+
     Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
 	    id: 'currentsearch',
 	    target: '#selection'
