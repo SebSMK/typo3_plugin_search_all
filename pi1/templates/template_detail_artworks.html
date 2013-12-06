@@ -1,0 +1,33 @@
+<div class="list-work">
+  <div class="list-work-image image_loading" id="{{img_id}}">
+    {{#img_data_bool}}
+    <a href="http://cstest:8180/collectionspace/tenant/smk/download/{{img_data}}/Original" class="work-image"></a>
+    {{/img_data_bool}}
+  </div>
+  <div class="list-work-text">
+  
+        <!--Title-->
+			    <div class="title-and-date">
+			  	  <span class="title-dk">{{title}} </span>
+			    	<span class="dates">{{artwork_date}} </span>
+		      </div>
+          	 	    	            	    	    
+		    <div class="artist">			    
+			    <span class="artist-name">{{artist_name_s}}</span>
+			    {{#artist_auth_bool}}
+			    	<span class="artist_auth">({{artist_auth}})</span>
+			    {{/artist_auth_bool}}
+            <div class="artist-other-infos">
+  					    <span class="artist-natio">{{artist_natio}} </span>
+  					    <span class="artist-dates">({{artist_birth}} - {{artist_death}})</span>
+  					</div>
+			  </div> 
+        
+        <div class="technique">{{technique}} </div>
+			  <div><span class="dim_brut">({{width_brut}} {{widthunit_brut}} x {{heigth_brut}} {{heigthunit_brut) </span></div>
+ 
+
+		    	<div class="ref">{{ref_number}} </div>
+	</div>
+      
+</div>

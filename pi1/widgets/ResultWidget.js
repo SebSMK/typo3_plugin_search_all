@@ -24,56 +24,34 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		
 		$target.empty();
 		
-		// save in a global variable the total number of results (not faceted)
+		//* save in a global variable the total number of results (not faceted)  
+		//---> רררר TO DO (send event num_res_changed)
 		if (this.manager.store.values('fq').length == 0)
 			window.numresultstotal = this.manager.response.response.numFound;
+								
+		//* load the html template	
+		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
+		var url = rootsite.concat('pi1/templates/template_list_artworks.html');
+		var template = self.get_template(url);  				
 		
-		self.images_for_loading = this.manager.response.response.docs.length;		
-		
-		// load template		
-	    for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-	      var doc = this.manager.response.response.docs[i];
-	      var artwork_data = {img_id: "img_" + doc.id,
-	  				ref_number: doc.id,
-	  				obj_date_earliest: doc.object_production_date_earliest,
-	  				img_data_bool: doc.medium_image_data != null ? true :  false,
-	  				img_data: doc.medium_image_data,
-	  				title: doc.title_first,	  				
-	  				artist_name_s: doc.artist_name_s,	  				
-	  				artist_auth: doc.artist_auth
-					};    
-	      //ררררררררר
-//	      $target.append(this.template(artwork_data));
-//	      self.getimage($target.find('#' + artwork_data.img_id), doc);
-	      
-	      var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
-		  var url = rootsite.concat('pi1/templates/template_result_works.html');
-		  
-//		  $.get(url,$.proxy(function(template) {
-//			  var html = Mustache.to_html(template, artwork_data);
-//			  $target.append(html);
-//			  self.getimage($target.find('#' + artwork_data.img_id), doc);
-//		  }, self));	
-		  
-		  
-		  $.ajax({
-			  url: url,
-			  async:false,
-			  type:"get", //send it through get method
-			  data:artwork_data, 
-			  success: function(template) {
-				  var html = Mustache.to_html(template, artwork_data);
-				  $target.append(html);
-				  self.getimage($target.find('#' + artwork_data.img_id), doc);
-			  },
-			  error: function(xhr) {
-			    //Do Something to handle error
-			  }
-			});
-	      
-	      
-	      
-	      //ררררררררררררררר
+		//* file the loaded template with artworks' data
+		var artwork_data = null;
+		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+		      var doc = this.manager.response.response.docs[i];
+		      artwork_data = {img_id: "img_" + doc.id,
+		  				ref_number: doc.id,
+		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+		  				img_data_bool: doc.medium_image_data != null ? true :  false,
+		  				img_data: doc.medium_image_data,
+		  				title: doc.title_first,	  				
+		  				artist_name_s: doc.artist_name_s,	  				
+		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+		  				artist_auth: doc.artist_auth[0]
+						};    	      
+		      
+		      var html = Mustache.to_html(template, artwork_data);
+			  $target.append(html);
+			  self.getimage($target.find('#' + artwork_data.img_id), doc);
 	    }			
 	} 
 	else{
@@ -110,33 +88,42 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
   
   show_detail: function () {
 		var self = this;
-		var $target_detail = $(this.target_detail);
-		var artwork_data = null;
+		var $target_detail = $(this.target_detail);		
 		
 		$target_detail.empty();
+		
+		//* load the html template	
+		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
+		var url = rootsite.concat('pi1/templates/template_detail_artworks.html');
+		var template = self.get_template(url);
 	    
+		var artwork_data = null;
 		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 	      var doc = this.manager.response.response.docs[i];
+	      
 	      artwork_data = {img_id: "img_" + doc.id,
 	  				ref_number: doc.id,
-	  				obj_date_earliest: doc.object_production_date_earliest,
+	  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+	  				img_data_bool: doc.medium_image_data != null ? true :  false,
 	  				img_data: doc.medium_image_data,
 	  				title: doc.title_first,	  				
 	  				artist_name_s: doc.artist_name_s,
 	  				artist_birth: doc.artist_birth,
 	  				artist_death: doc.artist_death,
 	  				artist_natio: doc.artist_natio,
-	  				artist_auth: doc.artist_auth,	  				
+	  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+	  				artist_auth: doc.artist_auth[0],
 	  				heigth_brut:doc.heigth_brut,
 	  				width_brut:doc.width_brut,
 	  				heigthunit_brut:doc.heigthunit_brut,
 	  				widthunit_brut:doc.widthunit_brut,
 	  				technique:doc.prod_technique_s
-					};      
+					};    	
 	      
-	      $(this.template_detail(artwork_data)).appendTo($target_detail);
+	      	var html = Mustache.to_html(template, artwork_data);
+	      	$target_detail.append(html);
 	      
-	      self.getimage_detail($target_detail.find('#' + artwork_data.img_id), doc);	      
+	      	self.getimage_detail($target_detail.find('#' + artwork_data.img_id), doc);	      
 	    }
 },
   
@@ -151,100 +138,117 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
       return false;
   },
   
-  
-  template: function (artwork_data) { 
-			  
-	    var output = '<li class="list-work">' 
-	    	    
-	    // image
-	    output += '<div id="' + artwork_data.img_id +  '" class="list-work-image image_loading">';	    	    
-	    if (artwork_data.img_data != ''){	    	
-	    	output += '<a class="work-image" href="http://cstest:8180/collectionspace/tenant/smk/download/'+ artwork_data.img_data + '/Medium">';
-	    	output += '</a>';
-	    };
-	    output += '</div>';
-	    //---- end image
-	    	
-	    // text
-	    output +='<div class="list-work-text">';	    	            
-	    	    
-		    //artist name
-		    output += '<div class="artist">';			    
-			    output += '<span class="artist-name">' + artwork_data.artist_name_s + '</span>';
-			    if (artwork_data.artist_auth != 'original'){	
-			    	output += '<span class="artist_auth">' + sprintf('(%s)', artwork_data.artist_auth) + '</span>';
-			    };
-		    output += '</div>';
-		    //--- end artist name
-		    
-	    	// title
-	    	var artwork_date = new Date(artwork_data.obj_date_earliest).getFullYear();
-	    	output += '<div class="title-and-date">';
-	    	output +=  '<span class="title-dk">' + artwork_data.title + '</span>';
-	    	output += '<span class="dates">' + artwork_date + '</span>';
-	    	output += '</div>';	    	
-	    	//----- end title
-		    
-		    output += '<div class="ref">' + artwork_data.ref_number + '</div>';
-	    
-	    output += '</div>';
-	    //---- end text
-
-	    output += '</li>'
-	    return output;
+  get_template: function (url) {
+	  var template;
+	  $.ajax({
+		  url: url,
+		  async:false,
+		  type:"get", 
+		  success: function(data) {
+			  template = data;
+		  },
+		  error: function(xhr) {
+			  template  = null;
+		  }
+		});
+	  
+	  return template;
+	  
   },
   
+//  template: function (artwork_data) { 
+//			  
+//	    var output = '<li class="list-work">' 
+//	    	    
+//	    // image
+//	    output += '<div id="' + artwork_data.img_id +  '" class="list-work-image image_loading">';	    	    
+//	    if (artwork_data.img_data != ''){	    	
+//	    	output += '<a class="work-image" href="http://cstest:8180/collectionspace/tenant/smk/download/'+ artwork_data.img_data + '/Medium">';
+//	    	output += '</a>';
+//	    };
+//	    output += '</div>';
+//	    //---- end image
+//	    	
+//	    // text
+//	    output +='<div class="list-work-text">';	    	            
+//	    	    
+//		    //artist name
+//		    output += '<div class="artist">';			    
+//			    output += '<span class="artist-name">' + artwork_data.artist_name_s + '</span>';
+//			    if (artwork_data.artist_auth != 'original'){	
+//			    	output += '<span class="artist_auth">' + sprintf('(%s)', artwork_data.artist_auth) + '</span>';
+//			    };
+//		    output += '</div>';
+//		    //--- end artist name
+//		    
+//	    	// title
+//	    	var artwork_date = new Date(artwork_data.obj_date_earliest).getFullYear();
+//	    	output += '<div class="title-and-date">';
+//	    	output +=  '<span class="title-dk">' + artwork_data.title + '</span>';
+//	    	output += '<span class="dates">' + artwork_date + '</span>';
+//	    	output += '</div>';	    	
+//	    	//----- end title
+//		    
+//		    output += '<div class="ref">' + artwork_data.ref_number + '</div>';
+//	    
+//	    output += '</div>';
+//	    //---- end text
+//
+//	    output += '</li>'
+//	    return output;
+//  },
   
-  template_detail: function (artwork_data) {    
-	    var output = '<div class="list-work">' 
-	    	    
-		    // image
-		    output += '<div id="' + artwork_data.img_id +  '" class="list-work-image image_loading">';	   
-		    if (artwork_data.img_data != ''){	    	
-		    	output += '<a class="work-image" href="http://cstest:8180/collectionspace/tenant/smk/download/'+ artwork_data.img_data + '/Original">';
-		    	output += '</a>';
-		    };
-		    output += '</div>';
-		    //---- end image
-		    	
-		    // text
-		    output +='<div class="list-work-text">';	    	            
-		    
-		    	// title
-		    	var artwork_date = new Date(artwork_data.obj_date_earliest).getFullYear();
-		    	output += '<div class="title-and-date">';
-			    	output +=  '<span class="title-dk">' + artwork_data.title + '</span>';
-			    	output += '<span class="dates">' + artwork_date + '</span>';
-		    	output += '</div>';	    	
-		    	//----- end title
-		    
-			    //artist data
-			    output += '<div class="artist">';
-			    	output += '<span class="artist-name">' + artwork_data.artist_name_s + '</span>';
-				    if (artwork_data.artist_auth != 'original'){	
-				    	output += '<span class="artist_auth">' + sprintf('(%s)', artwork_data.artist_auth) + '</span>';
-				    };
-				    
-				    output += '<div class="artist-other-infos">';
-					    output += '<span class="artist-natio">' + artwork_data.artist_natio + '</span>';
-					    output += '<span class="artist-dates">' + sprintf('(%s - %s)', artwork_data.artist_birth, artwork_data.artist_death )+ '</span>';
-					output += '</div>';
-			    output += '</div>';
-			    //--- end artist data
-			    		    
-			    output += '<div class="technique">' + artwork_data.technique + '</div>';
-			    output += '<div><span class="dim_brut">' + sprintf('%s%s x %s%s', artwork_data.width_brut, artwork_data.widthunit_brut, artwork_data.heigth_brut, artwork_data.heigthunit_brut) + '</span></div>';
-		    	output += '<div class="ref">' + artwork_data.ref_number + '</div>';
-		    
-		    output += '</div>';
-		    //---- end text
-
-	    output += '</div>'
-    	 //---- end list-work
-	    	
-	    	
-	    return output;
-},
+  
+//  template_detail: function (artwork_data) {    
+//	    var output = '<div class="list-work">' 
+//	    	    
+//		    // image
+//		    output += '<div id="' + artwork_data.img_id +  '" class="list-work-image image_loading">';	   
+//		    if (artwork_data.img_data != ''){	    	
+//		    	output += '<a class="work-image" href="http://cstest:8180/collectionspace/tenant/smk/download/'+ artwork_data.img_data + '/Original">';
+//		    	output += '</a>';
+//		    };
+//		    output += '</div>';
+//		    //---- end image
+//		    	
+//		    // text
+//		    output +='<div class="list-work-text">';	    	            
+//		    
+//		    	// title
+//		    	var artwork_date = new Date(artwork_data.obj_date_earliest).getFullYear();
+//		    	output += '<div class="title-and-date">';
+//			    	output +=  '<span class="title-dk">' + artwork_data.title + '</span>';
+//			    	output += '<span class="dates">' + artwork_date + '</span>';
+//		    	output += '</div>';	    	
+//		    	//----- end title
+//		    
+//			    //artist data
+//			    output += '<div class="artist">';
+//			    	output += '<span class="artist-name">' + artwork_data.artist_name_s + '</span>';
+//				    if (artwork_data.artist_auth != 'original'){	
+//				    	output += '<span class="artist_auth">' + sprintf('(%s)', artwork_data.artist_auth) + '</span>';
+//				    };
+//				    
+//				    output += '<div class="artist-other-infos">';
+//					    output += '<span class="artist-natio">' + artwork_data.artist_natio + '</span>';
+//					    output += '<span class="artist-dates">' + sprintf('(%s - %s)', artwork_data.artist_birth, artwork_data.artist_death )+ '</span>';
+//					output += '</div>';
+//			    output += '</div>';
+//			    //--- end artist data
+//			    		    
+//			    output += '<div class="technique">' + artwork_data.technique + '</div>';
+//			    output += '<div><span class="dim_brut">' + sprintf('%s%s x %s%s', artwork_data.width_brut, artwork_data.widthunit_brut, artwork_data.heigth_brut, artwork_data.heigthunit_brut) + '</span></div>';
+//		    	output += '<div class="ref">' + artwork_data.ref_number + '</div>';
+//		    
+//		    output += '</div>';
+//		    //---- end text
+//
+//	    output += '</div>'
+//    	 //---- end list-work
+//	    	
+//	    	
+//	    return output;
+//},
   
   getimage: function ($target, doc){
 	  var img = new Image();
@@ -388,26 +392,6 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 
   }
   
-  
-//  ,
-//
-//  init: function () {
-//    $(document).on('click', 'a.more', function () {
-//      var $this = $(this),
-//          span = $this.parent().find('span');
-//
-//      if (span.is(':visible')) {
-//        span.hide();
-//        $this.text('more');
-//      }
-//      else {
-//        span.show();
-//        $this.text('less');
-//      }
-//
-//      return false;
-//    });
-//  }
 });
 
 })(jQuery);

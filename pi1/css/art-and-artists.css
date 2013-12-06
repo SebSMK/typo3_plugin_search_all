@@ -27,7 +27,9 @@ img { padding: 0px; -ms-interpolation-mode: bicubic; }
     list-style-type: none;
     margin-left: 2px;}
 .filter-menu .menu-item a { border: none; color: #42433E; cursor: pointer; display: block; line-height: 38px; vertical-align: middle;
-padding: 0px 5px 0px 5px; background: #dfdfdf url('../images/filter-menu-arrow.gif') no-repeat right 17px; }
+	padding: 0px 5px 0px 5px;
+	/*background: #dfdfdf url('../images/filter-menu-arrow.gif') no-repeat right 17px;*/
+}
 .filter-menu .menu-item a:hover { color: #42433E; background-color: #f5f5f5; }
 .filter-menu .menu-item .active, .filter-menu .menu-item .active:hover { background-color: #444444; background-position: right -9px; color: #fff; }
 
