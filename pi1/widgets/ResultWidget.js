@@ -11,6 +11,8 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	
   start: 0,
   
+  type_data_doc: new Array("list", "detail"), 
+  
   beforeRequest: function () {
     //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
   },
@@ -19,7 +21,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;
 
 	if (!self.manager.getShowDetail()){
-	//** search view
+	//** list view
 		var $target = $(this.target);
 		
 		$target.empty();
@@ -38,20 +40,24 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		var artwork_data = null;
 		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 		      var doc = this.manager.response.response.docs[i];
-		      artwork_data = {img_id: "img_" + doc.id,
-		  				ref_number: doc.id,
-		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
-		  				img_data_bool: doc.medium_image_data != null ? true :  false,
-		  				img_data: doc.medium_image_data,
-		  				title: doc.title_first,	  				
-		  				artist_name_s: doc.artist_name_s,	  				
-		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-		  				artist_auth: doc.artist_auth[0]
-						};    	      
+		      
+		    //TO DO ------> the MIX between templating and jquery below is confusing ----> must be simplified
+		      
+		      artwork_data = self.get_data(self.type_data_doc[0], doc);	      
 		      
 		      var html = Mustache.to_html(template, artwork_data);
 			  $target.append(html);
-			  self.getimage($target.find('#' + artwork_data.img_id), doc);
+			  
+			  if (artwork_data.img_id != null && artwork_data.img_id != ""){
+				  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
+				  self.getimage($target.find('#' + artwork_data.img_id), doc.id, path);
+			  }
+			  			  
+			  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null)
+				  $target.find('a.smk_link').click(function(){
+					  window.open(doc.page_url);
+					  return false;
+			  });
 	    }			
 	} 
 	else{
@@ -62,7 +68,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		$target_detail.find('.list-work-text').append(
 	        $('<a class="detail_switcher" href="#"></a>')
 	         .html('<span>Return to search &lt;&lt;</span>')       
-	        .click(function () {
+	         .click(function () {
 	        	return self.call_previous_search();	            
 	          })
 		 );	
@@ -99,31 +105,15 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	    
 		var artwork_data = null;
 		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-	      var doc = this.manager.response.response.docs[i];
+			var doc = this.manager.response.response.docs[i];
 	      
-	      artwork_data = {img_id: "img_" + doc.id,
-	  				ref_number: doc.id,
-	  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
-	  				img_data_bool: doc.medium_image_data != null ? true :  false,
-	  				img_data: doc.medium_image_data,
-	  				title: doc.title_first,	  				
-	  				artist_name_s: doc.artist_name_s,
-	  				artist_birth: doc.artist_birth,
-	  				artist_death: doc.artist_death,
-	  				artist_natio: doc.artist_natio,
-	  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-	  				artist_auth: doc.artist_auth[0],
-	  				heigth_brut:doc.heigth_brut,
-	  				width_brut:doc.width_brut,
-	  				heigthunit_brut:doc.heigthunit_brut,
-	  				widthunit_brut:doc.widthunit_brut,
-	  				technique:doc.prod_technique_s
-					};    	
-	      
+	      	artwork_data = self.get_data(self.type_data_doc[1], doc);
+	            
 	      	var html = Mustache.to_html(template, artwork_data);
 	      	$target_detail.append(html);
 	      
-	      	self.getimage_detail($target_detail.find('#' + artwork_data.img_id), doc);	      
+	      	var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
+			self.getimage($target_detail.find('#' + artwork_data.img_id), doc.id, path);	      		      
 	    }
 },
   
@@ -156,106 +146,92 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	  
   },
   
-//  template: function (artwork_data) { 
-//			  
-//	    var output = '<li class="list-work">' 
-//	    	    
-//	    // image
-//	    output += '<div id="' + artwork_data.img_id +  '" class="list-work-image image_loading">';	    	    
-//	    if (artwork_data.img_data != ''){	    	
-//	    	output += '<a class="work-image" href="http://cstest:8180/collectionspace/tenant/smk/download/'+ artwork_data.img_data + '/Medium">';
-//	    	output += '</a>';
-//	    };
-//	    output += '</div>';
-//	    //---- end image
-//	    	
-//	    // text
-//	    output +='<div class="list-work-text">';	    	            
-//	    	    
-//		    //artist name
-//		    output += '<div class="artist">';			    
-//			    output += '<span class="artist-name">' + artwork_data.artist_name_s + '</span>';
-//			    if (artwork_data.artist_auth != 'original'){	
-//			    	output += '<span class="artist_auth">' + sprintf('(%s)', artwork_data.artist_auth) + '</span>';
-//			    };
-//		    output += '</div>';
-//		    //--- end artist name
-//		    
-//	    	// title
-//	    	var artwork_date = new Date(artwork_data.obj_date_earliest).getFullYear();
-//	    	output += '<div class="title-and-date">';
-//	    	output +=  '<span class="title-dk">' + artwork_data.title + '</span>';
-//	    	output += '<span class="dates">' + artwork_date + '</span>';
-//	    	output += '</div>';	    	
-//	    	//----- end title
-//		    
-//		    output += '<div class="ref">' + artwork_data.ref_number + '</div>';
-//	    
-//	    output += '</div>';
-//	    //---- end text
-//
-//	    output += '</li>'
-//	    return output;
-//  },
+  get_data: function (type_doc, doc){
+	  var data;
+	  
+	  var category = (doc.category.length > 0) && (doc.category[0] == "samlingercollectionspace") ? doc.category[0] : "others"; 
+	  
+	  switch(category)
+	  {
+		  //** artwork
+		  case "samlingercollectionspace":
+				 //* artwork list
+				 if (type_doc == this.type_data_doc[0]){
+					 data = {
+							 	img_id: "img_" + doc.id,
+				  				ref_number: doc.id,
+				  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+				  				img_data_bool: doc.medium_image_data != null ? true :  false,
+				  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
+				  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
+				  				title: doc.title_first,	  				
+				  				artist_name_s: doc.artist_name_s,	  				
+				  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+				  				artist_auth: doc.artist_auth[0],
+				  				url_bool: false
+							};
+				 }
+				 //* artwork detail
+				 else if (type_doc == this.type_data_doc[1]){
+					 data = {
+							 	img_id: "img_" + doc.id,
+				  				ref_number: doc.id,
+				  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+				  				img_data_bool: doc.medium_image_data != null ? true :  false,
+				  				non_img_data_bool: doc.medium_image_data != null ? false : true,
+				  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Original", doc.medium_image_data),
+				  				title: doc.title_first,	  				
+				  				artist_name_s: doc.artist_name_s,
+				  				artist_birth: doc.artist_birth,
+				  				artist_death: doc.artist_death,
+				  				artist_natio: doc.artist_natio,
+				  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+				  				artist_auth: doc.artist_auth[0],
+				  				heigth_brut:doc.heigth_brut,
+				  				width_brut:doc.width_brut,
+				  				heigthunit_brut:doc.heigthunit_brut,
+				  				widthunit_brut:doc.widthunit_brut,
+				  				technique:doc.prod_technique_s,
+				  				url_bool: false
+							};			 
+				 }
+				 else{
+					 data = null;
+				 }
+			     	
+		    break;	  
+		    
+		 //** url
+		 case "others":
+			 	//* url list
+			 	data = {					 		
+			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),
+			  				artwork_date: doc.page_url,
+			  				img_data_bool: false,
+			  				non_img_data_bool: true,
+			  				url_bool: true,
+			  				url: doc.page_url,
+			  				title: doc.page_title,	  				
+			  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
+			  				artist_auth_bool: false
+						};
+			 	break;
+		 
+		 default:
+			  	data = null;
+
+	  };
+	  
+	  return data;
   
+  },  
   
-//  template_detail: function (artwork_data) {    
-//	    var output = '<div class="list-work">' 
-//	    	    
-//		    // image
-//		    output += '<div id="' + artwork_data.img_id +  '" class="list-work-image image_loading">';	   
-//		    if (artwork_data.img_data != ''){	    	
-//		    	output += '<a class="work-image" href="http://cstest:8180/collectionspace/tenant/smk/download/'+ artwork_data.img_data + '/Original">';
-//		    	output += '</a>';
-//		    };
-//		    output += '</div>';
-//		    //---- end image
-//		    	
-//		    // text
-//		    output +='<div class="list-work-text">';	    	            
-//		    
-//		    	// title
-//		    	var artwork_date = new Date(artwork_data.obj_date_earliest).getFullYear();
-//		    	output += '<div class="title-and-date">';
-//			    	output +=  '<span class="title-dk">' + artwork_data.title + '</span>';
-//			    	output += '<span class="dates">' + artwork_date + '</span>';
-//		    	output += '</div>';	    	
-//		    	//----- end title
-//		    
-//			    //artist data
-//			    output += '<div class="artist">';
-//			    	output += '<span class="artist-name">' + artwork_data.artist_name_s + '</span>';
-//				    if (artwork_data.artist_auth != 'original'){	
-//				    	output += '<span class="artist_auth">' + sprintf('(%s)', artwork_data.artist_auth) + '</span>';
-//				    };
-//				    
-//				    output += '<div class="artist-other-infos">';
-//					    output += '<span class="artist-natio">' + artwork_data.artist_natio + '</span>';
-//					    output += '<span class="artist-dates">' + sprintf('(%s - %s)', artwork_data.artist_birth, artwork_data.artist_death )+ '</span>';
-//					output += '</div>';
-//			    output += '</div>';
-//			    //--- end artist data
-//			    		    
-//			    output += '<div class="technique">' + artwork_data.technique + '</div>';
-//			    output += '<div><span class="dim_brut">' + sprintf('%s%s x %s%s', artwork_data.width_brut, artwork_data.widthunit_brut, artwork_data.heigth_brut, artwork_data.heigthunit_brut) + '</span></div>';
-//		    	output += '<div class="ref">' + artwork_data.ref_number + '</div>';
-//		    
-//		    output += '</div>';
-//		    //---- end text
-//
-//	    output += '</div>'
-//    	 //---- end list-work
-//	    	
-//	    	
-//	    return output;
-//},
-  
-  getimage: function ($target, doc){
+  getimage: function ($target, img_id, path){
 	  var img = new Image();
-	  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
+	  //var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
 	  var self = this;
 	  
-	  var img_id = doc.id; 
+	  //var img_id = doc.id; 
 	  // wrap our new image in jQuery, then:
 	  $(img)
 	    // once the image has loaded, execute this code
@@ -281,7 +257,8 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	    .error(function () {
 	    	$target
 	        // remove the loading class (so no background spinner), 
-	        .removeClass('image_loading');
+	        .removeClass('image_loading')
+	    	.addClass('image_default');
 	    	 
 	    	//self.images_event_launcher();
 	    })
@@ -297,51 +274,52 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
   },
   
   
-  getimage_detail: function ($target, doc){
-	  var img = new Image();
-	  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
-	  var self = this;
-	  
-	  var img_id = doc.id; 
-	  // wrap our new image in jQuery, then:
-	  $(img)
-	    // once the image has loaded, execute this code
-	    .load(function () {
-	      // set the image hidden by default    
-	      $(this).hide();
-	    
-	      // with the holding div #loader, apply:
-	      $target
-	        // remove the loading class (so no background spinner), 
-	        .removeClass('image_loading')
-	        // then insert our image
-	        .find('a').append(this);
-	    
-	      // fade our image in to create a nice effect
-	      $(this).fadeIn();
-	      
-	      //self.images_event_launcher();
-		 
-	    })
-	    
-	    // if there was an error loading the image, react accordingly
-	    .error(function () {
-	    	$target
-	        // remove the loading class (so no background spinner), 
-	        .removeClass('image_loading');
-	    	 
-	    	//self.images_event_launcher();
-	    })
-	    
-//	    // call detailed view on click on image
-//	    .click({param1: img_id}, 
-//    		function (event) {					        	
-//	        	return self.call_detail(img_id);	            
-//	          })		
-
-	    // *finally*, set the src attribute of the new image to our image
-	    .attr('src', path); 
-  },
+//  getimage_detail: function ($target, doc){
+//	  var img = new Image();
+//	  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
+//	  var self = this;
+//	  
+//	  var img_id = doc.id; 
+//	  // wrap our new image in jQuery, then:
+//	  $(img)
+//	    // once the image has loaded, execute this code
+//	    .load(function () {
+//	      // set the image hidden by default    
+//	      $(this).hide();
+//	    
+//	      // with the holding div #loader, apply:
+//	      $target
+//	        // remove the loading class (so no background spinner), 
+//	        .removeClass('image_loading')
+//	        // then insert our image
+//	        .find('a').append(this);
+//	    
+//	      // fade our image in to create a nice effect
+//	      $(this).fadeIn();
+//	      
+//	      //self.images_event_launcher();
+//		 
+//	    })
+//	    
+//	    // if there was an error loading the image, react accordingly
+//	    .error(function () {
+//	    	$target
+//	        // remove the loading class (so no background spinner), 
+//	        .removeClass('image_loading')
+//	    	.addClass('image_default');
+//	    	 
+//	    	//self.images_event_launcher();
+//	    })
+//	    
+////	    // call detailed view on click on image
+////	    .click({param1: img_id}, 
+////    		function (event) {					        	
+////	        	return self.call_detail(img_id);	            
+////	          })		
+//
+//	    // *finally*, set the src attribute of the new image to our image
+//	    .attr('src', path); 
+//  },
   
   switch_list_grid: function (event) {
 	if (typeof event.data.caller === "undefined")

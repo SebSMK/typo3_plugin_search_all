@@ -206,6 +206,13 @@ padding: 5px 0 5px 15px;
 
 #docs_smk_collection .image_loading{ 
 	background: url(../images/ajax-loader.gif) no-repeat center center;
+	/*background: url(../images/logo.jpg) no-repeat center center;*/
+	height: 70px;
+}
+
+#docs_smk_collection .image_default{ 	
+	background: url(../images/logo.jpg) no-repeat center center;
+	height: 70px;
 }
 
 #docs_smk_collection .image_error{ 
