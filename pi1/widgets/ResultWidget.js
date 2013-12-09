@@ -28,8 +28,12 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		
 		//* save in a global variable the total number of results (not faceted)  
 		//---> רררר TO DO (send event num_res_changed)
-		if (this.manager.store.values('fq').length == 0)
+		//if (this.manager.store.values('fq').length == 0)
+		if (window.refresh_numresultstotal == true){
+			window.refresh_numresultstotal = false;
 			window.numresultstotal = this.manager.response.response.numFound;
+		}
+			
 								
 		//* load the html template	
 		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
@@ -51,7 +55,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 			  //* artwork ---> but if url has an image??? ררררר
 			  if (artwork_data.img_id != null && artwork_data.img_id != ""){
 				  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
-				  self.getimage($target.find('#' + artwork_data.img_id), doc.id, path);
+				  self.getimage($target.find('#' + artwork_data.img_id), doc.id, path, true);
 			  };
 			  //* url			  
 			  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
@@ -180,7 +184,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
   
   },  
   
-  getimage: function ($target, img_id, path){
+  getimage: function ($target, img_id, path, detail){
 	  var img = new Image();
 	  //var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
 	  var self = this;
@@ -220,7 +224,8 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	    // call detailed view on click on image
 	    .click({img_link: img_id}, 
     		function (event) {					        	
-	        	return self.call_detail(event.data.img_link);	            
+	        	if(detail)	
+	        		return self.call_detail(event.data.img_link);	            
 	          })		
 
 	    // *finally*, set the src attribute of the new image to our image
@@ -318,7 +323,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	      	$target_detail.append(html);
 	      
 	      	var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
-			self.getimage($target_detail.find('#' + artwork_data.img_id), doc.id, path);	      		      
+			self.getimage($target_detail.find('#' + artwork_data.img_id), doc.id, path, false);	      		      
 	    }
   },
   

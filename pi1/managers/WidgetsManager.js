@@ -74,6 +74,9 @@ var Manager;
     
     Manager.init();
     Manager.store.addByValue('q', '*:*');
+    //ררררררררר find another system!!
+    window.refresh_numresultstotal = true;
+    //ררררררררררר
     var params = {
       facet: true,
       'facet.field': [ 'artist_natio', 'object_production_century_earliest', 'prod_technique', 'category'],

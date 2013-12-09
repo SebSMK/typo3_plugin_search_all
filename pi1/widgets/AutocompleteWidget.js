@@ -26,7 +26,10 @@ AjaxSolr.AutocompleteWidget = AjaxSolr.AbstractTextWidget.extend({
           if (ui.item) {
             self.requestSent = true;
             if (self.manager.store.addByValue('fq', ui.item.field + ':' + AjaxSolr.Parameter.escapeValue(ui.item.value))) {
-              self.doRequest();
+            	//ררררררר
+            	window.refresh_numresultstotal = true;
+            	//ררררררר
+            	self.doRequest();
             }
           }
         }
@@ -37,7 +40,10 @@ AjaxSolr.AutocompleteWidget = AjaxSolr.AbstractTextWidget.extend({
         if (self.requestSent === false && e.which == 13) {
           var value = 'artist_name:' + $(this).val() + '*';
           if (value && self.set(value)) {
-            self.doRequest();
+        	  //ררררררר
+        	  window.refresh_numresultstotal = true;  
+        	  //ררררררר
+        	  self.doRequest();
           }
         }
       });
