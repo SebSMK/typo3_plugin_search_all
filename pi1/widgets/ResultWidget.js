@@ -48,16 +48,21 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		      var html = Mustache.to_html(template, artwork_data);
 			  $target.append(html);
 			  
+			  //* artwork ---> but if url has an image??? ררררר
 			  if (artwork_data.img_id != null && artwork_data.img_id != ""){
 				  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
 				  self.getimage($target.find('#' + artwork_data.img_id), doc.id, path);
-			  }
-			  			  
-			  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null)
-				  $target.find('a.smk_link').click(function(){
-					  window.open(doc.page_url);
+			  };
+			  //* url			  
+			  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
+				  var id = this.img_id_generator(doc.id);				  
+				  
+				  $target.find('#' + id).click({url: artwork_data.url }, function(event){				  
+					  window.open(event.data.url);
 					  return false;
-			  });
+				  });
+				  
+			  };
 	    }			
 	} 
 	else{
@@ -76,58 +81,6 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	
   },    
 
-  call_detail: function (art_id) {
-	  var self = this;
-	  self.manager.setShowDetail(true);			  
-	  
-	  //* save current solr parameters
-	  self.manager.store.save();
-      
-      self.manager.store.exposedReset();
-	  
-  	  var param = new AjaxSolr.Parameter({name: "q", value: "id:" + art_id}); 
-  	  self.manager.store.add(param.name, param);	     
-      	      
-      self.doRequest();
-      return false;
-  },
-  
-  show_detail: function () {
-		var self = this;
-		var $target_detail = $(this.target_detail);		
-		
-		$target_detail.empty();
-		
-		//* load the html template	
-		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
-		var url = rootsite.concat('pi1/templates/template_detail_artworks.html');
-		var template = self.get_template(url);
-	    
-		var artwork_data = null;
-		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-			var doc = this.manager.response.response.docs[i];
-	      
-	      	artwork_data = self.get_data(self.type_data_doc[1], doc);
-	            
-	      	var html = Mustache.to_html(template, artwork_data);
-	      	$target_detail.append(html);
-	      
-	      	var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
-			self.getimage($target_detail.find('#' + artwork_data.img_id), doc.id, path);	      		      
-	    }
-},
-  
-  call_previous_search: function () {
-	  var self = this;
-	  self.manager.setShowDetail(false);
-
-	  //* load solr parameters from the previous search
-	  self.manager.store.load(true);   
-      
-      self.doRequest();
-      return false;
-  },
-  
   get_template: function (url) {
 	  var template;
 	  $.ajax({
@@ -203,12 +156,13 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		    
 		 //** url
 		 case "others":
-			 	//* url list
-			 	data = {					 		
+			 	//* url list			 	
+			 	data = {
+				 			img_id: this.img_id_generator(doc.id),
 			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),
 			  				artwork_date: doc.page_url,
 			  				img_data_bool: false,
-			  				non_img_data_bool: true,
+			  				non_img_data_bool: true, // no image
 			  				url_bool: true,
 			  				url: doc.page_url,
 			  				title: doc.page_title,	  				
@@ -264,15 +218,20 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	    })
 	    
 	    // call detailed view on click on image
-	    .click({param1: img_id}, 
+	    .click({img_link: img_id}, 
     		function (event) {					        	
-	        	return self.call_detail(img_id);	            
+	        	return self.call_detail(event.data.img_link);	            
 	          })		
 
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
   },
   
+  
+  img_id_generator: function(text){	  
+	  var id = text.replace(/[^\w\s]/gi, '_');
+ 	  return 'img_smk_' + id.substring(id.length - 6, id.length - 1);
+  },
   
 //  getimage_detail: function ($target, doc){
 //	  var img = new Image();
@@ -320,6 +279,59 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 //	    // *finally*, set the src attribute of the new image to our image
 //	    .attr('src', path); 
 //  },
+  
+  
+  call_detail: function (art_id) {
+	  var self = this;
+	  self.manager.setShowDetail(true);			  
+	  
+	  //* save current solr parameters
+	  self.manager.store.save();
+      
+      self.manager.store.exposedReset();
+	  
+  	  var param = new AjaxSolr.Parameter({name: "q", value: "id:" + art_id}); 
+  	  self.manager.store.add(param.name, param);	     
+      	      
+      self.doRequest();
+      return false;
+  },
+  
+  show_detail: function () {
+		var self = this;
+		var $target_detail = $(this.target_detail);		
+		
+		$target_detail.empty();
+		
+		//* load the html template	
+		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
+		var url = rootsite.concat('pi1/templates/template_detail_artworks.html');
+		var template = self.get_template(url);
+	    
+		var artwork_data = null;
+		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+			var doc = this.manager.response.response.docs[i];
+	      
+	      	artwork_data = self.get_data(self.type_data_doc[1], doc);
+	            
+	      	var html = Mustache.to_html(template, artwork_data);
+	      	$target_detail.append(html);
+	      
+	      	var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
+			self.getimage($target_detail.find('#' + artwork_data.img_id), doc.id, path);	      		      
+	    }
+  },
+  
+  call_previous_search: function () {
+	  var self = this;
+	  self.manager.setShowDetail(false);
+
+	  //* load solr parameters from the previous search
+	  self.manager.store.load(true);   
+      
+      self.doRequest();
+      return false;
+  },
   
   switch_list_grid: function (event) {
 	if (typeof event.data.caller === "undefined")
