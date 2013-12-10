@@ -24,16 +24,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	//** list view
 		var $target = $(this.target);
 		
-		$target.empty();
-		
-		//* save in a global variable the total number of results (not faceted)  
-		//---> רררר TO DO (send event num_res_changed)
-		//if (this.manager.store.values('fq').length == 0)
-		if (window.refresh_numresultstotal == true){
-			window.refresh_numresultstotal = false;
-			window.numresultstotal = this.manager.response.response.numFound;
-		}
-			
+		$target.empty();					
 								
 		//* load the html template	
 		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 

@@ -66,26 +66,31 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
      */
     set: function (value) {
             return this.changeSelection(function () {
-          	  if (value != "all"){
-//	                  var indices = this.manager.store.find('fq', new RegExp('^-?' + this.field + ':'));
-//	                  if (indices) {
-//	                    this.manager.store.params['fq'][indices[0]] = new AjaxSolr.Parameter({ name: 'fq', value: this.manager.store.params['fq'][indices[0]].val() + ' OR ' + this.fq(value), locals: { tag:this.field } });
-//	                    return true;
-//	                  }
-//	                  else {
-//	                	this.manager.store.remove('fq');
-//	                    return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-//	                  }
-//	                  
-	                  this.manager.store.remove('fq');
-	                  return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-            		}
-            else{          	  
-          	  this.manager.store.remove('fq');   
-          	  return true;
-//          	  var not_fqstring = 'NOT ' + this.fq("nyheder") + ' NOT ' + this.fq("kunstdatabase") + ' NOT ' + this.fq("kalender") + ' NOT ' + this.fq("highlights") + ' NOT ' + this.fq("praktisk");                	  
-//          	  return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: not_fqstring, locals: { tag:this.field } }));                	  
-            }
+            	var a = this.manager.store.removeByValue('fq', new RegExp('^-?' + this.field + ':')),
+                b = value == 'all' ? true : this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+            return a || b;
+//            	
+//            	
+//          	  if (value != "all"){
+////	                  var indices = this.manager.store.find('fq', new RegExp('^-?' + this.field + ':'));
+////	                  if (indices) {
+////	                    this.manager.store.params['fq'][indices[0]] = new AjaxSolr.Parameter({ name: 'fq', value: this.manager.store.params['fq'][indices[0]].val() + ' OR ' + this.fq(value), locals: { tag:this.field } });
+////	                    return true;
+////	                  }
+////	                  else {
+////	                	this.manager.store.remove('fq');
+////	                    return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+////	                  }
+////	                  
+//	                  this.manager.store.remove('fq');
+//	                  return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+//            		}
+//            else{          	  
+//          	  this.manager.store.remove('fq');   
+//          	  return true;
+////          	  var not_fqstring = 'NOT ' + this.fq("nyheder") + ' NOT ' + this.fq("kunstdatabase") + ' NOT ' + this.fq("kalender") + ' NOT ' + this.fq("highlights") + ' NOT ' + this.fq("praktisk");                	  
+////          	  return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: not_fqstring, locals: { tag:this.field } }));                	  
+//            }
           });
     },
 
@@ -100,38 +105,38 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
       });
     },          
 
-    /**
-     * Removes a filter query.
-     *
-     * @returns {Boolean} Whether a filter query was removed.
-     */
-    remove: function (value, field) {
-          var self = this;
-      return this.changeSelection(function () {
-              for (var i = 0, l = this.manager.store.params['fq'].length; i < l; i++) { 
-              		var mySplitResult = this.manager.store.params['fq'][i].value.split(" OR ");
-                      var count = mySplitResult.length;
-                      for(var j = 0; j < mySplitResult.length; j++){
-                              var v = field + ":" + value;
-                              if (value.match(" ") != null && mySplitResult[j].localeCompare(v) != 0 && mySplitResult[j].split(":")[0].localeCompare(field)===0) {
-                                      value = '"' + value + '"';
-                              }
-                              v = field + ":" + value;
-                          if (mySplitResult[j].localeCompare(v) == 0) {
-                                  mySplitResult.splice(j,1);
-                                  var str = mySplitResult.join(" OR ");
-                                  if (count > 1) {
-                                          this.manager.store.params['fq'][i].value = str;
-                                  } else {
-                                          this.manager.store.params['fq'].splice(i,1);
-                                  }
-                                      return true;
-                              }
-                      }
-              }
-              return false;
-      });
-    },
+//    /**
+//     * Removes a filter query.
+//     *
+//     * @returns {Boolean} Whether a filter query was removed.
+//     */
+//    remove: function (value, field) {
+//          var self = this;
+//      return this.changeSelection(function () {
+//              for (var i = 0, l = this.manager.store.params['fq'].length; i < l; i++) { 
+//              		var mySplitResult = this.manager.store.params['fq'][i].value.split(" OR ");
+//                      var count = mySplitResult.length;
+//                      for(var j = 0; j < mySplitResult.length; j++){
+//                              var v = field + ":" + value;
+//                              if (value.match(" ") != null && mySplitResult[j].localeCompare(v) != 0 && mySplitResult[j].split(":")[0].localeCompare(field)===0) {
+//                                      value = '"' + value + '"';
+//                              }
+//                              v = field + ":" + value;
+//                          if (mySplitResult[j].localeCompare(v) == 0) {
+//                                  mySplitResult.splice(j,1);
+//                                  var str = mySplitResult.join(" OR ");
+//                                  if (count > 1) {
+//                                          this.manager.store.params['fq'][i].value = str;
+//                                  } else {
+//                                          this.manager.store.params['fq'].splice(i,1);
+//                                  }
+//                                      return true;
+//                              }
+//                      }
+//              }
+//              return false;
+//      });
+//    },
     
 	
   afterRequest: function () {
@@ -141,7 +146,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     }
 
     var maxCount = 0;
-    var objectedItems = [{facet: "all", count:window.numresultstotal}];
+    var objectedItems = [{facet: "all", count:this.manager.store.all_counts}];
     
     for (var facet in this.manager.response.facet_counts.facet_fields[this.field]) {
       var count = parseInt(this.manager.response.facet_counts.facet_fields[this.field][facet]);

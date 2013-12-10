@@ -79,6 +79,9 @@ padding: 5px 0 5px 15px;
 #search_smk_collection input, #search_smk_collection_title input {
   width: 350px;
 }
+#search_free input {
+  width: 450px;
+}
 
 .searchLabel {display: block;	float: left; padding: 0px; width: 100px; clear: both; color: #828282; font-size: 0.9em; }
 .searchValue {display: block;	padding: 0px; margin-left: 20px; }
