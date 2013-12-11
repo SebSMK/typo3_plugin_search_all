@@ -32,11 +32,22 @@ a:hover {
 
 /* header */
 
-#header {
-  height: 120px;
+#search_wrapper #header {
+    border-bottom: 1px dotted #E5E2DE;
+    display: block;
+    height: 290px;
+    margin-bottom: 20px;
 }
 
-#header .logo {
+#search_wrapper #header h2 {
+  clear: left;
+  padding-top: 10px;
+  margin-bottom: 1px;
+  color: #333;
+  font-size: 13px;
+}
+
+#search_wrapper #header .logo {
   display: inline;
   float:left;
   min-width:270px;
@@ -45,7 +56,16 @@ a:hover {
   background-repeat: no-repeat;
 }
 
-#header .text {
+#search_wrapper #header h3 {
+	line-height: 1;
+    clear: left;
+    color: #333333;
+    font-size: 13px;
+    margin-bottom: 1px;
+    padding-top: 10px;
+}
+
+#search_wrapper #header .text {
   display: inline;
 }
 
@@ -60,6 +80,8 @@ a:hover {
   font-size: 14px;
   font-weight: 100;
 }
+
+
 
 /* search */
 

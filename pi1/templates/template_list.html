@@ -1,9 +1,36 @@
 
     <div id="header">      
-      <div class="text">
-	      <h1>CollectionSpace / Solr Demonstration</h1>
-	      <h2>Browse SMK's collection online</h2>
+      <div class="text">	      
+	      <h1>Browse SMK's collection online</h1>
       </div>
+      
+      <div class="clear"></div>
+      
+      	  <h3>Free text search:</h3>
+		  <div class="search">
+    			<div id="search_free" class="infoRow">					
+					<input type="text" id="query_free" name="query_free" autocomplete="off">				
+				</div>
+		  </div>
+		  	
+		  <h3>Search after:</h3>
+		  <div class="search">			  
+			  <div id="search_smk_collection" class="infoRow">
+					<span class="searchLabel">Artist name</span>
+					<input class="searchValue" type="text" id="query" name="query" autocomplete="off">				
+				</div>
+			  
+			  <div id="search_smk_collection_title" class="infoRow">
+					<span class="searchLabel">Title</span>
+					<input class="searchValue" type="text" id="query_title" name="query_title" autocomplete="off">				
+				</div>
+		  </div>
+		  <div class="clear"></div>
+		  
+		  <h3 id="current_sel">Current Selection:</h3>
+		  <div id="selection"></div>
+
+		<div class="clear"></div>
     </div>	
 	
 	<div class="left">         
@@ -20,33 +47,7 @@
       <div class="clear"></div>
     </div>
 	
-    <div class="right">
-    	<h1>Free text search:</h1>
-		  <div class="search">
-    			<div id="search_free" class="infoRow">					
-					<input type="text" id="query_free" name="query_free" autocomplete="off">				
-				</div>
-		  </div>
-		  	
-		  <h1>Search after:</h1>
-		  <div class="search">			  
-			  <div id="search_smk_collection" class="infoRow">
-					<span class="searchLabel">Artist name</span>
-					<input class="searchValue" type="text" id="query" name="query" autocomplete="off">				
-				</div>
-			  
-			  <div id="search_smk_collection_title" class="infoRow">
-					<span class="searchLabel">Title</span>
-					<input class="searchValue" type="text" id="query_title" name="query_title" autocomplete="off">				
-				</div>
-		  </div>
-		  <div class="clear"></div>
-		  
-		  <h1 id="current_sel">Current Selection:</h1>
-		  <div id="selection"></div>
-
-		<div class="clear"></div>
-	
+    <div class="right">    		
 		<div id="detail_smk_collection_show"></div>		  
     
 		<div id="result_smk_collection">
