@@ -60,6 +60,19 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     for (var widgetId in this.widgets) {
       this.widgets[widgetId].afterRequest();
     };
+  },
+  
+  
+  /**
+   * This method is executed after the Solr response data arrives. Allows each
+   * widget to handle Solr's response separately.
+   *
+   * @param {Object} data The Solr response.
+   */
+  categoryChanged: function (category) {        	    
+    for (var widgetId in this.widgets) {
+      this.widgets[widgetId].setCurrentCategory(category);
+    };
   }
   
 });

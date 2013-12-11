@@ -7,58 +7,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	init: function () {
         this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: this.field, locals: { ex:this.field } }));
 	},
-	
-//	 /**
-//     * Add facet parameters to the parameter store.
-//     */	
-//	initStore: function () {
-//        /* http://wiki.apache.org/solr/SimpleFacetParameters */
-//        var parameters = [
-//          'facet.prefix',
-//          'facet.sort',
-//          'facet.limit',
-//          'facet.offset',
-//          'facet.mincount',
-//          'facet.missing',
-//          'facet.method',
-//          'facet.enum.cache.minDf'
-//        ];
-//
-//        this.manager.store.addByValue('facet', true);
-//
-//        if (this['facet.field'] !== undefined) {
-//                this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name: 'facet.field', value: this.field, locals:{ ex: this.field } }));
-//        }
-//        else if (this['facet.date'] !== undefined) {
-//          this.manager.store.addByValue('facet.date', this.field);
-//          parameters = parameters.concat([
-//            'facet.date.start',
-//            'facet.date.end',
-//            'facet.date.gap',
-//            'facet.date.hardend',
-//            'facet.date.other',
-//            'facet.date.include'
-//          ]);
-//        }
-//        else if (this['facet.range'] !== undefined) {
-//          this.manager.store.addByValue('facet.range', this.field);
-//          parameters = parameters.concat([
-//            'facet.range.start',
-//            'facet.range.end',
-//            'facet.range.gap',
-//            'facet.range.hardend',
-//            'facet.range.other',
-//            'facet.range.include'
-//          ]);
-//        }
-//
-//        for (var i = 0, l = parameters.length; i < l; i++) {
-//          if (this[parameters[i]] !== undefined) {
-//            this.manager.store.addByValue('f.' + this.field + '.' + parameters[i], this[parameters[i]]);
-//          }
-//        }
-//      },
-	
+		
 	/**
      * Sets the filter query.
      *
@@ -69,28 +18,6 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
             	var a = this.manager.store.removeByValue('fq', new RegExp('^-?' + this.field + ':')),
                 b = value == 'all' ? true : this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
             return a || b;
-//            	
-//            	
-//          	  if (value != "all"){
-////	                  var indices = this.manager.store.find('fq', new RegExp('^-?' + this.field + ':'));
-////	                  if (indices) {
-////	                    this.manager.store.params['fq'][indices[0]] = new AjaxSolr.Parameter({ name: 'fq', value: this.manager.store.params['fq'][indices[0]].val() + ' OR ' + this.fq(value), locals: { tag:this.field } });
-////	                    return true;
-////	                  }
-////	                  else {
-////	                	this.manager.store.remove('fq');
-////	                    return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-////	                  }
-////	                  
-//	                  this.manager.store.remove('fq');
-//	                  return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-//            		}
-//            else{          	  
-//          	  this.manager.store.remove('fq');   
-//          	  return true;
-////          	  var not_fqstring = 'NOT ' + this.fq("nyheder") + ' NOT ' + this.fq("kunstdatabase") + ' NOT ' + this.fq("kalender") + ' NOT ' + this.fq("highlights") + ' NOT ' + this.fq("praktisk");                	  
-////          	  return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: not_fqstring, locals: { tag:this.field } }));                	  
-//            }
           });
     },
 
@@ -99,45 +26,12 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
      *
      * @returns {Boolean} Whether a filter query was added.
      */
-    add: function (value) {
+  add: function (value) {
       return this.changeSelection(function () {
         return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
       });
     },          
 
-//    /**
-//     * Removes a filter query.
-//     *
-//     * @returns {Boolean} Whether a filter query was removed.
-//     */
-//    remove: function (value, field) {
-//          var self = this;
-//      return this.changeSelection(function () {
-//              for (var i = 0, l = this.manager.store.params['fq'].length; i < l; i++) { 
-//              		var mySplitResult = this.manager.store.params['fq'][i].value.split(" OR ");
-//                      var count = mySplitResult.length;
-//                      for(var j = 0; j < mySplitResult.length; j++){
-//                              var v = field + ":" + value;
-//                              if (value.match(" ") != null && mySplitResult[j].localeCompare(v) != 0 && mySplitResult[j].split(":")[0].localeCompare(field)===0) {
-//                                      value = '"' + value + '"';
-//                              }
-//                              v = field + ":" + value;
-//                          if (mySplitResult[j].localeCompare(v) == 0) {
-//                                  mySplitResult.splice(j,1);
-//                                  var str = mySplitResult.join(" OR ");
-//                                  if (count > 1) {
-//                                          this.manager.store.params['fq'][i].value = str;
-//                                  } else {
-//                                          this.manager.store.params['fq'].splice(i,1);
-//                                  }
-//                                      return true;
-//                              }
-//                      }
-//              }
-//              return false;
-//      });
-//    },
-    
 	
   afterRequest: function () {
     if (this.manager.response.facet_counts.facet_fields[this.field] === undefined) {
@@ -181,7 +75,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     for (var i = 0, l = objectedItems.length; i < l; i++) {
 	      var facet = null; 
 
-	      
+	      var category_name = typefacet[objectedItems[i].facet];
     	  facet = typefacet[objectedItems[i].facet] +' (' + objectedItems[i].count +')';
 	      
     	  //facet = objectedItems[i].facet.charAt(0).toUpperCase() + objectedItems[i].facet.slice(1) +' (' + objectedItems[i].count +')'; 
@@ -192,10 +86,29 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     	  $(this.target).find("#" + i +"-filters").append(
     		        $('<a href="#" class="category_item"></a>')
     		        .text(facet)        
-    		        .click(this.clickHandler(facetclick))
+    		        .click(this.clickHandler(facetclick, category_name))    		        		    		        		
     		      );  
     }       
     
+  },
+  
+  /**
+   * @param {String} value The value.
+   * @returns {Function} Sends a request to Solr if it successfully adds a
+   *   filter query with the given value.
+   */
+  clickHandler: function (value, category_name) {
+    var self = this, meth = this.multivalue ? 'add' : 'set';
+    return function () {
+      if (self[meth].call(self, value)) {
+    	$(self).trigger({
+			type: "smk_search_category_changed",
+			category: category_name
+		  });  
+        self.doRequest();
+      }
+      return false;
+    }
   }
 	
 

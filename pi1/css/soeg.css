@@ -39,13 +39,6 @@ a:hover {
     margin-bottom: 20px;
 }
 
-#search_wrapper #header h2 {
-  clear: left;
-  padding-top: 10px;
-  margin-bottom: 1px;
-  color: #333;
-  font-size: 13px;
-}
 
 #search_wrapper #header .logo {
   display: inline;
@@ -63,6 +56,14 @@ a:hover {
     font-size: 13px;
     margin-bottom: 1px;
     padding-top: 10px;
+}
+
+#search_wrapper #header h2 {
+  padding: 20px 0 5px 2px;
+  font-size: 20px;
+  letter-spacing: -2px;
+  margin-bottom: 2px;
+  font-weight: 1;
 }
 
 #search_wrapper #header .text {

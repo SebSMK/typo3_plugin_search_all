@@ -75,8 +75,12 @@ var Manager;
     });    
     $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
     	Manager.widgets['result_smk_collection'].switch_list_grid(event);
-    });    
-        
+    }); 
+    
+    $(Manager.widgets['category']).on('smk_search_category_changed', {caller:'smk_search_category_changed'}, function(event){ 
+    	Manager.categoryChanged(event.category);
+    });     
+            
     Manager.init();
     Manager.store.addByValue('q', '*:*');
     
