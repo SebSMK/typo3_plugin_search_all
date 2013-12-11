@@ -1,36 +1,28 @@
 (function ($) {
 AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 	
-	//hightlight : true,
+	hightlight : true,
 	//displayFields : [ 'title', 'content', 'url' ],
 	afterRequest : function() {
 
 		$(this.target).find('input').bind(
 				'keydown',
 				{
-					mmgr : this.manager,
-					thisplugin : this
+					mmgr : this.manager
 					//,mdf : this.displayFields
 				},
 				function(e) {
-					var mgr = e.data.mmgr;
-					var thisplugin = e.data.thisplugin;
+					var mgr = e.data.mmgr;					
 					
 					if (e.which == 13 && $(this).val()) {
 						var value = jQuery.trim($(this).val());
-						if (mgr.store.last != value) {
+						//if (mgr.store.last != value) {
 							mgr.store.last = value;
-							mgr.store.addByValue('q', 
-									'page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ');
-							//mgr.store.addByValue('fl', e.data.mdf);
-							
-							//* send event: refresh count result
-							$(thisplugin).trigger({
-									type: "smk_search_refresh_count_results"
-							});
-							
-							mgr.doRequest(0);
-						}
+							if (mgr.store.addByValue('q', 'page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
+								//mgr.store.addByValue('fl', e.data.mdf);																					
+								mgr.doRequest(0);								
+							}
+						//}
 					}// end if
 				}); // end binded action.
 
@@ -40,7 +32,7 @@ AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 		if (!this.hightlight)
 			return;
 		var vArray = this.manager.store.last.split(" ");
-		//jQuery('#docs').highlight(vArray);
+		jQuery('#docs_smk_collection').highlight(vArray);
 		
 	}
 	

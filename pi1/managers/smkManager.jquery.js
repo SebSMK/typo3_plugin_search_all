@@ -56,10 +56,6 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
    */
   handleResponse: function (data) {
     this.response = data;
-    
-    if (this.store.all_counts == -1){
-    	this.store.all_counts = this.response.response.numFound;
-    }
     	    
     for (var widgetId in this.widgets) {
       this.widgets[widgetId].afterRequest();

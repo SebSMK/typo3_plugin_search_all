@@ -146,15 +146,20 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     }
 
     var maxCount = 0;
-    var objectedItems = [{facet: "all", count:this.manager.store.all_counts}];
+    var allCount = 0;
+    var objectedItems = new Array();    
     
     for (var facet in this.manager.response.facet_counts.facet_fields[this.field]) {
       var count = parseInt(this.manager.response.facet_counts.facet_fields[this.field][facet]);
+      allCount = allCount + count;
       if (count > maxCount) {
         maxCount = count;
       }
       objectedItems.push({ facet: facet, count: count });
     }
+    
+    objectedItems.unshift({facet: "all", count:allCount});
+    
     objectedItems.sort(function (a, b) {
       return a.facet < b.facet ? -1 : 1;
     });

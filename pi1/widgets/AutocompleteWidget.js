@@ -35,10 +35,9 @@ AjaxSolr.AutocompleteWidget = AjaxSolr.AbstractTextWidget.extend({
       // This has lower priority so that requestSent is set.
       $(self.target).find('input').bind('keydown', function(e) {
         if (self.requestSent === false && e.which == 13) {
-          var value = $(this).val() + '*';
-          if (value && self.manager.store.addByValue('q', 'artist_name' + ':' + AjaxSolr.Parameter.escapeValue(value))) {
-          	self.doRequest();
-          }
+        	if (value && self.set(value)) {           	 
+           	  	self.doRequest();
+             }
         }
       });
     } // end callback

@@ -222,6 +222,10 @@ padding: 5px 0 5px 15px;
 	background: url(../images/img_err.png) no-repeat center center;
 }
 
+#docs_smk_collection .highlight{ 
+	background-color: #00BFD0;
+}
+
 /* left */
 
 .left {

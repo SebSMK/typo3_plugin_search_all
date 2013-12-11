@@ -36,9 +36,9 @@ AjaxSolr.AutocompleteTitleWidget = AjaxSolr.AbstractTextWidget.extend({
       $(self.target).find('input').bind('keydown', function(e) {
         if (self.requestSent === false && e.which == 13) {
         	var value = $(this).val() + '*';
-            if (value && self.manager.store.addByValue('q', 'title_dk' + ':' + AjaxSolr.Parameter.escapeValue(value))) {
-            	self.doRequest();
-            }        	        	
+        	 if (value && self.set(value)) {           	 
+           	  	self.doRequest();
+             }       	        	
         }
       });
     } // end callback
