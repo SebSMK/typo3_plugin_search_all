@@ -26,6 +26,9 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
       links.unshift($('<a href="#"></a>').text('Remove all').click(function () {
         self.manager.store.get('q').val('*:*');
         self.manager.store.remove('fq');
+        $(self).trigger({
+			type: "smk_search_category_removed"			
+		  });  
         self.doRequest();
         return false;
       }));
@@ -47,6 +50,14 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
     var self = this;
     return function () {
       if (self.manager.store.removeByValue('fq', facet)) {
+    	var slicedFacet = facet.split(":");
+    	
+    	if(slicedFacet.length == 2 && slicedFacet[0] == "category" ){
+    		$(self).trigger({
+    			type: "smk_search_category_removed"
+    		  });
+    	}
+    		     		    	
         self.doRequest();
       }
       return false;

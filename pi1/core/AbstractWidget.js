@@ -40,7 +40,7 @@ AjaxSolr.AbstractWidget = AjaxSolr.Class.extend(
       servlet: undefined,
       // A reference to the widget's manager.
       manager: null,
-      currentCategory:"Alle"
+      isWidgetVisible:true,
     }, attributes);
   },
 
@@ -73,15 +73,9 @@ AjaxSolr.AbstractWidget = AjaxSolr.Class.extend(
    */
   doRequest: function (start, servlet) {
     this.manager.doRequest(start || this.start, servlet || this.servlet);
-  },  
+  },    
   
-  setCurrentCategory: function (cat) { 
-	  this.currentCategory = cat;
-  },
-  
-  getCurrentCategory: function () { 
-	  return this.currentCategory;
-  }
+  handleState: function (cat) {}
   
 });
 

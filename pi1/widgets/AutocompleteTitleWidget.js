@@ -2,7 +2,16 @@
 
 AjaxSolr.AutocompleteTitleWidget = AjaxSolr.AbstractTextWidget.extend({
   afterRequest: function () {
-    $(this.target).find('input').unbind().removeData('events').val('');
+    
+	  
+	  
+	  if (!this.isWidgetVisible){
+		this.activateWidget(this.isWidgetVisible);
+		return;
+	  }		
+	  
+	  
+	$(this.target).find('input').unbind().removeData('events').val('');
 
     var self = this;
 
@@ -35,7 +44,7 @@ AjaxSolr.AutocompleteTitleWidget = AjaxSolr.AbstractTextWidget.extend({
       // This has lower priority so that requestSent is set.
       $(self.target).find('input').bind('keydown', function(e) {
         if (self.requestSent === false && e.which == 13) {
-        	var value = $(this).val() + '*';
+        	var value = "title_dk:" + $(this).val() + '*';
         	 if (value && self.set(value)) {           	 
            	  	self.doRequest();
              }       	        	
@@ -53,7 +62,37 @@ AjaxSolr.AutocompleteTitleWidget = AjaxSolr.AbstractTextWidget.extend({
     }
     params.push('q=' + this.manager.store.get('q').val());
     $.getJSON(this.manager.solrUrl + 'select?' + params.join('&') + '&wt=json&json.wrf=?', {}, callback);
-  }
+  },
+  
+	handleState: function (state) { 		  		  
+		this.isWidgetVisible = this.handleCategory(state);
+		this.activateWidget(this.isWidgetVisible);				 
+	  },
+	  
+	handleCategory: function(cat) { 
+		  
+		  res = false;
+		
+		  switch(cat)
+		  {
+		  case "Samlinger":		    			  			   
+			  res = true;
+			  break;		 
+		  default:			  		  	  
+		  	  res = false;
+		  }
+		  
+		  return res;
+	  },	
+	  
+	activateWidget: function(boolean){
+		if (boolean)
+			$(this.target).show();
+		else
+			$(this.target).hide(); 
+	}
+
+  
 });
 
 })(jQuery);

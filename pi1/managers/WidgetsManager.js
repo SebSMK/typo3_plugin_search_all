@@ -33,7 +33,8 @@ var Manager;
       Manager.addWidget(new AjaxSolr.TagcloudWidget({
         id: fields[i],
         target: '#' + fields[i],
-        field: fields[i]
+        field: fields[i],
+        isWidgetVisible: false
       }));
     };    
     
@@ -55,13 +56,15 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
 	    id: 'text_artist',
 	    target: '#search_smk_collection',
-	    fields: [ 'artist_name_s']
+	    fields: [ 'artist_name_s'],
+        isWidgetVisible: false
 	  }));    
 	
 	Manager.addWidget(new AjaxSolr.AutocompleteTitleWidget({
 	    id: 'text_title',
 	    target: '#search_smk_collection_title',
-	    fields: [ 'title_dk_s']
+	    fields: [ 'title_dk_s'],
+        isWidgetVisible: false
 	  }));
 	
 	Manager.addWidget(new AjaxSolr.FreeTextWidget({
@@ -79,7 +82,11 @@ var Manager;
     
     $(Manager.widgets['category']).on('smk_search_category_changed', {caller:'smk_search_category_changed'}, function(event){ 
     	Manager.categoryChanged(event.category);
-    });     
+    });    
+    
+    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', {caller:'smk_search_category_removed'}, function(event){ 
+    	Manager.categoryChanged();
+    });
             
     Manager.init();
     Manager.store.addByValue('q', '*:*');

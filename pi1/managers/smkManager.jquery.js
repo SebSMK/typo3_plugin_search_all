@@ -71,7 +71,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
    */
   categoryChanged: function (category) {        	    
     for (var widgetId in this.widgets) {
-      this.widgets[widgetId].setCurrentCategory(category);
+      this.widgets[widgetId].handleState(category);
     };
   }
   

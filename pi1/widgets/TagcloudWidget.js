@@ -4,8 +4,10 @@ AjaxSolr.TagcloudWidget = AjaxSolr.AbstractFacetWidget.extend({
 	
   afterRequest: function () {
 	  
-		if (!this.handleCategory(this.currentCategory))
-			  return;
+		if (!this.isWidgetVisible){
+			this.activateWidget(this.isWidgetVisible);
+			return;
+		}			  
 		  
 		if (this.manager.response.facet_counts.facet_fields[this.field] === undefined) {
 	      $(this.target).html('no items found in current selection');
@@ -91,6 +93,7 @@ AjaxSolr.TagcloudWidget = AjaxSolr.AbstractFacetWidget.extend({
 	    
 	  },
   
+  
   moreLessSwitcher: function (event) {
 	  event.preventDefault();
 	  
@@ -107,32 +110,33 @@ AjaxSolr.TagcloudWidget = AjaxSolr.AbstractFacetWidget.extend({
 	  }
 	},
 	
-
-  setCurrentCategory: function (cat) { 
-		  this.currentCategory = cat;
-		  
-		  this.handleCategory(this.currentCategory);
+	handleState: function (state) { 		  		  
+		this.isWidgetVisible = this.handleCategory(state);
+		this.activateWidget(this.isWidgetVisible);				 
 	  },
 	  
 	handleCategory: function(cat) { 
 		  
-			res = false;
+		  res = false;
 		
 		  switch(cat)
 		  {
-		  case "Samlinger":		    
-			  $(this.target).show(); 
+		  case "Samlinger":		    			  			   
 			  res = true;
 			  break;		 
-		  default:
-			  $(this.target).hide();
+		  default:			  		  	  
 		  	  res = false;
 		  }
 		  
 		  return res;
-	  }, 
-
-	
+	  },	
+	  
+	activateWidget: function(boolean){
+		if (boolean)
+			$(this.target).show();
+		else
+			$(this.target).hide(); 
+	}
 
 });
 

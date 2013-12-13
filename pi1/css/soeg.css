@@ -254,7 +254,6 @@ padding: 5px 0 5px 15px;
 .left {
   display: block;
   float:left;
-  width: 150px;
   padding: 0 0 10px 10px;
   overflow:hidden;
 }
@@ -272,12 +271,13 @@ padding: 5px 0 5px 15px;
 
 .tagcloud {
   padding: 10px 15px 0;
+  width: 130px;
 }
 
 .tagcloud .tagcloud_item {
   display: block;
   margin-right: 4px;
-  color: #505050;
+  color: #505050;  
 }
 .tagcloud .tagcloud_item:hover {
   color: #f00;
