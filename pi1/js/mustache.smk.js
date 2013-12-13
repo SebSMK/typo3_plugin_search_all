@@ -75,7 +75,7 @@
       new RegExp("\\s*" + escapeRegExp(tags[1]))
     ];
   }
-
+  
   /**
    * Breaks up the given `template` string into a tree of tokens. If the `tags`
    * argument is given here it must be an array with two string values: the
@@ -520,6 +520,30 @@
   // All high-level mustache.* functions use this writer.
   var defaultWriter = new Writer();
 
+  
+  /**
+   * SMK's dev
+   * 
+   * */
+  
+  mustache.getTemplate = function(url) {
+	  var template;
+	  
+	  $.ajax({
+		  url: url,
+		  async:false,
+		  type:"get", 
+		  success: function(data) {
+			  template = data;
+		  },
+		  error: function(xhr) {
+			  template  = null;
+		  }
+		});
+	  
+	  return template;	  
+  }
+  
   /**
    * Clears all cached templates in the default writer.
    */

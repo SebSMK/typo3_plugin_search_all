@@ -29,7 +29,8 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		//* load the html template	
 		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
 		var url = rootsite.concat('pi1/templates/template_list_artworks.html');
-		var template = self.get_template(url);  				
+		
+		var template = Mustache.getTemplate(url);  				
 		
 		//* file the loaded template with artworks' data
 		var artwork_data = null;
@@ -75,24 +76,6 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 	}	
 	
   },    
-
-  get_template: function (url) {
-	  var template;
-	  $.ajax({
-		  url: url,
-		  async:false,
-		  type:"get", 
-		  success: function(data) {
-			  template = data;
-		  },
-		  error: function(xhr) {
-			  template  = null;
-		  }
-		});
-	  
-	  return template;
-	  
-  },
   
   get_data: function (type_doc, doc){
 	  var data;
@@ -302,7 +285,7 @@ AjaxSolr.ResultWidget = AjaxSolr.AbstractWidget.extend({
 		//* load the html template	
 		var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
 		var url = rootsite.concat('pi1/templates/template_detail_artworks.html');
-		var template = self.get_template(url);
+		var template = Mustache.getTemplate(url);
 	    
 		var artwork_data = null;
 		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
