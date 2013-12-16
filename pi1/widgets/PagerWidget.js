@@ -234,6 +234,12 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
   },
 
   afterRequest: function () {
+	  
+	if (!this.isWidgetVisible){		
+		this.activateWidget(this.isWidgetVisible);
+		return;
+	}
+  
     var perPage = this.perPage();
     var offset  = this.getOffset();
     var total   = parseInt(this.manager.response.response.numFound);
@@ -248,6 +254,27 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
 
     this.renderLinks(this.windowedLinks());
     this.renderHeader(perPage, offset, total);
+  },
+  
+//** state handling  
+  handleState: function(state) { 
+    
+    res = false;
+
+    if (state["category"] !== undefined){
+  	  res = true;			  
+    }else if (state["view"] !== undefined){
+  	  switch(state["view"])
+  	  {
+  	  case "list":		    			  			   
+  		  res = true;
+  		  break;		 
+  	  default:			  		  	  
+  	  	  res = false;
+  	  } 			  
+    }
+
+    return res;
   }
 });
 

@@ -9,15 +9,26 @@ var Manager;
     		exposed: ["fq", "q", "start", "limit"]
     	})    	
     });
+
+//** load widgets    
     Manager.addWidget(new AjaxSolr.BaseTemplateLoader({
         id: 'template_smk_collection',
         target: '#search_wrapper'
       }));
-    Manager.addWidget(new AjaxSolr.ResultWidget({
-      id: 'result_smk_collection',
-      target: '#docs_smk_collection',
-      target_detail: '#detail_smk_collection_detail'
-    }));
+//    Manager.addWidget(new AjaxSolr.ResultWidget({
+//      id: 'result_list_smk_collection',
+//      target: '#docs_smk_collection',
+//      target_detail: '#docs_smk_collection_detail'
+//    }));
+    Manager.addWidget(new AjaxSolr.ResultListWidget({
+        id: 'result_list_smk_collection',
+        target: '#docs_smk_collection'
+      }));
+      Manager.addWidget(new AjaxSolr.ResultDetailWidget({
+          id: 'result_detail_smk_collection',
+          target: '#docs_smk_collection_detail',
+          isWidgetVisible: false          
+        })); 
     Manager.addWidget(new AjaxSolr.PagerWidget({
         id: 'pager',
         target: '#pager',
@@ -71,23 +82,35 @@ var Manager;
 		  id: 'text_free',
 		  target: '#search_free'
 	}));
+
+	//** add event listeners
+   
+	///* switch grid/list in results view
+	$(Manager.widgets['gridlistviewswitch']).on('smk_search_gridview', {caller:'smk_search_gridview'}, function(event){ 
+   	 Manager.widgets['result_list_smk_collection'].switch_list_grid(event);
+   });    
+   $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
+   	Manager.widgets['result_list_smk_collection'].switch_list_grid(event);
+   }); 
     
-//    // add event listeners
-    $(Manager.widgets['gridlistviewswitch']).on('smk_search_gridview', {caller:'smk_search_gridview'}, function(event){ 
-    	 Manager.widgets['result_smk_collection'].switch_list_grid(event);
-    });    
-    $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
-    	Manager.widgets['result_smk_collection'].switch_list_grid(event);
-    }); 
-    
-    $(Manager.widgets['category']).on('smk_search_category_changed', {caller:'smk_search_category_changed'}, function(event){ 
-    	Manager.categoryChanged(event.category);
-    });    
-    
-    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', {caller:'smk_search_category_removed'}, function(event){ 
-    	Manager.categoryChanged();
+   //* click on category
+    $(Manager.widgets['category']).on('smk_search_category_changed', function(event){ 
+    	Manager.stateChanged({category:event.category});
+    });        
+    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){ 
+    	Manager.stateChanged({category:''});
     });
-            
+    
+    //* switch between detail/results view
+    $(Manager.widgets['result_list_smk_collection']).on('smk_search_call_result_detail', function(event){ 
+    	Manager.stateChanged({view:"detail"});
+    	Manager.widgets['result_detail_smk_collection'].call_detail(event.detail_id);
+    });	    
+    $(Manager.widgets['result_detail_smk_collection']).on('smk_search_call_result_list', function(event){ 
+    	Manager.stateChanged({view:"list"});
+    	Manager.widgets['result_list_smk_collection'].call_previous_search();
+    });	
+	
     Manager.init();
     Manager.store.addByValue('q', '*:*');
     

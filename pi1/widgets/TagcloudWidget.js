@@ -109,34 +109,27 @@ AjaxSolr.TagcloudWidget = AjaxSolr.AbstractFacetWidget.extend({
 		  $event_target.text('View more >') 
 	  }
 	},
+
 	
-	handleState: function (state) { 		  		  
-		this.isWidgetVisible = this.handleCategory(state);
-		this.activateWidget(this.isWidgetVisible);				 
-	  },
+	//** state handling
 	  
-	handleCategory: function(cat) { 
-		  
-		  res = false;
-		
-		  switch(cat)
+  handleState: function(state) { 
+	  
+	  res = false;
+	
+	  if (state["category"] !== undefined){
+		  switch(state["category"])
 		  {
 		  case "Samlinger":		    			  			   
 			  res = true;
 			  break;		 
 		  default:			  		  	  
 		  	  res = false;
-		  }
-		  
-		  return res;
-	  },	
-	  
-	activateWidget: function(boolean){
-		if (boolean)
-			$(this.target).show();
-		else
-			$(this.target).hide(); 
-	}
+		  } 			  
+	  }
+
+	  return res;
+  }
 
 });
 

@@ -4,7 +4,12 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   start: 0,
 
   afterRequest: function () {
-    var self = this;
+	if (!this.isWidgetVisible){
+		this.activateWidget(this.isWidgetVisible);
+		return;
+	  }	
+	  
+	var self = this;
     var links = [];
 
     var q = this.manager.store.get('q').val();
@@ -62,7 +67,34 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
       }
       return false;
     };
+  },
+  
+  
+//** state handling
+  
+  handleState: function(state) { 
+    
+    res = false;
+
+    if (state["category"] !== undefined){
+  	  res = true;			  
+    }else if (state["view"] !== undefined){
+  	  switch(state["view"])
+  	  {
+  	  case "list":		    			  			   
+  		  res = true;
+  		  break;		 
+  	  default:			  		  	  
+  	  	  res = false;
+  	  } 			  
+    }
+
+    return res;
   }
+  
+  
+  
+  
 });
 
 })(jQuery);

@@ -75,7 +75,22 @@ AjaxSolr.AbstractWidget = AjaxSolr.Class.extend(
     this.manager.doRequest(start || this.start, servlet || this.servlet);
   },    
   
-  handleState: function (cat) {}
+  
+//** state handling
+  stateChanged: function (state) { 		  		  
+  	this.isWidgetVisible = this.handleState(state);
+  	this.activateWidget(this.isWidgetVisible);				 
+    },
+    
+    
+  handleState: function(state) {return true},	
+    
+  activateWidget: function(boolean){
+  	if (boolean)
+  		$(this.target).show();
+  	else
+  		$(this.target).hide(); 
+  }
   
 });
 

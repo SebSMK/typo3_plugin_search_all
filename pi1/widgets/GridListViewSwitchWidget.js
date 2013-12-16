@@ -3,7 +3,13 @@
 AjaxSolr.GridListViewSwitchWidget = AjaxSolr.AbstractWidget.extend({	  
   
   afterRequest: function () {
-    var self = this;
+    
+	if (!this.isWidgetVisible){		
+			this.activateWidget(this.isWidgetVisible);
+			return;
+	}	
+	  
+	  var self = this;
 
 	  var $target = $(this.target);
 	  $target.empty();
@@ -71,7 +77,31 @@ AjaxSolr.GridListViewSwitchWidget = AjaxSolr.AbstractWidget.extend({
 			
 			return true;
 		}
+  },
+  
+  
+//** state handling
+  
+  handleState: function(state) { 
+    
+    res = false;
+
+    if (state["category"] !== undefined){
+  	  res = true;			  
+    }else if (state["view"] !== undefined){
+  	  switch(state["view"])
+  	  {
+  	  case "list":		    			  			   
+  		  res = true;
+  		  break;		 
+  	  default:			  		  	  
+  	  	  res = false;
+  	  } 			  
+    }
+
+    return res;
   }
+  
 });
 
 })(jQuery);

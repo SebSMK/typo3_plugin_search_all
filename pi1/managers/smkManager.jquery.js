@@ -15,15 +15,15 @@
 AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
   /** @lends AjaxSolr.Manager.prototype */
   {
-  bool_show_detail: false,
-  
-  setShowDetail: function (bool) { 
-	  this.bool_show_detail = bool;
-  },
-  
-  getShowDetail: function () { 
-	  return this.bool_show_detail;
-  }, 
+//  bool_show_detail: false,
+//  
+//  setShowDetail: function (bool) { 
+//	  this.bool_show_detail = bool;
+//  },
+//  
+//  getShowDetail: function () { 
+//	  return this.bool_show_detail;
+//  }, 
   
   executeRequest: function (servlet, string, handler, errorHandler) {
     var self = this,
@@ -64,16 +64,12 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
   
   
   /**
-   * This method is executed after the Solr response data arrives. Allows each
-   * widget to handle Solr's response separately.
-   *
-   * @param {Object} data The Solr response.
    */
-  categoryChanged: function (category) {        	    
+  stateChanged: function (state) {        	    
     for (var widgetId in this.widgets) {
-      this.widgets[widgetId].handleState(category);
+      this.widgets[widgetId].stateChanged(state);
     };
-  }
+  }      
   
 });
 
