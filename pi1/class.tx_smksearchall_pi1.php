@@ -96,7 +96,7 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 		$dir_base .= t3lib_extMgm::siteRelPath('smk_search_all');
 		setcookie("smk_search_all_plugin_dir_base", $dir_base);
 		
-		$content='<div id="search_wrapper"></div>';
+		$content='<div id="smk_search_wrapper"></div>';
 	
 		return $this->pi_wrapInBaseClass($content);
 	}

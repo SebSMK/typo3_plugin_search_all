@@ -4,10 +4,8 @@ AjaxSolr.TagcloudWidget = AjaxSolr.AbstractFacetWidget.extend({
 	
   afterRequest: function () {
 	  
-		if (!this.isWidgetVisible){
-			this.activateWidget(this.isWidgetVisible);
-			return;
-		}			  
+	  	if ($(this.target).is(':hidden'))
+		  	return;			  
 		  
 		if (this.manager.response.facet_counts.facet_fields[this.field] === undefined) {
 	      $(this.target).html('no items found in current selection');
@@ -108,28 +106,7 @@ AjaxSolr.TagcloudWidget = AjaxSolr.AbstractFacetWidget.extend({
 		  $event_target.parent().parent().find('.moreless_switch_target').hide();
 		  $event_target.text('View more >') 
 	  }
-	},
-
-	
-	//** state handling
-	  
-  handleState: function(state) { 
-	  
-	  res = false;
-	
-	  if (state["category"] !== undefined){
-		  switch(state["category"])
-		  {
-		  case "Samlinger":		    			  			   
-			  res = true;
-			  break;		 
-		  default:			  		  	  
-		  	  res = false;
-		  } 			  
-	  }
-
-	  return res;
-  }
+	}
 
 });
 

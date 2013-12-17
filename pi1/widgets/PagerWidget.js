@@ -235,10 +235,8 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
 
   afterRequest: function () {
 	  
-	if (!this.isWidgetVisible){		
-		this.activateWidget(this.isWidgetVisible);
-		return;
-	}
+	  if ($(this.target).is(':hidden'))
+		  	return;
   
     var perPage = this.perPage();
     var offset  = this.getOffset();
@@ -254,27 +252,6 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
 
     this.renderLinks(this.windowedLinks());
     this.renderHeader(perPage, offset, total);
-  },
-  
-//** state handling  
-  handleState: function(state) { 
-    
-    res = false;
-
-    if (state["category"] !== undefined){
-  	  res = true;			  
-    }else if (state["view"] !== undefined){
-  	  switch(state["view"])
-  	  {
-  	  case "list":		    			  			   
-  		  res = true;
-  		  break;		 
-  	  default:			  		  	  
-  	  	  res = false;
-  	  } 			  
-    }
-
-    return res;
   }
 });
 

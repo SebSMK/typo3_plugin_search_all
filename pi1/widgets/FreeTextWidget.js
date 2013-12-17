@@ -5,11 +5,9 @@ AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 	//displayFields : [ 'title', 'content', 'url' ],
 	afterRequest : function() {
 
-		if (!this.isWidgetVisible){
-			this.activateWidget(this.isWidgetVisible);
-			return;
-		  }		
-		
+		if ($(this.target).is(':hidden'))
+		  	return;	
+		$(this.target).find('input').val('');
 		$(this.target).find('input').bind(
 				'keydown',
 				{
@@ -39,30 +37,7 @@ AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 		var vArray = this.manager.store.last.split(" ");
 		jQuery('#docs_smk_collection').highlight(vArray);
 		
-	},
-
-
-//** state handling
-   
-handleState: function(state) { 
-  
-  res = false;
-
-  if (state["category"] !== undefined){
-	  res = true;			  
-  }else if (state["view"] !== undefined){
-	  switch(state["view"])
-	  {
-	  case "list":		    			  			   
-		  res = true;
-		  break;		 
-	  default:			  		  	  
-	  	  res = false;
-	  } 			  
-  }
-
-  return res;
-}
+	}
 	
 });
 

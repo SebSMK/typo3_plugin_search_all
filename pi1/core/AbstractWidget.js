@@ -39,8 +39,7 @@ AjaxSolr.AbstractWidget = AjaxSolr.Class.extend(
       start: undefined,
       servlet: undefined,
       // A reference to the widget's manager.
-      manager: null,
-      isWidgetVisible:true,
+      manager: null
     }, attributes);
   },
 
@@ -73,25 +72,7 @@ AjaxSolr.AbstractWidget = AjaxSolr.Class.extend(
    */
   doRequest: function (start, servlet) {
     this.manager.doRequest(start || this.start, servlet || this.servlet);
-  },    
-  
-  
-//** state handling
-  stateChanged: function (state) { 		  		  
-  	this.isWidgetVisible = this.handleState(state);
-  	this.activateWidget(this.isWidgetVisible);				 
-    },
-    
-    
-  handleState: function(state) {return true},	
-    
-  activateWidget: function(boolean){
-  	if (boolean)
-  		$(this.target).show();
-  	else
-  		$(this.target).hide(); 
   }
-  
 });
 
 }));

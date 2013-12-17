@@ -60,17 +60,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     for (var widgetId in this.widgets) {
       this.widgets[widgetId].afterRequest();
     };
-  },
-  
-  
-  /**
-   */
-  stateChanged: function (state) {        	    
-    for (var widgetId in this.widgets) {
-      this.widgets[widgetId].stateChanged(state);
-    };
-  }      
-  
+  }  
 });
 
 }));

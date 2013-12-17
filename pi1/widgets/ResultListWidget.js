@@ -17,10 +17,8 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 
   afterRequest: function () {
 	  
-	  if (!this.isWidgetVisible){
-			this.activateWidget(this.isWidgetVisible);
-			return;
-		}		
+	  if ($(this.target).is(':hidden'))
+		  	return;		
 	  
 	var self = this;
 	var $target = $(this.target);
@@ -191,7 +189,7 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 	  //* load solr parameters from the previous search
 	  self.manager.store.load(true);   
       
-      self.doRequest();
+      //self.doRequest();
       return false;
   },
   
@@ -242,30 +240,7 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		artworks_li_div_text.removeClass("grid-work-text");	
 	} 
 
-  },
-  
-//** state handling
-
-handleState: function(state) { 
-
-	  res = false;
-	
-	  if (state["category"] !== undefined){
-		  res = true;			  
-	  }else if (state["view"] !== undefined){
-		  switch(state["view"])
-		  {
-		  case "list":		    			  			   
-			  res = true;
-			  break;		 
-		  default:			  		  	  
-		  	  res = false;
-		  } 			  
-	  }
-	 
-	  
-	  return res;
-}
+  }
   
 });
 

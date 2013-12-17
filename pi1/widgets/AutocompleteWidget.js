@@ -3,10 +3,8 @@
 AjaxSolr.AutocompleteWidget = AjaxSolr.AbstractTextWidget.extend({
   afterRequest: function () {
 
-	  if (!this.isWidgetVisible){
-		this.activateWidget(this.isWidgetVisible);
-		return;
-	  }	
+	  if ($(this.target).is(':hidden'))
+		  	return;
 	  
 	  $(this.target).find('input').unbind().removeData('events').val('');
 
@@ -59,28 +57,7 @@ AjaxSolr.AutocompleteWidget = AjaxSolr.AbstractTextWidget.extend({
     }
     params.push('q=' + this.manager.store.get('q').val());
     $.getJSON(this.manager.solrUrl + 'select?' + params.join('&') + '&wt=json&json.wrf=?', {}, callback);
-  },
-  
-
-  //** state handling
-  handleState: function(state) { 
-	  
-	  res = false;
-	
-	  if (state["category"] !== undefined){
-		  switch(state["category"])
-		  {
-		  case "Samlinger":		    			  			   
-			  res = true;
-			  break;		 
-		  default:			  		  	  
-		  	  res = false;
-		  } 			  
-	  }
-	  
-	  return res;
   }
-  
 });
 
 })(jQuery);

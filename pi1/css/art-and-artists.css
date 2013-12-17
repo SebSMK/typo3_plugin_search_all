@@ -485,7 +485,7 @@ ul.explorerList .list-work-image .art-id {
 
 /* DETAILED VIEW*/
 
-#detail_smk_collection_detail .list-work-image {  
+#docs_smk_collection_detail .list-work-image {  
   float: left;
   display: block;
   width: 500px;
@@ -493,13 +493,13 @@ ul.explorerList .list-work-image .art-id {
   border-right: 1px solid #aaa;
   overflow:hidden;}
 
-#detail_smk_collection_detail .list-work-text {   display: block;
+#docs_smk_collection_detail .list-work-text {   display: block;
   float:left;
   width: 300px;
   padding: 0 0 10px 10px;
   overflow:hidden;}
 
-#detail_smk_collection_detail img {
+#docs_smk_collection_detail img {
 	max-width:500px;
 }
 

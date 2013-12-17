@@ -35,10 +35,8 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	
   afterRequest: function () {
 	  
-	  if (!this.isWidgetVisible){
-			this.activateWidget(this.isWidgetVisible);
-			return;
-		}  
+	  if ($(this.target).is(':hidden'))
+		  	return;
 	  
     if (this.manager.response.facet_counts.facet_fields[this.field] === undefined) {
       $(this.target).html('no items found in current selection');
@@ -115,34 +113,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
       }
       return false;
     }
-  },
-  
-  
-//** state handling
-	  
-	  
-handleState: function(state) { 
-	  
-	  res = false;
-	
-	  if (state["category"] !== undefined){
-		  res = true;			  
-	  }else if (state["view"] !== undefined){
-		  switch(state["view"])
-		  {
-		  case "list":		    			  			   
-			  res = true;
-			  break;		 
-		  default:			  		  	  
-		  	  res = false;
-		  } 			  
-	  }
-
-	  return res;
-}
-
-	
-
+  }
 });
 
 })(jQuery);

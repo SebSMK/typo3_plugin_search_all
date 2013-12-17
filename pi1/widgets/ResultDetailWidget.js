@@ -17,10 +17,8 @@ AjaxSolr.ResultDetailWidget = AjaxSolr.AbstractWidget.extend({
 
   afterRequest: function () {
 	  
-  if (!this.isWidgetVisible){
-		this.activateWidget(this.isWidgetVisible);
-		return;
-	}		
+	  if ($(this.target).is(':hidden'))
+		  	return;		
   
 	var self = this;
 		
@@ -206,40 +204,7 @@ AjaxSolr.ResultDetailWidget = AjaxSolr.AbstractWidget.extend({
       	      
       self.doRequest();
       return false;
-  },
-  
-//  call_previous_search: function () {
-//	  var self = this;
-//	  //self.manager.setShowDetail(false);
-//
-//	  //* load solr parameters from the previous search
-//	  self.manager.store.load(true);   
-//      
-//      self.doRequest();
-//      return false;
-//  },
-  
-
-  //** state handling
-
-  handleState: function(state) { 
-  
-	  res = false;
-	
-	  if (state["view"] !== undefined){
-		  switch(state["view"])
-		  {
-		  case "detail":		    			  			   
-			  res = true;
-			  break;		 
-		  default:			  		  	  
-		  	  res = false;
-		  } 			  
-	  }
-	 
-	  
-	  return res;
-}
+  }
   
 });
 
