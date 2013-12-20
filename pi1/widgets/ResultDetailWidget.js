@@ -62,7 +62,7 @@ AjaxSolr.ResultDetailWidget = AjaxSolr.AbstractWidget.extend({
   				width_brut:doc.width_brut,
   				heigthunit_brut:doc.heigthunit_brut,
   				widthunit_brut:doc.widthunit_brut,
-  				technique:doc.prod_technique_s,
+  				technique:doc.prod_technique_ss,
   				url_bool: false
 			}			 	  
   

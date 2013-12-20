@@ -83,7 +83,7 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
 		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
 		  				title: doc.title_first,	  				
-		  				artist_name_s: doc.artist_name_s,	  				
+		  				artist_name_s: doc.artist_name_ss,	  				
 		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
 		  				artist_auth: doc.artist_auth[0],
 		  				url_bool: false

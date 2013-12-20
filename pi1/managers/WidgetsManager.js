@@ -63,13 +63,13 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
 	    id: 'text_artist',
 	    target: '#search_smk_collection',
-	    fields: [ 'artist_name_s'],
+	    fields: [ 'artist_name_ss'],
 	    isWidgetVisible: false
 	  }));    
 	Manager.addWidget(new AjaxSolr.AutocompleteTitleWidget({
 	    id: 'text_title',
 	    target: '#search_smk_collection_title',
-	    fields: [ 'title_dk_s'],
+	    fields: [ 'title_dk_ss'],
 	    isWidgetVisible: false
 	  }));
 	Manager.addWidget(new AjaxSolr.FreeTextWidget({
