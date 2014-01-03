@@ -13,31 +13,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	
 	init: function () {
         this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: this.field, locals: { ex:this.field } }));
-	},
-		
-	/**
-     * Sets the filter query.
-     *
-     * @returns {Boolean} Whether the selection changed.
-     */
-    set: function (value) {
-        return this.changeSelection(function () {
-        	var a = this.manager.store.removeByValue('fq', new RegExp('^-?' + this.field + ':')),
-            b = value == 'all' ? true : this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-        return a || b;
-      });
-    },
-
-    /**
-     * Adds a filter query.
-     *
-     * @returns {Boolean} Whether a filter query was added.
-     */
-	add: function (value) {
-		return this.changeSelection(function () {
-			return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-		});
-	},          
+	},	         
 
   afterRequest: function () {
 	var self = this;  
@@ -55,8 +31,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 
     var maxCount = 0;
     var allCount = 0;
-    var objectedItems = new Array();    
-    //var typefacet = {"all": "Alle", "samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"};
+    var objectedItems = new Array();        
 
     //* proceed facets
     for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
@@ -71,8 +46,8 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     //* add "all" facet
     objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": allCount, "active": "all" == self.activeCategory});
 
-    //* merge data in template
-    var html = self.template_integration_json(this, objectedItems, 'pi1/templates/category.html');
+    //* merge data and template
+    var html = self.template_integration_json(objectedItems, 'pi1/templates/category.html');
     $target.html(html);
     
     //* add click handling
@@ -80,9 +55,9 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
         
   },  
   
-  template_integration_json: function (self, data, templ_path){	  
+  template_integration_json: function (data, templ_path){	  
 	var template = Mustache.getTemplate(templ_path);	
-	var json_data = {categories: data};
+	var json_data = {"categories": data};
 	var html = Mustache.to_html($(template).find('#categoryItemsTemplate').html(), json_data);
 	return html;
   },
@@ -110,7 +85,31 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
   
   setActiveTab: function (tab){
 	  this.activeCategory = tab;	  	  	  
-  }
+  },
+  
+  /**
+   * Sets the filter query.
+  *
+  * @returns {Boolean} Whether the selection changed.
+  */
+ set: function (value) {
+     return this.changeSelection(function () {
+     	var a = this.manager.store.removeByValue('fq', new RegExp('^-?' + this.field + ':')),
+         b = value == 'all' ? true : this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+     return a || b;
+   });
+ },
+
+ /**
+  * Adds a filter query.
+  *
+  * @returns {Boolean} Whether a filter query was added.
+  */
+	add: function (value) {
+		return this.changeSelection(function () {
+			return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+		});
+	}, 
   
 });
 

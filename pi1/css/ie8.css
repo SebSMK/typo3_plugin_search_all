@@ -1,0 +1,197 @@
+/*! Friday, January 3rd, 2014, 08:07 */
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\
+ § Tweaks for IE8
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\
+ § Settings
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Colors
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Screen sizes (used in media queries).
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Time durations.
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Measures
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Global settings
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\
+ § Mixins
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § @font-face
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Image replacement
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Spriteless image replacement
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Focus
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Purple button
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 14, ../../src/scss/ie8.scss */
+.button--purple.button--subtle {
+  color: #5f66f2;
+  border: 1px solid #5f66f2;
+}
+
+/*
+ § Red button
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 25, ../../src/scss/ie8.scss */
+.button--red.button--subtle {
+  color: #ea4766;
+  border: 1px solid #ea4766;
+}
+
+/*
+ § Blue button
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 36, ../../src/scss/ie8.scss */
+.button--blue.button--subtle {
+  color: #0ea7e2;
+  border: 1px solid #0ea7e2;
+}
+
+/*
+ § Green button
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 47, ../../src/scss/ie8.scss */
+.button--green.button--subtle {
+  color: #27cc6e;
+  border: 1px solid #27cc6e;
+}
+
+/*
+ § Subtle button
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 56, ../../src/scss/ie8.scss */
+.button--subtle {
+  border: 1px solid #111111;
+}
+/* line 60, ../../src/scss/ie8.scss */
+.button--subtle:focus, .button--subtle:hover {
+  background-color: #ecedf2 !important;
+  color: #111111;
+  border: 1px solid #111111;
+}
+
+/*
+ § Cutoff
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 72, ../../src/scss/ie8.scss */
+.cutoff {
+  max-height: 9999px !important;
+}
+
+/* line 73, ../../src/scss/ie8.scss */
+.cutoff__show-more {
+  display: none;
+}
+
+/*
+ § Image replacements
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 82, ../../src/scss/ie8.scss */
+.smk-logo {
+  background-image: url("../images/smk_logo.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+
+/* line 86, ../../src/scss/ie8.scss */
+.smkui-logo,
+.smkui-logo--s {
+  background-image: url("../images/smkui_logo_small.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+
+/* line 89, ../../src/scss/ie8.scss */
+.smkui-logo--m {
+  background-image: url("../images/smkui_logo.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+
+/* line 92, ../../src/scss/ie8.scss */
+.main-header .smkui-logo:after {
+  background-image: url("../images/menu.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+
+/* line 97, ../../src/scss/ie8.scss */
+.sharing--iconified a[href*="facebook.com"] {
+  background-image: url("../images/facebook.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+/* line 100, ../../src/scss/ie8.scss */
+.sharing--iconified a[href*="twitter.com"] {
+  background-image: url("../images/twitter.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+/* line 103, ../../src/scss/ie8.scss */
+.sharing--iconified a[href*="plus.google.com"] {
+  background-image: url("../images/google_plus.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+/* line 106, ../../src/scss/ie8.scss */
+.sharing--iconified a[href*="pinterest.com"] {
+  background-image: url("../images/pinterest.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+
+/* line 113, ../../src/scss/ie8.scss */
+.view-picker label {
+  background-image: url("../images/grid.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+/* line 116, ../../src/scss/ie8.scss */
+.view-picker label.list {
+  background-image: url("../images/list.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}
+/* line 119, ../../src/scss/ie8.scss */
+.view-picker label.image {
+  background-image: url("../images/image.png");
+  background-position: 0 0;
+  background-size: auto;
+  text-indent: -9999em;
+  display: inline-block;
+}

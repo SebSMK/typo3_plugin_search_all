@@ -23,6 +23,122 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;
 	var $target = $(this.target);
 	
+	$target.empty();												
+	
+	//* load data
+	var artwork_data = null;
+	var objectedItems = new Array();
+	
+	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+	      var doc = this.manager.response.response.docs[i];	      	      
+	      
+	      //** load data for this artwork
+	      artwork_data = self.getData(doc);
+	      
+	      objectedItems.push(artwork_data);
+	      
+//	      //** merge data and template
+//	      var html = Mustache.to_html(template, artwork_data);
+//		  $target.append(html);
+//		  		  
+//		  //** manage clickhandlers
+//		  //* artwork ---> but if url has an image??? ררררר
+//		  if (artwork_data.img_id != null && artwork_data.img_id != ""){
+//			  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
+//			  self.getImage($target.find('#' + artwork_data.img_id), doc.id, path, true);
+//		  };
+//		  //* url			  
+//		  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
+//			  var id = this.img_id_generator(doc.id);				  
+//			  
+//			  $target.find('#' + id).click({url: artwork_data.url }, function(event){				  
+//				  window.open(event.data.url);
+//				  return false;
+//			  });
+//			  
+//		  };
+    }	
+	
+    //* merge data and template
+    var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');
+    $target.html(html);
+	
+  }, 
+   
+  template_integration_json: function (data, templ_path){	  
+		var template = Mustache.getTemplate(templ_path);	
+		var json_data = {"artworks": data};
+		var html = Mustache.to_html($(template).find('#teaserGridTemplate').html(), json_data);
+		return html;
+	  },
+    
+  getData: function (doc){
+	  var data;
+	  
+	  var category = (doc.category.length > 0) && (doc.category[0] == "samlingercollectionspace") ? doc.category[0] : "others"; 
+	  
+	  switch(category)
+	  {
+		  //** artwork
+		  case "samlingercollectionspace":
+
+			 data = {
+				  		title: doc.title_first,	 
+				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
+				  		description: "koukouk",
+				  		categories: [{name: doc.id, url:"#"}],
+				  		
+				  		img_id: "img_" + doc.id,
+		  				ref_number: doc.id,		  				
+		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+		  				img_data_bool: doc.medium_image_data != null ? true :  false,
+		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
+		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),		  						  				  				
+		  				artist_name_s: doc.artist_name_ss,		  				
+		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+		  				artist_auth: doc.artist_auth[0],
+		  				url_bool: false
+					};
+			     	
+		    break;	  
+		    
+		 //** url
+		 case "others":
+		 	
+			 	data = {
+				 			title: doc.page_title,
+				 			description: sprintf("%s(...)", doc.page_content.substring(0, 300)),
+				 			url: doc.page_url,				 			
+				 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
+				 			
+				 			img_id: this.img_id_generator(doc.id),
+			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),			  				
+			  				artwork_date: doc.page_url,
+			  				img_data_bool: false,
+			  				non_img_data_bool: true, // no image
+			  				url_bool: true,			  							  					  				
+			  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
+			  				artist_auth_bool: false
+						};
+			 	break;
+		 
+		 default:
+			  	data = null;
+
+	  };
+	  
+	  return data;
+  
+  },  
+  
+afterRequest_deprecated: function () {
+	  
+	  if ($(this.target).is(':hidden'))
+		  	return;		
+	  
+	var self = this;
+	var $target = $(this.target);
+	
 	$target.empty();					
 							
 	//* load the html template		
@@ -60,9 +176,9 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		  };
     }				
 	
-  },    
+  },   
   
-  getData: function (doc){
+  getData_deprecated: function (doc){
 	  var data;
 	  
 	  var category = (doc.category.length > 0) && (doc.category[0] == "samlingercollectionspace") ? doc.category[0] : "others"; 
