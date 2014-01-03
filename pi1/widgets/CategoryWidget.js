@@ -1,8 +1,15 @@
 (function ($) {
 
 AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
-  
-	
+
+	 constructor: function (attributes) {
+		    AjaxSolr.CategoryWidget.__super__.constructor.apply(this, arguments);
+		    AjaxSolr.extend(this, {
+		    	categoryList: {},
+		    	activeCategory: ""
+		    }, attributes);
+	 },
+
 	
 	init: function () {
         this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: this.field, locals: { ex:this.field } }));
@@ -14,11 +21,11 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
      * @returns {Boolean} Whether the selection changed.
      */
     set: function (value) {
-            return this.changeSelection(function () {
-            	var a = this.manager.store.removeByValue('fq', new RegExp('^-?' + this.field + ':')),
-                b = value == 'all' ? true : this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-            return a || b;
-          });
+        return this.changeSelection(function () {
+        	var a = this.manager.store.removeByValue('fq', new RegExp('^-?' + this.field + ':')),
+            b = value == 'all' ? true : this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+        return a || b;
+      });
     },
 
     /**
@@ -26,74 +33,58 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
      *
      * @returns {Boolean} Whether a filter query was added.
      */
-  add: function (value) {
-      return this.changeSelection(function () {
-        return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
-      });
-    },          
+	add: function (value) {
+		return this.changeSelection(function () {
+			return this.manager.store.add('fq', new AjaxSolr.Parameter({ name: 'fq', value: this.fq(value), locals: { tag:this.field } }));
+		});
+	},          
 
-	
   afterRequest: function () {
+	var self = this;  
+	var $target = $(this.target);
+	
+	if ($target.is(':hidden'))
+	 	return;
+	
+	$target.empty();
 	  
-	  if ($(this.target).is(':hidden'))
-		  	return;
-	  
-    if (this.manager.response.facet_counts.facet_fields[this.field] === undefined) {
-      $(this.target).html('no items found in current selection');
+    if (self.manager.response.facet_counts.facet_fields[this.field] === undefined) {
+    	$target.html('no items found in current selection');
       return;
     }
 
     var maxCount = 0;
     var allCount = 0;
     var objectedItems = new Array();    
-    
-    for (var facet in this.manager.response.facet_counts.facet_fields[this.field]) {
-      var count = parseInt(this.manager.response.facet_counts.facet_fields[this.field][facet]);
+    //var typefacet = {"all": "Alle", "samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"};
+
+    //* proceed facets
+    for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
+      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
       allCount = allCount + count;
       if (count > maxCount) {
         maxCount = count;
       }
-      objectedItems.push({ facet: facet, count: count });
+      objectedItems.push({ "facetname": facet, "facettext": self.categoryList[facet], "count": count, "active": facet == self.activeCategory});
     }
     
-    objectedItems.unshift({facet: "all", count:allCount});
+    //* add "all" facet
+    objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": allCount, "active": "all" == self.activeCategory});
+
+    //* merge data in template
+    var html = self.template_integration_json(this, objectedItems, 'pi1/templates/category.html');
+    $target.html(html);
     
-    objectedItems.sort(function (a, b) {
-      return a.facet < b.facet ? -1 : 1;
-    });
-
-    $(this.target).empty();
-    
-    $(this.target).append($('<div class="filter-topbar"></div>'));
-    $(this.target).find(".filter-topbar").append($('<ul class="filter-menu"></ul>'));
-
-//    $(this.target).find(".filter-menu").append('<li id="all-filters" class="menu-item first"></li>');
-//	  $(this.target).find("#all-filters").append(
-//		        $('<a href="#" class="category_item"></a>')
-//		        .text("All")        
-//		        .click(this.clickHandler("all"))
-//		      );  
-    
-    var typefacet = {"all": "Alle", "samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"};
-
-    for (var i = 0, l = objectedItems.length; i < l; i++) {
-	      var facet = null; 
-
-	      var category_name = typefacet[objectedItems[i].facet];
-    	  facet = typefacet[objectedItems[i].facet] +' (' + objectedItems[i].count +')';
-	      
-    	  //facet = objectedItems[i].facet.charAt(0).toUpperCase() + objectedItems[i].facet.slice(1) +' (' + objectedItems[i].count +')'; 
-
-	      var facetclick = objectedItems[i].facet;
-
-    	  $(this.target).find(".filter-menu").append('<li id="' + i +'-filters" class="menu-item"></li>');
-    	  $(this.target).find("#" + i +"-filters").append(
-    		        $('<a href="#" class="category_item"></a>')
-    		        .text(facet)        
-    		        .click(this.clickHandler(facetclick, category_name))    		        		    		        		
-    		      );  
-    }       
-    
+    //* add click handling
+    $target.find("li").click(self.clickHandler());
+        
+  },  
+  
+  template_integration_json: function (self, data, templ_path){	  
+	var template = Mustache.getTemplate(templ_path);	
+	var json_data = {categories: data};
+	var html = Mustache.to_html($(template).find('#categoryItemsTemplate').html(), json_data);
+	return html;
   },
   
   /**
@@ -101,19 +92,26 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
    * @returns {Function} Sends a request to Solr if it successfully adds a
    *   filter query with the given value.
    */
-  clickHandler: function (value, category_name) {
+  clickHandler: function () {
     var self = this, meth = this.multivalue ? 'add' : 'set';
-    return function () {
-      if (self[meth].call(self, value)) {
+    return function (event) {
+      var selectedTab = $(event.currentTarget).attr("name");	
+      if (self[meth].call(self, selectedTab)) {  
+    	self.setActiveTab(selectedTab);  
     	$(self).trigger({
 			type: "smk_search_category_changed",
-			category: category_name
+			category: selectedTab
 		  });  
         self.doRequest();
       }
       return false;
     }
+  },
+  
+  setActiveTab: function (tab){
+	  this.activeCategory = tab;	  	  	  
   }
+  
 });
 
 })(jQuery);

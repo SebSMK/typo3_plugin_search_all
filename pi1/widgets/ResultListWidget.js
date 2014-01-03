@@ -25,11 +25,8 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 	
 	$target.empty();					
 							
-	//* load the html template	
-	var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // the "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
-	var url = rootsite.concat('pi1/templates/template_list_artworks.html');
-	
-	var template = Mustache.getTemplate(url);  				
+	//* load the html template		
+	var template = Mustache.getTemplate('pi1/templates/template_list_artworks.html');  				
 	
 	//* file the loaded template with artworks' data
 	var artwork_data = null;

@@ -16,10 +16,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	
 	init: function () {
 	  var self = this;
-	  var $target = $(this.target);	  	
-	  var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // "rootsite" value is pasted to cookie in class.tx_smksearchall_pi1.php	 
-	  var url = rootsite.concat('pi1/templates/template_list.html');	  
-	  var template = Mustache.getTemplate(url);
+	  var $target = $(this.target);	  	  
+	  var template = Mustache.getTemplate('pi1/templates/template_list.html');
 	  
 	  $target.empty();	  
 	  $target.append(template);	

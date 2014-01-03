@@ -36,12 +36,12 @@ var Manager;
 	    }
 	  }));
 	
-	var fields = [ 'artist_natio', 'object_production_century_earliest', 'prod_technique' ];
-	for (var i = 0, l = fields.length; i < l; i++) {
+	var tagcloudFields = [ 'artist_natio', 'object_production_century_earliest', 'prod_technique' ];
+	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.TagcloudWidget({
-	    id: fields[i],
-	    target: '#' + fields[i],
-	        field: fields[i],
+	    id: tagcloudFields[i],
+	    target: '#' + tagcloudFields[i],
+	        field: tagcloudFields[i],
 	        isWidgetVisible: false
 	      }));
 	};        
@@ -50,7 +50,9 @@ var Manager;
 	    id: 'category',
 	    target: '#category',
 	    field: 'category',
-	    multivalue:false
+	    multivalue:false,
+	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
+	    activeCategory: "all"
 	  }));
 	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
 	    id: 'currentsearch',

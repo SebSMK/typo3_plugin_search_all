@@ -526,8 +526,10 @@
    * 
    * */
   
-  mustache.getTemplate = function(url) {
+  mustache.getTemplate = function(path) {
 	  var template;
+	  var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // "rootsite" value is copied into the cookie in class.tx_smksearchall_pi1.php	 
+	  var url = rootsite.concat(path);
 	  
 	  $.ajax({
 		  url: url,
