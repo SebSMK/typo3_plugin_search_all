@@ -17,7 +17,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	init: function () {
 	  var self = this;
 	  var $target = $(this.target);	  	  
-	  var template = Mustache.getTemplate('pi1/templates/template_list.html');
+	  var template = Mustache.getTemplate('pi1/templates/general_template.html');
 	  
 	  $target.empty();	  
 	  $target.append(template);	

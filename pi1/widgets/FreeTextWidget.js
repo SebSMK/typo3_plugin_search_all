@@ -2,13 +2,19 @@
 AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 	
 	hightlight : true,
-	//displayFields : [ 'title', 'content', 'url' ],
+	
+	init: function () {		
+		var template = Mustache.getTemplate('pi1/templates/search_box.html');	
+		$(this.target).html(template);
+	},	
+	
+	
 	afterRequest : function() {
 
 		if ($(this.target).is(':hidden'))
 		  	return;	
-		$(this.target).find('input').val('');
-		$(this.target).find('input').bind(
+		$(this.target).find('input#search.typeahead').val('');
+		$(this.target).find('input#search.typeahead').bind(
 				'keydown',
 				{
 					mmgr : this.manager

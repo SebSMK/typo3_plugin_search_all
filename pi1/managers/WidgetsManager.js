@@ -54,26 +54,26 @@ var Manager;
 	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
 	    activeCategory: "all"
 	  }));
-	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
-	    id: 'currentsearch',
-	    target: '#selection'
-	  }));
+//	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
+//	    id: 'currentsearch',
+//	    target: '#selection'
+//	  }));
 	Manager.addWidget(new AjaxSolr.GridListViewSwitchWidget({
 	    id: 'gridlistviewswitch',
 	    target: '#switch_smk_collection'
 	  }));   
-	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
-	    id: 'text_artist',
-	    target: '#search_smk_collection',
-	    fields: [ 'artist_name_ss'],
-	    isWidgetVisible: false
-	  }));    
-	Manager.addWidget(new AjaxSolr.AutocompleteTitleWidget({
-	    id: 'text_title',
-	    target: '#search_smk_collection_title',
-	    fields: [ 'title_dk_ss'],
-	    isWidgetVisible: false
-	  }));
+//	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
+//	    id: 'text_artist',
+//	    target: '#search_smk_collection',
+//	    fields: [ 'artist_name_ss'],
+//	    isWidgetVisible: false
+//	  }));    
+//	Manager.addWidget(new AjaxSolr.AutocompleteTitleWidget({
+//	    id: 'text_title',
+//	    target: '#search_smk_collection_title',
+//	    fields: [ 'title_dk_ss'],
+//	    isWidgetVisible: false
+//	  }));
 	Manager.addWidget(new AjaxSolr.FreeTextWidget({
 		  id: 'text_free',
 		  target: '#search_free'
