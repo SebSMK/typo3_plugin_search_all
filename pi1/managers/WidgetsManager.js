@@ -107,6 +107,17 @@ var Manager;
     	Manager.widgets['result_list_smk_collection'].call_previous_search();
     });	
 	
+    // All teaser's images has been loaded
+    $(Manager.widgets['result_list_smk_collection']).on('smk_teasers_all_img_loaded', function(event){     	        
+    	//Executes when complete page is fully loaded, including all frames, objects
+        // and images. This ensures that Masonry knows about elements heights and can
+        // do its layouting properly.
+    	$(Manager.widgets['result_list_smk_collection'].target).find('#teaser-container-grid').masonry( {
+          transitionDuration: 0
+        });
+    });
+    
+    
     Manager.init();
     Manager.store.addByValue('q', '*:*');
     

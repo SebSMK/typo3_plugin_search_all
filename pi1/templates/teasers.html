@@ -1,12 +1,11 @@
 <div>	
-	 <script id="teaserGridTemplate" type="text/template">	
+	 <script id="teaserGridTemplate" type="text/template">
+	<div id="teaser-container-grid">	
 		{{#artworks}}
         <article class="teaser--grid">
           <div class="teaser__wrapper">
-            <div class="teaser__thumbnail">
-              <a href="{{url}}" alt="{{title}}">
-                <img src="{{thumbnail}}" alt="{{title}}">
-              </a>
+            <div class="teaser__thumbnail image_loading" src="{{thumbnail}}" alt="{{title}}" img_id="{{img_id}}">
+              <a href="{{url}}" alt="{{title}} "></a>
             </div>
             
             <div class="teaser__content">
@@ -34,6 +33,7 @@
             </div><!-- teaser__content -->
           </div><!-- teaser__wrapper -->
         </article><!-- teaser -->      
-      {{/artworks}}	 	
+      {{/artworks}}	 
+	</div>	
 	</script>	
 </div>

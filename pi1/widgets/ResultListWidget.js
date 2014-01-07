@@ -62,9 +62,19 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
     //* merge data and template
     var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');
     $target.html(html);
-	
+    
+    //* add images
+    $target.find( ".image_loading" ).each(function() {    	    	
+		self.getImage($target, $(this), true);
+    });
+    
+    //* add click event on images
+    $target.find( "img" ).each(function() {    	    	
+		self.getImage($target, $(this), true);
+    });
+    
   }, 
-   
+  
   template_integration_json: function (data, templ_path){	  
 		var template = Mustache.getTemplate(templ_path);	
 		var json_data = {"artworks": data};
@@ -85,10 +95,10 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 			 data = {
 				  		title: doc.title_first,	 
 				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
-				  		description: "koukouk",
+				  		description: "Lorem ipsum dolor sit amet, libero felis suspendisse tortor proin praesent, elit odio pharetra non fermentum, nascetur suspendisse varius neque adipiscing, accumsan ac hendrerit. Risus dapibus, duis ac, quam pulvinar arcu arcu lorem non. Etiam purus eget sodales eu lobortis sit, turpis nec, facilisis ut fringilla. Erat dapibus ultricies massa rhoncus sit. Pulvinar ipsum congue id eget aliquam, felis dis, sapien pellentesque, sed pede donec velit bibendum convallis. Eu in ac non pulvinar integer diam, arcu quis dignissim congue imperdiet malesuada, erat nec etiam wisi, dui in, velit tortor sem mollis pede. Aliquam bibendum semper ultrices massa phasellus, sem eget est id sed, quo facilisis convallis odio viverra. Vivamus varius magna, sodales maecenas nec eros, nisl lorem, primis nibh turpis voluptas molestie hendrerit integer. Dui aliquam a vestibulum amet, massa wisi urna tincidunt pellentesque, aliquam ut aliquid nec rhoncus ac, in facilisis non at quisque wisi.",
 				  		categories: [{name: doc.id, url:"#"}],
 				  		
-				  		img_id: "img_" + doc.id,
+				  		img_id: this.img_id_generator(doc.id),
 		  				ref_number: doc.id,		  				
 		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
@@ -105,122 +115,23 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		 //** url
 		 case "others":
 		 	
-			 	data = {
-				 			title: doc.page_title,
-				 			description: sprintf("%s(...)", doc.page_content.substring(0, 300)),
-				 			url: doc.page_url,				 			
-				 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
-				 			
-				 			img_id: this.img_id_generator(doc.id),
-			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),			  				
-			  				artwork_date: doc.page_url,
-			  				img_data_bool: false,
-			  				non_img_data_bool: true, // no image
-			  				url_bool: true,			  							  					  				
-			  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
-			  				artist_auth_bool: false
-						};
-			 	break;
-		 
-		 default:
-			  	data = null;
-
-	  };
-	  
-	  return data;
-  
-  },  
-  
-afterRequest_deprecated: function () {
-	  
-	  if ($(this.target).is(':hidden'))
-		  	return;		
-	  
-	var self = this;
-	var $target = $(this.target);
-	
-	$target.empty();					
-							
-	//* load the html template		
-	var template = Mustache.getTemplate('pi1/templates/template_list_artworks.html');  				
-	
-	//* file the loaded template with artworks' data
-	var artwork_data = null;
-	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-	      var doc = this.manager.response.response.docs[i];
-	      
-	    //TO DO ------> the MIX between templating and jquery below is confusing ----> must be simplified
-	      
-	      //** load data for this artworl
-	      artwork_data = self.getData(doc);	      
-	      
-	      //** merge data and template
-	      var html = Mustache.to_html(template, artwork_data);
-		  $target.append(html);
-		  		  
-		  //** manage clickhandlers
-		  //* artwork ---> but if url has an image??? ררררר
-		  if (artwork_data.img_id != null && artwork_data.img_id != ""){
-			  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
-			  self.getImage($target.find('#' + artwork_data.img_id), doc.id, path, true);
-		  };
-		  //* url			  
-		  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
-			  var id = this.img_id_generator(doc.id);				  
-			  
-			  $target.find('#' + id).click({url: artwork_data.url }, function(event){				  
-				  window.open(event.data.url);
-				  return false;
-			  });
-			  
-		  };
-    }				
-	
-  },   
-  
-  getData_deprecated: function (doc){
-	  var data;
-	  
-	  var category = (doc.category.length > 0) && (doc.category[0] == "samlingercollectionspace") ? doc.category[0] : "others"; 
-	  
-	  switch(category)
-	  {
-		  //** artwork
-		  case "samlingercollectionspace":
-
-			 data = {
-					 	img_id: "img_" + doc.id,
-		  				ref_number: doc.id,
-		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
-		  				img_data_bool: doc.medium_image_data != null ? true :  false,
-		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
-		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
-		  				title: doc.title_first,	  				
-		  				artist_name_s: doc.artist_name_ss,	  				
-		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-		  				artist_auth: doc.artist_auth[0],
-		  				url_bool: false
+		 	data = {
+			 			title: doc.page_title,
+			 			description: sprintf("%s(...)", doc.page_content.substring(0, 150)),
+			 			url: doc.page_url,				 			
+			 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
+			 			
+			 			img_id: this.img_id_generator(doc.id),
+		  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),			  				
+		  				artwork_date: doc.page_url,
+		  				img_data_bool: false,
+		  				non_img_data_bool: true, // no image
+		  				url_bool: true,			  							  					  				
+		  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
+		  				artist_auth_bool: false
 					};
-			     	
-		    break;	  
-		    
-		 //** url
-		 case "others":
-		 	
-			 	data = {
-				 			img_id: this.img_id_generator(doc.id),
-			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),
-			  				artwork_date: doc.page_url,
-			  				img_data_bool: false,
-			  				non_img_data_bool: true, // no image
-			  				url_bool: true,
-			  				url: doc.page_url,
-			  				title: doc.page_title,	  				
-			  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
-			  				artist_auth_bool: false
-						};
-			 	break;
-		 
+		 	break;
+	 
 		 default:
 			  	data = null;
 
@@ -230,7 +141,10 @@ afterRequest_deprecated: function () {
   
   },  
   
-  getImage: function ($target, img_id, path, detail){
+  getImage: function ($container, $target, detail){
+	  var img_id = $target.attr("img_id");
+	  var path = $target.attr("src");
+	  var alt = $target.attr("alt");
 	  var img = new Image();
 	  var self = this;
 	  	   
@@ -251,7 +165,12 @@ afterRequest_deprecated: function () {
 	      // fade our image in to create a nice effect
 	      $(this).fadeIn();
 	      
-	      //self.images_event_launcher();
+	      // has all images been loaded, trig event
+	      if ($container.find('.image_loading').length == 0){
+	    	  $(self).trigger({
+	  			type: "smk_teasers_all_img_loaded"
+	  		  });  	    	  
+	      }
 		 
 	    })
 	    
@@ -261,8 +180,13 @@ afterRequest_deprecated: function () {
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	    	.addClass('image_default');
-	    	 
-	    	//self.images_event_launcher();
+	    	
+	    	// has all images been loaded, trig event
+	    	if ($container.find('.image_loading').length == 0){
+		    	  $(self).trigger({
+		  			type: "smk_teasers_all_img_loaded"
+		  		  });  	    	  
+		      }
 	    })
 	    
 	    // call detailed view on click on image
@@ -279,6 +203,8 @@ afterRequest_deprecated: function () {
 	        	//return self.call_detail(event.data.detail_id);	            
 	          })		
 
+	    .attr('alt', alt)
+	    
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
   },
@@ -353,7 +279,106 @@ afterRequest_deprecated: function () {
 		artworks_li_div_text.removeClass("grid-work-text");	
 	} 
 
-  }
+  },  
+  
+  afterRequest_deprecated: function () {
+  	  
+  	  if ($(this.target).is(':hidden'))
+  		  	return;		
+  	  
+  	var self = this;
+  	var $target = $(this.target);
+  	
+  	$target.empty();					
+  							
+  	//* load the html template		
+  	var template = Mustache.getTemplate('pi1/templates/template_list_artworks.html');  				
+  	
+  	//* file the loaded template with artworks' data
+  	var artwork_data = null;
+  	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+  	      var doc = this.manager.response.response.docs[i];
+  	      
+  	    //TO DO ------> the MIX between templating and jquery below is confusing ----> must be simplified
+  	      
+  	      //** load data for this artworl
+  	      artwork_data = self.getData(doc);	      
+  	      
+  	      //** merge data and template
+  	      var html = Mustache.to_html(template, artwork_data);
+  		  $target.append(html);
+  		  		  
+  		  //** manage clickhandlers
+  		  //* artwork ---> but if url has an image??? ררררר
+  		  if (artwork_data.img_id != null && artwork_data.img_id != ""){
+  			  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
+  			  self.getImage($target.find('#' + artwork_data.img_id), doc.id, path, true);
+  		  };
+  		  //* url			  
+  		  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
+  			  var id = this.img_id_generator(doc.id);				  
+  			  
+  			  $target.find('#' + id).click({url: artwork_data.url }, function(event){				  
+  				  window.open(event.data.url);
+  				  return false;
+  			  });
+  			  
+  		  };
+      }				
+  	
+    },   
+    
+    getData_deprecated: function (doc){
+  	  var data;
+  	  
+  	  var category = (doc.category.length > 0) && (doc.category[0] == "samlingercollectionspace") ? doc.category[0] : "others"; 
+  	  
+  	  switch(category)
+  	  {
+  		  //** artwork
+  		  case "samlingercollectionspace":
+
+  			 data = {
+  					 	img_id: "img_" + doc.id,
+  		  				ref_number: doc.id,
+  		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+  		  				img_data_bool: doc.medium_image_data != null ? true :  false,
+  		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
+  		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
+  		  				title: doc.title_first,	  				
+  		  				artist_name_s: doc.artist_name_ss,	  				
+  		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+  		  				artist_auth: doc.artist_auth[0],
+  		  				url_bool: false
+  					};
+  			     	
+  		    break;	  
+  		    
+  		 //** url
+  		 case "others":
+  		 	
+  			 	data = {
+  				 			img_id: this.img_id_generator(doc.id),
+  			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),
+  			  				artwork_date: doc.page_url,
+  			  				img_data_bool: false,
+  			  				non_img_data_bool: true, // no image
+  			  				url_bool: true,
+  			  				url: doc.page_url,
+  			  				title: doc.page_title,	  				
+  			  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
+  			  				artist_auth_bool: false
+  						};
+  			 	break;
+  		 
+  		 default:
+  			  	data = null;
+
+  	  };
+  	  
+  	  return data;
+    
+    }
   
 });
 

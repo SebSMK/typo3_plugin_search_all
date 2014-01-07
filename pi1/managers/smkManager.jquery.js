@@ -59,7 +59,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     	    
     for (var widgetId in this.widgets) {
       this.widgets[widgetId].afterRequest();
-    };
+    };      
   }  
 });
 

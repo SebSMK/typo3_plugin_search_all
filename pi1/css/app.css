@@ -1275,7 +1275,7 @@ samp {
 /* line 28, ../../src/scss/components/_tabs.scss */
 .tabs a span {
   color: #a2a2a5;
-  font-size: .7em;
+  font-size: .5em;
 }
 /* line 35, ../../src/scss/components/_tabs.scss */
 .tabs a:hover, .tabs a:focus {
