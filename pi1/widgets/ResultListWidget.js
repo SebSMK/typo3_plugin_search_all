@@ -63,16 +63,10 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
     var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');
     $target.html(html);
     
-    //* add images
+    //* add images and their click handling
     $target.find( ".image_loading" ).each(function() {    	    	
-		self.getImage($target, $(this), true);
-    });
-    
-    //* add click event on images
-    $target.find( "img" ).each(function() {    	    	
-		self.getImage($target, $(this), true);
-    });
-    
+		self.getImage($target, $(this));
+    });        
   }, 
   
   template_integration_json: function (data, templ_path){	  
@@ -93,12 +87,13 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		  case "samlingercollectionspace":
 
 			 data = {
-				  		title: doc.title_first,	 
+				  		title:sprintf("%s%s, %s (%s)", doc.title_first, (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? doc.artist_auth[0] : "", doc.artist_name_ss, new Date(doc.object_production_date_earliest).getFullYear()),	 
 				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
-				  		description: "Lorem ipsum dolor sit amet, libero felis suspendisse tortor proin praesent, elit odio pharetra non fermentum, nascetur suspendisse varius neque adipiscing, accumsan ac hendrerit. Risus dapibus, duis ac, quam pulvinar arcu arcu lorem non. Etiam purus eget sodales eu lobortis sit, turpis nec, facilisis ut fringilla. Erat dapibus ultricies massa rhoncus sit. Pulvinar ipsum congue id eget aliquam, felis dis, sapien pellentesque, sed pede donec velit bibendum convallis. Eu in ac non pulvinar integer diam, arcu quis dignissim congue imperdiet malesuada, erat nec etiam wisi, dui in, velit tortor sem mollis pede. Aliquam bibendum semper ultrices massa phasellus, sem eget est id sed, quo facilisis convallis odio viverra. Vivamus varius magna, sodales maecenas nec eros, nisl lorem, primis nibh turpis voluptas molestie hendrerit integer. Dui aliquam a vestibulum amet, massa wisi urna tincidunt pellentesque, aliquam ut aliquid nec rhoncus ac, in facilisis non at quisque wisi.",
-				  		categories: [{name: doc.id, url:"#"}],
-				  		
+				  		description: "Lorem ipsum dolor sit amet, libero felis suspendisse tortor proin praesent, elit odio pharetra non fermentum..., nascetur suspendisse varius neque adipiscing, accumsan ac hendrerit. Risus dapibus...",
+				  		categories: [{name: "Samlinger", url:"#"}],
+				  		meta: [{key: "Ref.num.", value: doc.id}],				  		
 				  		img_id: this.img_id_generator(doc.id),
+				  		
 		  				ref_number: doc.id,		  				
 		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
@@ -117,7 +112,7 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		 	
 		 	data = {
 			 			title: doc.page_title,
-			 			description: sprintf("%s(...)", doc.page_content.substring(0, 150)),
+			 			description: sprintf("%s...", doc.page_content.substring(0, 50)),
 			 			url: doc.page_url,				 			
 			 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
 			 			
@@ -141,7 +136,7 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
   
   },  
   
-  getImage: function ($container, $target, detail){
+  getImage: function ($container, $target){
 	  var img_id = $target.attr("img_id");
 	  var path = $target.attr("src");
 	  var alt = $target.attr("alt");
@@ -199,8 +194,6 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 				  });
 		    	
 		    	return;
-		    	
-	        	//return self.call_detail(event.data.detail_id);	            
 	          })		
 
 	    .attr('alt', alt)
@@ -208,7 +201,7 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
   },
-    
+
   img_id_generator: function(text){	  	  	
 	  	var hash = 0, i, char;
 		//if (text.length == 0) return hash;
