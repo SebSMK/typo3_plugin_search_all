@@ -14,17 +14,22 @@ AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 		if ($(this.target).is(':hidden'))
 		  	return;	
 		$(this.target).find('input#search.typeahead').val('');
-		$(this.target).find('input#search.typeahead').bind(
-				'keydown',
+		
+		$(this.target).find('form').bind(
+				'submit',
 				{
-					mmgr : this.manager
+					mmgr : this.manager,
+					$input : $(this.target).find('input#search.typeahead')
 					//,mdf : this.displayFields
 				},
 				function(e) {
-					var mgr = e.data.mmgr;					
+					e.preventDefault();
 					
-					if (e.which == 13 && $(this).val()) {
-						var value = jQuery.trim($(this).val());
+					var mgr = e.data.mmgr;	
+					var val = e.data.$input.val();
+					
+					if (val != '') {
+						var value = jQuery.trim(val);
 						//if (mgr.store.last != value) {
 							mgr.store.last = value;
 							if (mgr.store.addByValue('q', 'page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
