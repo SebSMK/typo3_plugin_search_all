@@ -36,13 +36,14 @@ var Manager;
 	    }
 	  }));
 	
-	var tagcloudFields = [ 'artist_natio', 'object_production_century_earliest', 'prod_technique' ];
+	var tagcloudFields = [ {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
-	  Manager.addWidget(new AjaxSolr.TagcloudWidget({
-	    id: tagcloudFields[i],
-	    target: '#' + tagcloudFields[i],
-	        field: tagcloudFields[i],
-	        isWidgetVisible: false
+	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
+	    id: tagcloudFields[i].field,
+	    title: tagcloudFields[i].title,
+	    target: '#' + tagcloudFields[i].field,
+	        field: tagcloudFields[i].field,
+	        isWidgetVisible: true
 	      }));
 	};        
 	
@@ -58,9 +59,9 @@ var Manager;
 //	    id: 'currentsearch',
 //	    target: '#selection'
 //	  }));
-	Manager.addWidget(new AjaxSolr.GridListViewSwitchWidget({
-	    id: 'gridlistviewswitch',
-	    target: '#switch_smk_collection'
+	Manager.addWidget(new AjaxSolr.ViewPickerWidget({
+	    id: 'viewpicker',
+	    target: '#viewpicker'
 	  }));   
 //	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
 //	    id: 'text_artist',
@@ -75,8 +76,8 @@ var Manager;
 //	    isWidgetVisible: false
 //	  }));
 	Manager.addWidget(new AjaxSolr.FreeTextWidget({
-		  id: 'text_free',
-		  target: '#search_free'
+		  id: 'textfree',
+		  target: '#searchfreetext'
 	}));
 
 	//** add event listeners

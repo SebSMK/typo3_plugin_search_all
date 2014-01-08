@@ -1,0 +1,15 @@
+<div>	
+	 <script id="chosenTemplate" type="text/template">
+    	{{#options}}
+		<h2 class="heading--widget">{{title}}</h2>
+    	<div class="chosen--multiple chosen--open">
+	      	<select data-placeholder="{{title}}..." multiple>
+    	    	<option value=""></option>
+        		{{#values}}
+        			<option value="{{value}}">{{text}}</option>
+        		{{/values}}       
+      		</select>
+    	</div><!-- chosen -->
+		{{/options}}
+	</script>
+</div>

@@ -1,6 +1,6 @@
 (function ($) {
 
-AjaxSolr.GridListViewSwitchWidget = AjaxSolr.AbstractWidget.extend({	  
+AjaxSolr.ViewPickerWidget = AjaxSolr.AbstractWidget.extend({	  
   
   afterRequest: function () {
     
@@ -12,9 +12,21 @@ AjaxSolr.GridListViewSwitchWidget = AjaxSolr.AbstractWidget.extend({
 	  var $target = $(this.target);
 	  $target.empty();
 	  
-	  $target.append(self.template());
+	  var template = Mustache.getTemplate('pi1/templates/view_picker.html');	
+	  $target.html(template);
 	  
-	  $target.addClass('listViewtype');
+	  $(this.target).find('form').bind(
+				'submit',
+				{
+					$this : $(this)
+				},
+				function(e) {
+					e.preventDefault();
+					$(this).trigger({
+						type: "smk_search_listview"
+					 });
+					
+				});
 	  
 	  $target.find('#listview_a').click($.proxy(function( event ) {
 		  event.preventDefault();
