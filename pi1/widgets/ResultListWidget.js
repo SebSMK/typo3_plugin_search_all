@@ -87,9 +87,8 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		  case "samlingercollectionspace":
 
 			 data = {
-				  		title:sprintf("%s%s, %s (%s)", doc.title_first, (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? doc.artist_auth[0] : "", doc.artist_name_ss, new Date(doc.object_production_date_earliest).getFullYear()),	 
-				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
-				  		description: "Lorem ipsum dolor sit amet, libero felis suspendisse tortor proin praesent, elit odio pharetra non fermentum..., nascetur suspendisse varius neque adipiscing, accumsan ac hendrerit. Risus dapibus...",
+				  		title:sprintf("%s%s, <i>%s</i> (%s)", doc.title_first, (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? doc.artist_auth[0] : "", doc.artist_name_ss, new Date(doc.object_production_date_earliest).getFullYear()),	 
+				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),				  		
 				  		categories: [{name: "Samlinger", url:"#"}],
 				  		meta: [{key: "Ref.num.", value: doc.id}],				  		
 				  		img_id: this.img_id_generator(doc.id),

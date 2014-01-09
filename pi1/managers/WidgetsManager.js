@@ -126,7 +126,7 @@ var Manager;
       facet: true,
       'facet.field': [ 'artist_natio', 'object_production_century_earliest', 'prod_technique', 'category'],
       'f.prod_technique.facet.limit': -1,
-      'f.prod_technique.facet.mincount': 20,
+      //'f.prod_technique.facet.mincount': 20,
       'facet.limit': -1,
       'facet.mincount': 1,
       'json.nl': 'map'

@@ -14,17 +14,7 @@
  */
 AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
   /** @lends AjaxSolr.Manager.prototype */
-  {
-//  bool_show_detail: false,
-//  
-//  setShowDetail: function (bool) { 
-//	  this.bool_show_detail = bool;
-//  },
-//  
-//  getShowDetail: function () { 
-//	  return this.bool_show_detail;
-//  }, 
-  
+  {  
   executeRequest: function (servlet, string, handler, errorHandler) {
     var self = this,
         options = {dataType: 'json'};
