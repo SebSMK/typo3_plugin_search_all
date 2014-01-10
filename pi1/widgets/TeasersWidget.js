@@ -30,40 +30,17 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	var objectedItems = new Array();
 	
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-	      var doc = this.manager.response.response.docs[i];	      	      
-	      
+	      var doc = this.manager.response.response.docs[i];	      	      	      
 	      //** load data for this artwork
-	      artwork_data = self.getData(doc);
-	      
-	      objectedItems.push(artwork_data);
-	      
-//	      //** merge data and template
-//	      var html = Mustache.to_html(template, artwork_data);
-//		  $target.append(html);
-//		  		  
-//		  //** manage clickhandlers
-//		  //* artwork ---> but if url has an image??? ררררר
-//		  if (artwork_data.img_id != null && artwork_data.img_id != ""){
-//			  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
-//			  self.getImage($target.find('#' + artwork_data.img_id), doc.id, path, true);
-//		  };
-//		  //* url			  
-//		  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
-//			  var id = this.img_id_generator(doc.id);				  
-//			  
-//			  $target.find('#' + id).click({url: artwork_data.url }, function(event){				  
-//				  window.open(event.data.url);
-//				  return false;
-//			  });
-//			  
-//		  };
+	      artwork_data = self.getData(doc);	      
+	      objectedItems.push(artwork_data);	      
     }	
 	
     //* merge data and template
-    var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');
+    var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');    
     $target.html(html);
     
-    //* add images and their click handling
+    //* add images and associated click handling
     $target.find( ".image_loading" ).each(function() {    	    	
 		self.getImage($target, $(this));
     });        
@@ -90,8 +67,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		title:doc.title_first,	 
 				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),				  		
 				  		categories: [{name: "Samlinger", url:"#"}],
-				  		meta: [{key: "Ref.num.", value: doc.id}],				  		
-				  		img_id: this.img_id_generator(doc.id),
+				  		meta: [{key: "inv.num.", value: doc.id}],				  		
+				  		img_id: doc.id,
 				  		artist_name: doc.artist_name_ss,	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
@@ -141,7 +118,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   getImage: function ($container, $target){
 	  var img_id = $target.attr("img_id");
 	  var path = $target.attr("src");
-	  var alt = $target.attr("alt");
+	  var alt = $target.attr("alt");	  
 	  var img = new Image();
 	  var self = this;
 	  	   
@@ -191,7 +168,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     		function (event) {
 	    		event.preventDefault();
 		    	$(event.data.caller).trigger({
-					type: "smk_search_call_result_detail",
+					type: "smk_search_call_detail",
 					detail_id: event.data.detail_id
 				  });
 		    	

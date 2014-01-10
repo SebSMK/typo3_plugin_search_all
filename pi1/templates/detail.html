@@ -1,0 +1,78 @@
+<div>
+
+<script id="detailTemplate" type="text/template">
+
+{{#detail}}
+
+{{#media}}
+	<div id="media-container">
+	  <div class="gallery">
+	    <div class="gallery__main">
+	      <img src="{{image}}" title="{{title}}">
+	    </div>
+	
+	    <!-- Copyright notice -->
+	    <div class="gallery__copyright">&copy;&nbsp;{{copyright}}</div>
+	
+	    <!-- Images -->
+	    {{#thumbnails}}
+	    <div class="gallery__thumbnails">
+	      <ul>
+	        <li>
+	          <a href="{{url}}" data-copyright="{{copyrights}}">
+	            <img src="{{thumbnail}}">
+	          </a>
+	        </li>      
+	      </ul>
+	    </div>
+	  </div><!-- thumbnails -->
+	  {{/thumbnails}}
+	</div><!-- gallery -->
+  </div><!-- #media-container -->
+{{/media}}
+	
+{{#info}}
+	<div id="info-container">
+	
+	  <!-- Sharing links -->
+	  <div class="sharing--iconified">
+	    <a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=INSERT_URL">Share on Facebook</a>
+	    <a target="_blank" href="https://twitter.com/intent/tweet?text=INSERT_DESCRIPTION&amp;url=INSERT_URL&amp;via=INSERT_TWITTER_HANDLE">Tweet This</a>
+	    <a target="_blank" href="https://plus.google.com/share?url=INSERT_URL">Plus on Google+</a>
+	    <a target="_blank" href="http://pinterest.com/pin/create/button/?url=INSERT_URL&amp;description=INSERT_DESCRIPTION">Pin on Pinterest</a>
+	  </div>
+	
+	  <!-- Heading -->
+	  <h1 class="heading--m">{{artist_name}}<br><i>{{title}}<span>&nbsp({{artwork_date}})</span></i></h1>
+	
+	  <div class="cutoff">{{description}}</div>
+	
+	  <!-- Data pairs (metainformation) -->
+	  {{#meta}}
+	  <div class="data-pairs">
+	    <div class="data-pair">
+	      <div class="data-pair__key">{{key}}</div>
+	      <div class="data-pair__value {{#type-code}}type--code{{/type-code}}">{{value}}</div>
+	    </div>	    
+	  </div><!-- data-pairs -->
+	  {{/meta}}
+
+	<!-- Link to previous search -->
+	  {{#prev}}
+	  <div class="data-pairs">
+	    <div class="data-pair">
+	      <div class="data-pair__value previous_search">
+			<a href="#">&lt;&lt;&nbsp;</a>{{value}}
+		  </div>
+	    </div>	    
+	  </div><!-- previous search -->
+	  {{/prev}}
+	  
+	</div><!-- #info-container -->
+{{/info}}
+	
+{{/detail}}
+
+</script>
+
+</div>

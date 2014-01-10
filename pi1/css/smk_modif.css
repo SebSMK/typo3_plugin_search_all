@@ -1,27 +1,11 @@
 @CHARSET "ISO-8859-1";
 
-#search-filters {	
-	width:200px;
-	display: block;
-    float: left;
-}
-
-#docs_smk_collection{
-	display: block;
-    float: left;
-    margin: 15px;
-    width: 500px;
+#smk_teasers .highlight{
+	background-color:#123456;
 }
 
 .search-choice span{	
 	color: #ffffff;
-}
-
-#smk_search_wrapper .main-header section, .main-footer, .section--main {
-    margin: 0 auto;
-    max-width: 1300px;
-    min-width: 200px;
-    padding: 0;
 }
 
 a i{

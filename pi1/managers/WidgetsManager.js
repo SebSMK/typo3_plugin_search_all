@@ -14,16 +14,15 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.StateManager({
 	    id: 'state_manager_smk_collection',
 	    target: '#smk_search_wrapper',
-	    currentState: {view:"list", category:''}
+	    currentState: {view:'teasers', category:''}
 	  }));
 	Manager.addWidget(new AjaxSolr.TeasersWidget({
-	    id: 'result_list_smk_collection',
-	    target: '#docs_smk_collection'
+	    id: 'teasers_smk_collection',
+	    target: '#smk_teasers'
 	  }));
-	Manager.addWidget(new AjaxSolr.ResultDetailWidget({
-	      id: 'result_detail_smk_collection',
-	      target: '#docs_smk_collection_detail',
-	      isWidgetVisible: false          
+	Manager.addWidget(new AjaxSolr.DetailWidget({
+	      id: 'details_smk_collection',
+	      target: '#docs_smk_collection_detail'
 	    })); 
 	Manager.addWidget(new AjaxSolr.PagerWidget({
 	    id: 'pager',
@@ -42,8 +41,7 @@ var Manager;
 	    id: tagcloudFields[i].field,
 	    title: tagcloudFields[i].title,
 	    target: '#' + tagcloudFields[i].field,
-	        field: tagcloudFields[i].field,
-	        isWidgetVisible: true
+	        field: tagcloudFields[i].field
 	      }));
 	};        
 	
@@ -82,12 +80,12 @@ var Manager;
 
 	//** add event listeners
    
-	///* switch grid/list in results view
+	///* switch grid/list in teasers view
 	$(Manager.widgets['gridlistviewswitch']).on('smk_search_gridview', {caller:'smk_search_gridview'}, function(event){ 
-   	 Manager.widgets['result_list_smk_collection'].switch_list_grid(event);
+   	 Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
    });    
    $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
-   	Manager.widgets['result_list_smk_collection'].switch_list_grid(event);
+   	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
    }); 
     
    //* switch between categories
@@ -98,22 +96,22 @@ var Manager;
     	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
     });
     
-    //* switch between detail/results view
-    $(Manager.widgets['result_list_smk_collection']).on('smk_search_call_result_detail', function(event){     	
+    //* switch between teasers/detail view
+    $(Manager.widgets['teasers_smk_collection']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager_smk_collection'].stateChanged({view:"detail"});
-    	Manager.widgets['result_detail_smk_collection'].call_detail(event.detail_id);
+    	Manager.widgets['details_smk_collection'].call_detail(event.detail_id);
     });	    
-    $(Manager.widgets['result_detail_smk_collection']).on('smk_search_call_result_list', function(event){     	
-    	Manager.widgets['state_manager_smk_collection'].stateChanged({view:"list"});
-    	Manager.widgets['result_list_smk_collection'].call_previous_search();
+    $(Manager.widgets['details_smk_collection']).on('smk_search_call_teasers', function(event){     	
+    	Manager.widgets['state_manager_smk_collection'].stateChanged({view:"teasers"});
+    	Manager.widgets['teasers_smk_collection'].call_previous_search();
     });	
 	
-    // All teaser's images has been loaded
-    $(Manager.widgets['result_list_smk_collection']).on('smk_teasers_all_img_loaded', function(event){     	        
+    //* All teaser's images has been loaded
+    $(Manager.widgets['teasers_smk_collection']).on('smk_teasers_all_img_loaded', function(event){     	        
     	//Executes when complete page is fully loaded, including all frames, objects
         // and images. This ensures that Masonry knows about elements heights and can
         // do its layouting properly.
-    	$(Manager.widgets['result_list_smk_collection'].target).find('#teaser-container-grid').masonry( {
+    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry( {
           transitionDuration: 0
         });
     });

@@ -36,26 +36,28 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
     	return;
     
     switch(newstate["view"]){
-	  case "list":		 		  
+	  case "teasers":		  
+		  $target.find(".search_smk_result_detail").hide();
+		  $target.find("#category").show().children().show();	
+		  $target.find("#viewpicker").show().children().show();	
+		  
 		  switch(newstate["category"]){
-			  case "Samlinger":		 			  			  
-				  $target.find(".search_smk_result_detail").hide();
-				  $target.find("#search_smk_header").show().children().show();
-				  $target.find("#search_smk_left").show().children().show();
-				  $target.find("#search_smk_right").show().children().show();
-				break;	
-			  default:		    			  			   
-				  $target.find(".search_smk_result_detail").hide();
-				  $target.find("#search_smk_header").show().children().show();
-			  	  $target.find("#search_smk_left").hide();
-			  	  $target.find("#search_smk_right").show().children().show();
-				break;		  
+			  case "samlingercollectionspace":		 			  			  
+				  
+				  $target.find("#search-filters").show().children().show();		
+				  $target.find('#smk_teasers').removeClass('full_size').addClass('splited').show().children().show();
+				  break;	
+			  default:		    			  			   							  
+			  	  $target.find("#search-filters").hide();
+			  	  $target.find('#smk_teasers').removeClass('splited').addClass('full_size').show().children().show();			  	  
+			  	  break;		  
 		  } 
 		  break;
-	  case "detail":		    			  			   
-		  $target.find("#search_smk_header").hide();
-	  	  $target.find("#search_smk_left").hide();
-	  	  $target.find("#search_smk_right").hide();
+	  case "detail":	
+		  $target.find("#category").hide();
+		  $target.find("#viewpicker").hide();
+		  $target.find("#search-filters").hide();
+		  $target.find("#smk_teasers").hide();		  
 		  $target.find(".search_smk_result_detail").show().children().show();
 		  break;		  
 	  } 	
