@@ -10,18 +10,18 @@ constructor: function (attributes) {
   },
 
   init: function () {
-//	  var self = this;
-//	  var $target = $(this.target);
-//	  var templ_path = 'pi1/templates/chosen.html';
-//	  	  
-//	  //$target.hide('fast'); // hide until all styling is ready
-//	  
-//	  var json_data = {"options" : new Array({title:'title', values:[{ "value": 'value', "text": 'text'}]})};	 
-//	  var html = self.template_integration_json(json_data, templ_path); 				  
-//	  $target.html(html);	  
-//	  
-//	  //* init 'chosen' plugin
-//	  self.init_chosen();
+	  var self = this;
+	  var $target = $(this.target);
+	  var templ_path = 'pi1/templates/chosen.html';
+	  	  
+	  //$target.hide('fast'); // hide until all styling is ready
+	  
+	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": 'text'}]})};	 
+	  var html = self.template_integration_json(json_data, templ_path); 				  
+	  $target.html(html);	  
+	  
+	  //* init 'chosen' plugin
+	  self.init_chosen();
 //	  //$('.chosen--multiple').chosen({no_results_text: "No results found."});
 	  
   },
@@ -72,13 +72,13 @@ constructor: function (attributes) {
 	  	$target.hide('fast'); // hide until all styling is ready
 	  	
 	  	//* remove all options in 'select'...
-//	  	$select.empty();	  	
-//	  	//*... and copy the new option list
-//	  	$select.append($(html).find('option'));
+	  	$select.empty();	  	
+	  	//*... and copy the new option list
+	  	$select.append($(html).find('option'));
 	  	
-	  	$target.empty();	  	
-//	  	//*... and copy the new option list
-	  	$target.html(html);
+//	  	$target.empty();	  	
+////	  	//*... and copy the new option list
+//	  	$target.html(html);
 	  	
 		//* add previous selected values in the target 'select' component
 		if (previous_values.length > 0)
@@ -89,8 +89,44 @@ constructor: function (attributes) {
 		$target.find('select').change(self.clickHandler());
 		
 //		//* init 'chosen' plugin
-		self.init_chosen();
-		//$target.find('select').trigger("chosen:updated");
+		//self.init_chosen();
+		
+		$target.find('select').trigger("chosen:updated");
+		
+		// Multiple select (always open).
+		  $target.find('.chosen--multiple.chosen--open').each( function() {
+		    
+			    // This 'fix' allows the user to see the select options before he has
+			    // interacted with the select box.
+			    // 
+			    // Chosen do not show the contents of the select boxes by default, so we
+			    // have to show them ourselves. In the code below we loop through the options
+			    // in the select boxes, adds these to an array, and append each array item
+			    // to the <ul> called .chosen-results. Chosen uses .chosen-results to show
+			    // the options.
+		
+			    var chosenResults = $(this).find('.chosen-results');
+			    var selectOptions = [];
+			    
+			    // Put all select options in an array
+			    $(this).find('select option').each( function() {
+			      selectOptions.push( $(this).text() );
+			    });
+		
+			    // For each item in the array, append a <li> to .chosen-results
+			    $.each(selectOptions, function(i, val) {
+			      if(this != "") {
+			        chosenResults.append('<li class="active-result" data-option-array-index="' + i + '">' + this + '</li>');
+		      }
+		    });
+		  });
+
+		  // Subtle select
+		  $target.find('.chosen--simple select').chosen({
+		    disable_search: true
+		  });  
+		
+		
 		
 		//* show component
 		$target.fadeIn();

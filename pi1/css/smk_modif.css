@@ -23,3 +23,12 @@
     min-width: 200px;
     padding: 0;
 }
+
+a i{
+  color: inherit;
+}
+
+a span{
+  font-size: 0.8em;
+  color: inherit;
+}

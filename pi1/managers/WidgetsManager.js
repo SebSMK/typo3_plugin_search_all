@@ -16,7 +16,7 @@ var Manager;
 	    target: '#smk_search_wrapper',
 	    currentState: {view:"list", category:''}
 	  }));
-	Manager.addWidget(new AjaxSolr.ResultListWidget({
+	Manager.addWidget(new AjaxSolr.TeasersWidget({
 	    id: 'result_list_smk_collection',
 	    target: '#docs_smk_collection'
 	  }));

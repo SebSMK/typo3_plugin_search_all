@@ -1,6 +1,6 @@
 (function ($) {
 
-AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
+AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   
 //	constructor: function (attributes) {
 //	    AjaxSolr.ResultWidget.__super__.constructor.apply(this, arguments);
@@ -87,21 +87,23 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 		  case "samlingercollectionspace":
 
 			 data = {
-				  		title:sprintf("%s%s, <i>%s</i> (%s)", doc.title_first, (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? doc.artist_auth[0] : "", doc.artist_name_ss, new Date(doc.object_production_date_earliest).getFullYear()),	 
+				  		title:doc.title_first,	 
 				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),				  		
 				  		categories: [{name: "Samlinger", url:"#"}],
 				  		meta: [{key: "Ref.num.", value: doc.id}],				  		
 				  		img_id: this.img_id_generator(doc.id),
+				  		artist_name: doc.artist_name_ss,	
+				  		not_is_artwork: false,
+				  		is_artwork: true,
 				  		
 		  				ref_number: doc.id,		  				
 		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
-		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),		  						  				  				
-		  				artist_name_s: doc.artist_name_ss,		  				
-		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-		  				artist_auth: doc.artist_auth[0],
-		  				url_bool: false
+		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),		  						  				  						  					  				
+//		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
+//		  				artist_auth: doc.artist_auth[0],
+		  				
 					};
 			     	
 		    break;	  
@@ -114,13 +116,14 @@ AjaxSolr.ResultListWidget = AjaxSolr.AbstractWidget.extend({
 			 			description: sprintf("%s...", doc.page_content.substring(0, 50)),
 			 			url: doc.page_url,				 			
 			 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
+			 			is_artwork: false,
+			 			not_is_artwork: true,
 			 			
 			 			img_id: this.img_id_generator(doc.id),
 		  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),			  				
 		  				artwork_date: doc.page_url,
 		  				img_data_bool: false,
-		  				non_img_data_bool: true, // no image
-		  				url_bool: true,			  							  					  				
+		  				non_img_data_bool: true, // no image		  							  							  					  			
 		  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
 		  				artist_auth_bool: false
 					};
