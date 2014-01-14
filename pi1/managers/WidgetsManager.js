@@ -35,7 +35,7 @@ var Manager;
 	    }
 	  }));
 	
-	var tagcloudFields = [ {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
+	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
 	    id: tagcloudFields[i].field,
@@ -122,7 +122,7 @@ var Manager;
     
     var params = {
       facet: true,
-      'facet.field': [ 'artist_natio', 'object_production_century_earliest', 'prod_technique', 'category'],
+      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'prod_technique', 'category'],
       'f.prod_technique.facet.limit': -1,
       //'f.prod_technique.facet.mincount': 20,
       'facet.limit': -1,
