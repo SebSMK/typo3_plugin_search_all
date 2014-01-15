@@ -45,13 +45,21 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  case "samlingercollectionspace":		 			  			  
 				  
 				  $target.find("#search-filters").show().children().show();		
-				  $target.find('#smk_teasers').removeClass('full_size').addClass('splited').show().children().show();
+				  $target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_3-grid').addClass('col_4-grid').show().children().show();
+				  $target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_3--grid').addClass('col_4--grid').show().children().show();				  
+				  
 				  break;	
 			  default:		    			  			   							  
 			  	  $target.find("#search-filters").hide();
-			  	  $target.find('#smk_teasers').removeClass('splited').addClass('full_size').show().children().show();			  	  
+			  	  $target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_4-grid').addClass('col_3-grid').show().children().show();
+			  	  $target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_4--grid').addClass('col_3--grid').show().children().show();
+			  	  
 			  	  break;		  
-		  } 
+		  }
+		  
+		  $target.find("#smk_teasers").show().children().show();
+		  $target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
+		  
 		  break;
 	  case "detail":	
 		  $target.find("#category").hide();

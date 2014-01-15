@@ -9,7 +9,11 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 //	    }, attributes);
 //	  },
 
-	start: 0,	
+  start: 0,	
+  
+  teaser_class: 'col_3-grid',
+  teaser_grid_class:'col_3--grid',
+	  
 	
   beforeRequest: function () {
     //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
@@ -23,6 +27,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;
 	var $target = $(this.target);
 	
+	//* save current classes
+	self.teaser_class = $target.find('#teaser-container-grid').attr('class') === undefined ? self.teaser_class : $target.find('#teaser-container-grid').attr('class');
+	self.teaser_grid_class = $target.find('#teaser-container-grid .teaser--grid').attr('class') === undefined ? self.teaser_grid_class : $target.find('#teaser-container-grid .teaser--grid').attr('class');	
+		
 	$target.empty();												
 	
 	//* load data
@@ -40,10 +48,19 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');    
     $target.html(html);
     
+    //* load saved classes
+    $target.find('#teaser-container-grid').addClass(self.teaser_class );
+	$target.find('#teaser-container-grid .teaser--grid').addClass(self.teaser_grid_class);
+    
+    $target.find('#teaser-container-grid').masonry( {
+        transitionDuration: 0
+    });
+    
     //* add images and associated click handling
     $target.find( ".image_loading" ).each(function() {    	    	
 		self.getImage($target, $(this));
     });        
+    
   }, 
   
   template_integration_json: function (data, templ_path){	  
@@ -139,12 +156,12 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	      // fade our image in to create a nice effect
 	      $(this).fadeIn();
 	      
-	      // has all images been loaded, trig event
-	      if ($container.find('.image_loading').length == 0){
+	      // trig "image loaded" event
+	      //if ($container.find('.image_loading').length == 0){
 	    	  $(self).trigger({
 	  			type: "smk_teasers_all_img_loaded"
 	  		  });  	    	  
-	      }
+	      //}
 		 
 	    })
 	    

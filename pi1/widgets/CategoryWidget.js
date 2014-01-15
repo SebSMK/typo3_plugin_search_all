@@ -11,8 +11,21 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	 },
 
 	
-	init: function () {
+  init: function () {
         this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: this.field, locals: { ex:this.field } }));
+        
+        //* init template
+        var objectedItems = new Array(); 
+
+        $.each(this.categoryList , function(key, value) { 
+        	 objectedItems.push({"facetname": key, "facettext": value, "count": '0', "active": false}); 
+        });
+        
+          //* add "all" facet
+        objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": '0', "active": true});
+          
+        var html = this.template_integration_json(objectedItems, 'pi1/templates/category.html');
+        $(this.target).html(html);
 	},	         
 
   afterRequest: function () {
@@ -22,7 +35,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	if ($target.is(':hidden'))
 	 	return;
 	
-	$target.empty();
+	//$target.empty();
 	  
     if (self.manager.response.facet_counts.facet_fields[this.field] === undefined) {
     	$target.html('no items found in current selection');
@@ -40,15 +53,25 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
       if (count > maxCount) {
         maxCount = count;
       }
-      objectedItems.push({ "facetname": facet, "facettext": self.categoryList[facet], "count": count, "active": facet == self.activeCategory});
+      
+      $(this.target).find('li[name='+facet+'] span').text(sprintf('(%s)', count));            
+      
+      //objectedItems.push({ "facetname": facet, "facettext": self.categoryList[facet], "count": count, "active": facet == self.activeCategory});
     }
     
     //* add "all" facet
-    objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": allCount, "active": "all" == self.activeCategory});
+    $(this.target).find('li[name=all] span').text(sprintf('(%s)', allCount));
+    
+    //* active tab
+    $(this.target).find('li').removeClass('tab--active');
+    $(this.target).find('li[name='+self.activeCategory+']').addClass('tab--active');
+    
+    
+    //objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": allCount, "active": "all" == self.activeCategory});
 
     //* merge data and template
-    var html = self.template_integration_json(objectedItems, 'pi1/templates/category.html');
-    $target.html(html);
+    //var html = self.template_integration_json(objectedItems, 'pi1/templates/category.html');
+    //$target.html(html);
     
     //* add click handling
     $target.find("li").click(self.clickHandler());

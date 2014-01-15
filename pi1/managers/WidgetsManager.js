@@ -16,14 +16,21 @@ var Manager;
 	    target: '#smk_search_wrapper',
 	    currentState: {view:'teasers', category:''}
 	  }));
-	Manager.addWidget(new AjaxSolr.TeasersWidget({
-	    id: 'teasers_smk_collection',
-	    target: '#smk_teasers'
+	
+	Manager.addWidget(new AjaxSolr.CategoryWidget({
+	    id: 'category',
+	    target: '#category',
+	    field: 'category',
+	    multivalue:false,
+	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
+	    activeCategory: "all"
 	  }));
-	Manager.addWidget(new AjaxSolr.DetailWidget({
-	      id: 'details_smk_collection',
-	      target: '#docs_smk_collection_detail'
-	    })); 
+	
+	Manager.addWidget(new AjaxSolr.FreeTextWidget({
+		  id: 'textfree',
+		  target: '#searchfreetext'
+	}));
+	
 	Manager.addWidget(new AjaxSolr.PagerWidget({
 	    id: 'pager',
 	    target: '#pager',
@@ -35,6 +42,11 @@ var Manager;
 	    }
 	  }));
 	
+	Manager.addWidget(new AjaxSolr.ViewPickerWidget({
+	    id: 'viewpicker',
+	    target: '#viewpicker'
+	  })); 
+	
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
@@ -43,24 +55,22 @@ var Manager;
 	    target: '#' + tagcloudFields[i].field,
 	        field: tagcloudFields[i].field
 	      }));
-	};        
+	};	
 	
-	Manager.addWidget(new AjaxSolr.CategoryWidget({
-	    id: 'category',
-	    target: '#category',
-	    field: 'category',
-	    multivalue:false,
-	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
-	    activeCategory: "all"
+	Manager.addWidget(new AjaxSolr.TeasersWidget({
+	    id: 'teasers_smk_collection',
+	    target: '#smk_teasers'
 	  }));
+		
 //	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
 //	    id: 'currentsearch',
 //	    target: '#selection'
-//	  }));
-	Manager.addWidget(new AjaxSolr.ViewPickerWidget({
-	    id: 'viewpicker',
-	    target: '#viewpicker'
-	  }));   
+//	  })); 
+	
+	Manager.addWidget(new AjaxSolr.DetailWidget({
+	      id: 'details_smk_collection',
+	      target: '#docs_smk_collection_detail'
+	    })); 
 //	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
 //	    id: 'text_artist',
 //	    target: '#search_smk_collection',
@@ -73,10 +83,7 @@ var Manager;
 //	    fields: [ 'title_dk_ss'],
 //	    isWidgetVisible: false
 //	  }));
-	Manager.addWidget(new AjaxSolr.FreeTextWidget({
-		  id: 'textfree',
-		  target: '#searchfreetext'
-	}));
+
 
 	//** add event listeners
    
@@ -111,9 +118,11 @@ var Manager;
     	//Executes when complete page is fully loaded, including all frames, objects
         // and images. This ensures that Masonry knows about elements heights and can
         // do its layouting properly.
-    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry( {
-          transitionDuration: 0
-        });
+//    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry( {
+//          transitionDuration: 0
+//        });
+    	
+    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry('layout');
     });
     
     

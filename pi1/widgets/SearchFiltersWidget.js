@@ -16,7 +16,7 @@ constructor: function (attributes) {
 	  	  
 	  //$target.hide('fast'); // hide until all styling is ready
 	  
-	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": 'text'}]})};	 
+	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": ''}]})};	 
 	  var html = self.template_integration_json(json_data, templ_path); 				  
 	  $target.html(html);	  
 	  
@@ -52,7 +52,7 @@ constructor: function (attributes) {
 	      if (count > maxCount) {
 	        maxCount = count;
 	      }
-	      objectedItems.push({ "value": facet, "text": facet });
+	      objectedItems.push({ "value": facet, "text": facet, "count": count });
 	    }
 	    objectedItems.sort(function (a, b) {
 	      return a.value < b.value ? -1 : 1;
@@ -66,7 +66,7 @@ constructor: function (attributes) {
 	    //* save previous selected values in the target 'select' component
 	  	var previous_values = new Array(); 
 	  	$select.find("option:selected").each(function (){
-	  		previous_values.push(this.value);
+	  		previous_values.push(this.value);	  		
 	  	});
 	  		  	
 	  	$target.hide('fast'); // hide until all styling is ready
@@ -74,7 +74,7 @@ constructor: function (attributes) {
 	  	//* remove all options in 'select'...
 	  	$select.empty();	  	
 	  	//*... and copy the new option list
-	  	$select.append($(html).find('option'));
+	  	$select.append($(html).find('option'));	  	
 	  	
 //	  	$target.empty();	  	
 ////	  	//*... and copy the new option list
@@ -93,66 +93,48 @@ constructor: function (attributes) {
 		
 		$target.find('select').trigger("chosen:updated");
 		
-		// Multiple select (always open).
-		  $target.find('.chosen--multiple.chosen--open').each( function() {
-		    
-			    // This 'fix' allows the user to see the select options before he has
-			    // interacted with the select box.
-			    // 
-			    // Chosen do not show the contents of the select boxes by default, so we
-			    // have to show them ourselves. In the code below we loop through the options
-			    // in the select boxes, adds these to an array, and append each array item
-			    // to the <ul> called .chosen-results. Chosen uses .chosen-results to show
-			    // the options.
+						// Multiple select (always open).
+						  $target.find('.chosen--multiple.chosen--open').each( function() {
+						    
+							    // This 'fix' allows the user to see the select options before he has
+							    // interacted with the select box.
+							    // 
+							    // Chosen do not show the contents of the select boxes by default, so we
+							    // have to show them ourselves. In the code below we loop through the options
+							    // in the select boxes, adds these to an array, and append each array item
+							    // to the <ul> called .chosen-results. Chosen uses .chosen-results to show
+							    // the options.
+						
+							    var chosenResults = $(this).find('.chosen-results');
+							    var selectOptions = [];
+							    
+							    // Put all select options in an array
+							    $(this).find('select option').each( function() {
+							      selectOptions.push( $(this).text() );
+							    });
+						
+							    // For each item in the array, append a <li> to .chosen-results
+							    $.each(selectOptions, function(i, val) {
+							      if(this != "") {
+							        chosenResults.append('<li class="active-result" data-option-array-index="' + i + '">' + this + '</li>');
+						      }
+						    });
+						  });
+				
+						  // Subtle select
+						  $target.find('.chosen--simple select').chosen({
+						    disable_search: true
+						  });  
 		
-			    var chosenResults = $(this).find('.chosen-results');
-			    var selectOptions = [];
-			    
-			    // Put all select options in an array
-			    $(this).find('select option').each( function() {
-			      selectOptions.push( $(this).text() );
-			    });
 		
-			    // For each item in the array, append a <li> to .chosen-results
-			    $.each(selectOptions, function(i, val) {
-			      if(this != "") {
-			        chosenResults.append('<li class="active-result" data-option-array-index="' + i + '">' + this + '</li>');
-		      }
-		    });
-		  });
-
-		  // Subtle select
-		  $target.find('.chosen--simple select').chosen({
-		    disable_search: true
-		  });  
-		
-		
+//	  	$select.change(function(event) {
+//	  		var value = $(this).find("option:selected").text().split('(')[0] ;
+//	  		$(this).find("input").val(value);
+//	  		$(this).change();
+//	  	});
 		
 		//* show component
-		$target.fadeIn();
-		
-		
-	    
-//	    for (var i = 0, l = objectedItems.length; i < l; i++) {
-//		      var facet = null; 
-//	
-//		      if (this.field == 'object_production_century_earliest'){
-//		    	  var cent = {"15.0":"15th", "16.0":"16th", "17.0":"17th", "18.0":"18th", "19.0":"19th", "20.0":"20th"};
-//		    	  facet = cent[objectedItems[i].facet] +' (' + objectedItems[i].count +')';
-//		    	  
-//		      }else{
-//		    	  facet = objectedItems[i].facet.charAt(0).toUpperCase() + objectedItems[i].facet.slice(1) +' (' + objectedItems[i].count +')'; 
-//		      }
-//		      var facetclick = objectedItems[i].facet;
-//
-//	    	  $(this.target).append(
-//	    		        $('<a href="#" class="tagcloud_item"></a>')
-//	    		        .text(facet)        
-//	    		        .click(this.clickHandler(facetclick))
-//	    		      );  
-//		        
-//	    }
-    
+		$target.fadeIn();				    
   },
   
   /**

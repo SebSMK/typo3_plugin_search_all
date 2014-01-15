@@ -12,3 +12,49 @@ a span{
   font-size: 0.8em;
   color: inherit;
 }
+
+
+.view #teaser-container-grid.col_4-grid{    
+    width: 660px;
+    float: right;
+}
+
+.view #teaser-container-grid.col_3-grid{    
+    width: 880px;
+    float: left;
+}
+
+.view #teaser-container-grid .teaser--grid.col_4--grid{    
+    width: 198px;
+}
+
+.view #teaser-container-grid .teaser--grid.col_3--grid{    
+    width: 264px;
+}
+
+/*  from Jacques' Code  */
+
+.view #teaser-container-grid {
+    
+    margin-left: -11px;
+    margin-right: -11px;
+    margin-top: 27px;
+    
+}
+
+.view #teaser-container-grid .teaser--grid {
+    margin-left: 11px;
+    margin-right: 11px;
+    
+}
+
+.tabs li {
+    float: left;
+    font-family: "hill regular",sans-serif;
+    font-size: 1.3em;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+
+
