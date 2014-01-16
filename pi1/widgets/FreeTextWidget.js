@@ -24,6 +24,7 @@ AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 				},
 				function(e) {
 					e.preventDefault();
+					e.stopImmediatePropagation(); 
 					
 					var mgr = e.data.mmgr;	
 					var val = e.data.$input.val();

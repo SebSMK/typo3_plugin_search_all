@@ -29,10 +29,10 @@ a span{
 }
 
 .view #teaser-container-grid .teaser--grid.col_3--grid{    
-    width: 264px;
+    width: 198px;
 }
 
-/*  from Jacques' Code  */
+/* Jacques' Code  modif */
 
 .view #teaser-container-grid {
     
@@ -54,6 +54,14 @@ a span{
     font-size: 1.3em;
     letter-spacing: 0;
     text-transform: uppercase;
+}
+
+
+a {
+    color: #39393A;
+    line-height: inherit;
+    text-decoration: none;
+    transition: all 200ms ease-in-out 0s;
 }
 
 

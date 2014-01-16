@@ -92,17 +92,18 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
    */
   clickHandler: function () {
     var self = this, meth = this.multivalue ? 'add' : 'set';
-    return function (event) {
+    return function (event) {      
+      event.stopImmediatePropagation();
       var selectedTab = $(event.currentTarget).attr("name");	
-      if (self[meth].call(self, selectedTab)) {  
-    	self.setActiveTab(selectedTab);  
-    	$(self).trigger({
+	  if (self[meth].call(self, selectedTab)) {  
+		self.setActiveTab(selectedTab);  
+		$(self).trigger({
 			type: "smk_search_category_changed",
 			category: selectedTab
 		  });  
-        self.doRequest();
-      }
-      return false;
+	    self.doRequest();
+	  }
+	  return false;
     }
   },
   

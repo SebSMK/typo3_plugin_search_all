@@ -145,6 +145,7 @@ constructor: function (attributes) {
   clickHandler: function () {
     var self = this, meth = this.multivalue ? 'add' : 'set';
     return function (event, params) {
+    	event.stopImmediatePropagation(); 
     	if (params.selected !== undefined){
     		if (self[meth].call(self, params.selected)){
                 self.doRequest();
