@@ -64,5 +64,11 @@ a {
     transition: all 200ms ease-in-out 0s;
 }
 
+#teaser-container-grid .image_loading{ 
+	background: url(../images/favicon-160x160.png) no-repeat center center;
+	min-width: 198px;
+	min-heigth: 198px;
+}
+
 
 

@@ -12,7 +12,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   start: 0,	
   
   teaser_class: 'col_3-grid',
-  teaser_grid_class:'col_3--grid',
+  teaser_grid_class:'col_3--grid teaser--grid',
 	  
 	
   beforeRequest: function () {
@@ -27,9 +27,9 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;
 	var $target = $(this.target);
 	
-	//* save current classes
+	//* save current visualization classes
 	self.teaser_class = $target.find('#teaser-container-grid').attr('class') === undefined ? self.teaser_class : $target.find('#teaser-container-grid').attr('class');
-	self.teaser_grid_class = $target.find('#teaser-container-grid .teaser--grid').attr('class') === undefined ? self.teaser_grid_class : $target.find('#teaser-container-grid .teaser--grid').attr('class');	
+	self.teaser_grid_class = $target.find('#teaser-container-grid article').attr('class') === undefined ? self.teaser_grid_class : $target.find('#teaser-container-grid article').attr('class');	
 		
 	$target.empty();												
 	
@@ -47,11 +47,13 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     //* merge data and template
     var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');    
     $target.html(html);
+
     
     //* load saved classes
-    $target.find('#teaser-container-grid').addClass(self.teaser_class );
-	$target.find('#teaser-container-grid .teaser--grid').addClass(self.teaser_grid_class);
+    $target.find('#teaser-container-grid').removeClass().addClass(self.teaser_class );
+	$target.find('#teaser-container-grid article').removeClass().addClass(self.teaser_grid_class);
     
+	//* start masonry jquery
     $target.find('#teaser-container-grid').masonry( {
         transitionDuration: 0
     });
@@ -221,153 +223,23 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
       return false;
   },
   
-  switch_list_grid: function (event) {
-	if (typeof event.data.caller === "undefined")
-		return false;
+  switch_list_grid: function (view) {
  
-	var $this_target = $(this.target);
+	var $target = $(this.target);
 	
-	var caller = event.data.caller;
-  	
-	var artworks = $this_target;
-	var artworks_li = $this_target.find("li");
-
-	if(caller == "smk_search_gridview") {	
-	
-		// remove the list class and change to grid
-		artworks.removeClass("explorerList");
-		artworks.addClass("explorerGrid");
-		
-		artworks_li.removeClass("list-work");
-		artworks_li.addClass("grid-work");
-		
-		var artworks_li_div_im = $this_target.find(".list-work-image");				
-		artworks_li_div_im.removeClass("list-work-image");
-		artworks_li_div_im.addClass("grid-work-image");
-						
-		var artworks_li_div_text = $this_target.find(".list-work-text");
-		artworks_li_div_text.removeClass("list-work-text");
-		artworks_li_div_text.addClass("grid-work-text");
-	
+	if(view == "grid") {		
+		$target.find('#teaser-container-grid article').removeClass('teaser--list').addClass('teaser--grid');	
 	}	
-	else if(caller == "smk_search_listview") {
-			
-		// remove the grid view and change to list
-		artworks.removeClass("explorerGrid")
-		artworks.addClass("explorerList");
-		
-		artworks_li.removeClass("grid-work");
-		artworks_li.addClass("list-work");				
-		
-		var artworks_li_div_im = $this_target.find(".grid-work-image");				
-		artworks_li_div_im.addClass("list-work-image");
-		artworks_li_div_im.removeClass("grid-work-image");
-						
-		var artworks_li_div_text = $this_target.find(".grid-work-text");
-		artworks_li_div_text.addClass("list-work-text");
-		artworks_li_div_text.removeClass("grid-work-text");	
-	} 
-
-  },  
-  
-  afterRequest_deprecated: function () {
-  	  
-  	  if ($(this.target).is(':hidden'))
-  		  	return;		
-  	  
-  	var self = this;
-  	var $target = $(this.target);
-  	
-  	$target.empty();					
-  							
-  	//* load the html template		
-  	var template = Mustache.getTemplate('pi1/templates/template_list_artworks.html');  				
-  	
-  	//* file the loaded template with artworks' data
-  	var artwork_data = null;
-  	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-  	      var doc = this.manager.response.response.docs[i];
-  	      
-  	    //TO DO ------> the MIX between templating and jquery below is confusing ----> must be simplified
-  	      
-  	      //** load data for this artworl
-  	      artwork_data = self.getData(doc);	      
-  	      
-  	      //** merge data and template
-  	      var html = Mustache.to_html(template, artwork_data);
-  		  $target.append(html);
-  		  		  
-  		  //** manage clickhandlers
-  		  //* artwork ---> but if url has an image??? ררררר
-  		  if (artwork_data.img_id != null && artwork_data.img_id != ""){
-  			  var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Thumbnail';
-  			  self.getImage($target.find('#' + artwork_data.img_id), doc.id, path, true);
-  		  };
-  		  //* url			  
-  		  if ((doc.category.length > 0) && (doc.category[0] != "samlingercollectionspace") && doc.page_url != null){				  
-  			  var id = this.img_id_generator(doc.id);				  
-  			  
-  			  $target.find('#' + id).click({url: artwork_data.url }, function(event){				  
-  				  window.open(event.data.url);
-  				  return false;
-  			  });
-  			  
-  		  };
-      }				
-  	
-    },   
+	else if(view == "list") {
+		$target.find('#teaser-container-grid article').removeClass('teaser--grid').addClass('teaser--list');
+	}
+	
+    $target.find('#teaser-container-grid').masonry( {
+        transitionDuration: 0
+    });
     
-    getData_deprecated: function (doc){
-  	  var data;
-  	  
-  	  var category = (doc.category.length > 0) && (doc.category[0] == "samlingercollectionspace") ? doc.category[0] : "others"; 
-  	  
-  	  switch(category)
-  	  {
-  		  //** artwork
-  		  case "samlingercollectionspace":
 
-  			 data = {
-  					 	img_id: "img_" + doc.id,
-  		  				ref_number: doc.id,
-  		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
-  		  				img_data_bool: doc.medium_image_data != null ? true :  false,
-  		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
-  		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
-  		  				title: doc.title_first,	  				
-  		  				artist_name_s: doc.artist_name_ss,	  				
-  		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-  		  				artist_auth: doc.artist_auth[0],
-  		  				url_bool: false
-  					};
-  			     	
-  		    break;	  
-  		    
-  		 //** url
-  		 case "others":
-  		 	
-  			 	data = {
-  				 			img_id: this.img_id_generator(doc.id),
-  			  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),
-  			  				artwork_date: doc.page_url,
-  			  				img_data_bool: false,
-  			  				non_img_data_bool: true, // no image
-  			  				url_bool: true,
-  			  				url: doc.page_url,
-  			  				title: doc.page_title,	  				
-  			  				artist_name_s: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay()),	  				
-  			  				artist_auth_bool: false
-  						};
-  			 	break;
-  		 
-  		 default:
-  			  	data = null;
-
-  	  };
-  	  
-  	  return data;
-    
-    }
+  }
   
 });
 

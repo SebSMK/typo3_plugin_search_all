@@ -47,6 +47,11 @@ var Manager;
 	    target: '#viewpicker'
 	  })); 
 	
+	Manager.addWidget(new AjaxSolr.TeasersWidget({
+	    id: 'teasers_smk_collection',
+	    target: '#smk_teasers'
+	  }));
+	
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
@@ -55,12 +60,7 @@ var Manager;
 	    target: '#' + tagcloudFields[i].field,
 	        field: tagcloudFields[i].field
 	      }));
-	};	
-	
-	Manager.addWidget(new AjaxSolr.TeasersWidget({
-	    id: 'teasers_smk_collection',
-	    target: '#smk_teasers'
-	  }));
+	};		
 		
 //	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
 //	    id: 'currentsearch',
@@ -88,8 +88,8 @@ var Manager;
 	//** add event listeners
    
 	///* switch grid/list in teasers view
-	$(Manager.widgets['gridlistviewswitch']).on('smk_search_gridview', {caller:'smk_search_gridview'}, function(event){ 
-   	 Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
+	$(Manager.widgets['viewpicker']).on('view_picker', function(event){ 
+   	 Manager.widgets['teasers_smk_collection'].switch_list_grid(event.value);
    });    
    $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
    	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
