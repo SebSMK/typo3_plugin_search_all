@@ -1,33 +1,26 @@
 (function ($) {
 
-AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
-  
-//	constructor: function (attributes) {
-//	    AjaxSolr.ResultWidget.__super__.constructor.apply(this, arguments);
-//	    AjaxSolr.extend(this, {
-//	      target_detail: null
-//	    }, attributes);
-//	  },
+AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({  
 
-  start: 0,	
-  
-  teaser_class: 'col_3-grid',
-  teaser_grid_class:'col_3--grid teaser--grid',
-	  
+  start: 0,		  
 
   init: function(){
 	  
 	var self = this;
-	var $target = $(this.target);
+	var $target = $(this.target);		
+	
 	//* load empty template
-	var html = self.template_integration_json(new Array(), 'pi1/templates/teasers.html');    
-	$target.html(html);			  
+	var html = Mustache.getTemplate('pi1/templates/teasers.html');    
+	$target.html($(html).find('#teaserInitTemplate').html());		
+	
+	$target.find('#teaser-container-grid article').hide();
+	
+	//* init masonry
+    $target.find('#teaser-container-grid').masonry( {
+        transitionDuration: 0
+    });
 	  
-  },
-  
-  beforeRequest: function () {
-    //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
-  },
+  },  
 
   afterRequest: function () {
 	  
@@ -37,53 +30,78 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;
 	var $target = $(this.target);
 	
-	//* save current visualization classes
-	self.teaser_class = $target.find('#teaser-container-grid').attr('class') === undefined ? self.teaser_class : $target.find('#teaser-container-grid').attr('class');
-	self.teaser_grid_class = $target.find('#teaser-container-grid article').attr('class') === undefined ? self.teaser_grid_class : $target.find('#teaser-container-grid article').attr('class');	
-		
-	$target.empty();	
-	///* remove all articles
-	//var $all_articles = $target.find('#teaser-container-grid article');
-	//$target.find('#teaser-container-grid').masonry('remove', $all_articles);
+	//* save current article visualization classes	
+	var teaser_article_class = $target.find('#teaser-container-grid article').attr('class');	
+				
+	//* remove all articles
+	var $all_articles = $target.find('#teaser-container-grid article');
+	$target.find('#teaser-container-grid').masonry('remove', $all_articles);		
 	
-	//* load data
-	var artwork_data = null;
-	var objectedItems = new Array();
 	
-	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
-	      var doc = this.manager.response.response.docs[i];	      	      	      
-	      //** load data for this artwork
-	      artwork_data = self.getData(doc);	      
-	      objectedItems.push(artwork_data);
-	      //$target.find('#teaser-container-grid').masonry()
-	      
-    }	
+	//* in case there are no result, we create an empty-invisible article
+	if (this.manager.response.response.docs.length == 0){
+		  var html = self.template_integration_json({}, 'pi1/templates/teasers.html');     
+	      var $article = $(html);	      
+	      //* load current article visualization classes
+	      $article.removeClass().addClass(teaser_article_class);	      
+	      $target.find('#teaser-container-grid').append($article);	      	        
+	      $target.find('#teaser-container-grid').masonry('appended', $article);	 
+	      $target.find('#teaser-container-grid article').hide();
+	      return;		
+	}
+	else{
+		//* load data
+		var artwork_data = null;		
+		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
+		      var doc = this.manager.response.response.docs[i];	      	      	      
+		      
+		      //* load data for this artwork
+		      artwork_data = self.getData(doc);	      	      
+		      
+		      //* merge data and template
+		      var html = self.template_integration_json(artwork_data, 'pi1/templates/teasers.html');     
+		      var $article = $(html);
+		      
+		      //* load current article visualization classes
+		      $article.removeClass().addClass(teaser_article_class);
+		      
+		      $target.find('#teaser-container-grid').append($article);	      
+		      $target.find('#teaser-container-grid .image_loading[img_id='+artwork_data.img_id +']' ).each(function() {    	    	
+		  		self.getImage($target, $(this));
+		      });  
+		      $target.find('#teaser-container-grid').masonry('appended', $article);	      
+	    }						
+	}
 	
-    //* merge data and template
-    var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');    
-    $target.html(html);
-
-    
-    //* load saved classes
-    $target.find('#teaser-container-grid').removeClass().addClass(self.teaser_class );
-	$target.find('#teaser-container-grid article').removeClass().addClass(self.teaser_grid_class);
-    
-	//* start masonry jquery
-    $target.find('#teaser-container-grid').masonry( {
-        transitionDuration: 0
-    });
-    
-    //* add images and associated click handling
-    $target.find( ".image_loading" ).each(function() {    	    	
-		self.getImage($target, $(this));
-    });        
+				
+	
+	 //$target.find('#teaser-container-grid').masonry('layout');
+	
+//    //* merge data and template
+//    var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');    
+//    $target.html(html);
+//
+//    
+//    //* load saved classes
+//    $target.find('#teaser-container-grid').removeClass().addClass(self.teaser_class );
+//	$target.find('#teaser-container-grid article').removeClass().addClass(self.teaser_grid_class);
+//    
+//	//* start masonry jquery
+//    $target.find('#teaser-container-grid').masonry( {
+//        transitionDuration: 0
+//    });
+//    
+//    //* add images and associated click handling
+//    $target.find( ".image_loading" ).each(function() {    	    	
+//		self.getImage($target, $(this));
+//    });        
     
   }, 
   
   template_integration_json: function (data, templ_path){	  
 		var template = Mustache.getTemplate(templ_path);	
 		var json_data = {"artworks": data};
-		var html = Mustache.to_html($(template).find('#teaserGridTemplate').html(), json_data);
+		var html = Mustache.to_html($(template).find('#teaserArticleTemplate').html(), json_data);
 		return html;
 	  },
     

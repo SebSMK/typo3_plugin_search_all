@@ -1,6 +1,11 @@
-<div>	
-	 <script id="teaserGridTemplate" type="text/template">
-	<div id="teaser-container-grid">	
+<div>
+    <script id="teaserInitTemplate" type="text/template">	
+		<div id="teaser-container-grid" class="col_3-grid">	
+        	<article class="teaser--grid col_3--grid"></article>
+		</div>
+	 </script>
+	 	
+	 <script id="teaserArticleTemplate" type="text/template">	
 		{{#artworks}}
         <article class="teaser--grid">
           <div class="teaser__wrapper">
@@ -23,7 +28,7 @@
 					<a href="{{url}}" alt="{{title}}">{{artist_name}}<br><i>{{title}}<span>&nbsp({{artwork_date}})</span></i></a> 
 				{{/is_artwork}}
 				
-				<!-- showing not an artwork -->
+				<!-- not showing an artwork -->
 				{{#not_is_artwork}} 
 					<a href="{{url}}" alt="{{title}}">{{title}}</a> 
 				{{/not_is_artwork}}
@@ -42,6 +47,5 @@
           </div><!-- teaser__wrapper -->
         </article><!-- teaser -->      
       {{/artworks}}	 
-	</div>	
 	</script>	
 </div>
