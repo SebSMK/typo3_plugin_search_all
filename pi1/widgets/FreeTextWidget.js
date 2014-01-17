@@ -47,7 +47,7 @@ AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
 		if (!this.hightlight)
 			return;
 		var vArray = this.manager.store.last.split(" ");
-		jQuery('#smk_teasers').highlight(vArray);
+		jQuery('#smk_teasers .teaser__content').highlight(vArray);
 		
 	}
 	

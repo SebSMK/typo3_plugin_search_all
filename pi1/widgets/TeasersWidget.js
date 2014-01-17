@@ -14,14 +14,24 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   teaser_class: 'col_3-grid',
   teaser_grid_class:'col_3--grid teaser--grid',
 	  
-	
+
+  init: function(){
+	  
+	var self = this;
+	var $target = $(this.target);
+	//* load empty template
+	var html = self.template_integration_json(new Array(), 'pi1/templates/teasers.html');    
+	$target.html(html);			  
+	  
+  },
+  
   beforeRequest: function () {
     //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
   },
 
   afterRequest: function () {
 	  
-	  if ($(this.target).is(':hidden'))
+	if ($(this.target).is(':hidden'))
 		  	return;		
 	  
 	var self = this;
@@ -31,7 +41,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	self.teaser_class = $target.find('#teaser-container-grid').attr('class') === undefined ? self.teaser_class : $target.find('#teaser-container-grid').attr('class');
 	self.teaser_grid_class = $target.find('#teaser-container-grid article').attr('class') === undefined ? self.teaser_grid_class : $target.find('#teaser-container-grid article').attr('class');	
 		
-	$target.empty();												
+	$target.empty();	
+	///* remove all articles
+	//var $all_articles = $target.find('#teaser-container-grid article');
+	//$target.find('#teaser-container-grid').masonry('remove', $all_articles);
 	
 	//* load data
 	var artwork_data = null;
@@ -41,7 +54,9 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	      var doc = this.manager.response.response.docs[i];	      	      	      
 	      //** load data for this artwork
 	      artwork_data = self.getData(doc);	      
-	      objectedItems.push(artwork_data);	      
+	      objectedItems.push(artwork_data);
+	      //$target.find('#teaser-container-grid').masonry()
+	      
     }	
 	
     //* merge data and template
@@ -224,22 +239,71 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   },
   
   switch_list_grid: function (view) {
- 
+	var self = this;  
 	var $target = $(this.target);
 	
 	if(view == "grid") {		
-		$target.find('#teaser-container-grid article').removeClass('teaser--list').addClass('teaser--grid');	
+		//$target.find('#teaser-container-grid article').removeClass('teaser--list').addClass('teaser--grid');
+		self.setTeaserViewGrid();
 	}	
 	else if(view == "list") {
-		$target.find('#teaser-container-grid article').removeClass('teaser--grid').addClass('teaser--list');
+		//$target.find('#teaser-container-grid article').removeClass('teaser--grid').addClass('teaser--list');
+		self.setTeaserViewList();
 	}
-	
-    $target.find('#teaser-container-grid').masonry( {
-        transitionDuration: 0
-    });
-    
+		
+	$target.find('#teaser-container-grid').masonry('layout');    
 
-  }
+  },
+  
+//Grid view
+  setTeaserViewGrid: function () {
+
+    // Restyling articles
+    var teasers = $('article').each( function() {
+      if ( $(this).hasClass('teaser--list') ) {
+
+        // Switching classes
+        $(this).removeClass('teaser--list');
+        $(this).addClass('teaser--grid');
+
+//        // Removing list style css
+//        $(this).attr('style', '');
+//
+//        // Adding CSS position (masonry doesn't add this automatically when rerun - see below)
+//        $(this).css('position', 'absolute');
+      } // end if
+    });
+
+    // Rerun masonry to enable grid
+    $('#teaser-container-grid').masonry({
+      transitionDuration: 0
+    });
+  }, // setTeaserViewGrid
+
+  // List view
+  setTeaserViewList: function () {
+    // Resetting the height of the containing element
+//    $('#teaser-container-grid').css('height', 'auto');
+
+    // Restyling articles
+    $('article').each( function() {
+      if ( $(this).hasClass('teaser--grid') ) {
+
+        // Switching classes
+        $(this).removeClass('teaser--grid');
+        $(this).addClass('teaser--list');
+
+//        // Adjusting CSS
+//        $(this).css('position', 'relative');
+//        $(this).css('float', 'none');
+//        $(this).css('width', 'auto');
+//        $(this).css('top', 'auto');
+//        $(this).css('right', 'auto');
+//        $(this).css('bottom', 'auto');
+//        $(this).css('left', 'auto');
+      } // end if
+    });
+  } // setTeaserViewGrid
   
 });
 

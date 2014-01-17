@@ -24,12 +24,7 @@ var Manager;
 	    multivalue:false,
 	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
 	    activeCategory: "all"
-	  }));
-	
-	Manager.addWidget(new AjaxSolr.FreeTextWidget({
-		  id: 'textfree',
-		  target: '#searchfreetext'
-	}));
+	  }));	
 	
 	Manager.addWidget(new AjaxSolr.PagerWidget({
 	    id: 'pager',
@@ -51,6 +46,11 @@ var Manager;
 	    id: 'teasers_smk_collection',
 	    target: '#smk_teasers'
 	  }));
+	
+	Manager.addWidget(new AjaxSolr.FreeTextWidget({
+		  id: 'textfree',
+		  target: '#searchfreetext'
+	}));
 	
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
@@ -91,17 +91,17 @@ var Manager;
 	$(Manager.widgets['viewpicker']).on('view_picker', function(event){ 
    	 Manager.widgets['teasers_smk_collection'].switch_list_grid(event.value);
    });    
-   $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
-   	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
-   }); 
+//   $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
+//   	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
+//   }); 
     
    //* switch between categories
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
     	Manager.widgets['state_manager_smk_collection'].stateChanged({category:event.category});
     });        
-    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
-    	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
-    });
+//    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
+//    	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
+//    });
     
     //* switch between teasers/detail view
     $(Manager.widgets['teasers_smk_collection']).on('smk_search_call_detail', function(event){     	
@@ -113,7 +113,7 @@ var Manager;
     	Manager.widgets['teasers_smk_collection'].call_previous_search();
     });	
 	
-    //* All teaser's images has been loaded
+    //* a new image has finished loading in "teaser"
     $(Manager.widgets['teasers_smk_collection']).on('smk_teasers_all_img_loaded', function(event){     	        
     	//Executes when complete page is fully loaded, including all frames, objects
         // and images. This ensures that Masonry knows about elements heights and can
