@@ -37,7 +37,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
     
     switch(newstate["view"]){
 	  case "teasers":		  
-		  $target.find(".search_smk_result_detail").hide();
+		  $target.find("#smk_detail").hide();
 		  $target.find("#category").show().children().show();	
 		  $target.find("#viewpicker").show().children().show();	
 		  
@@ -66,7 +66,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#viewpicker").hide();
 		  $target.find("#search-filters").hide();
 		  $target.find("#smk_teasers").hide();		  
-		  $target.find(".search_smk_result_detail").show().children().show();
+		  $target.find("#smk_detail").show().children().show();
 		  break;		  
 	  } 	
 

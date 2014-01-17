@@ -38,7 +38,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	$target.find('#teaser-container-grid').masonry('remove', $all_articles);		
 	
 	
-	//* in case there are no result, we create an empty-invisible article
+	//* in case there are no results, we create an empty-invisible article - but with the correct visualization class...
 	if (this.manager.response.response.docs.length == 0){
 		  var html = self.template_integration_json({}, 'pi1/templates/teasers.html');     
 	      var $article = $(html);	      
@@ -66,35 +66,12 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		      $article.removeClass().addClass(teaser_article_class);
 		      
 		      $target.find('#teaser-container-grid').append($article);	      
-		      $target.find('#teaser-container-grid .image_loading[img_id='+artwork_data.img_id +']' ).each(function() {    	    	
+		      $target.find('#teaser-container-grid .image_loading[img_id='+ $('<div/>').text(artwork_data.img_id).html() +']' ).each(function() {    	    	
 		  		self.getImage($target, $(this));
 		      });  
 		      $target.find('#teaser-container-grid').masonry('appended', $article);	      
 	    }						
-	}
-	
-				
-	
-	 //$target.find('#teaser-container-grid').masonry('layout');
-	
-//    //* merge data and template
-//    var html = self.template_integration_json(objectedItems, 'pi1/templates/teasers.html');    
-//    $target.html(html);
-//
-//    
-//    //* load saved classes
-//    $target.find('#teaser-container-grid').removeClass().addClass(self.teaser_class );
-//	$target.find('#teaser-container-grid article').removeClass().addClass(self.teaser_grid_class);
-//    
-//	//* start masonry jquery
-//    $target.find('#teaser-container-grid').masonry( {
-//        transitionDuration: 0
-//    });
-//    
-//    //* add images and associated click handling
-//    $target.find( ".image_loading" ).each(function() {    	    	
-//		self.getImage($target, $(this));
-//    });        
+	}	   
     
   }, 
   
@@ -120,7 +97,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),				  		
 				  		categories: [{name: "Samlinger", url:"#"}],
 				  		meta: [{key: "inv.num.", value: doc.id}],				  		
-				  		img_id: doc.id,
+				  		img_id: doc.id.split(' ')[0].replace("/", "--"), // for verso and sub-artworks
 				  		artist_name: doc.artist_name_ss,	
 				  		not_is_artwork: false,
 				  		is_artwork: true,

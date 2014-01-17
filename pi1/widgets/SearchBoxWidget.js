@@ -1,5 +1,5 @@
 (function ($) {
-AjaxSolr.FreeTextWidget = AjaxSolr.AbstractTextWidget.extend({
+AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 	
 	hightlight : true,
 	
