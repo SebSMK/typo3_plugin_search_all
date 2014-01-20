@@ -1,5 +1,19 @@
 @CHARSET "ISO-8859-1";
 
+
+#pager,
+#pager-header,
+#viewpicker {
+  display: inline;
+}
+
+#pager li,
+.links li {
+  list-style-type: none;
+  display: inline;
+  margin: 1px;
+}
+
 .search-choice span{	
 	color: #ffffff;
 }

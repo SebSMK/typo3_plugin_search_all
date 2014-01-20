@@ -4,7 +4,7 @@ var Manager;
 
   $(function () {
     Manager = new AjaxSolr.smkManager({
-    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All/',
+    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v2/',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit"]
     	})    	
@@ -33,7 +33,7 @@ var Manager;
 	    nextLabel: '&gt;',
 	    innerWindow: 1,
 	    renderHeader: function (perPage, offset, total) {
-	      $('#pager-header').html($('<span></span>').text('displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
+	      $('#pager-header').html($('<span></span>').text(' displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
 	    }
 	  }));
 	
