@@ -1,6 +1,16 @@
 @CHARSET "ISO-8859-1";
 
 
+#currentsearch {
+  padding: 0px 10px 15px 15px;
+  /*font-size: 80%;*/
+}
+#currentsearch li {
+  list-style-type: none;
+  clear: both; color: #828282; font-size: 0.9em;
+  margin-left: 15px;
+}
+
 #pager,
 #pager-header,
 #viewpicker {

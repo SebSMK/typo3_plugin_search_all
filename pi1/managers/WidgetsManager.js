@@ -62,10 +62,10 @@ var Manager;
 	      }));
 	};		
 		
-//	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
-//	    id: 'currentsearch',
-//	    target: '#selection'
-//	  })); 
+	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
+	    id: 'currentsearch',
+	    target: '#currentsearch'
+	  })); 
 	
 	Manager.addWidget(new AjaxSolr.DetailWidget({
 	      id: 'details',
@@ -100,13 +100,15 @@ var Manager;
 //   	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
 //   }); 
     
-   //* switch between categories
+	//* switch between categories
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
     	Manager.widgets['state_manager'].stateChanged({category:event.category});
     });        
-//    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
-//    	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
-//    });
+    
+    //* all categories
+    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
+    	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
+    });
     
     //* switch between teasers/detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
