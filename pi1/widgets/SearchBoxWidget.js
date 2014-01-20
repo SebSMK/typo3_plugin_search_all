@@ -33,7 +33,7 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 						var value = jQuery.trim(val);
 						//if (mgr.store.last != value) {
 							mgr.store.last = value;
-							if (mgr.store.addByValue('q', 'page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
+							if (mgr.store.addByValue('q', 'id:(' + value + '*)^2 page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
 								//mgr.store.addByValue('fl', e.data.mdf);																					
 								mgr.doRequest(0);								
 							}

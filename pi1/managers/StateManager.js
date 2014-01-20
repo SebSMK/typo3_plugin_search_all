@@ -38,8 +38,12 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
     switch(newstate["view"]){
 	  case "teasers":		  
 		  $target.find("#smk_detail").hide();
+		  $target.find("#related-artworks").hide();
+		  
 		  $target.find("#category").show().children().show();	
-		  $target.find("#viewpicker").show().children().show();	
+		  $target.find("#viewpicker").show().children().show();
+		  $target.find("#pager").show().children().show();
+		  $target.find("#pager-header").show().children().show();
 		  
 		  switch(newstate["category"]){
 			  case "samlingercollectionspace":		 			  			  
@@ -64,9 +68,16 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  case "detail":	
 		  $target.find("#category").hide();
 		  $target.find("#viewpicker").hide();
+		  $target.find("#pager").hide();
+		  $target.find("#pager-header").hide();
+		  
 		  $target.find("#search-filters").hide();
 		  $target.find("#smk_teasers").hide();		  
 		  $target.find("#smk_detail").show().children().show();
+		  $target.find("#related-artworks").show().children().show();
+		  
+		  $target.find('.view  #related-artworks #related-container-grid').masonry('layout');
+		  
 		  break;		  
 	  } 	
 

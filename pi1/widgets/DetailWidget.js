@@ -60,7 +60,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  return {
 		  		media:[{
 		  			title:doc.title_first,	 
-			  		image: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Original", doc.medium_image_data),
+			  		//image: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Original", doc.medium_image_data),
+		  			image: doc.medium_image_url,
 			  		copyright: "copyright", 
 			  		thumbnails: false
 		  		}],

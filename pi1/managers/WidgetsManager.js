@@ -15,7 +15,7 @@ var Manager;
 	    id: 'state_manager',
 	    target: '#smk_search_wrapper',
 	    currentState: {view:'teasers', category:''}
-	  }));
+	}));
 	
 	Manager.addWidget(new AjaxSolr.CategoryWidget({
 	    id: 'category',
@@ -70,7 +70,12 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.DetailWidget({
 	      id: 'details',
 	      target: '#smk_detail'
-	    })); 
+	    }));
+
+	Manager.addWidget(new AjaxSolr.RelatedWidget({
+	    id: 'related',
+	    target: '#related-artworks'
+	  }));
 //	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
 //	    id: 'text_artist',
 //	    target: '#search_smk_collection',
@@ -107,7 +112,11 @@ var Manager;
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].stateChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id);
-    });	    
+    });	 
+    $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
+    	Manager.widgets['state_manager'].stateChanged({view:"detail"});
+    	Manager.widgets['details'].call_detail(event.detail_id);
+    });	
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].stateChanged({view:"teasers"});
     	Manager.widgets['teasers'].call_previous_search();
@@ -125,9 +134,21 @@ var Manager;
     	$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
     });
     
+  //* a new image has finished loading in "related"
+    $(Manager.widgets['related']).on('smk_related_all_img_loaded', function(event){     	        
+    	//Executes when complete page is fully loaded, including all frames, objects
+        // and images. This ensures that Masonry knows about elements heights and can
+        // do its layouting properly.
+//    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry( {
+//          transitionDuration: 0
+//        });
+    	
+    	$(Manager.widgets['related'].target).find('#related-container-grid').masonry('layout');
+    });
+    
     
     Manager.init();
-    Manager.store.addByValue('q', '*:*');
+    Manager.store.addByValue('q', '-(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace)');
     
     var params = {
       facet: true,

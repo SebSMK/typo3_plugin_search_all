@@ -65,10 +65,15 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		      //* load current article visualization classes
 		      $article.removeClass().addClass(teaser_article_class);
 		      
+		      //* add image + click on image to the current article
+		      $article.find('.image_loading').each(function() {    	    	
+			  		self.getImage($article, $(this));
+			  });
+		      
+		      //* append the current article to list
 		      $target.find('#teaser-container-grid').append($article);	      
-		      $target.find('#teaser-container-grid .image_loading[img_id='+ $('<div/>').text(artwork_data.img_id).html() +']' ).each(function() {    	    	
-		  		self.getImage($target, $(this));
-		      });  
+		      
+		      //* refresh masonry
 		      $target.find('#teaser-container-grid').masonry('appended', $article);	      
 	    }						
 	}	   
@@ -94,7 +99,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
 			 data = {
 				  		title:doc.title_first,	 
-				  		thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),				  		
+				  		//thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
+				  		thumbnail: doc.medium_image_url,
 				  		categories: [{name: "Samlinger", url:"#"}],
 				  		meta: [{key: "inv.num.", value: doc.id}],				  		
 				  		img_id: doc.id.split(' ')[0].replace("/", "--"), // for verso and sub-artworks

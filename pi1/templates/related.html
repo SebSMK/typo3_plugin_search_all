@@ -1,0 +1,39 @@
+<div>
+    <script id="relatedInitTemplate" type="text/template">	
+		<h3 class="heading--l heading--bordered">Relaterede v&aelig;ker</h3>
+		<div id="related-container-grid" class="col_3-grid">	
+        	<article class="related--grid col_3--grid"></article>
+		</div>
+	 </script>
+	 	
+	 <script id="relatedArticleTemplate" type="text/template">	
+		{{#artworks}}		
+        <article class="related--grid">
+          <div class="related__wrapper">
+            <div class="related__thumbnail image_loading" src="{{thumbnail}}" alt="{{title}}" img_id="{{img_id}}">
+              <a href="{{url}}" alt="{{title}} "></a>
+            </div>
+            
+            <div class="related__content">
+              <ul class="related__category">
+                {{#categories}}
+                  <li>
+                    <a href="{{url}}">{{name}}</a>
+                  </li>
+                {{/categories}}
+              </ul>
+              
+              <h3 class="related__heading">               					 
+					<a href="{{url}}" alt="{{title}}">{{artist_name}}<br><i>{{title}}<span>&nbsp({{artwork_date}})</span></i></a> 
+              </h3>
+              <ul class="related__meta">
+                {{#meta}}
+                  <li><span>{{key}}</span> {{value}}</li>
+                {{/meta}}
+              </ul>
+            </div><!-- related__content -->
+          </div><!-- related__wrapper -->
+        </article><!-- related -->      
+      {{/artworks}}	 
+	</script>	
+</div>
