@@ -57,30 +57,91 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   },
   
   get_data: function (doc){
-	  return {
-		  		media:[{
+	  var data =  {
+		  		media:{
 		  			title:doc.title_first,	 
 			  		//image: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Original", doc.medium_image_data),
 		  			image: doc.medium_image_url,
 			  		copyright: "copyright", 
 			  		thumbnails: false
-		  		}],
+		  		},
 		  		
-		  		info:[{
+		  		info:{
+		  			
 		  			title:doc.title_first,	
 		  		    artist_name: doc.artist_name_ss,
 		  		    artwork_date: new Date(doc.object_production_date_earliest).getFullYear(),
-		  		    description:" Lorem ipsum dolor sit amet, sem praesent cras et quis, erat magna mattis vivamus vivamus lectus, sed eius mi fusce faucibus, iste magna sit orci, sit ac et etiam pharetra pede aliquam. Velit lectus, bibendum adipiscing ultrices. Velit ultricies massa, gravida dolor lectus viverra. Sodales id elit. Auctor felis suscipit suspendisse, pretium justo ligula neque etiam praesent dolor, augue dui.Odit sed massa est, eget enim, non tempor aliquam mollis sapien, in donec sed risus rhoncus ut facilisis, neque proin ipsum dis. Sem magna suspendisse enim duis, porta praesent sit malesuada nibh dolor amet, curae augue ut gravida nullam. Adipiscing vivamus mauris. Lacinia phasellus donec non condimentum, arcu duis dictum, scelerisque et nam suspendisse ipsum. Malesuada turpis a, ac metus. Class velit elit, consequat rutrum, vulputate a, suspendisse libero velit leo aenean. Lacus porta, felis venenatis a vitae metus nec. Integer libero consectetuer viverra lacus. Culpa vestibulum enim turpis vitae ut sed, euismod nulla quam dictum morbi. Feugiat nulla odio quisque nec ligula amet.",
-		  		    meta: [{
+		  		    description: doc.content_note,
+		  		    technique: {
+		  		    	key: "technique",  
+		  		    	value: doc.prod_technique_s
+		  		    },
+		  		    meta: {
 		  		    	key: "inv.num.",  
-		  		    	value: doc.id,
-		  		    	'type-code': true
-		  		    }],
-		  		    prev: [{		  		    	 
+		  		    	value: doc.id
+		  		    },
+		  		    
+		  		    acq: false,
+		  		    
+		  		    dim: false,
+		  		    
+		  		    location:false,
+		  		    
+		  		    prev: {		  		    	 
 		  		    	value: "Back to previous search"		  		    	
-		  		    }]		  		    
-		  		}]	  
-			}			 	  
+		  		    }		  		    
+		  		}	  
+			};	
+	  
+	  //* add acquisition data
+	  if (doc.acq_date !== undefined || doc.acq_method !== undefined){
+		  data.info.acq = {
+			    	key: "erhvervelse",  
+				    	date: doc.acq_date,
+				    	method: doc.acq_method,
+				    	note: doc.acq_note,
+				    	source: doc.acq_source
+		  };
+		  
+	  };
+	  
+	  
+	  //* add dimension data
+	  if (doc.heigth_net !== undefined || doc.width_net !== undefined || doc.heigth_brut !== undefined || doc.width_brut !== undefined){
+		  
+		  data.info.dim = {
+			    	key: "dimension", 			    	
+			    	net: false,
+			    	brut: false
+		  };
+		  
+		  if (doc.heigth_net !== undefined || doc.width_net !== undefined){
+			  data.info.dim.net = 
+			  			{
+				    		heigth : doc.heigth_net !== undefined ? doc.heigth_net : "-",
+					    	width : doc.width_net !== undefined ? doc.width_net : "-",
+					    	unit : doc.heigthunit_net
+				    	};	  		  
+		  };
+		  
+		  if (doc.heigth_brut !== undefined || doc.width_brut !== undefined){
+			  data.info.dim.brut = 
+			  			{
+				    		heigth : doc.heigth_brut !== undefined ? doc.heigth_brut : "-",
+					    	width : doc.width_net !== undefined ? doc.width_net : "-",
+					    	unit : doc.heigthunit_brut
+				    	};		  		    			  		    				    				    	  		  
+		  }; 
+		  
+	  };
+	  
+	  //* add location	  	 	  
+	  data.info.location = {
+			  key:"location",
+			  value:doc.location_name
+	  };
+	  	  
+	  return data;	  
   
   },     
   

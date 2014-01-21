@@ -101,12 +101,13 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		title:doc.title_first,	 
 				  		//thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
 				  		thumbnail: doc.medium_image_url,
-				  		categories: [{name: "Samlinger", url:"#"}],
-				  		meta: [{key: "inv.num.", value: doc.id}],				  		
+				  		categories: {name: "Samlinger", url:"#"},
+				  		meta: {key: "inv.num.", value: doc.id},				  		
 				  		img_id: doc.id.split(' ')[0].replace("/", "--"), // for verso and sub-artworks
 				  		artist_name: doc.artist_name_ss,	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
+				  		location: {key: "location", value: doc.location_name},
 				  		
 		  				ref_number: doc.id,		  				
 		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,

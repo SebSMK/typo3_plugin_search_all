@@ -46,16 +46,63 @@
 	  <h1 class="heading--m">{{artist_name}}<br><i>{{title}}<span>&nbsp({{artwork_date}})</span></i></h1>
 	
 	  <div class="cutoff">{{description}}</div>
+
+	<!-- Data pairs (technique) -->
+	  {{#technique}}
+	  <div class="data-pairs">
+	    <div class="data-pair">
+	      <div class="data-pair__key">{{key}}</div>
+	      <div class="data-pair__value">{{value}}</div>
+	    </div>	    
+	  </div><!-- data-pairs -->
+	  {{/technique}}	
+
+
+	  <!-- Data pairs (dimensions) -->
+	  {{#dim}}
+	  <div class="data-pairs">
+	    <div class="data-pair">
+	      <div class="data-pair__key">{{key}}</div>							
+			{{#net}}	      		
+				<div class="data-pair__value">Netto: {{heigth}}&nbsp;x&nbsp;{{width}}&nbsp;{{unit}}</div>
+			{{/net}}
+		  {{#brut}}
+	      		<div class="data-pair__value">Brutto: {{heigth}}&nbsp;x&nbsp;{{width}}&nbsp;{{unit}}</div>
+			{{/brut}}
+	    </div>	    
+	  </div><!-- data-pairs -->
+	  {{/dim}}	
 	
-	  <!-- Data pairs (metainformation) -->
+	  <!-- Data pairs (acquisition) -->
+	  {{#acq}}
+	  <div class="data-pairs">
+	    <div class="data-pair">
+	      <div class="data-pair__key">{{key}}</div>
+	      <div class="data-pair__value">{{method}}, {{source}} - {{date}}</div>
+		  <div class="data-pair__value">{{note}}</div>
+	    </div>	    
+	  </div><!-- data-pairs -->
+	  {{/acq}}
+
+	  <!-- Data pairs (inventar number) -->
 	  {{#meta}}
 	  <div class="data-pairs">
 	    <div class="data-pair">
 	      <div class="data-pair__key">{{key}}</div>
-	      <div class="data-pair__value {{#type-code}}type--code{{/type-code}}">{{value}}</div>
+	      <div class="data-pair__value type--code">{{value}}</div>
 	    </div>	    
 	  </div><!-- data-pairs -->
 	  {{/meta}}
+
+	  <!-- Data pairs (location) -->
+	  {{#location}}
+	  <div class="data-pairs">
+	    <div class="data-pair">
+	      <div class="data-pair__key">{{key}}</div>
+	      <div class="data-pair__value">{{value}}</div>
+	    </div>	    
+	  </div><!-- data-pairs -->
+	  {{/location}}
 
 	<!-- Link to previous search -->
 	  {{#prev}}

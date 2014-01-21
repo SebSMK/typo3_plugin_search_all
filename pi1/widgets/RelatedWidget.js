@@ -22,48 +22,50 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	  
   },  
 
-  afterRequest: function () {
-	  
-	if ($(this.target).is(':hidden'))
-		  	return;		
-	  
+  afterRequest: function () {	  				  
 	var self = this;
 	var $target = $(this.target);
+	
+	if ($target.is(':hidden'))
+	  	return;
 				
-	//* remove all articles
+	//* remove all existing articles
 	var $all_articles = $target.find('#related-container-grid article');
 	$target.find('#related-container-grid').masonry('remove', $all_articles);		
-		
-	//* in case there are no results, we create an empty-invisible article - but with the correct visualization class...
+			
+	//* create new articles
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 		//* load data
 		var artwork_data = null;						
 		var doc = this.manager.response.response.docs[i];	      	      	      
 		
-		if (doc.related_id !== undefined){ 
+		if (doc.related_id === undefined){
+			$target.hide();
+			return;			
+		} 
 			
-			doc.related_id.split(';-;').forEach( function(entry){
-				  //* load data for this artwork
-			      artwork_data = self.getData(entry);	      	      
-			      
-			      //* merge data and template
-			      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html');     
-			      var $article = $(html);
+		doc.related_id.split(';-;').forEach( function(entry){
+			  //* load data for this artwork
+		      artwork_data = self.getData(entry);	      	      
+		      
+		      //* merge data and template
+		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html');     
+		      var $article = $(html);
 
-			      //* add image + click on image to the current article
-			      $article.find('.image_loading').each(function() {    	    	
-				  		self.getImage($article, $(this));
-				  });
-			      
-			      //* append the current article to list
-			      $target.find('#related-container-grid').append($article);	      
-			      
-			      //* refresh masonry
-			      $target.find('#related-container-grid').masonry('appended', $article);	  				
-				
-				}					
-			);								        
-	    }						
+		      //* add image + click on image to the current article
+		      $article.find('.image_loading').each(function() {    	    	
+			  		self.getImage($article, $(this));
+			  });
+		      
+		      //* append the current article to list
+		      $target.find('#related-container-grid').append($article);	      
+		      
+		      //* refresh masonry
+		      $target.find('#related-container-grid').masonry('appended', $article);	  				
+			
+			}					
+		);								        
+    						
 	}	   
     
   }, 
