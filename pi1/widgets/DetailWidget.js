@@ -2,12 +2,12 @@
 
 AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
-//	constructor: function (attributes) {
-//	    AjaxSolr.ResultWidget.__super__.constructor.apply(this, arguments);
-//	    AjaxSolr.extend(this, {
-//	      target_detail: null
-//	    }, attributes);
-//	  },	
+	constructor: function (attributes) {
+	    AjaxSolr.DetailWidget.__super__.constructor.apply(this, arguments);
+	    AjaxSolr.extend(this, {
+	      thumbnails_target: null
+	    }, attributes);
+	  },	
   
   start: 0,
 	
@@ -17,11 +17,16 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 
   afterRequest: function () {
 	  
-	  if ($(this.target).is(':hidden'))
+	if ($(this.target).is(':hidden'))
 		  	return;		
   
 	var self = this;		
 	var $target = $(this.target);
+	
+	// if the thumbnail gallery mustn't be frefreshed, we save it
+	var $thumbnails = null;
+	if ( $(this.target).find(this.thumbnails_target).attr("class") == 'no_refresh')
+		$thumbnails =  $(this.target).find(this.thumbnails_target);			
 	
 	$target.empty();
 	
@@ -34,6 +39,19 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	//* merge data and template
     var html = self.template_integration_json(artwork_data, 'pi1/templates/detail.html');    
     $target.html(html);
+    
+  //* add main image
+    $target.find('.gallery__main.image_loading').each(function() {    	    	
+	  		self.getImage($(this));
+	});
+    
+    //* if the previous thumbnail gallery was saved, reload it
+    if($thumbnails != null){
+//    	$(this.target).find(this.thumbnails_target).html($thumbnails.html());
+//    	$(this.target).find(this.thumbnails_target).addClass('no_refresh');
+    	$(this.target).find(this.thumbnails_target).append( $thumbnails.find('.gallery__thumbnails'));
+    	$(this.target).find(this.thumbnails_target).addClass('no_refresh');
+    }    	
 	
     //* add link to previous search
 	$target.find('.previous_search').click(
@@ -59,11 +77,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   get_data: function (doc){
 	  var data =  {
 		  		media:{
-		  			title:doc.title_first,	 
+		  			title:doc.title_first,		  			
 			  		//image: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Original", doc.medium_image_data),
 		  			image: doc.medium_image_url,
-			  		copyright: "copyright", 
-			  		thumbnails: false
+			  		copyright: "copyright",
+			  		img_id:doc.id
 		  		},
 		  		
 		  		info:{
@@ -74,7 +92,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    description: doc.content_note,
 		  		    technique: {
 		  		    	key: "technique",  
-		  		    	value: doc.prod_technique_s
+		  		    	value: doc.prod_technique
 		  		    },
 		  		    meta: {
 		  		    	key: "inv.num.",  
@@ -96,11 +114,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  //* add acquisition data
 	  if (doc.acq_date !== undefined || doc.acq_method !== undefined){
 		  data.info.acq = {
-			    	key: "erhvervelse",  
-				    	date: doc.acq_date,
-				    	method: doc.acq_method,
-				    	note: doc.acq_note,
-				    	source: doc.acq_source
+			key: "erhvervelse",  
+			date: doc.acq_date,
+			method: doc.acq_method,
+			note: doc.acq_note,
+			source: doc.acq_source
 		  };
 		  
 	  };
@@ -110,27 +128,25 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  if (doc.heigth_net !== undefined || doc.width_net !== undefined || doc.heigth_brut !== undefined || doc.width_brut !== undefined){
 		  
 		  data.info.dim = {
-			    	key: "dimension", 			    	
-			    	net: false,
-			    	brut: false
+	    	key: "dimension", 			    	
+	    	net: false,
+	    	brut: false
 		  };
 		  
 		  if (doc.heigth_net !== undefined || doc.width_net !== undefined){
-			  data.info.dim.net = 
-			  			{
-				    		heigth : doc.heigth_net !== undefined ? doc.heigth_net : "-",
-					    	width : doc.width_net !== undefined ? doc.width_net : "-",
-					    	unit : doc.heigthunit_net
-				    	};	  		  
+			  data.info.dim.net = {
+	    		heigth : doc.heigth_net !== undefined ? doc.heigth_net : "-",
+		    	width : doc.width_net !== undefined ? doc.width_net : "-",
+		    	unit : doc.heigthunit_net
+			  };	  		  
 		  };
 		  
 		  if (doc.heigth_brut !== undefined || doc.width_brut !== undefined){
-			  data.info.dim.brut = 
-			  			{
-				    		heigth : doc.heigth_brut !== undefined ? doc.heigth_brut : "-",
-					    	width : doc.width_net !== undefined ? doc.width_net : "-",
-					    	unit : doc.heigthunit_brut
-				    	};		  		    			  		    				    				    	  		  
+			  data.info.dim.brut = {
+	    		heigth : doc.heigth_brut !== undefined ? doc.heigth_brut : "-",
+		    	width : doc.width_brut !== undefined ? doc.width_brut : "-",
+		    	unit : doc.heigthunit_brut
+			 };		  		    			  		    				    				    	  		  
 		  }; 
 		  
 	  };
@@ -139,34 +155,42 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  data.info.location = {
 			  key:"location",
 			  value:doc.location_name
-	  };
-	  	  
+	  };	  	  
+	  
 	  return data;	  
   
   },     
   
-	getimage: function ($target, img_id, path, detail){
+  getImage: function ($target){
+	  var img_id = $target.attr("img_id");
+	  var path = $target.attr("src");
+	  var alt = $target.attr("alt");	  
 	  var img = new Image();
 	  var self = this;
-
+	  	   
 	  // wrap our new image in jQuery, then:
 	  $(img)
 	    // once the image has loaded, execute this code
 	    .load(function () {
 	      // set the image hidden by default    
-	      $(this).hide();
+	      $target.hide();
 	    
 	      // with the holding div #loader, apply:
 	      $target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        // then insert our image
-	        .find('a').append(this);
+	        .append(this);
 	    
 	      // fade our image in to create a nice effect
-	      $(this).fadeIn();
+	      $target.fadeIn();
 	      
-	      //self.images_event_launcher();
+	      // trig "image loaded" event
+	      //if ($container.find('.image_loading').length == 0){
+//	    	  $(self).trigger({
+//	  			type: "smk_related_all_img_loaded"
+//	  		  });  	    	  
+	      //}
 		 
 	    })
 	    
@@ -175,17 +199,42 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
-	    	.addClass('image_default');
-	    	 
-	    	//self.images_event_launcher();
+	        .append(sprintf('<img src="http://%s/%spi1/images/default_picture.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	    	$target.fadeIn();
+	    	// has all images been loaded, trig event
+//	    	if ($container.find('.image_loading').length == 0){
+//		    	  $(self).trigger({
+//		  			type: "smk_related_all_img_loaded"
+//		  		  });  	    	  
+//		      }
 	    })
 	    
 //	    // call detailed view on click on image
-//	    .click({param1: img_id}, 
-//    		function (event) {					        	
-//	        	return self.call_detail(img_id);	            
+//	    .click({detail_id: img_id, caller:this}, 
+//    		function (event) {
+//	    		event.preventDefault();
+//
+//	    		// if this view is the current view, do nothing 
+//	    		if ($(this).parent().attr("class") == 'current')
+//	    			return;
+//	    		
+//	    		// ...otherwise, change current selected thumnail
+//	    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
+//	    		$(this).parent().addClass('current');	
+//	    		
+//	    		// the thumbnail gallery mustn't be frefreshed
+//	    		$(event.data.caller.target).addClass('no_refresh');	    			    			    		
+//
+//		    	$(event.data.caller).trigger({
+//					type: "smk_search_call_detail_from_thumb",
+//					detail_id: event.data.detail_id
+//				  });
+//		    	
+//		    	return;
 //	          })		
 
+	    .attr('alt', alt)
+	    
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
   },

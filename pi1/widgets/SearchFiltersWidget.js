@@ -52,7 +52,7 @@ constructor: function (attributes) {
 	      if (count > maxCount) {
 	        maxCount = count;
 	      }
-	      objectedItems.push({ "value": facet, "text": facet, "count": count });
+	      objectedItems.push({ "value": facet, "text": facet.charAt(0).toUpperCase() + facet.slice(1), "count": count });
 	    }
 	    objectedItems.sort(function (a, b) {
 	      return a.value < b.value ? -1 : 1;

@@ -21,18 +21,18 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
       }));
     }
 
-    var fq = this.manager.store.values('fq');
-    for (var i = 0, l = fq.length; i < l; i++) {
-      links.push($('<a href="#"></a>').text('(x) ' + fq[i]).click(self.removeFacet(fq[i])));
-    }
+//    var fq = this.manager.store.values('fq');
+//    for (var i = 0, l = fq.length; i < l; i++) {
+//      links.push($('<a href="#"></a>').text('(x) ' + fq[i]).click(self.removeFacet(fq[i])));
+//    }
 
     if (links.length > 1) {
       links.unshift($('<a href="#"></a>').text('Remove all').click(function () {
         self.manager.store.get('q').val('*:*');
-        self.manager.store.remove('fq');
-        $(self).trigger({
-			type: "smk_search_category_removed"			
-		  });  
+//        self.manager.store.remove('fq');
+//        $(self).trigger({
+//			type: "smk_search_category_removed"			
+//		  });  
         self.doRequest();
         return false;
       }));
@@ -48,25 +48,25 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
     else {
       $(this.target).html('<li>Viewing all documents!</li>');
     }
-  },
-
-  removeFacet: function (facet) {
-    var self = this;
-    return function () {
-      if (self.manager.store.removeByValue('fq', facet)) {
-    	var slicedFacet = facet.split(":");
-    	
-    	if(slicedFacet.length == 2 && slicedFacet[0] == "category" ){
-    		$(self).trigger({
-    			type: "smk_search_category_removed"
-    		  });
-    	}
-    		     		    	
-        self.doRequest();
-      }
-      return false;
-    };
   }
+
+//  removeFacet: function (facet) {
+//    var self = this;
+//    return function () {
+//      if (self.manager.store.removeByValue('fq', facet)) {
+//    	var slicedFacet = facet.split(":");
+//    	
+//    	if(slicedFacet.length == 2 && slicedFacet[0] == "category" ){
+//    		$(self).trigger({
+//    			type: "smk_search_category_removed"
+//    		  });
+//    	}
+//    		     		    	
+//        self.doRequest();
+//      }
+//      return false;
+//    };
+//  }
 });
 
 })(jQuery);

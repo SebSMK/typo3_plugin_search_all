@@ -37,7 +37,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
     
     switch(newstate["view"]){
 	  case "teasers":		  
-		  $target.find("#smk_detail").hide();
+		  $target.find("#thumbnails").hide();
+		  $target.find("#smk_detail").hide();		  
 		  $target.find("#related-artworks").hide();
 		  
 		  $target.find("#category").show().children().show();	
@@ -72,8 +73,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#pager-header").hide();
 		  
 		  $target.find("#search-filters").hide();
-		  $target.find("#smk_teasers").hide();		  
+		  $target.find("#smk_teasers").hide();		
+		  
 		  $target.find("#smk_detail").show().children().show();
+		  $target.find("#thumbnails").show().children().show();
 		  $target.find("#related-artworks").show().children().show();
 		  
 		  $target.find('.view  #related-artworks #related-container-grid').masonry('layout');

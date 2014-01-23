@@ -4,7 +4,7 @@ var Manager;
 
   $(function () {
     Manager = new AjaxSolr.smkManager({
-    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v2/',
+    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v4/',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit"]
     	})    	
@@ -52,7 +52,7 @@ var Manager;
 		  target: '#searchbox'
 	}));
 	
-	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'prod_technique', title:'Techniques'} ];
+	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'object_type', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
 	    id: tagcloudFields[i].field,
@@ -67,30 +67,25 @@ var Manager;
 	    target: '#currentsearch'
 	  })); 
 	
+	//* Detail and Thumbs widget are tightly coupled
 	Manager.addWidget(new AjaxSolr.DetailWidget({
 	      id: 'details',
-	      target: '#smk_detail'
-	    }));
-
+	      target: '#smk_detail',
+	      thumbnails_target:'#thumbnails' 
+	 }));
+	Manager.addWidget(new AjaxSolr.ThumbsWidget({
+	      id: 'thumbs',
+	      target: '#thumbnails'
+	 }));	
+	
 	Manager.addWidget(new AjaxSolr.RelatedWidget({
 	    id: 'related',
 	    target: '#related-artworks'
-	  }));
-//	Manager.addWidget(new AjaxSolr.AutocompleteWidget({
-//	    id: 'text_artist',
-//	    target: '#search_smk_collection',
-//	    fields: [ 'artist_name_ss'],
-//	    isWidgetVisible: false
-//	  }));    
-//	Manager.addWidget(new AjaxSolr.AutocompleteTitleWidget({
-//	    id: 'text_title',
-//	    target: '#search_smk_collection_title',
-//	    fields: [ 'title_dk_ss'],
-//	    isWidgetVisible: false
-//	  }));
+	 }));
 
-
+	//******************************
 	//** add event listeners
+	//******************************
    
 	///* switch grid/list in teasers view
 	$(Manager.widgets['viewpicker']).on('view_picker', function(event){ 
@@ -105,12 +100,12 @@ var Manager;
     	Manager.widgets['state_manager'].stateChanged({category:event.category});
     });        
     
-    //* all categories
+    //* call to "all" categories
     $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
     	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
     });
     
-    //* switch between teasers/detail view
+    //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].stateChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id);
@@ -119,10 +114,17 @@ var Manager;
     	Manager.widgets['state_manager'].stateChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id);
     });	
+    $(Manager.widgets['thumbs']).on('smk_search_call_detail_from_thumb', function(event){     	    	
+    	Manager.widgets['state_manager'].stateChanged({view:"detail"});
+    	Manager.widgets['details'].call_detail(event.detail_id);
+    });
+    
+  //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].stateChanged({view:"teasers"});
     	Manager.widgets['teasers'].call_previous_search();
     });	
+
 	
     //* a new image has finished loading in "teaser"
     $(Manager.widgets['teasers']).on('smk_teasers_all_img_loaded', function(event){     	        
@@ -154,7 +156,7 @@ var Manager;
     
     var params = {
       facet: true,
-      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'prod_technique', 'category'],
+      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],
       'f.prod_technique.facet.limit': -1,
       //'f.prod_technique.facet.mincount': 20,
       'facet.limit': -1,

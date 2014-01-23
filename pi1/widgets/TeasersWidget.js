@@ -65,10 +65,23 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		      //* load current article visualization classes
 		      $article.removeClass().addClass(teaser_article_class);
 		      
-		      //* add image + click on image to the current article
+		      //* add image + link to detail on click on image to the current article
 		      $article.find('.image_loading').each(function() {    	    	
 			  		self.getImage($article, $(this));
 			  });
+		      
+		      //* if the current article is an artwork, add a link to detail on click on title
+		      $article.find('.article_artwork')
+		      .click({detail_id: artwork_data.img_id, caller:this}, 
+		      		function (event) {
+		  	    		event.preventDefault();
+		  		    	$(event.data.caller).trigger({
+		  					type: "smk_search_call_detail",
+		  					detail_id: event.data.detail_id
+		  				  });
+		  		    	
+		  		    	return;
+		  	    })		
 		      
 		      //* append the current article to list
 		      $target.find('#teaser-container-grid').append($article);	      
@@ -98,12 +111,13 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  case "samlingercollectionspace":
 
 			 data = {
+				  		id:doc.id,
 				  		title:doc.title_first,	 
 				  		//thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
 				  		thumbnail: doc.medium_image_url,
 				  		categories: {name: "Samlinger", url:"#"},
 				  		meta: {key: "inv.num.", value: doc.id},				  		
-				  		img_id: doc.id.split(' ')[0].replace("/", "--"), // for verso and sub-artworks
+				  		img_id: doc.id, // for verso and sub-artworks
 				  		artist_name: doc.artist_name_ss,	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
@@ -125,6 +139,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		 case "others":
 		 	
 		 	data = {
+				 		id:doc.id,
 			 			title: doc.page_title,
 			 			description: sprintf("%s...", doc.page_content.substring(0, 50)),
 			 			url: doc.page_url,				 			
@@ -155,8 +170,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  var img_id = $target.attr("img_id");
 	  var path = $target.attr("src");
 	  var alt = $target.attr("alt");	  
-	  var img = new Image();
 	  var self = this;
+	  
+	  //
+	  var img = new Image();
 	  	   
 	  // wrap our new image in jQuery, then:
 	  $(img)
@@ -189,14 +206,27 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
-	    	.addClass('image_default');
+	        .find('a')
+	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	    	// call detailed view on click on image
+		    $target.find('img').click({detail_id: img_id, caller:self}, 
+	    		function (event) {
+		    		event.preventDefault();
+			    	$(event.data.caller).trigger({
+						type: "smk_search_call_detail",
+						detail_id: event.data.detail_id
+					  });
+			    	
+			    	return;
+		     });
+	    	$target.fadeIn();
 	    	
-	    	// has all images been loaded, trig event
-	    	if ($container.find('.image_loading').length == 0){
+	    	// trig "image loaded" event
+	    	//if ($container.find('.image_loading').length == 0){
 		    	  $(self).trigger({
 		  			type: "smk_teasers_all_img_loaded"
 		  		  });  	    	  
-		      }
+		     // }
 	    })
 	    
 	    // call detailed view on click on image
@@ -209,7 +239,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  });
 		    	
 		    	return;
-	          })		
+	     })		
 
 	    .attr('alt', alt)
 	    

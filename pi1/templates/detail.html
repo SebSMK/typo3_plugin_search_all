@@ -7,26 +7,16 @@
 {{#media}}
 	<div id="media-container">
 	  <div class="gallery">
-	    <div class="gallery__main">
-	      <img src="{{image}}" title="{{title}}">
+	    <div class="gallery__main image_loading" src="{{image}}" title="{{title}}" alt="{{title}}" img_id="{{img_id}}">
+	      
 	    </div>
 	
 	    <!-- Copyright notice -->
 	    <div class="gallery__copyright">&copy;&nbsp;{{copyright}}</div>
 	
-	    <!-- Images -->
-	    {{#thumbnails}}
-	    <div class="gallery__thumbnails">
-	      <ul>
-	        <li>
-	          <a href="{{url}}" data-copyright="{{copyrights}}">
-	            <img src="{{thumbnail}}">
-	          </a>
-	        </li>      
-	      </ul>
-	    </div>
-	  </div><!-- thumbnails -->
-	  {{/thumbnails}}
+		<!-- thumbnails -->
+		<div id="thumbnails"></div>  	  
+
 	</div><!-- gallery -->
   </div><!-- #media-container -->
 {{/media}}
@@ -78,8 +68,7 @@
 	  <div class="data-pairs">
 	    <div class="data-pair">
 	      <div class="data-pair__key">{{key}}</div>
-	      <div class="data-pair__value">{{method}}, {{source}} - {{date}}</div>
-		  <div class="data-pair__value">{{note}}</div>
+	      <div class="data-pair__value">{{method}}, {{source}} - {{date}}</div>		  
 	    </div>	    
 	  </div><!-- data-pairs -->
 	  {{/acq}}

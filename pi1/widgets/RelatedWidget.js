@@ -52,10 +52,24 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html');     
 		      var $article = $(html);
 
-		      //* add image + click on image to the current article
+		      //* add image + link to detail on click on image to the current article
 		      $article.find('.image_loading').each(function() {    	    	
 			  		self.getImage($article, $(this));
 			  });
+		      
+		      //* add a link to detail on click on title
+		      $article.find('.article_artwork')
+		      .click({detail_id: artwork_data.img_id, caller:self}, 
+		      		function (event) {
+		  	    		event.preventDefault();
+		  		    	$(event.data.caller).trigger({
+		  					type: "smk_search_call_detail",
+		  					detail_id: event.data.detail_id
+		  				  });
+		  		    	
+		  		    	return;
+		  	    })		
+		      
 		      
 		      //* append the current article to list
 		      $target.find('#related-container-grid').append($article);	      
@@ -85,6 +99,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	  var artist_name = entry.split(';--;')[1];
 	  
 	  return {
+		  		id: id,
 		  		title: title_first,	 
 		  		thumbnail: medium_image_data,				  						  		
 		  		meta: [{key: "inv.num.", value: id}],				  		
@@ -132,14 +147,27 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
-	    	.addClass('image_default');
+	        .find('a')
+	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	    	// call detailed view on click on image
+		    $target.find('img').click({detail_id: img_id, caller:self}, 
+	    		function (event) {
+		    		event.preventDefault();
+			    	$(event.data.caller).trigger({
+						type: "smk_search_call_detail",
+						detail_id: event.data.detail_id
+					  });
+			    	
+			    	return;
+		     });
+	    	$target.fadeIn();
 	    	
-	    	// has all images been loaded, trig event
-	    	if ($container.find('.image_loading').length == 0){
+	    	// trig "image loaded" event
+	    	//if ($container.find('.image_loading').length == 0){
 		    	  $(self).trigger({
 		  			type: "smk_related_all_img_loaded"
 		  		  });  	    	  
-		      }
+		     // }
 	    })
 	    
 	    // call detailed view on click on image

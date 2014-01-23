@@ -1,0 +1,20 @@
+<div>
+
+<script id="thumbTemplate" type="text/template">
+
+	    {{#thumbnails}}
+	    <div class="gallery__thumbnails">	    
+		  <ul>
+			{{#thumb}}	  
+	        <li src="{{image}}" alt="{{title}}" img_id="{{img_id}}" class="image_loading">
+	          <a href="#" {{#current}}class = "current"{{/current}}></a>
+	        </li>     
+			{{/thumb}} 
+	      </ul>
+	    </div>	  
+	  </div><!-- thumbnails -->
+	  {{/thumbnails}}	  	  
+
+</script>
+
+</div>
