@@ -21,12 +21,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  	return;		
   
 	var self = this;		
-	var $target = $(this.target);
-	
-	// if the thumbnail gallery mustn't be frefreshed, we save it
-	var $thumbnails = null;
-	if ( $(this.target).find(this.thumbnails_target).attr("class") == 'no_refresh')
-		$thumbnails =  $(this.target).find(this.thumbnails_target);			
+	var $target = $(this.target);		
 	
 	$target.empty();
 	
@@ -40,20 +35,12 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
     var html = self.template_integration_json(artwork_data, 'pi1/templates/detail.html');    
     $target.html(html);
     
-  //* add main image
+    //* add main image
     $target.find('.gallery__main.image_loading').each(function() {    	    	
 	  		self.getImage($(this));
-	});
-    
-    //* if the previous thumbnail gallery was saved, reload it
-    if($thumbnails != null){
-//    	$(this.target).find(this.thumbnails_target).html($thumbnails.html());
-//    	$(this.target).find(this.thumbnails_target).addClass('no_refresh');
-    	$(this.target).find(this.thumbnails_target).append( $thumbnails.find('.gallery__thumbnails'));
-    	$(this.target).find(this.thumbnails_target).addClass('no_refresh');
-    }    	
+	});      	
 	
-    //* add link to previous search
+    //* add link to "previous search" button
 	$target.find('.previous_search').click(
 		  {caller:this}, 
 		  function (event) {
@@ -254,31 +241,6 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
       	      
       self.doRequest();
       return false;
-  },
-  
-  show_detail_deprecated: function () {
-		var self = this;
-		var $target = $(this.target);		
-		
-		$target.empty();
-		
-		//* load the html template	
-		var template = Mustache.getTemplate('pi1/templates/template_detail_artworks.html');
-	    
-		var artwork_data = null;
-		for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
-			var doc = this.manager.response.response.docs[i];
-	      
-	      	artwork_data = self.get_data(doc);
-	        
-	      	if (i == 0){
-	      		var html = Mustache.to_html(template, artwork_data);
-		      	$target.append(html);
-		      
-		      	var path = 'http://cstest:8180/collectionspace/tenant/smk/download/'+ doc.medium_image_data + '/Original';
-				self.getimage($target.find('#' + artwork_data.img_id), doc.id, path, false);		      			      		
-	      	}
-	    }
   }
   
 });

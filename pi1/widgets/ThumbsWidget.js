@@ -2,7 +2,9 @@
 
 AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   
-  start: 0,
+  start: 0, 
+  
+  current_selec: null,
 
   afterRequest: function () {
 	  
@@ -10,44 +12,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	var $target = $(this.target);
 	
 	if ($target.is(':hidden') || $(this.target).length == 0)
-	  	return;		
-  	
-	// if the thumbnail gallery mustn't be frefreshed, return
-	if ($target.attr("class") == 'no_refresh'){
-		$target.removeClass('no_refresh');
-		
-		// call detailed view on click on image
-	    $target.find('li').each(function(){
-		    	
-	    		var img_id = $(this).attr('img_id');
-	    		
-	    		$(this).find('img').click({detail_id: img_id, caller:self}, 
-			    		function (event) {
-				    		event.preventDefault();
-	
-				    		// if this view is the current view, do nothing 
-				    		if ($(this).parent().attr("class") == 'current')
-				    			return;
-				    		
-				    		// ...otherwise, change current selected thumnail
-				    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
-				    		$(this).parent().addClass('current');	
-				    		
-				    		// the thumbnail gallery mustn't be frefreshed
-				    		$(event.data.caller.target).addClass('no_refresh');	    			    			    		
-	
-					    	$(event.data.caller).trigger({
-								type: "smk_search_call_detail_from_thumb",
-								detail_id: event.data.detail_id
-							  });
-					    	
-					    	return;
-				 });	    		    	
-	    	}	    	
-	    );	    
-		
-		return;
-	}		
+	  	return;		  			
 	
 	$target.empty();
 	
@@ -59,7 +24,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 		if(doc.multi_work_ref === undefined)
 			return;
 		
-      	artwork_data = self.get_data(doc);              
+      	artwork_data = self.get_data(doc);
     }
 		
 	//* merge data and template
@@ -70,8 +35,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
     //* add image + link to detail on click on image to the current article
     $target.find('.image_loading').each(function() {    	    	
 	  		self.getImage($(this));
-	});
-
+	});    			    			
  
   },  
   
@@ -87,26 +51,32 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	  var multi_works = doc.multi_work_ref.split(';-;');
 	  var thumbnails = new Array();
 	  
+	  if (this.current_selec == null)
+		  this.current_selec = doc.id;
+	  
 	  //* first proceed data from main work	  
 	  thumbnails.push({
 		  img_id : doc.id,
 		  title : doc.title_first,
 		  image : doc.medium_image_url,
-		  current:true
+		  current: this.current_selec == doc.id
 	  });
 	  
 	  //* ...then data from sub-works
-	  for (var i = 0; i < multi_works.length; i++) {
+	  for (var i = 0; i < multi_works.length; i++) {		  
 		  var id = multi_works[i].split(';--;')[0];
-		  var title = multi_works[i].split(';--;')[1];
-		  var thumb = multi_works[i].split(';--;')[2];			   
 		  
-		  thumbnails.push({
-				  img_id : id,
-				  title : sprintf('%s - %s', id, title),
-				  image : thumb
-			  });
-		  				  
+		  if(id != doc.id){
+			  var title = multi_works[i].split(';--;')[1];
+			  var thumb = multi_works[i].split(';--;')[2];			   
+			  
+			  thumbnails.push({
+					  img_id : id,
+					  title : sprintf('%s - %s', id, title),
+					  image : thumb,
+					  current: this.current_selec == id
+				  });  
+		  }
 	  }		
 	  
 	  data = {thumb : thumbnails};  	  
@@ -170,12 +140,14 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			    		if ($(this).parent().attr("class") == 'current')
 			    			return;
 			    		
-			    		// ...otherwise, change current selected thumnail
-			    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
-			    		$(this).parent().addClass('current');	
+			    		event.data.caller.current_selec = img_id;
 			    		
-			    		// the thumbnail gallery mustn't be frefreshed
-			    		$(event.data.caller.target).addClass('no_refresh');	    			    			    		
+//			    		// ...otherwise, change current selected thumnail
+//			    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
+//			    		$(this).parent().addClass('current');	
+//			    		
+//			    		// the thumbnail gallery mustn't be frefreshed
+//			    		//$(event.data.caller.target).addClass('no_refresh');	    			    			    		
 
 				    	$(event.data.caller).trigger({
 							type: "smk_search_call_detail_from_thumb",
@@ -203,12 +175,14 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	    		if ($(this).parent().attr("class") == 'current')
 	    			return;
 	    		
-	    		// ...otherwise, change current selected thumnail
-	    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
-	    		$(this).parent().addClass('current');	
+	    		event.data.caller.current_selec = img_id;
 	    		
-	    		// the thumbnail gallery mustn't be frefreshed
-	    		$(event.data.caller.target).addClass('no_refresh');	    			    			    		
+//	    		// ...otherwise, change current selected thumnail
+//	    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
+//	    		$(this).parent().addClass('current');	
+//	    		
+//	    		// the thumbnail gallery mustn't be frefreshed
+//	    		//$(event.data.caller.target).addClass('no_refresh');	    			    			    		
 
 		    	$(event.data.caller).trigger({
 					type: "smk_search_call_detail_from_thumb",
