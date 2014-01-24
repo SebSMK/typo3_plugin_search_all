@@ -15,6 +15,37 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	// if the thumbnail gallery mustn't be frefreshed, return
 	if ($target.attr("class") == 'no_refresh'){
 		$target.removeClass('no_refresh');
+		
+		// call detailed view on click on image
+	    $target.find('li').each(function(){
+		    	
+	    		var img_id = $(this).attr('img_id');
+	    		
+	    		$(this).find('img').click({detail_id: img_id, caller:self}, 
+			    		function (event) {
+				    		event.preventDefault();
+	
+				    		// if this view is the current view, do nothing 
+				    		if ($(this).parent().attr("class") == 'current')
+				    			return;
+				    		
+				    		// ...otherwise, change current selected thumnail
+				    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
+				    		$(this).parent().addClass('current');	
+				    		
+				    		// the thumbnail gallery mustn't be frefreshed
+				    		$(event.data.caller.target).addClass('no_refresh');	    			    			    		
+	
+					    	$(event.data.caller).trigger({
+								type: "smk_search_call_detail_from_thumb",
+								detail_id: event.data.detail_id
+							  });
+					    	
+					    	return;
+				 });	    		    	
+	    	}	    	
+	    );	    
+		
 		return;
 	}		
 	
@@ -131,7 +162,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	    				));
 	    	// call detailed view on click on image
 		    $target.find('img')
-		    .click({detail_id: img_id, caller:this}, 
+		    .click({detail_id: img_id, caller:self}, 
 		    		function (event) {
 			    		event.preventDefault();
 
