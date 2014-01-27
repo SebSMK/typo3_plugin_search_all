@@ -186,7 +186,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
-	        .append(sprintf('<img src="http://%s/%spi1/images/default_picture.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	        .append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_large.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
 	    	$target.fadeIn();
 	    	// has all images been loaded, trig event
 //	    	if ($container.find('.image_loading').length == 0){

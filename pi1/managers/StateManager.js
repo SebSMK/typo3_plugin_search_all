@@ -41,6 +41,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#smk_detail").hide();		  
 		  $target.find("#related-artworks").hide();
 		  
+		  $target.find("#currentsearch").show().children().show();
 		  $target.find("#category").show().children().show();	
 		  $target.find("#viewpicker").show().children().show();
 		  $target.find("#pager").show().children().show();
@@ -67,6 +68,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  
 		  break;
 	  case "detail":	
+		  $target.find("#currentsearch").hide();
 		  $target.find("#category").hide();
 		  $target.find("#viewpicker").hide();
 		  $target.find("#pager").hide();

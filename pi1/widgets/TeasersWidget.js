@@ -207,7 +207,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        .find('a')
-	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_medium.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
 	    	// call detailed view on click on image
 		    $target.find('img').click({detail_id: img_id, caller:self}, 
 	    		function (event) {

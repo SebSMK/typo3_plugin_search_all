@@ -47,43 +47,76 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   },
   
   get_data: function (doc){
-	  var data = null;	  		  
-	  var multi_works = doc.multi_work_ref.split(';-;');
+	  var data = null;	  		  	  
 	  var thumbnails = new Array();
+	  
+	  var multi_works = doc.multi_work_ref.split(';-;');
+	  var work_parent = new Array();
+	  var work_siblings = new Array();
+	  var work_children = new Array();
 	  
 	  if (this.current_selec == null)
 		  this.current_selec = doc.id;
 	  
-	  //* first proceed data from main work	  
-	  thumbnails.push({
-		  img_id : doc.id,
-		  title : doc.title_first,
-		  image : doc.medium_image_url,
-		  current: this.current_selec == doc.id
-	  });
-	  
-	  //* ...then data from sub-works
-	  for (var i = 0; i < multi_works.length; i++) {		  
-		  var id = multi_works[i].split(';--;')[0];
+	  for ( var i = 0, l = multi_works.length; i<l; ++i ) {
 		  
-		  if(id != doc.id){
-			  var title = multi_works[i].split(';--;')[1];
-			  var thumb = multi_works[i].split(';--;')[2];			   
-			  
-			  thumbnails.push({
-					  img_id : id,
-					  title : sprintf('%s - %s', id, title),
-					  image : thumb,
-					  current: this.current_selec == id
-				  });  
+		  var work = multi_works[i].split(';--;');
+		  
+		  switch(work[0]){
+		  
+		  	case "parent":
+		  		work_parent.push(work);
+		  		break;
+		  	case "sibling":
+		  		work_siblings.push(work);
+		  		break;
+		  	case "child":
+		  		work_children.push(work);
+		  		break;		  		  
+		  };
+	  }
+	  	  	  	  
+	  if (work_parent.length == 0){
+		  thumbnails.push({
+			  img_id : doc.id,
+			  title : doc.title_first,
+			  image : doc.medium_image_url,
+			  current: this.current_selec == doc.id
+		  }); 		
+	  }
+	  else{
+		  for (var i = 0; i < work_parent.length; i++) {		  
+			  this.push_work_til_thumb(work_parent[i], thumbnails);
 		  }
+	  };
+		  
+	  for (var i = 0; i < work_siblings.length; i++) {		  
+		  this.push_work_til_thumb(work_siblings[i], thumbnails);
 	  }		
+	  
+	  for (var i = 0; i < work_children.length; i++) {		  
+		  this.push_work_til_thumb(work_children[i], thumbnails);
+	  }
 	  
 	  data = {thumb : thumbnails};  	  
 	  
 	  return data;	  
   
   },     
+  
+  push_work_til_thumb: function(work, thumbnails){
+	  var id = work[1];		  
+	  var title = work[2];
+	  var thumb = work[3];			   
+	  
+	  thumbnails.push({
+			  img_id : id,
+			  title : sprintf('%s - %s', id, title),
+			  image : thumb,
+			  current: this.current_selec == id
+		  });  
+	  
+  },
   
   getImage: function ($target){
 	  var img_id = $target.attr("img_id");
@@ -124,7 +157,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        .find('a')
-	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture.png" alt="%s" title="%s"/>', 
+	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_small.png" alt="%s" title="%s"/>', 
 	    				$.cookie("smk_search_all_plugin_server_name"), 
 	    				$.cookie("smk_search_all_plugin_dir_base"),
 	    				alt,
