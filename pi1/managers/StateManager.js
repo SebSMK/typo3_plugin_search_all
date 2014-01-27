@@ -42,6 +42,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#related-artworks").hide();
 		  
 		  $target.find("#currentsearch").show().children().show();
+		  		  
 		  $target.find("#category").show().children().show();	
 		  $target.find("#viewpicker").show().children().show();
 		  $target.find("#pager").show().children().show();

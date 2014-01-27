@@ -16,15 +16,17 @@ var Manager;
 	    target: '#smk_search_wrapper',
 	    currentState: {view:'teasers', category:''}
 	}));
+
 	
-	Manager.addWidget(new AjaxSolr.CategoryWidget({
-	    id: 'category',
-	    target: '#category',
-	    field: 'category',
-	    multivalue:false,
-	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
-	    activeCategory: "all"
-	  }));	
+	Manager.addWidget(new AjaxSolr.SearchBoxWidget({
+		  id: 'searchbox',
+		  target: '#searchbox'
+	}));
+	
+	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
+	    id: 'currentsearch',
+	    target: '#currentsearch'
+	  })); 
 	
 	Manager.addWidget(new AjaxSolr.PagerWidget({
 	    id: 'pager',
@@ -42,15 +44,23 @@ var Manager;
 	    target: '#viewpicker'
 	  })); 
 	
+	
+	Manager.addWidget(new AjaxSolr.CategoryWidget({
+	    id: 'category',
+	    target: '#category',
+	    field: 'category',
+	    multivalue:false,
+	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
+	    activeCategory: "all"
+	  }));	
+	
+	
 	Manager.addWidget(new AjaxSolr.TeasersWidget({
 	    id: 'teasers',
 	    target: '#smk_teasers'
 	  }));
 	
-	Manager.addWidget(new AjaxSolr.SearchBoxWidget({
-		  id: 'searchbox',
-		  target: '#searchbox'
-	}));
+
 	
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'object_type', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
@@ -60,12 +70,7 @@ var Manager;
 	    target: '#' + tagcloudFields[i].field,
 	        field: tagcloudFields[i].field
 	      }));
-	};		
-		
-	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
-	    id: 'currentsearch',
-	    target: '#currentsearch'
-	  })); 
+	};				
 	
 	//* Detail and Thumbs widget are tightly coupled
 	Manager.addWidget(new AjaxSolr.DetailWidget({

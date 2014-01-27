@@ -116,7 +116,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		//thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
 				  		thumbnail: doc.medium_image_url,
 				  		categories: {name: "Samlinger", url:"#"},
-				  		meta: {key: "inv.num.", value: doc.id},				  		
+				  		meta: {key: "Inv.num.", value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
 				  		artist_name: doc.artist_name_ss,	
 				  		not_is_artwork: false,
@@ -124,7 +124,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		location: {key: "location", value: doc.location_name},
 				  		
 		  				ref_number: doc.id,		  				
-		  				artwork_date: new Date(doc.object_production_date_earliest).getFullYear() ,
+		  				artwork_date: doc.object_production_date_text === undefined? '-' : doc.object_production_date_text,
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
 		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),		  						  				  						  					  				
