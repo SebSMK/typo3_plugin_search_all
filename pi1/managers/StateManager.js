@@ -22,12 +22,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  $target.empty();	  
 	  $target.append(template);	
 	  
-	  this.stateChanged(this.currentState);
+	  this.viewChanged(this.currentState);
+	  this.categoryChanged(this.currentState);
   },
   
   /**
    */
-  stateChanged: function (stateChange) {        	    
+  viewChanged: function (stateChange) {        	    
     var $target = $(this.target);
     
     var newstate = this.getNewState(stateChange);
@@ -46,8 +47,51 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#category").show().children().show();	
 		  $target.find("#viewpicker").show().children().show();
 		  $target.find("#pager").show().children().show();
-		  $target.find("#pager-header").show().children().show();
+		  $target.find("#pager-header").show().children().show();	
 		  
+		  $target.find('#smk_teasers').show().children().show();
+		  
+		  switch(newstate["category"]){
+		  case "samlingercollectionspace":		 			  			  			  
+			  $target.find("#search-filters").show().children().show();					  			  			  
+			  break;	
+		  default:		    			  			   							  
+		  	  $target.find("#search-filters").hide();		  	 		  	  
+		  	  break;		  
+		  }
+		  
+		  break;
+		  
+	  case "detail":	
+		  $target.find("#currentsearch").hide();
+		  $target.find("#category").hide();
+		  $target.find("#viewpicker").hide();
+		  $target.find("#pager").hide();
+		  $target.find("#pager-header").hide();
+		  
+		  $target.find("#search-filters").hide();
+		  $target.find("#smk_teasers").hide();		
+		  
+		  $target.find("#smk_detail").show().children().show();
+		  $target.find("#thumbnails").show().children().show();
+		  $target.find("#related-artworks").show().children().show();
+		  
+		  $target.find('.view  #related-artworks #related-container-grid').masonry('layout');
+		  
+		  break;		  
+	  } 	
+
+    return;
+  },
+  
+  categoryChanged: function (stateChange) {        	    
+	    var $target = $(this.target);
+	    
+	    var newstate = this.getNewState(stateChange);
+	    
+	    if (newstate["category"] === undefined )
+	    	return;
+  
 		  switch(newstate["category"]){
 			  case "samlingercollectionspace":		 			  			  
 				  
@@ -74,7 +118,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 					type: "current_view_mode",
 					value:'grid'
 				 });
-			  $target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
+			  
 		  }else{
 			  //* list view mode
 			  $(this).trigger({
@@ -85,29 +129,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		
 		  $target.find("#smk_teasers").show().children().show();
 		  
-		  
-		  break;
-	  case "detail":	
-		  $target.find("#currentsearch").hide();
-		  $target.find("#category").hide();
-		  $target.find("#viewpicker").hide();
-		  $target.find("#pager").hide();
-		  $target.find("#pager-header").hide();
-		  
-		  $target.find("#search-filters").hide();
-		  $target.find("#smk_teasers").hide();		
-		  
-		  $target.find("#smk_detail").show().children().show();
-		  $target.find("#thumbnails").show().children().show();
-		  $target.find("#related-artworks").show().children().show();
-		  
-		  $target.find('.view  #related-artworks #related-container-grid').masonry('layout');
-		  
-		  break;		  
-	  } 	
-
-    return;
-  },
+		  if($target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').length > 0)
+			  $target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
+			  		
+	    return;
+	  },
   
   getNewState: function(stateChange) {
 	  

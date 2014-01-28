@@ -103,31 +103,31 @@ var Manager;
     
 	//* switch between categories
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
-    	Manager.widgets['state_manager'].stateChanged({category:event.category});
+    	Manager.widgets['state_manager'].categoryChanged({category:event.category});
     });        
     
     //* call to "all" categories
     $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
-    	Manager.widgets['state_manager'].stateChanged({category:''});
+    	Manager.widgets['state_manager'].categoryChanged({category:''});
     });
     
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
-    	Manager.widgets['state_manager'].stateChanged({view:"detail"});
+    	Manager.widgets['state_manager'].viewChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id);
     });	 
     $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
-    	Manager.widgets['state_manager'].stateChanged({view:"detail"});
+    	Manager.widgets['state_manager'].viewChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id);
     });	
     $(Manager.widgets['thumbs']).on('smk_search_call_detail_from_thumb', function(event){     	    	
-    	Manager.widgets['state_manager'].stateChanged({view:"detail"});
+    	Manager.widgets['state_manager'].viewChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id);
     });
     
   //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
-    	Manager.widgets['state_manager'].stateChanged({view:"teasers"});
+    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['teasers'].call_previous_search();
     });	
 
