@@ -67,15 +67,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  	  
 			  	  break;		  
 		  }
-		  
-		  
-		  
+  
 		  if($target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').length > 0){
 			  //* grid view mode
 			  $(this).trigger({
 					type: "current_view_mode",
 					value:'grid'
-				 });	
+				 });
+			  $target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
 		  }else{
 			  //* list view mode
 			  $(this).trigger({
@@ -85,7 +84,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  }
 		
 		  $target.find("#smk_teasers").show().children().show();
-		  //$target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
+		  
 		  
 		  break;
 	  case "detail":	
