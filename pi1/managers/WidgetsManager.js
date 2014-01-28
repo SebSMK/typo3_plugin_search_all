@@ -43,7 +43,7 @@ var Manager;
 	    id: 'viewpicker',
 	    target: '#viewpicker'
 	  })); 
-	
+
 	
 	Manager.addWidget(new AjaxSolr.CategoryWidget({
 	    id: 'category',
@@ -53,14 +53,11 @@ var Manager;
 	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
 	    activeCategory: "all"
 	  }));	
-	
-	
+
 	Manager.addWidget(new AjaxSolr.TeasersWidget({
 	    id: 'teasers',
 	    target: '#smk_teasers'
 	  }));
-	
-
 	
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'object_type', title:'Techniques'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
@@ -95,7 +92,11 @@ var Manager;
 	///* switch grid/list in teasers view
 	$(Manager.widgets['viewpicker']).on('view_picker', function(event){ 
    	 Manager.widgets['teasers'].switch_list_grid(event.value);
-   });    
+	}); 
+	
+	$(Manager.widgets['state_manager']).on('current_view_mode', function(event){ 
+	   	 Manager.widgets['teasers'].switch_list_grid(event.value);
+	});
 //   $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
 //   	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
 //   }); 
@@ -107,7 +108,7 @@ var Manager;
     
     //* call to "all" categories
     $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
-    	Manager.widgets['state_manager_smk_collection'].stateChanged({category:''});
+    	Manager.widgets['state_manager'].stateChanged({category:''});
     });
     
     //* calls to detail view

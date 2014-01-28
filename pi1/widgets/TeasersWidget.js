@@ -277,6 +277,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  {		  
 		case "grid":
 			self.setTeaserViewGrid();
+			//$(this.target).find('#teaser-container-grid').masonry('layout');
 			break;
 		
 		case "list":
@@ -287,63 +288,65 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			self.setTeaserViewGrid();
 	  }		
 		
-	 $(this.target).find('#teaser-container-grid').masonry('layout');    
+	     
 
   },
   
 //Grid view
   setTeaserViewGrid: function () {
+	  var $target = $(this.target);	  
+	// Restyling articles
+	  var teasers = $target.find('article').each( function() {
+	    if ( $(this).hasClass('teaser--list') ) {
 
-	  $(this.target).find('#teaser-container-grid article').removeClass('teaser--list').addClass('teaser--grid');
-	  
-//    // Restyling articles
-//    var teasers = $('article').each( function() {
-//      if ( $(this).hasClass('teaser--list') ) {
-//
-//        // Switching classes
-//        $(this).removeClass('teaser--list');
-//        $(this).addClass('teaser--grid');
-//
-//        // Removing list style css
-//        $(this).attr('style', '');
-//
-//        // Adding CSS position (masonry doesn't add this automatically when rerun - see below)
-//        $(this).css('position', 'absolute');
-//      } // end if
-//    });
-//
-//    // Rerun masonry to enable grid
-//    $('#teaser-container-grid').masonry({
-//      transitionDuration: 0
-//    });
+	      // Switching classes
+	      $(this).removeClass('teaser--list');
+	      $(this).removeClass('teaser--two-columns');
+	      $(this).addClass('teaser--grid');
+
+	      // Removing inline css
+	      $(this).attr('style', '');
+
+	      // Adding CSS position (masonry doesn't add this automatically when rerun - see below)
+	      $(this).css('position', 'absolute');
+
+	      // Removing list style vertical alignment for thumbs
+	      $(this).find('img').css('margin-top', 'auto');
+	    } // end if
+	  });
+
+	  // Rerun masonry to enable grid
+	  $target.find('#teaser-container-grid').masonry({
+	    transitionDuration: 0
+	  });
   }, // setTeaserViewGrid
 
   // List view
   setTeaserViewList: function () {
 	  
-	  $(this.target).find('#teaser-container-grid article').removeClass('teaser--grid').addClass('teaser--list');
-	  
-//    // Resetting the height of the containing element
-//    $('#teaser-container-grid').css('height', 'auto');
-//
-//    // Restyling articles
-//    $('article').each( function() {
-//      if ( $(this).hasClass('teaser--grid') ) {
-//
-//        // Switching classes
-//        $(this).removeClass('teaser--grid');
-//        $(this).addClass('teaser--list');
-//
-//        // Adjusting CSS
-//        $(this).css('position', 'relative');
-//        $(this).css('float', 'none');
-//        $(this).css('width', 'auto');
-//        $(this).css('top', 'auto');
-//        $(this).css('right', 'auto');
-//        $(this).css('bottom', 'auto');
-//        $(this).css('left', 'auto');
-//      } // end if
-//    });
+	  var $target = $(this.target);
+	// Resetting the height of the containing element
+	  $target.find('#teaser-container-grid').css('height', 'auto');
+
+	  // Restyling articles
+	  $target.find('article').each( function() {
+	    if ( $(this).hasClass('teaser--grid') ) {
+
+	      // Switching classes
+	      $(this).removeClass('teaser--grid');
+	      $(this).addClass('teaser--list');
+
+	      // Adjusting CSS
+	      $(this).attr('style', '');
+	    } // end if
+
+	    // If the teaser container is full width, than make a two column layout.
+	    if ( $target.find('#teaser-container-grid').hasClass('full-width') ) {
+	      $(this).addClass('teaser--two-columns');
+	    }else{
+	      $(this).removeClass('teaser--two-columns');	
+	    }
+	  });
   } // setTeaserViewGrid
   
 });

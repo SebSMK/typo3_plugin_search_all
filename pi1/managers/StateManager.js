@@ -52,20 +52,40 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  case "samlingercollectionspace":		 			  			  
 				  
 				  $target.find("#search-filters").show().children().show();		
-				  $target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_3-grid').addClass('col_4-grid').show().children().show();
-				  $target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_3--grid').addClass('col_4--grid').show().children().show();				  
+				  $target.find('.view  #smk_teasers #teaser-container-grid').removeClass('full-width').hide();
+				  //$target.find('.view  #smk_teasers #teaser-container-grid').addClass('teaser--two-columns').show().children().show();
+				  //$target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_3-grid').addClass('col_4-grid').show().children().show();
+				  //$target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_3--grid').addClass('col_4--grid').show().children().show();				  
 				  
 				  break;	
 			  default:		    			  			   							  
 			  	  $target.find("#search-filters").hide();
-			  	  $target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_4-grid').addClass('col_3-grid').show().children().show();
-			  	  $target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_4--grid').addClass('col_3--grid').show().children().show();
+			  	  $target.find('.view  #smk_teasers #teaser-container-grid').addClass('full-width').hide();
+			  	  //$target.find('.view  #smk_teasers #teaser-container-grid').removeClass('teaser--two-columns').show().children().show();
+			  	  //$target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_4-grid').addClass('col_3-grid').show().children().show();
+			  	  //$target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_4--grid').addClass('col_3--grid').show().children().show();
 			  	  
 			  	  break;		  
 		  }
 		  
+		  
+		  
+		  if($target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').length > 0){
+			  //* grid view mode
+			  $(this).trigger({
+					type: "current_view_mode",
+					value:'grid'
+				 });	
+		  }else{
+			  //* list view mode
+			  $(this).trigger({
+					type: "current_view_mode",
+					value:'list'
+				 });
+		  }
+		
 		  $target.find("#smk_teasers").show().children().show();
-		  $target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
+		  //$target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
 		  
 		  break;
 	  case "detail":	
