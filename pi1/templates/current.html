@@ -2,7 +2,11 @@
 	 <script id="currentItemsTemplate" type="text/template">	
 		<div class="search-terms">
 			<ul>	 	
-				{{#current}}<li><span>{{fq}}</span> <a fq="{{fq}}" class="search-term__close" href="#"></a></li>{{/current}}
+				{{#current}}
+					{{#label}}
+						<li><span>{{label}}</span> <a fq="{{fq}}" class="search-term__close" href="#"></a></li>
+					{{/label}}
+				{{/current}}
 			</ul>
 		</div>		 	
 	</script>	

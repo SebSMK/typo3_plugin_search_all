@@ -24,7 +24,12 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
     var fq = this.manager.store.values('fq');
     for (var i = 0, l = fq.length; i < l; i++) {
       //links.push($('<a href="#"></a>').text('(x) ' + fq[i]).click(self.removeFacet(fq[i])));
-      links.push({"fq": fq[i]});
+    	if (fq[i].text === undefined){
+    		links.push({"fq": fq[i].value});
+    	}else{
+    		links.push({"fq": fq[i].value, "label":fq[i].text});
+    	}
+    	
     }
 
 //    if (links.length > 1) {

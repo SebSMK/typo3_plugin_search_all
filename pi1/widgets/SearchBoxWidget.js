@@ -34,7 +34,8 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 						//if (mgr.store.last != value) {
 							mgr.store.last = value;
 							//if (mgr.store.addByValue('q', 'id:(' + value + '*)^2 -(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
-							if (mgr.store.addByValue('fq', 'id:(' + value + '*)^2 page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
+							var fq_value = 'id:(' + value + '*)^2 page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ';							
+							if (mgr.store.addByValue('fq', fq_value, {}, value)){
 								//mgr.store.addByValue('fl', e.data.mdf);																					
 								mgr.doRequest(0);								
 							}
