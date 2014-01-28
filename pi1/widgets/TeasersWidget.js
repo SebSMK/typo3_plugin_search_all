@@ -192,12 +192,15 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	      // fade our image in to create a nice effect
 	      $(this).fadeIn();
 	      
-	      // trig "image loaded" event
-	      //if ($container.find('.image_loading').length == 0){
-	    	  $(self).trigger({
-	  			type: "smk_teasers_all_img_loaded"
-	  		  });  	    	  
-	      //}
+	      // trig "this image is loaded" event	      
+    	  $(self).trigger({
+  			type: "smk_teasers_this_img_loaded"
+  		  });  	    	  
+        	  
+	   	 // all images are loaded
+    	  if ($container.find('.image_loading').length == 0){
+	    	  self.verticalAlign(); 
+	      }
 		 
 	    })
 	    
@@ -221,12 +224,15 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		     });
 	    	$target.fadeIn();
 	    	
-	    	// trig "image loaded" event
-	    	//if ($container.find('.image_loading').length == 0){
-		    	  $(self).trigger({
-		  			type: "smk_teasers_all_img_loaded"
-		  		  });  	    	  
-		     // }
+	    	// trig "this image is loaded" event	    	
+	    	$(self).trigger({
+	    		type: "smk_teasers_this_img_loaded"
+	  		});  	    	  	     
+	    	  
+	    	// all images are loaded
+	    	if ($container.find('.image_loading').length == 0){
+	    		self.verticalAlign(); 
+		    }
 	    })
 	    
 	    // call detailed view on click on image
@@ -287,9 +293,6 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		default:
 			self.setTeaserViewGrid();
 	  }		
-		
-	     
-
   },
   
 //Grid view
@@ -347,7 +350,33 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	      $(this).removeClass('teaser--two-columns');	
 	    }
 	  });
-  } // setTeaserViewGrid
+	  	  
+	  this.verticalAlign();
+	  
+  }, // setTeaserViewGrid
+  
+  
+  verticalAlign: function() {
+	  
+	  var $target = $(this.target);	  
+	  
+	  $(this.target).show().children().show();
+	  
+	  // Vertically align thumbs (in relation to their frames)
+	  $target.find('.teaser--list img').each( function() {
+
+	    // Calculating offset that will vertically center the thumb
+	    // NOTE: 66 is the maximum thumb height in pixels
+	    var thumbHeight = $(this).height();
+	    var verticalOffset =  (66 - thumbHeight) / 2;
+
+	    if( $(this).height() < 66 ) {
+	      $(this).css('margin-top', verticalOffset + 'px');
+	    }
+	  });
+  
+  }
+  
   
 });
 

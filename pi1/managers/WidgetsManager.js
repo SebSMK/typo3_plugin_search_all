@@ -133,7 +133,7 @@ var Manager;
 
 	
     //* a new image has finished loading in "teaser"
-    $(Manager.widgets['teasers']).on('smk_teasers_all_img_loaded', function(event){     	        
+    $(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	        
     	//Executes when complete page is fully loaded, including all frames, objects
         // and images. This ensures that Masonry knows about elements heights and can
         // do its layouting properly.
