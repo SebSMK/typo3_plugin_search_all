@@ -224,14 +224,16 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   },
   
   
-  call_detail: function (art_id) {
+  call_detail: function (art_id, save_request) {
 	  var self = this;
-	  //self.manager.setShowDetail(true);			  
+			  	  
+	  if(save_request){
+		  //* save current solr parameters
+		  self.manager.store.save();      		  	
+	  }
 	  
-	  //* save current solr parameters
-	  self.manager.store.save();
-      
-      self.manager.store.exposedReset();
+	  //* delete current (exposed) solr parameters
+	  self.manager.store.exposedReset();
 	  
   	  var param = new AjaxSolr.Parameter({name: "q", value: "id:" + art_id}); 
   	  self.manager.store.add(param.name, param);	     

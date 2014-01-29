@@ -106,23 +106,23 @@ var Manager;
     	Manager.widgets['state_manager'].categoryChanged({category:event.category});
     });        
     
-    //* call to "all" categories
-    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
-    	Manager.widgets['state_manager'].categoryChanged({category:''});
-    });
+//    //* call to "all" categories
+//    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
+//    	Manager.widgets['state_manager'].categoryChanged({category:''});
+//    });
     
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	Manager.widgets['details'].call_detail(event.detail_id);
+    	Manager.widgets['details'].call_detail(event.detail_id, true);
     });	 
     $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	Manager.widgets['details'].call_detail(event.detail_id);
+    	Manager.widgets['details'].call_detail(event.detail_id, true);
     });	
     $(Manager.widgets['thumbs']).on('smk_search_call_detail_from_thumb', function(event){     	    	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	Manager.widgets['details'].call_detail(event.detail_id);
+    	Manager.widgets['details'].call_detail(event.detail_id, false);
     });
     
   //* calls to teasers view
