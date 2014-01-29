@@ -137,7 +137,33 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        // then insert our image
-	        .find('a').append(this);
+	        .find('a')
+	        // call detailed view on click on image
+	        .click({detail_id: img_id, caller:self}, 
+    		function (event) {
+	    		event.preventDefault();
+
+	    		// if this view is the current view, do nothing 
+	    		if ($(this).attr("class") == 'current')
+	    			return;
+	    		
+	    		event.data.caller.current_selec = img_id;
+	    		
+//	    		// ...otherwise, change current selected thumnail
+//	    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
+//	    		$(this).parent().addClass('current');	
+//	    		
+//	    		// the thumbnail gallery mustn't be frefreshed
+//	    		//$(event.data.caller.target).addClass('no_refresh');	    			    			    		
+
+		    	$(event.data.caller).trigger({
+					type: "smk_search_call_detail_from_thumb",
+					detail_id: event.data.detail_id
+				  });
+		    	
+		    	return;
+	      })		
+	        .append(this);
 	    
 	      // fade our image in to create a nice effect
 	      $target.fadeIn();
@@ -164,7 +190,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	    				alt
 	    				));
 	    	// call detailed view on click on image
-		    $target.find('img')
+		    $target.find('a')
 		    .click({detail_id: img_id, caller:self}, 
 		    		function (event) {
 			    		event.preventDefault();
@@ -197,33 +223,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 //		  			type: "smk_related_all_img_loaded"
 //		  		  });  	    	  
 		     // }
-	    })
-	    
-	    // call detailed view on click on image
-	    .click({detail_id: img_id, caller:this}, 
-    		function (event) {
-	    		event.preventDefault();
-
-	    		// if this view is the current view, do nothing 
-	    		if ($(this).parent().attr("class") == 'current')
-	    			return;
-	    		
-	    		event.data.caller.current_selec = img_id;
-	    		
-//	    		// ...otherwise, change current selected thumnail
-//	    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
-//	    		$(this).parent().addClass('current');	
-//	    		
-//	    		// the thumbnail gallery mustn't be frefreshed
-//	    		//$(event.data.caller.target).addClass('no_refresh');	    			    			    		
-
-		    	$(event.data.caller).trigger({
-					type: "smk_search_call_detail_from_thumb",
-					detail_id: event.data.detail_id
-				  });
-		    	
-		    	return;
-	      })		
+	    })	    	    
 
 	    .attr('alt', alt)
 	    

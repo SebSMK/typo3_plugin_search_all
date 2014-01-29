@@ -187,7 +187,19 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        // then insert our image
-	        .find('a').append(this);
+	        .find('a')
+	        // call detailed view on click on image
+		    .click({detail_id: img_id, caller:self}, 
+	    		function (event) {
+		    		event.preventDefault();
+			    	$(event.data.caller).trigger({
+						type: "smk_search_call_detail",
+						detail_id: event.data.detail_id
+					  });
+			    	
+			    	return;
+		     })	
+	        .append(this);
 	    
 	      // fade our image in to create a nice effect
 	      $(this).fadeIn();
@@ -233,19 +245,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    	if ($container.find('.image_loading').length == 0){
 	    		self.verticalAlign(); 
 		    }
-	    })
-	    
-	    // call detailed view on click on image
-	    .click({detail_id: img_id, caller:this}, 
-    		function (event) {
-	    		event.preventDefault();
-		    	$(event.data.caller).trigger({
-					type: "smk_search_call_detail",
-					detail_id: event.data.detail_id
-				  });
-		    	
-		    	return;
-	     })		
+	    })	    	
 
 	    .attr('alt', alt)
 	    
