@@ -157,7 +157,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 //	    		//$(event.data.caller.target).addClass('no_refresh');	    			    			    		
 
 		    	$(event.data.caller).trigger({
-					type: "smk_search_call_detail_from_thumb",
+					type: "smk_search_call_detail",
 					detail_id: event.data.detail_id
 				  });
 		    	
@@ -209,7 +209,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 //			    		//$(event.data.caller.target).addClass('no_refresh');	    			    			    		
 
 				    	$(event.data.caller).trigger({
-							type: "smk_search_call_detail_from_thumb",
+							type: "smk_search_call_detail",
 							detail_id: event.data.detail_id
 						  });
 				    	

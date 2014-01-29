@@ -118,9 +118,9 @@ var Manager;
     });	 
     $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	Manager.widgets['details'].call_detail(event.detail_id, true);
+    	Manager.widgets['details'].call_detail(event.detail_id, false);
     });	
-    $(Manager.widgets['thumbs']).on('smk_search_call_detail_from_thumb', function(event){     	    	
+    $(Manager.widgets['thumbs']).on('smk_search_call_detail', function(event){     	    	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id, false);
     });
@@ -155,6 +155,11 @@ var Manager;
     	
     	$(Manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');
     });
+    
+    //* a new search on a word has been added in serch box
+    $(Manager.widgets['searchbox']).on('smk_search_fq_added', function(event){     	
+    	Manager.widgets['currentsearch'].add_fq(event.value, event.text );    	
+    });	
     
     
     Manager.init();

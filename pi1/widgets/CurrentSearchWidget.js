@@ -2,6 +2,8 @@
 
 AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   start: 0,
+  
+  fq: new Array(),
 
   afterRequest: function () {
 	  
@@ -21,13 +23,13 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 //      }));
 //    }
 
-    var fq = this.manager.store.values('fq');
-    for (var i = 0, l = fq.length; i < l; i++) {
+    //var fq = this.manager.store.values('fq');
+    for (var i = 0, l = self.fq.length; i < l; i++) {
       //links.push($('<a href="#"></a>').text('(x) ' + fq[i]).click(self.removeFacet(fq[i])));
-    	if (fq[i].text === undefined){
-    		links.push({"fq": fq[i].value});
+    	if (self.fq[i].text === undefined){
+    		links.push({"fq": self.fq[i].value});
     	}else{
-    		links.push({"fq": fq[i].value, "label":fq[i].text});
+    		links.push({"fq": self.fq[i].value, "label": self.fq[i].text});
     	}
     	
     }
@@ -60,6 +62,14 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
       var facet = $(this).attr('fq');    	
       if (self.manager.store.removeByValue('fq', facet)) {   
     	$(self.target).empty();
+    	
+    	for (var i = 0, l = self.fq.length; i < l; i++) {	 
+	    	if (self.fq[i].value == facet){
+	    		self.fq.splice(i, 1);	    		
+	    		break;
+	    	}    	    	
+    	 }
+    	
         self.doRequest();
       }
       return false;
@@ -71,7 +81,12 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 		var json_data = {"current": data};
 		var html = Mustache.to_html($(template).find('#currentItemsTemplate').html(), json_data);
 		return html;
+  },
+  
+  add_fq: function(value, text){
+	  this.fq.push({'value':value, 'text':text});	  	  
   }
+  
 });
 
 })(jQuery);

@@ -19,7 +19,8 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 				'submit',
 				{
 					mmgr : this.manager,
-					$input : $(this.target).find('input#search.typeahead')
+					$input : $(this.target).find('input#search.typeahead'),
+					caller : this
 					//,mdf : this.displayFields
 				},
 				function(e) {
@@ -37,6 +38,11 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 							var fq_value = 'id:(' + value + '*)^2 page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ';							
 							if (mgr.store.addByValue('fq', fq_value, {}, value)){
 								//mgr.store.addByValue('fl', e.data.mdf);																					
+								$(e.data.caller).trigger({
+									type: "smk_search_fq_added",
+									value: fq_value,
+									text: value
+								  });  		
 								mgr.doRequest(0);								
 							}
 						//}
