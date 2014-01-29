@@ -76,7 +76,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#thumbnails").show().children().show();
 		  $target.find("#related-artworks").show().children().show();
 		  
-		  $target.find('.view  #related-artworks #related-container-grid').masonry('layout');
+		  $target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
 		  
 		  break;		  
 	  } 	

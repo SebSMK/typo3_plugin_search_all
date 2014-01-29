@@ -153,7 +153,7 @@ var Manager;
 //          transitionDuration: 0
 //        });
     	
-    	$(Manager.widgets['related'].target).find('#related-container-grid').masonry('layout');
+    	$(Manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');
     });
     
     

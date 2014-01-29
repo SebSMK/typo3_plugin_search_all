@@ -1,0 +1,208 @@
+@CHARSET "ISO-8859-1";
+
+
+/*.location {
+    background: none repeat scroll 0 0 #fff8ac;
+    border-top: 5px solid #FFFFFF;
+    clear: both;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    line-height: 1.5em;
+    margin: 0;
+}*/
+
+#pager,
+#pager-header,
+#viewpicker {
+  display: inline;
+}
+
+#pager li,
+.links li {
+  list-style-type: none;
+  display: inline;
+  margin: 1px;
+}
+
+.search-choice span{	
+	color: #ffffff;
+}
+
+a i{
+  color: inherit;
+}
+
+a span{
+  font-size: 0.8em;
+  color: inherit;
+}
+
+
+.view #teaser-container-grid.col_4-grid{    
+    width: 660px;
+    float: right;
+}
+
+.view #teaser-container-grid.col_3-grid{    
+    width: 880px;
+    float: left;
+}
+
+.view #teaser-container-grid .teaser--grid.col_4--grid{    
+    width: 198px;
+}
+
+.view #teaser-container-grid .teaser--grid.col_3--grid{    
+    width: 198px;
+}
+
+.view #related-container-grid.col_4-grid{    
+    width: 660px;
+    float: right;
+}
+
+.view #related-container-grid.col_3-grid{    
+    width: 880px;
+    float: left;
+}
+
+.view #related-container-grid .related--grid.col_4--grid{    
+    width: 198px;
+}
+
+.view #related-container-grid .related--grid.col_3--grid{    
+    width: 198px;
+}
+
+
+/* Jacques' Code  modif */
+
+
+.view #teaser-container-grid {
+    
+    margin-left: -11px;
+    margin-right: -11px;
+    margin-top: 27px;
+    
+}
+
+.view #teaser-container-grid .teaser--grid {
+    margin-left: 11px;
+    margin-right: 11px;
+    
+}
+
+.tabs li {
+    float: left;
+    font-family: "hill regular",sans-serif;
+    font-size: 1.3em;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+/* added */
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\
+ § related
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*
+ § Grid layout (default)
+\*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* line 10, ../../src/scss/components/_related.scss */
+#related-container-grid {
+  margin-right: -1.6%;
+  margin-left: -1.6%;
+}
+
+/* line 17, ../../src/scss/components/_related.scss */
+.related, .related--list,
+.related--grid {
+  width: 30.12%;
+  border-bottom: 2px solid #111111;
+  padding-bottom: 1.35em;
+  margin-right: 1.6%;
+  margin-left: 1.6%;
+  margin-bottom: 1.35em;
+  position: relative;
+}
+
+/* line 43, ../../src/scss/components/_related.scss */
+.related__wrapper {
+  *zoom: 1;
+  -webkit-transition: all 200ms ease-in-out;
+  -moz-transition: all 200ms ease-in-out;
+  transition: all 200ms ease-in-out;
+}
+/* line 18, ../../src/bower_components/bourbon/app/assets/stylesheets/addons/_clearfix.scss */
+.related__wrapper:before, .related__wrapper:after {
+  content: " ";
+  display: table;
+}
+/* line 23, ../../src/bower_components/bourbon/app/assets/stylesheets/addons/_clearfix.scss */
+.related__wrapper:after {
+  clear: both;
+}
+
+/* line 49, ../../src/scss/components/_related.scss */
+.related__thumbnail {
+  margin-bottom: 1.5em;
+  -webkit-transition: opacity 200ms ease-in-out;
+  -moz-transition: opacity 200ms ease-in-out;
+  transition: opacity 200ms ease-in-out;
+}
+/* line 54, ../../src/scss/components/_related.scss */
+.related__thumbnail:hover, .related__thumbnail:focus {
+  opacity: .85;
+}
+
+/* line 60, ../../src/scss/components/_related.scss */
+.related__category, .related--list .related__meta {
+  color: #a2a2a5;
+  text-transform: uppercase;
+  margin-bottom: .5em;
+}
+/* line 66, ../../src/scss/components/_related.scss */
+.related__category li, .related--list .related__meta li {
+  display: inline-block;
+  border-right: 1px solid #a2a2a5;
+  margin-right: 0.375em;
+  padding-right: 0.55em;
+  line-height: normal;
+}
+/* line 75, ../../src/scss/components/_related.scss */
+.related__category li:last-child, .related--list .related__meta li:last-child {
+  border: 0;
+}
+/* line 77, ../../src/scss/components/_related.scss */
+.related__category a, .related--list .related__meta a {
+  color: #a2a2a5;
+  display: inline-block;
+}
+/* line 82, ../../src/scss/components/_related.scss */
+.related__category a:hover, .related--list .related__meta a:hover, .related__category a:focus, .related--list .related__meta a:focus {
+  color: #5f66f2;
+  text-decoration: none;
+}
+
+/* line 90, ../../src/scss/components/_related.scss */
+.related__heading {
+  margin-bottom: .5em;
+}
+
+/* line 96, ../../src/scss/components/_related.scss */
+.related__description {
+  margin-bottom: 1em;
+}
+
+/* line 101, ../../src/scss/components/_related.scss */
+.related__meta {
+  margin-top: .5em;
+}
+/* line 107, ../../src/scss/components/_related.scss */
+.related__meta span {
+  text-transform: uppercase;
+}
+/* line 109, ../../src/scss/components/_related.scss */
+.related__meta span:after {
+  content: ":";
+}

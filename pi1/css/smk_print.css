@@ -1,0 +1,19 @@
+/*! Tuesday, January 28th, 2014, 15:13 */
+/* line 11, ../../src/scss/smk_print.scss */
+#header,
+.view-main-header,
+#footer,
+.view-main-footer,
+#navigator,
+#searchbox,
+.search-box,
+.sharing--iconified,
+#related-artworks,
+.cutoff__show-more {
+  display: none !important;
+}
+
+/* line 15, ../../src/scss/smk_print.scss */
+.cutoff {
+  max-height: none !important;
+}

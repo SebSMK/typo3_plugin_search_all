@@ -13,10 +13,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	var html = Mustache.getTemplate('pi1/templates/related.html');    
 	$target.html($(html).find('#relatedInitTemplate').html());		
 	
-	$target.find('#related-container-grid article').hide();
+	$target.find('#teaser-container-grid article').hide();
 	
 	//* init masonry
-    $target.find('#related-container-grid').masonry( {
+    $target.find('#teaser-container-grid').masonry( {
         transitionDuration: 0
     });
 	  
@@ -30,8 +30,8 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	  	return;
 				
 	//* remove all existing articles
-	var $all_articles = $target.find('#related-container-grid article');
-	$target.find('#related-container-grid').masonry('remove', $all_articles);		
+	var $all_articles = $target.find('#teaser-container-grid article');
+	$target.find('#teaser-container-grid').masonry('remove', $all_articles);		
 			
 	//* create new articles
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
@@ -72,10 +72,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		      
 		      
 		      //* append the current article to list
-		      $target.find('#related-container-grid').append($article);	      
+		      $target.find('#teaser-container-grid').append($article);	      
 		      
 		      //* refresh masonry
-		      $target.find('#related-container-grid').masonry('appended', $article);	  				
+		      $target.find('#teaser-container-grid').masonry('appended', $article);	  				
 			
 			}					
 		);								        
