@@ -38,19 +38,17 @@
                 {{description}}
               </div>
 
+			  <!-- inv.num & location -->
               <ul class="teaser__meta">
                 {{#meta}}
                   <li><span>{{key}}</span> {{value}}</li>
+				  {{#is_artwork}}
+				  	{{#location}}
+						<li>Location: {{value}}</li>
+				  	{{/location}}
+				  {{/is_artwork}}
                 {{/meta}}
               </ul>							
-			  
-			 {{#is_artwork}} 	
-			  <ul class="location">
-				{{#location}}
-					<li><span>{{key}}</span> {{value}}</li>
-				{{/location}}
-			  </ul>
-			 {{/is_artwork}}
 			 
 
             </div><!-- teaser__content -->
