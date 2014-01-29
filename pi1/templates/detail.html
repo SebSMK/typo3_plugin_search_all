@@ -3,7 +3,7 @@
 <script id="detailTemplate" type="text/template">
 
 {{#detail}}
-
+<a class="back-button" href="#" style="opacity: 1;">Back</a>
 {{#media}}
 	<div id="media-container">
 	  <div class="gallery">
@@ -90,17 +90,6 @@
 	    </div>	    
 	  </div><!-- data-pairs -->
 	  {{/location}}
-
-	<!-- Link to previous search -->
-	  {{#prev}}
-	  <div class="data-pairs">
-	    <div class="data-pair">
-	      <div class="data-pair__value previous_search">
-			<a href="#">&lt;&lt;&nbsp;</a>{{value}}
-		  </div>
-	    </div>	    
-	  </div><!-- previous search -->
-	  {{/prev}}
 	  
 	</div><!-- #info-container -->
 {{/info}}

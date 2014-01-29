@@ -40,9 +40,9 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  		self.getImage($(this));
 	});      	
 	
-    //* add link to "previous search" button
-	$target.find('.previous_search').click(
-		  {caller:this}, 
+    //* add link to back button
+	$target.find('a.back-button').click(
+		  {caller:self}, 
 		  function (event) {
     		event.preventDefault();
 	    	$(event.data.caller).trigger({
@@ -91,10 +91,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    dim: false,
 		  		    
 		  		    location:false,
-		  		    
-		  		    prev: {		  		    	 
-		  		    	value: "Back to previous search"		  		    	
-		  		    }		  		    
+	  		    
 		  		}	  
 			};	
 	  
