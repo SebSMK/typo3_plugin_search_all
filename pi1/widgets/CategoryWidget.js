@@ -46,6 +46,11 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     var allCount = 0;
     var objectedItems = new Array();        
 
+    //* reset facet count
+    $.each(self.categoryList , function(key, value) { 
+    	$target.find('li[name='+key+'] span').text('(0)'); 
+   });
+   
     //* proceed facets
     for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
       var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
