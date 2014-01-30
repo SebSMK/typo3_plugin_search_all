@@ -74,8 +74,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		info:{
 		  			
 		  			title:doc.title_first,	
-		  		    artist_name: doc.artist_name_ss,
-		  		    artwork_date: doc.object_production_date_text === undefined? '-' : doc.object_production_date_text,
+		  			artist_data: this.getArtistLabel(doc),
+		  		    artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text,
 		  		    description: doc.description_note,
 		  		    technique: {
 		  		    	key: "technique",  
@@ -100,9 +100,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  data.info.acq = {
 			key: "erhvervelse",  
 			date: doc.acq_date,
-			method: doc.acq_method,
-			note: doc.acq_note,
-			source: doc.acq_source
+			method: doc.acq_method !== undefined ? sprintf('%s, ', doc.acq_method.charAt(0).toUpperCase() + doc.acq_method.slice(1)) : null,
+			source: doc.acq_source !== undefined ? sprintf('%s - ', doc.acq_source) : null
 		  };
 		  
 	  };
@@ -135,15 +134,36 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  
 	  };
 	  
-	  //* add location	  	 	  
-	  data.info.location = {
+	  //* add location	 
+	  if (this.getlocationLabel(doc.location_name))
+		  	data.info.location = {
 			  key:"location",
 			  value:doc.location_name
-	  };	  	  
+	  		};	  	  
 	  
 	  return data;	  
   
   },     
+  
+  getArtistLabel: function(doc){
+	  var artistLabel = new Array();
+	  
+	  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
+		  return doc.artist_name_ss;
+	  
+	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
+		  var name = doc.artist_name_ss[i];
+		  var role = doc.artist_auth[i] != 'original' ? sprintf('<span>%s</span>', doc.artist_auth[i].toLowerCase()) : "";
+		  var birth = doc.artist_birth[i];
+		  var death = doc.artist_death[i] != '(?)' ? doc.artist_death[i] : (doc.artist_death[i] < 1800) ? doc.artist_death[i] : "";
+		  var dates = sprintf('(%s - %s)', birth, death);
+		  var padding = i > 0 ? "<br>" : "";
+		  var label = role == "" ? sprintf('%s%s&nbsp;<span>%s</span>', padding, name, dates) : sprintf('%s%s&nbsp;%s&nbsp;<span>%s</span>', padding, role, name, dates);
+		  artistLabel.push(label);		  		  
+	  }
+	  
+	  return artistLabel;
+  },
   
   getImage: function ($target){
 	  var img_id = $target.attr("img_id");
@@ -223,6 +243,14 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    .attr('src', path); 
   },
   
+  getlocationLabel: function (location){
+	  
+		if(location !== undefined && location.toUpperCase().indexOf('SAL') != -1)
+			return true;
+			  
+		return false;	  
+		  
+	  },
   
   call_detail: function (art_id, save_request) {
 	  var self = this;

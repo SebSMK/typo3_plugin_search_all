@@ -1,15 +1,8 @@
 @CHARSET "ISO-8859-1";
 
-
-/*.location {
-    background: none repeat scroll 0 0 #fff8ac;
-    border-top: 5px solid #FFFFFF;
-    clear: both;
-    padding: 5px 10px;
-    font-size: 0.9em;
-    line-height: 1.5em;
-    margin: 0;
-}*/
+.heading--m span {
+    font-size: 0.8em;
+}
 
 #pager,
 #pager-header,

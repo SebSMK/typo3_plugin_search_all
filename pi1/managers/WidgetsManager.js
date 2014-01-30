@@ -50,7 +50,7 @@ var Manager;
 	    target: '#category',
 	    field: 'category',
 	    multivalue:false,
-	    categoryList: {"samlingercollectionspace":"Samlinger", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler", "highlights":"Highlights", "praktisk":"Praktisk info"},
+	    categoryList: {"samlingercollectionspace":"V&aelig;rker", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler",  "praktisk":"Praktisk info"},
 	    activeCategory: "all"
 	  }));	
 
@@ -59,7 +59,7 @@ var Manager;
 	    target: '#smk_teasers'
 	  }));
 	
-	var tagcloudFields = [ {field:'artist_name_ss', title:'Artists'}, {field:'artist_natio', title:'Countries'}, {field:'object_production_century_earliest', title:'Periods'}, {field:'object_type', title:'Techniques'} ];
+	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
 	    id: tagcloudFields[i].field,

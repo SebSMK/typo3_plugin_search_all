@@ -118,20 +118,23 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		categories: {name: "Samlinger", url:"#"},
 				  		meta: {key: "Inv.num.", value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
-				  		artist_name: doc.artist_name_ss,	
+				  		artist_data: this.getArtistLabel(doc),	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
-				  		location: {key: "location", value: doc.location_name},
+				  		location: false,
 				  		
 		  				ref_number: doc.id,		  				
-		  				artwork_date: doc.object_production_date_text === undefined? '-' : doc.object_production_date_text,
+		  				artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text,
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
 		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),		  						  				  						  					  				
 //		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-//		  				artist_auth: doc.artist_auth[0],
+		  				//artist_auth: sprintf('(%s)', doc.artist_auth),
 		  				
 					};
+			 
+			 if (location !== undefined)
+				 data.location = {label: this.getlocationLabel(doc.location_name)};
 			     	
 		    break;	  
 		    
@@ -165,6 +168,23 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return data;
   
   },  
+  
+  getArtistLabel: function(doc){
+	  var artistLabel = new Array();
+	  
+	  if(doc.artist_name_ss.length != doc.artist_auth.length)
+		  return doc.artist_name_ss;
+	  
+	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
+		  var name = doc.artist_name_ss[i];
+		  var role = doc.artist_auth[i] != 'original' ? sprintf('<span>%s</span>', doc.artist_auth[i].toLowerCase()) : "";
+		  var padding = i > 0 ? "<br>" : "";
+		  var label = role == "" ? sprintf('%s%s', padding, name) : sprintf('%s%s&nbsp;%s', padding, role, name);
+		  artistLabel.push(label);		  		  
+	  }
+	  
+	  return artistLabel;
+  },
   
   getImage: function ($container, $target){
 	  var img_id = $target.attr("img_id");
@@ -253,6 +273,16 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    .attr('src', path); 
   },
 
+  
+  getlocationLabel: function (location){
+		  
+	if(location !== undefined && location.toUpperCase().indexOf('SAL') != -1)
+		return "Kan ses p&aring; museet";
+		  
+	return "Kan ses efter aftale";	  
+	  
+  },
+  
   img_id_generator: function(text){	  	  	
 	  	var hash = 0, i, char;
 		//if (text.length == 0) return hash;
