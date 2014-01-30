@@ -163,7 +163,7 @@ var Manager;
     
     
     Manager.init();
-    Manager.store.addByValue('q', '-(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace)');
+    Manager.store.addByValue('q', '-(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) -(id:(ORIG*) AND category:samlingercollectionspace) -(id:(EKS*) AND category:samlingercollectionspace)');
     
     var params = {
       facet: true,

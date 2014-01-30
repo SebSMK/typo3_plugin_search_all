@@ -74,7 +74,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		info:{
 		  			
 		  			title:doc.title_first,	
-		  			artist_data: this.getArtistLabel(doc),
+		  			artist_data: doc.artist_name_ss === undefined ? '' : this.getArtistLabel(doc),
 		  		    artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text,
 		  		    description: doc.description_note,
 		  		    technique: {

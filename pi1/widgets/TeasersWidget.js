@@ -118,7 +118,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		categories: {name: "Samlinger", url:"#"},
 				  		meta: {key: "Inv.num.", value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
-				  		artist_data: this.getArtistLabel(doc),	
+				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtistLabel(doc),	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
 				  		location: false,
