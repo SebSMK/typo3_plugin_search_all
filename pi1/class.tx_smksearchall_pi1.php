@@ -98,7 +98,7 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 		
 		setcookie("smk_search_all_plugin_server_name", $_SERVER['SERVER_NAME']);
 		
-		$content='<div id="smk_search_wrapper"></div>';
+		$content='<div id="smk_search_wrapper" class="modal_loading"></div>';
 	
 		return $this->pi_wrapInBaseClass($content);
 	}

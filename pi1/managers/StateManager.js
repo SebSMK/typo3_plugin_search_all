@@ -16,7 +16,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	
 	init: function () {
 	  var self = this;
-	  var $target = $(this.target);	  	  
+	  var $target = $(this.target);	
+	  
 	  var template = Mustache.getTemplate('pi1/templates/general_template.html');
 	  
 	  $target.empty();	  
@@ -26,8 +27,33 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  this.categoryChanged(this.currentState);
   },
   
+  
+  beforeRequest: function(){
+	 this.start_modal_loading();
+  },
+  
+  
   /**
    */
+  
+  start_modal_loading: function(target){
+	  //$(target).addClass("modal_loading");
+	  $("#smk_search_wrapper").addClass("modal_loading"); 
+  },
+  
+  stop_modal_loading: function(target){
+	  //$(target).addClass("modal_loading");
+	  $("#smk_search_wrapper").removeClass("modal_loading"); 
+  },
+      
+//  search_filter_start_loading: function(target){
+//	  $(target).addClass('filter_loading');	  
+//  },
+//  
+//  search_filter_stop_loading: function(target){
+//	  $(target).removeClass('filter_loading');	  
+//  },
+  
   viewChanged: function (stateChange) {        	    
     var $target = $(this.target);
     

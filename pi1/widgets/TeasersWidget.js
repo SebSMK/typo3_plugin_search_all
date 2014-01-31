@@ -46,8 +46,14 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	      $article.removeClass().addClass(teaser_article_class);	      
 	      $target.find('#teaser-container-grid').append($article);	      	        
 	      $target.find('#teaser-container-grid').masonry('appended', $article);	 
-	      $target.find('#teaser-container-grid article').hide();
-	      return;		
+	      $target.find('.image_loading').removeClass('image_loading').hide();
+	      
+	      // trig "this image is loaded" event	      
+    	  $(self).trigger({
+  			type: "smk_teasers_this_img_loaded"
+  		  });
+	      
+    	  return;		
 	}
 	else{
 		//* load data
@@ -63,12 +69,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		      var $article = $(html);
 		      
 		      //* load current article visualization classes
-		      $article.removeClass().addClass(teaser_article_class);
-		      
-		      //* add image + link to detail on click on image to the current article
-		      $article.find('.image_loading').each(function() {    	    	
-			  		self.getImage($article, $(this));
-			  });
+		      $article.removeClass().addClass(teaser_article_class);		      
 		      
 		      //* if the current article is an artwork, add a link to detail on click on title
 		      $article.find('.article_artwork')
@@ -89,6 +90,11 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		      //* refresh masonry
 		      $target.find('#teaser-container-grid').masonry('appended', $article);	      
 	    }						
+		
+		  //* add image + link to detail on click on image to all articles
+		  $target.find('article').each(function() {    	    	
+			self.getImage($(this), $(this).find('.image_loading'));
+		  });
 	}	   
     
   }, 
@@ -229,10 +235,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   			type: "smk_teasers_this_img_loaded"
   		  });  	    	  
         	  
-	   	 // all images are loaded
-    	  if ($container.find('.image_loading').length == 0){
-	    	  self.verticalAlign(); 
-	      }
+//	   	 // if all images are loaded & list view mode, align images
+//    	  if ($container.find('.image_loading .teaser--list').length == 0){
+//	    	  self.verticalAlign(); 
+//	      }
 		 
 	    })
 	    
@@ -261,10 +267,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    		type: "smk_teasers_this_img_loaded"
 	  		});  	    	  	     
 	    	  
-	    	// all images are loaded
-	    	if ($container.find('.image_loading').length == 0){
-	    		self.verticalAlign(); 
-		    }
+//	    	// all images are loaded
+//	    	if ($container.find('.image_loading').length == 0){
+//	    		self.verticalAlign(); 
+//		    }
 	    })	    	
 
 	    .attr('alt', alt)

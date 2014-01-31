@@ -93,6 +93,7 @@ constructor: function (attributes) {
 		
 		$target.find('select').trigger("chosen:updated");
 		
+		//ררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררר
 						// Multiple select (always open).
 						  $target.find('.chosen--multiple.chosen--open').each( function() {
 						    
@@ -125,7 +126,7 @@ constructor: function (attributes) {
 						  $target.find('.chosen--simple select').chosen({
 						    disable_search: true
 						  });  
-		
+		//ררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררר
 		
 //	  	$select.change(function(event) {
 //	  		var value = $(this).find("option:selected").text().split('(')[0] ;
@@ -134,7 +135,12 @@ constructor: function (attributes) {
 //	  	});
 		
 		//* show component
-		$target.fadeIn();				    
+		$target.fadeIn();
+		
+//		//* send "loaded" event
+//		$(this).trigger({
+//			type: "smk_search_filter_loaded"
+//		});
   },
   
   /**

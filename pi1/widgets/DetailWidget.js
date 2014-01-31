@@ -189,12 +189,10 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	      // fade our image in to create a nice effect
 	      $target.fadeIn();
 	      
-	      // trig "image loaded" event
-	      //if ($container.find('.image_loading').length == 0){
-//	    	  $(self).trigger({
-//	  			type: "smk_related_all_img_loaded"
-//	  		  });  	    	  
-	      //}
+	      // trig "this image is loaded" event	      
+    	  $(self).trigger({
+  			type: "smk_detail_this_img_loaded"
+  		  }); 
 		 
 	    })
 	    
@@ -205,12 +203,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	        .removeClass('image_loading')
 	        .append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_large.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
 	    	$target.fadeIn();
-	    	// has all images been loaded, trig event
-//	    	if ($container.find('.image_loading').length == 0){
-//		    	  $(self).trigger({
-//		  			type: "smk_related_all_img_loaded"
-//		  		  });  	    	  
-//		      }
+	    	
+	    	// trig "this image is loaded" event	      
+	    	$(self).trigger({
+	    		type: "smk_detail_this_img_loaded"
+	  		});
 	    })
 	    
 //	    // call detailed view on click on image

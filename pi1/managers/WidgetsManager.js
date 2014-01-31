@@ -16,8 +16,7 @@ var Manager;
 	    target: '#smk_search_wrapper',
 	    currentState: {view:'teasers', category:''}
 	}));
-
-	
+	  
 	Manager.addWidget(new AjaxSolr.SearchBoxWidget({
 		  id: 'searchbox',
 		  target: '#searchbox'
@@ -43,7 +42,6 @@ var Manager;
 	    id: 'viewpicker',
 	    target: '#viewpicker'
 	  })); 
-
 	
 	Manager.addWidget(new AjaxSolr.CategoryWidget({
 	    id: 'category',
@@ -53,11 +51,6 @@ var Manager;
 	    categoryList: {"samlingercollectionspace":"V&aelig;rker", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler",  "praktisk":"Praktisk info"},
 	    activeCategory: "all"
 	  }));	
-
-	Manager.addWidget(new AjaxSolr.TeasersWidget({
-	    id: 'teasers',
-	    target: '#smk_teasers'
-	  }));
 	
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
@@ -69,7 +62,12 @@ var Manager;
 	      }));
 	};				
 	
-	//* Detail and Thumbs widget are tightly coupled
+	Manager.addWidget(new AjaxSolr.TeasersWidget({
+	    id: 'teasers',
+	    target: '#smk_teasers'
+	  }));
+	
+	//* Detail and Thumbs widgets are tightly coupled
 	Manager.addWidget(new AjaxSolr.DetailWidget({
 	      id: 'details',
 	      target: '#smk_detail',
@@ -125,13 +123,19 @@ var Manager;
     	Manager.widgets['details'].call_detail(event.detail_id, false);
     });
     
-  //* calls to teasers view
+    //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['teasers'].call_previous_search();
     });	
-
 	
+//    //* searchfilters has finished loading
+//    for (var i = 0, l = tagcloudFields.length; i < l; i++) {
+//    	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_loaded', function(event){
+//    		Manager.widgets['state_manager'].search_filter_stop_loading(event.currentTarget.target);
+//    	});
+//  	};	
+    
     //* a new image has finished loading in "teaser"
     $(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	        
     	//Executes when complete page is fully loaded, including all frames, objects
@@ -142,10 +146,22 @@ var Manager;
 //        });
     	
     	$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
+    	
+    	//* check if there are still images loading 
+    	if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0){
+    		
+    		// if all images are loaded, we stop the modal "waiting image"
+    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['teasers'].target);
+   	   	 	
+    		// if in list view mode, align images
+      	  	if ($(Manager.widgets['teasers'].target).find('.teaser--list').length > 0)
+      	  		Manager.widgets['teasers'].verticalAlign();       	  	
+    	}    		  
+	    
     });
     
-  //* a new image has finished loading in "related"
-    $(Manager.widgets['related']).on('smk_related_all_img_loaded', function(event){     	        
+    //* a new image has finished loading in "related"
+    $(Manager.widgets['related']).on('smk_related_this_img_loaded', function(event){     	        
     	//Executes when complete page is fully loaded, including all frames, objects
         // and images. This ensures that Masonry knows about elements heights and can
         // do its layouting properly.
@@ -153,18 +169,35 @@ var Manager;
 //          transitionDuration: 0
 //        });
     	
-    	$(Manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');
+    	$(Manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');  
+    	
+    	//* check if there are still images loading 
+    	if ($('.image_loading').length == 0){    		
+    		// if all images are loaded, we stop the modal "waiting image"
+    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['related'].target);   	   	 	       	  	
+    	}    		
+    	
     });
     
-    //* a new search on a word has been added in serch box
+    //* detail image has finished loading in "detail"
+    $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	        
+    	//* check if there are still images loading 
+    	if ($('.image_loading').length == 0){    		
+    		// if all images are loaded, we stop the modal "waiting image"
+    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['details'].target);   	   	 	       	  	
+    	}      	
+    });
+    
+    //* a new search on a word has been added in search box
     $(Manager.widgets['searchbox']).on('smk_search_fq_added', function(event){     	
     	Manager.widgets['currentsearch'].add_fq(event.value, event.text );    	
     });	
-    
-    
+        
+    //* init all widgets
     Manager.init();
-    Manager.store.addByValue('q', '-(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) -(id:(ORIG*) AND category:samlingercollectionspace) -(id:(EKS*) AND category:samlingercollectionspace)');
-    
+
+    //* prepare and start init request
+    Manager.store.addByValue('q', '-(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) -(id:(ORIG*) AND category:samlingercollectionspace) -(id:(EKS*) AND category:samlingercollectionspace)');    
     var params = {
       facet: true,
       'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],
@@ -177,7 +210,8 @@ var Manager;
     for (var name in params) {
       Manager.store.addByValue(name, params[name]);
     }
-    Manager.doRequest();    
+    Manager.doRequest();  
+    
   });
 
 })(jQuery);

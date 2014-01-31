@@ -136,7 +136,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	      // trig "image loaded" event
 	      //if ($container.find('.image_loading').length == 0){
 	    	  $(self).trigger({
-	  			type: "smk_related_all_img_loaded"
+	  			type: "smk_related_this_img_loaded"
 	  		  });  	    	  
 	      //}
 		 
@@ -165,7 +165,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	    	// trig "image loaded" event
 	    	//if ($container.find('.image_loading').length == 0){
 		    	  $(self).trigger({
-		  			type: "smk_related_all_img_loaded"
+		  			type: "smk_related_this_img_loaded"
 		  		  });  	    	  
 		     // }
 	    })
