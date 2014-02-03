@@ -34,7 +34,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
     
     //* add image + link to detail on click on image to the current article
     $target.find('.image_loading').each(function() {    	    	
-	  		self.getImage($(this));
+	  	self.getImage($(this));
 	});    			    			
  
   },  
@@ -168,13 +168,11 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	      // fade our image in to create a nice effect
 	      $target.fadeIn();
 	      
-	      // trig "image loaded" event
-	      //if ($container.find('.image_loading').length == 0){
-//	    	  $(self).trigger({
-//	  			type: "smk_related_all_img_loaded"
-//	  		  });  	    	  
-	      //}
-		 
+//	      // trig "image loaded" event	      
+//    	  $(self).trigger({
+//  			type: "smk_thumbs_img_loaded"
+//  	  });  	    	  
+	      		 
 	    })
 	    
 	    // if there was an error loading the image, react accordingly
@@ -217,12 +215,10 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			 });
 	    	$target.fadeIn();
 	    	
-	    	// trig "image loaded" event
-	    	//if ($container.find('.image_loading').length == 0){
-//		    	  $(self).trigger({
-//		  			type: "smk_related_all_img_loaded"
-//		  		  });  	    	  
-		     // }
+//		      // trig "image loaded" event	      
+//	    	  $(self).trigger({
+//	  			type: "smk_thumbs_img_loaded"
+//	  		  });
 	    })	    	    
 
 	    .attr('alt', alt)

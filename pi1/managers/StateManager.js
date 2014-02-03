@@ -29,26 +29,40 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   
   
   beforeRequest: function(){	 
-	  this.start_modal_loading(this.manager.widgets['teasers'].target);
 	  
+	  //* start modal loading screen for each active widget
+	  // teasers
+	  this.start_modal_loading(this.manager.widgets['teasers'].target);
+	  // searchfilters
 	  for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
 		  this.start_modal_loading(this.manager.widgets[this.manager.searchfilterList[i].field].target);
-	  };		
-	 
+	  };
+	  // details
+	  this.start_modal_loading(this.manager.widgets['details'].target);	 
+	  // related
+	  this.start_modal_loading(this.manager.widgets['related'].target);
   },
   
   
   /**
    */
-  
+  /*
+   * Load modal screen for a given widget.
+   * - only if widget's state is "active"
+   */
   start_modal_loading: function(target){
-	  $(target).addClass("modal_loading");
+	  if(this.isActive(target))
+		  $(target).addClass("modal_loading");
   },
   
   stop_modal_loading: function(target){
-	  $(target).removeClass("modal_loading"); 
+	  $(target).removeClass("modal_loading");
+	  $(this.target).removeClass("modal_loading"); 
   },
-      
+  
+  isActive: function(target){
+	  return !$(target).is(':hidden')
+  },
 //  search_filter_start_loading: function(target){
 //	  $(target).addClass('filter_loading');	  
 //  },
@@ -59,7 +73,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   
   viewChanged: function (stateChange) {        	    
     var $target = $(this.target);
-    
+    var self = this;
     var newstate = this.getNewState(stateChange);
     
     if (newstate["view"] === undefined && newstate["category"] === undefined )
@@ -71,18 +85,26 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#smk_detail").hide();		  
 		  $target.find("#related-artworks").hide();
 		  
-		  $target.find("#currentsearch").show().children().show();
-		  		  
-		  $target.find("#category").show().children().show();	
-		  $target.find("#viewpicker").show().children().show();
-		  $target.find("#pager").show().children().show();
-		  $target.find("#pager-header").show().children().show();	
 		  
-		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
+		  self.showWidget($target.find("#currentsearch"));
+		  self.showWidget($target.find("#category"));
+		  self.showWidget($target.find("#viewpicker"));
+		  self.showWidget($target.find("#pager"));
+		  self.showWidget($target.find("#pager-header"));
+		  self.showWidget($(this.manager.widgets['teasers'].target));
+		  
+		  
+//		  $target.find("#currentsearch").show().children().show();//		  		  
+//		  $target.find("#category").show().children().show();	
+//		  $target.find("#viewpicker").show().children().show();
+//		  $target.find("#pager").show().children().show();
+//		  $target.find("#pager-header").show().children().show();			  
+//		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
 		  switch(newstate["category"]){
 		  case "samlingercollectionspace":		 			  			  			  
-			  $target.find("#search-filters").show().children().show();					  			  			  
+			  self.showWidget($target.find("#search-filters"));
+			  //$target.find("#search-filters").show().children().show();					  			  			  
 			  break;	
 		  default:		    			  			   							  
 		  	  $target.find("#search-filters").hide();		  	 		  	  
@@ -101,9 +123,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#search-filters").hide();
 		  $(this.manager.widgets['teasers'].target).hide();		
 		  
-		  $target.find("#smk_detail").show().children().show();
-		  $target.find("#thumbnails").show().children().show();
-		  $target.find("#related-artworks").show().children().show();
+		  self.showWidget($target.find("#smk_detail"));
+		  self.showWidget($target.find("#thumbnails"));
+		  self.showWidget($target.find("#related-artworks"));
+		  
+		  
+//		  $target.find("#smk_detail").show().children().show();
+//		  $target.find("#thumbnails").show().children().show();
+//		  $target.find("#related-artworks").show().children().show();
 		  
 		  $target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
 		  
@@ -154,6 +181,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  		
 	    return;
 	  },
+  
+	  
+  showWidget: function($target){
+	  $target.show().children().not('.modal').show();	  	  
+  },
   
   getNewState: function(stateChange) {
 	  

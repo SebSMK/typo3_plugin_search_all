@@ -150,10 +150,10 @@ var Manager;
     	
     	$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
     	
-    	//* check if there are still images loading 
+    	//* check if there are still images loading in "teaser"
     	if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0){
     		
-    		// if all images are loaded, we stop the modal "waiting image"
+    		// if all images are loaded, we stop the modal "waiting image" for this widget
     		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['teasers'].target);
    	   	 	
     		// if in list view mode, align images
@@ -174,21 +174,18 @@ var Manager;
     	
     	$(Manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');  
     	
-    	//* check if there are still images loading 
-    	if ($('.image_loading').length == 0){    		
-    		// if all images are loaded, we stop the modal "waiting image"
+    	//* check if there are still images loading in "related"
+    	if ($(Manager.widgets['related'].target).find('.image_loading').length == 0){    		
+    		// if all images are loaded, we stop the modal "waiting image" for this widget
     		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['related'].target);   	   	 	       	  	
     	}    		
     	
-    });
+    });    
     
-    //* detail image has finished loading in "detail"
-    $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	        
-    	//* check if there are still images loading 
-    	if ($('.image_loading').length == 0){    		
-    		// if all images are loaded, we stop the modal "waiting image"
-    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['details'].target);   	   	 	       	  	
-    	}      	
+    //* image has finished loading in "detail"
+    $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	            		
+		// stop the modal "waiting image" for this widget
+		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['details'].target);   	   	 	       	  		      	
     });
     
     //* a new search on a word has been added in search box

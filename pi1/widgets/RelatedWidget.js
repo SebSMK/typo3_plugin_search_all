@@ -52,10 +52,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html');     
 		      var $article = $(html);
 
-		      //* add image + link to detail on click on image to the current article
-		      $article.find('.image_loading').each(function() {    	    	
-			  		self.getImage($article, $(this));
-			  });
+//		      //* add image + link to detail on click on image to the current article
+//		      $article.find('.image_loading').each(function() {    	    	
+//			  		self.getImage($article, $(this));
+//			  });
 		      
 		      //* add a link to detail on click on title
 		      $article.find('.article_artwork')
@@ -80,7 +80,12 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 			}					
 		);								        
     						
-	}	   
+	}	
+	
+	  //* add image + link to detail on click on image to all articles
+	  $target.find('article').each(function() {    	    	
+		self.getImage($(this), $(this).find('.image_loading'));
+	  });
     
   }, 
   

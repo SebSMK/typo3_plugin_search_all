@@ -36,37 +36,29 @@
 
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
-#smk_teasers.modal_loading {
-    overflow: hidden;   
-}
-#artist_name_ss.modal_loading {
-    overflow: hidden;   
-}
-#object_type.modal_loading {
-    overflow: hidden;   
-}
-#object_production_century_earliest.modal_loading {
-    overflow: hidden;   
-}
-#artist_natio.modal_loading {
+#smk_search_wrapper.modal_loading,
+#smk_teasers.modal_loading,
+#artist_name_ss.modal_loading,
+#object_type.modal_loading,
+#object_production_century_earliest.modal_loading,
+#artist_natio.modal_loading,
+#smk_detail.modal_loading,
+#related-artworks.modal_loading
+{
     overflow: hidden;   
 }
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
-#smk_teasers.modal_loading .modal {
-    display: block;
-}
-#artist_name_ss.modal_loading .modal {
-    display: block;
-}
-#object_type.modal_loading .modal {
-    display: block;
-}
-#object_production_century_earliest.modal_loading .modal {
-    display: block;
-}
-#artist_natio.modal_loading .modal {
+#smk_search_wrapper.modal_loading .modal,
+#smk_teasers.modal_loading .modal,
+#artist_name_ss.modal_loading .modal,
+#object_type.modal_loading .modal,
+#object_production_century_earliest.modal_loading .modal,
+#artist_natio.modal_loading .modal,
+#smk_detail.modal_loading .modal,
+#related-artworks.modal_loading .modal
+{
     display: block;
 }
 
