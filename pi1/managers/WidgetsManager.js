@@ -3,11 +3,15 @@ var Manager;
 (function ($) {
 
   $(function () {
+	  
+	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
+	  
     Manager = new AjaxSolr.smkManager({
     	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v4/',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit"]
-    	})    	
+    	}),
+    	searchfilterList: tagcloudFields
     });
 
 	//** load widgets    
@@ -51,8 +55,12 @@ var Manager;
 	    categoryList: {"samlingercollectionspace":"V&aelig;rker", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler",  "praktisk":"Praktisk info"},
 	    activeCategory: "all"
 	  }));	
+		
+	Manager.addWidget(new AjaxSolr.TeasersWidget({
+	    id: 'teasers',
+	    target: '#smk_teasers'
+	  }));
 	
-	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
 	    id: tagcloudFields[i].field,
@@ -61,11 +69,6 @@ var Manager;
 	        field: tagcloudFields[i].field
 	      }));
 	};				
-	
-	Manager.addWidget(new AjaxSolr.TeasersWidget({
-	    id: 'teasers',
-	    target: '#smk_teasers'
-	  }));
 	
 	//* Detail and Thumbs widgets are tightly coupled
 	Manager.addWidget(new AjaxSolr.DetailWidget({
@@ -129,12 +132,12 @@ var Manager;
     	Manager.widgets['teasers'].call_previous_search();
     });	
 	
-//    //* searchfilters has finished loading
-//    for (var i = 0, l = tagcloudFields.length; i < l; i++) {
-//    	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_loaded', function(event){
-//    		Manager.widgets['state_manager'].search_filter_stop_loading(event.currentTarget.target);
-//    	});
-//  	};	
+    //* searchfilters has finished loading
+    for (var i = 0, l = tagcloudFields.length; i < l; i++) {
+    	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_loaded', function(event){
+    		Manager.widgets['state_manager'].stop_modal_loading(event.currentTarget.target);
+    	});
+  	};	
     
     //* a new image has finished loading in "teaser"
     $(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	        

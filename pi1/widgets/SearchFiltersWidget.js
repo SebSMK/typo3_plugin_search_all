@@ -137,10 +137,10 @@ constructor: function (attributes) {
 		//* show component
 		$target.fadeIn();
 		
-//		//* send "loaded" event
-//		$(this).trigger({
-//			type: "smk_search_filter_loaded"
-//		});
+		//* send "loaded" event
+		$(this).trigger({
+			type: "smk_search_filter_loaded"
+		});
   },
   
   /**

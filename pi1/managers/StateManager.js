@@ -28,8 +28,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   },
   
   
-  beforeRequest: function(){
-	 this.start_modal_loading();
+  beforeRequest: function(){	 
+	  this.start_modal_loading(this.manager.widgets['teasers'].target);
+	  
+	  for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
+		  this.start_modal_loading(this.manager.widgets[this.manager.searchfilterList[i].field].target);
+	  };		
+	 
   },
   
   
@@ -37,13 +42,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
    */
   
   start_modal_loading: function(target){
-	  //$(target).addClass("modal_loading");
-	  $("#smk_search_wrapper").addClass("modal_loading"); 
+	  $(target).addClass("modal_loading");
   },
   
   stop_modal_loading: function(target){
-	  //$(target).addClass("modal_loading");
-	  $("#smk_search_wrapper").removeClass("modal_loading"); 
+	  $(target).removeClass("modal_loading"); 
   },
       
 //  search_filter_start_loading: function(target){
@@ -75,7 +78,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#pager").show().children().show();
 		  $target.find("#pager-header").show().children().show();	
 		  
-		  $target.find('#smk_teasers').show().children().show();
+		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
 		  switch(newstate["category"]){
 		  case "samlingercollectionspace":		 			  			  			  
@@ -96,7 +99,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#pager-header").hide();
 		  
 		  $target.find("#search-filters").hide();
-		  $target.find("#smk_teasers").hide();		
+		  $(this.manager.widgets['teasers'].target).hide();		
 		  
 		  $target.find("#smk_detail").show().children().show();
 		  $target.find("#thumbnails").show().children().show();
@@ -119,26 +122,17 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    	return;
   
 		  switch(newstate["category"]){
-			  case "samlingercollectionspace":		 			  			  
-				  
+			  case "samlingercollectionspace":		 			  			  				  
 				  $target.find("#search-filters").show().children().show();		
-				  $target.find('.view  #smk_teasers #teaser-container-grid').removeClass('full-width').hide();
-				  //$target.find('.view  #smk_teasers #teaser-container-grid').addClass('teaser--two-columns').show().children().show();
-				  //$target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_3-grid').addClass('col_4-grid').show().children().show();
-				  //$target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_3--grid').addClass('col_4--grid').show().children().show();				  
-				  
+				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();				 				  
 				  break;	
 			  default:		    			  			   							  
 			  	  $target.find("#search-filters").hide();
-			  	  $target.find('.view  #smk_teasers #teaser-container-grid').addClass('full-width').hide();
-			  	  //$target.find('.view  #smk_teasers #teaser-container-grid').removeClass('teaser--two-columns').show().children().show();
-			  	  //$target.find('.view  #smk_teasers #teaser-container-grid').removeClass('col_4-grid').addClass('col_3-grid').show().children().show();
-			  	  //$target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').removeClass('col_4--grid').addClass('col_3--grid').show().children().show();
-			  	  
+			  	  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
 			  	  break;		  
 		  }
   
-		  if($target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').length > 0){
+		  if($(this.manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0){
 			  //* grid view mode
 			  $(this).trigger({
 					type: "current_view_mode",
@@ -153,10 +147,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 				 });
 		  }
 		
-		  $target.find("#smk_teasers").show().children().show();
+		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
-		  if($target.find('.view  #smk_teasers #teaser-container-grid .teaser--grid').length > 0)
-			  $target.find('.view  #smk_teasers #teaser-container-grid').masonry('layout');
+		  if($(this.manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0)
+			  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
 			  		
 	    return;
 	  },

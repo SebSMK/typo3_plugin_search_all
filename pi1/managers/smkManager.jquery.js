@@ -14,7 +14,15 @@
  */
 AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
   /** @lends AjaxSolr.Manager.prototype */
-  {  
+  { 
+  
+	 constructor: function (attributes) {
+		    AjaxSolr.smkManager.__super__.constructor.apply(this, arguments);
+		    AjaxSolr.extend(this, {
+		    	searchfilterList: []
+		    }, attributes);
+	 },	  	  
+	  
   executeRequest: function (servlet, string, handler, errorHandler) {
     var self = this,
         options = {dataType: 'json'};
