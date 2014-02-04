@@ -148,14 +148,7 @@ var Manager;
   	};	
     
     //* a new image has finished loading in "teaser"
-    $(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	        
-    	//Executes when complete page is fully loaded, including all frames, objects
-        // and images. This ensures that Masonry knows about elements heights and can
-        // do its layouting properly.
-//    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry( {
-//          transitionDuration: 0
-//        });
-    	
+    $(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	            	
     	$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
     	
     	//* check if there are still images loading in "teaser"
@@ -166,20 +159,13 @@ var Manager;
    	   	 	
     		// if in list view mode, align images
       	  	if ($(Manager.widgets['teasers'].target).find('.teaser--list').length > 0)
-      	  		Manager.widgets['teasers'].verticalAlign();       	  	
+      	  		Manager.widgets['teasers'].verticalAlign(); 
     	}    		  
 	    
     });
     
     //* a new image has finished loading in "related"
-    $(Manager.widgets['related']).on('smk_related_this_img_loaded', function(event){     	        
-    	//Executes when complete page is fully loaded, including all frames, objects
-        // and images. This ensures that Masonry knows about elements heights and can
-        // do its layouting properly.
-//    	$(Manager.widgets['teasers_smk_collection'].target).find('#teaser-container-grid').masonry( {
-//          transitionDuration: 0
-//        });
-    	
+    $(Manager.widgets['related']).on('smk_related_this_img_loaded', function(event){     	            	
     	$(Manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');  
     	
     	//* check if there are still images loading in "related"
@@ -225,6 +211,7 @@ var Manager;
       //'f.prod_technique.facet.mincount': 20,
       'facet.limit': -1,
       'facet.mincount': 1,
+      'rows':12,
       'json.nl': 'map'
     };
     for (var name in params) {
