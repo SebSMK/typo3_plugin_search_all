@@ -260,7 +260,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  //* delete current (exposed) solr parameters
 	  self.manager.store.exposedReset();
 	  
-  	  var param = new AjaxSolr.Parameter({name: "q", value: "id:" + art_id}); 
+  	  var param = new AjaxSolr.Parameter({name: "q", value: 'id_s:"' + art_id +'"'}); 
   	  self.manager.store.add(param.name, param);	     
       	      
       self.doRequest();
