@@ -396,7 +396,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  var $target = $(this.target);	  
 	  
-	  $(this.target).show().children().show();
+	  $(this.target).show().children().not('.modal').show();
 	  
 	  // Vertically align thumbs (in relation to their frames)
 	  $target.find('.teaser--list img').each( function() {

@@ -32,7 +32,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
         
     $target.html(html);
     
-    //* add image + link to detail on click on image to the current article
+    //* add image + link to detail on click on images
     $target.find('.image_loading').each(function() {    	    	
 	  	self.getImage($(this));
 	});    			    			
@@ -168,10 +168,10 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	      // fade our image in to create a nice effect
 	      $target.fadeIn();
 	      
-//	      // trig "image loaded" event	      
-//    	  $(self).trigger({
-//  			type: "smk_thumbs_img_loaded"
-//  	  });  	    	  
+	      // trig "image loaded" event	      
+    	  $(self).trigger({
+  			type: "smk_thumbs_img_loaded"
+    	  });  	    	  
 	      		 
 	    })
 	    
@@ -215,17 +215,37 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			 });
 	    	$target.fadeIn();
 	    	
-//		      // trig "image loaded" event	      
-//	    	  $(self).trigger({
-//	  			type: "smk_thumbs_img_loaded"
-//	  		  });
+		    // trig "image loaded" event	      
+	    	$(self).trigger({
+	  			type: "smk_thumbs_img_loaded"
+	  		});
 	    })	    	    
 
 	    .attr('alt', alt)
 	    
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
-  }
+  },
+  
+  verticalAlign: function() {
+	  
+	  var $target = $(this.target);	  
+	  
+	  $(this.target).show().children().not('.modal').show();	
+	  
+	  // Vertically align thumbs (in relation to their frames)
+	  $target.find('li img').each( function() {
+
+	    // Calculating offset that will vertically center the thumb
+	    // NOTE: 66 is the maximum thumb height in pixels
+	    var thumbHeight = $(this).height();
+	    var verticalOffset =  (66 - thumbHeight) / 2;
+
+	    if( $(this).height() < 66 ) {
+	      $(this).css('margin-top', verticalOffset + 'px');
+	    }
+	  });  
+  }  
   
 });
 

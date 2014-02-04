@@ -115,7 +115,7 @@ var Manager;
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	Manager.widgets['details'].call_detail(event.detail_id, true);
+    	Manager.widgets['details'].call_detail(event.detail_id, true);    	
     });	 
     $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
@@ -130,6 +130,7 @@ var Manager;
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['teasers'].call_previous_search();
+    	Manager.widgets['thumbs'].current_selec = null;
     });	
 	
     //* searchfilters has finished loading
@@ -180,7 +181,19 @@ var Manager;
     		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['related'].target);   	   	 	       	  	
     	}    		
     	
-    });    
+    }); 
+    
+    //* a new image has finished loading in "thumbnails"
+    $(Manager.widgets['thumbs']).on('smk_thumbs_img_loaded', function(event){     	            	    	
+    	//* check if there are still images loading in "teaser"
+    	if ($(Manager.widgets['thumbs'].target).find('.image_loading').length == 0){
+    		
+//    		// if all images are loaded, we stop the modal "waiting image" for this widget
+//    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['teasers'].target);
+      	  	Manager.widgets['thumbs'].verticalAlign();       	  	
+    	}    		  
+	    
+    });
     
     //* image has finished loading in "detail"
     $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	            		

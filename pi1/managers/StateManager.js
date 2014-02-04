@@ -150,7 +150,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   
 		  switch(newstate["category"]){
 			  case "samlingercollectionspace":		 			  			  				  
-				  $target.find("#search-filters").show().children().show();		
+				  this.showWidget($target.find("#search-filters"));
+				  //$target.find("#search-filters").show().children().show();		
 				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();				 				  
 				  break;	
 			  default:		    			  			   							  
