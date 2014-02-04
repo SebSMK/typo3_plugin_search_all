@@ -39,7 +39,12 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		var artwork_data = null;						
 		var doc = this.manager.response.response.docs[i];	      	      	      
 		
+		//* in case there are no results, remove all ".image_loading" class in the widget and send "widget loaded" event
 		if (doc.related_id === undefined){
+			$target.removeClass('.image_loading');
+			$(self).trigger({
+	  			type: "smk_related_this_img_loaded"
+	  		});
 			$target.hide();
 			return;			
 		} 
@@ -52,10 +57,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html');     
 		      var $article = $(html);
 
-//		      //* add image + link to detail on click on image to the current article
-//		      $article.find('.image_loading').each(function() {    	    	
-//			  		self.getImage($article, $(this));
-//			  });
+//			      //* add image + link to detail on click on image to the current article
+//			      $article.find('.image_loading').each(function() {    	    	
+//				  		self.getImage($article, $(this));
+//				  });
 		      
 		      //* add a link to detail on click on title
 		      $article.find('.article_artwork')
@@ -80,12 +85,14 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 			}					
 		);								        
     						
-	}	
+	 };	
 	
-	  //* add image + link to detail on click on image to all articles
-	  $target.find('article').each(function() {    	    	
+	 //* add image + link to detail on click on image to all articles
+	 $target.find('article').each(function() {    	    	
 		self.getImage($(this), $(this).find('.image_loading'));
-	  });
+	 });		
+
+
     
   }, 
   

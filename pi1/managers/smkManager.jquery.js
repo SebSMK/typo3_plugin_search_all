@@ -19,7 +19,8 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
 	 constructor: function (attributes) {
 		    AjaxSolr.smkManager.__super__.constructor.apply(this, arguments);
 		    AjaxSolr.extend(this, {
-		    	searchfilterList: []
+		    	searchfilterList: [],
+		    	allWidgetsProcessed: null
 		    }, attributes);
 	 },	  	  
 	  
@@ -57,8 +58,14 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     	    
     for (var widgetId in this.widgets) {
       this.widgets[widgetId].afterRequest();
-    };      
-  }  
+    }; 
+    
+    //* Uses a function passed as an argument.
+    //* The whole idea is, that this function should refer to a function in StateManager
+    if(this.allWidgetsProcessed != null)
+    	this.allWidgetsProcessed();
+
+   }  
 });
 
 }));

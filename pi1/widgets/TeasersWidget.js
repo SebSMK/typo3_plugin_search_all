@@ -38,7 +38,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	$target.find('#teaser-container-grid').masonry('remove', $all_articles);		
 	
 	
-	//* in case there are no results, we create an empty-invisible article - but with the correct visualization class...
+	//* in case there are no results, we create an empty-invisible article - but with the correct visualization class
+	//* ...and send "teaser loaded" event
 	if (this.manager.response.response.docs.length == 0){
 		  var html = self.template_integration_json({}, 'pi1/templates/teasers.html');     
 	      var $article = $(html);	      

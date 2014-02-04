@@ -5,21 +5,28 @@ var Manager;
   $(function () {
 	  
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
-	  
+		
+	var stateManager = new AjaxSolr.StateManager({
+	    id: 'state_manager',
+	    target: '#smk_search_wrapper',
+	    currentState: {view:'teasers', category:''}
+	});
+	
+	//* the function hereunder will be passed as parameter in the manager - we've got to bind it to an environment
+	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);
+	
     Manager = new AjaxSolr.smkManager({
     	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v4/',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit"]
     	}),
-    	searchfilterList: tagcloudFields
+    	searchfilterList: tagcloudFields,
+    	allWidgetsProcessed: allWidgetsProcessedBound
     });
 
-	//** load widgets    
-	Manager.addWidget(new AjaxSolr.StateManager({
-	    id: 'state_manager',
-	    target: '#smk_search_wrapper',
-	    currentState: {view:'teasers', category:''}
-	}));
+	//** load widgets
+    //* stateManagerWidget must be registred in first place
+	Manager.addWidget(stateManager);
 	  
 	Manager.addWidget(new AjaxSolr.SearchBoxWidget({
 		  id: 'searchbox',
@@ -136,7 +143,7 @@ var Manager;
     //* searchfilters has finished loading
     for (var i = 0, l = tagcloudFields.length; i < l; i++) {
     	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_loaded', function(event){
-    		Manager.widgets['state_manager'].stop_modal_loading(event.currentTarget.target);
+    		Manager.widgets['state_manager'].remove_modal_loading_from_widget(event.currentTarget.target);
     	});
   	};	
     
@@ -155,7 +162,7 @@ var Manager;
     	if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0){
     		
     		// if all images are loaded, we stop the modal "waiting image" for this widget
-    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['teasers'].target);
+    		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['teasers'].target);
    	   	 	
     		// if in list view mode, align images
       	  	if ($(Manager.widgets['teasers'].target).find('.teaser--list').length > 0)
@@ -178,7 +185,7 @@ var Manager;
     	//* check if there are still images loading in "related"
     	if ($(Manager.widgets['related'].target).find('.image_loading').length == 0){    		
     		// if all images are loaded, we stop the modal "waiting image" for this widget
-    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['related'].target);   	   	 	       	  	
+    		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['related'].target);   	   	 	       	  	
     	}    		
     	
     }); 
@@ -189,7 +196,7 @@ var Manager;
     	if ($(Manager.widgets['thumbs'].target).find('.image_loading').length == 0){
     		
 //    		// if all images are loaded, we stop the modal "waiting image" for this widget
-//    		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['teasers'].target);
+//    		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['teasers'].target);
       	  	Manager.widgets['thumbs'].verticalAlign();       	  	
     	}    		  
 	    
@@ -198,7 +205,7 @@ var Manager;
     //* image has finished loading in "detail"
     $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	            		
 		// stop the modal "waiting image" for this widget
-		Manager.widgets['state_manager'].stop_modal_loading(Manager.widgets['details'].target);   	   	 	       	  		      	
+		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['details'].target);   	   	 	       	  		      	
     });
     
     //* a new search on a word has been added in search box

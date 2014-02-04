@@ -12,9 +12,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    AjaxSolr.extend(this, {
 	      currentState:{}
 	    }, attributes);
-	  },
+	  },		  
+	  
+ allWidgetProcessed : false, 
 	
-	init: function () {
+ init: function () {
 	  var self = this;
 	  var $target = $(this.target);	
 	  
@@ -30,39 +32,75 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   
   beforeRequest: function(){	 
 	  
-	  //* start modal loading screen for each active widget
+	  this.start_modal_loading(this.target);
+	  
+	  //* start loading mode for some choosen widgets  
 	  // teasers
-	  this.start_modal_loading(this.manager.widgets['teasers'].target);
+	  this.add_modal_loading_to_widget(this.manager.widgets['teasers'].target);
 	  // searchfilters
 	  for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
-		  this.start_modal_loading(this.manager.widgets[this.manager.searchfilterList[i].field].target);
+		  this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field].target);
 	  };
 	  // details
-	  this.start_modal_loading(this.manager.widgets['details'].target);	 
+	  this.add_modal_loading_to_widget(this.manager.widgets['details'].target);	 
 	  // related
-	  this.start_modal_loading(this.manager.widgets['related'].target);
+	  this.add_modal_loading_to_widget(this.manager.widgets['related'].target);
   },
   
-  
-  /**
-   */
+
   /*
-   * Load modal screen for a given widget.
+   * start general modal loading screen 
+   */
+  start_modal_loading: function(){
+	  $(this.target).addClass("modal_loading"); 	  
+  },
+  
+  /*
+   * stop general modal loading screen 
+   */
+  stop_modal_loading: function(){
+	  $(this.target).removeClass("modal_loading"); 
+	  this.allWidgetProcessed = false;
+  },
+  
+  /*
+   * start loading mode for a given widget.
    * - only if widget's state is "active"
    */
-  start_modal_loading: function(target){
-	  if(this.isActive(target))
+  add_modal_loading_to_widget: function(target){
+	  if(this.isThisWidgetActive(target))
 		  $(target).addClass("modal_loading");
   },
   
-  stop_modal_loading: function(target){
+  /*
+   * stop loading mode for a given widget.
+   */
+  remove_modal_loading_from_widget: function(target){
 	  $(target).removeClass("modal_loading");
-	  $(this.target).removeClass("modal_loading"); 
+	  
+	  if (this.allWidgetProcessed){
+		  if ($(this.target).find('.modal_loading').length == 0){
+			// all widgets are loaded, we remove the general loading screen
+			  this.stop_modal_loading();
+		  }			  
+	  }
   },
   
-  isActive: function(target){
+  isThisWidgetActive: function(target){
 	  return !$(target).is(':hidden')
   },
+  
+  allWidgetsProcessed: function(){
+	  if ($(this.target).find('.modal_loading').length != 0){
+		  // there are still some widgets loading
+		  this.allWidgetProcessed = true;	
+	  }	else{
+		  // all widgets are loaded, we remove the general loading screen
+		  this.stop_modal_loading();
+	  }	  	  
+  },
+  
+  
 //  search_filter_start_loading: function(target){
 //	  $(target).addClass('filter_loading');	  
 //  },

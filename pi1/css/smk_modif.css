@@ -8,7 +8,7 @@
    speak for themselves. Background we set to 80% white with
    our animation centered, and no-repeating */
 .modal {
-	/*
+	
     background: url("../images/ajax_loader_gray_64.gif") no-repeat fixed 50% 50% rgba(255, 255, 255, 0.8);
     height: 100%;
     margin-left: auto;
@@ -17,9 +17,9 @@
     top: 0;
     width: 882px;
     z-index: 1000;
-    display:    none;*/
+    display:    none;
     
-    
+    /*
     display:    none;
     position:   fixed;
     z-index:    1000;
@@ -31,33 +31,19 @@
                 url('../images/ajax_loader_gray_64.gif') 
                 50% 50% 
                 no-repeat;
-                
+*/                
 }
 
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
-#smk_search_wrapper.modal_loading,
-#smk_teasers.modal_loading,
-#artist_name_ss.modal_loading,
-#object_type.modal_loading,
-#object_production_century_earliest.modal_loading,
-#artist_natio.modal_loading,
-#smk_detail.modal_loading,
-#related-artworks.modal_loading
+#smk_search_wrapper.modal_loading
 {
     overflow: hidden;   
 }
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
-#smk_search_wrapper.modal_loading .modal,
-#smk_teasers.modal_loading .modal,
-#artist_name_ss.modal_loading .modal,
-#object_type.modal_loading .modal,
-#object_production_century_earliest.modal_loading .modal,
-#artist_natio.modal_loading .modal,
-#smk_detail.modal_loading .modal,
-#related-artworks.modal_loading .modal
+#smk_search_wrapper.modal_loading .modal
 {
     display: block;
 }
