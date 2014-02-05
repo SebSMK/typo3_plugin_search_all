@@ -12,9 +12,8 @@ var Manager;
 	    currentState: {view:'teasers', category:''}
 	});
 	
-	//* the function hereunder will be passed as parameter in the manager - we've got to bind it to an environment
-	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);
-	
+	// this function will be passed as parameter in the manager - we've got to bind it to an environment
+	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);	
     Manager = new AjaxSolr.smkManager({
     	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v4/',
     	store: new AjaxSolr.smkParameterStore({
@@ -27,10 +26,13 @@ var Manager;
 	//** load widgets
     //* stateManagerWidget must be registred in first place
 	Manager.addWidget(stateManager);
-	  
+	
+	// this function will be passed as parameter in the searchbox - we've got to bind it to an environment
+	var getCurrentStateBound = $.proxy(stateManager.getCurrentState, stateManager);
 	Manager.addWidget(new AjaxSolr.SearchBoxWidget({
 		  id: 'searchbox',
-		  target: '#searchbox'
+		  target: '#searchbox',
+		  getCurrentState: getCurrentStateBound
 	}));
 	
 	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
@@ -105,19 +107,11 @@ var Manager;
 	$(Manager.widgets['state_manager']).on('current_view_mode', function(event){ 
 	   	 Manager.widgets['teasers'].switch_list_grid(event.value);
 	});
-//   $(Manager.widgets['gridlistviewswitch']).on('smk_search_listview', {caller:'smk_search_listview'}, function(event){ 
-//   	Manager.widgets['teasers_smk_collection'].switch_list_grid(event);
-//   }); 
     
 	//* switch between categories
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
     	Manager.widgets['state_manager'].categoryChanged({category:event.category});
-    });        
-    
-//    //* call to "all" categories
-//    $(Manager.widgets['currentsearch']).on('smk_search_category_removed', function(event){     	
-//    	Manager.widgets['state_manager'].categoryChanged({category:''});
-//    });
+    });            
     
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
@@ -137,6 +131,12 @@ var Manager;
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['teasers'].call_previous_search();
+    	Manager.widgets['thumbs'].current_selec = null;
+    });	
+    $(Manager.widgets['searchbox']).on('smk_search_call_teasers', function(event){     	
+    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
+    	Manager.widgets['state_manager'].categoryChanged({category:""});
+    	Manager.widgets['currentsearch'].removeAllFacets(); 
     	Manager.widgets['thumbs'].current_selec = null;
     });	
 	

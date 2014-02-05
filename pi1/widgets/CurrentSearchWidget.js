@@ -7,8 +7,8 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 
   afterRequest: function () {
 	  
-	  if ($(this.target).is(':hidden'))
-		  	return;	
+	if ($(this.target).is(':hidden'))
+	  	return;	
 	  
 	var self = this;
     var links = [];
@@ -52,11 +52,11 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
     if (links.length) {                  
       var html = this.template_integration_json(links, 'pi1/templates/current.html');
       $(this.target).html(html);
-      $(this.target).find('a').click(self.removeFacet());            
+      $(this.target).find('a').click(self.removeClickedFacet());            
     }
   },
 
-  removeFacet: function () {
+  removeClickedFacet: function () {
     var self = this;
     return function (event) {
       var facet = $(this).attr('fq');    	
@@ -74,7 +74,7 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
       }
       return false;
     };
-  },
+  },  
   
   template_integration_json: function (data, templ_path){	  
 		var template = Mustache.getTemplate(templ_path);	
@@ -85,7 +85,29 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   
   add_fq: function(value, text){
 	  this.fq.push({'value':value, 'text':text});	  	  
-  }
+  },
+  
+  removeAllFacets: function(){
+	  var self = this;
+	  for (var i = 0, l = self.fq.length; i < l; i++) {	 
+		  self.removeFacet(self.fq[i].value);
+  	 	}    	        	  
+	  self.fq = new Array();
+	  
+  },
+  
+  removeFacet: function (facet) {
+	  var self = this;	    
+	        	
+      if (self.manager.store.removeByValue('fq', facet)) {       	    	
+    	for (var i = 0, l = self.fq.length; i < l; i++) {	 
+	    	if (self.fq[i].value == facet){
+	    		self.fq.splice(i, 1);	    		
+	    		break;
+	    	}    	    	
+    	 }    	        
+      }
+  }	    
   
 });
 

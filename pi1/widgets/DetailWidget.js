@@ -85,7 +85,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text,
 		  		    description: doc.description_note,
 		  		    technique: {
-		  		    	key: "technique",  
+		  		    	key: "teknik",  
 		  		    	value: doc.prod_technique
 		  		    },
 		  		    meta: {

@@ -2,17 +2,12 @@
 
 AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	
-	/**
-	   * @param {Object} [attributes]
-	   * @param {Number} [attributes.start] This widget will by default set the
-	   *   offset parameter to 0 on each request.
-	   */
-	constructor: function (attributes) {
-	    AjaxSolr.AbstractWidget.__super__.constructor.apply(this, arguments);
-	    AjaxSolr.extend(this, {
-	      currentState:{}
-	    }, attributes);
-	  },		  
+ constructor: function (attributes) {
+    AjaxSolr.AbstractWidget.__super__.constructor.apply(this, arguments);
+    AjaxSolr.extend(this, {
+      currentState:{}
+    }, attributes);
+  },		  
 	  
  allWidgetProcessed : false, 
 	
@@ -186,36 +181,45 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    if (newstate["category"] === undefined )
 	    	return;
   
-		  switch(newstate["category"]){
+		switch(newstate["category"]){
 			  case "samlingercollectionspace":		 			  			  				  
 				  this.showWidget($target.find("#search-filters"));
 				  //$target.find("#search-filters").show().children().show();		
 				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();				 				  
-				  break;	
+				  break;
+			  case "nyheder":
+			  case "kalender":
+			  case "artikel":
+			  case "praktisk":
+				  $target.find("#search-filters").hide();
+			  	  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
+			  	  this.manager.widgets['category'].setActiveTab(newstate["category"]);
+			  	  break;
 			  default:		    			  			   							  
 			  	  $target.find("#search-filters").hide();
 			  	  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
+			  	  this.manager.widgets['category'].setActiveTab("all");
 			  	  break;		  
-		  }
+		}
   
-		  if($(this.manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0){
+		if($(this.manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0){
 			  //* grid view mode
 			  $(this).trigger({
 					type: "current_view_mode",
 					value:'grid'
 				 });
 			  
-		  }else{
+		}else{
 			  //* list view mode
 			  $(this).trigger({
 					type: "current_view_mode",
 					value:'list'
 				 });
-		  }
+		}
 		
-		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
+		$(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
-		  if($(this.manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0)
+		if($(this.manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0)
 			  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
 			  		
 	    return;
@@ -235,6 +239,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  this.currentState["category"] = stateChange["category"];
 	  }
 	  
+	  return this.currentState;
+  },
+  
+  getCurrentState: function(){
 	  return this.currentState;
   }
 
