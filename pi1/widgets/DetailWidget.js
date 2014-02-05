@@ -53,6 +53,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  {caller:self}, 
 		  function (event) {
     		event.preventDefault();
+    		
+    		//restore previous search request
+    		event.data.caller.manager.store.load(true); 
+    		
+    		// send call to teaser view
 	    	$(event.data.caller).trigger({
 				type: "smk_search_call_teasers"
 			  });  		    	

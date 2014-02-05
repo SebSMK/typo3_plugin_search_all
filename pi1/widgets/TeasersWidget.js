@@ -301,17 +301,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  	  
 		return 'img_smk_' + hash;
   },
-  
-  call_previous_search: function () {
-	  var self = this;
-	  //self.manager.setShowDetail(false);
 
-	  //* load solr parameters from the previous search
-	  self.manager.store.load(true);   
-      
-      //self.doRequest();
-      return false;
-  },
   
   switch_list_grid: function (view) {
 	var self = this;  

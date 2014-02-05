@@ -129,8 +129,7 @@ var Manager;
     
     //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
-    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
-    	Manager.widgets['teasers'].call_previous_search();
+    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});    	
     	Manager.widgets['thumbs'].current_selec = null;
     });	
     $(Manager.widgets['searchbox']).on('smk_search_call_teasers', function(event){     	
