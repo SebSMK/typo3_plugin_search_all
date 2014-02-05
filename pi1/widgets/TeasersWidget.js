@@ -4,6 +4,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
   start: 0,		  
 
+  default_picture_path: null, 
+  
   init: function(){
 	  
 	var self = this;
@@ -19,6 +21,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     $target.find('#teaser-container-grid').masonry( {
         transitionDuration: 0
     });
+    
+    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_medium.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"))
 	  
   },  
 
@@ -120,8 +124,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 data = {
 				  		id:doc.id,
 				  		title:doc.title_first,	 
-				  		//thumbnail: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),
-				  		thumbnail: doc.medium_image_url,
+				  		thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 				  		categories: {name: "Samlinger", url:"#"},
 				  		meta: {key: "Inv.num.", value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
@@ -133,11 +136,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  				ref_number: doc.id,		  				
 		  				artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text,
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
-		  				non_img_data_bool: doc.medium_image_data != null ? false : true,		
-		  				img_link: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Medium", doc.medium_image_data),		  						  				  						  					  				
-//		  				artist_auth_bool: (doc.artist_auth.length > 0 ) && (doc.artist_auth[0] != 'original') ? true : false,
-		  				//artist_auth: sprintf('(%s)', doc.artist_auth),
-		  				
+		  				non_img_data_bool: doc.medium_image_data != null ? false : true,			  						  				  						  					  						  				
 					};
 			 
 			 if (location !== undefined)
@@ -151,6 +150,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		 	data = {
 				 		id:doc.id,
 			 			title: doc.page_title,
+			 			thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 			 			description: sprintf("%s...", doc.page_content.substring(0, 50)),
 			 			url: doc.page_url,				 			
 			 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
@@ -248,8 +248,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
-	        .find('a')
-	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_medium.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	        .find('a')	    	
+	    	.append(sprintf('<img src="%s" />', self.default_picture_path));
 	    	// call detailed view on click on image
 		    $target.find('a').click({detail_id: img_id, caller:self}, 
 	    		function (event) {
