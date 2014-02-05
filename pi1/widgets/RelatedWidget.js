@@ -2,7 +2,9 @@
 
 AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({  
 
-  start: 0,		  
+  start: 0,	
+  
+  default_picture_path: null, 
 
   init: function(){
 	  
@@ -19,6 +21,8 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
     $target.find('#teaser-container-grid').masonry( {
         transitionDuration: 0
     });
+    
+    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_large.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));
 	  
   },  
 
@@ -106,7 +110,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
   getData: function (entry){
 	  
 	  var title_first = entry.split(';--;')[2];
-	  var medium_image_data = entry.split(';--;')[3];
+	  var medium_image_data = entry.split(';--;')[3] != "" ? entry.split(';--;')[3] : this.default_picture_path;
 	  var id = entry.split(';--;')[0];
 	  var artist_name = entry.split(';--;')[1];
 	  
@@ -160,7 +164,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        .find('a')
-	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_medium.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	    	.append(sprintf('<img src="%s" />', self.default_picture_path));
 	    	// call detailed view on click on image
 		    $target.find('img').click({detail_id: img_id, caller:self}, 
 	    		function (event) {

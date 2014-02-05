@@ -5,7 +5,15 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   start: 0, 
   
   current_selec: null,
-
+  
+  default_picture_path: null,
+  
+  init: function(){	  	
+	    
+	    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_small.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));
+		  
+	  },  
+  
   afterRequest: function () {
 	  
 	var self = this;		
@@ -107,7 +115,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   push_work_til_thumb: function(work, thumbnails){
 	  var id = work[1];		  
 	  var title = work[2];
-	  var thumb = work[3];			   
+	  var thumb = work[3] != "" ? work[3] : this.default_picture_path;			   
 	  
 	  thumbnails.push({
 			  img_id : id,
@@ -181,9 +189,8 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
 	        .find('a')
-	    	.append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_small.png" alt="%s" title="%s"/>', 
-	    				$.cookie("smk_search_all_plugin_server_name"), 
-	    				$.cookie("smk_search_all_plugin_dir_base"),
+	    	.append(sprintf('<img src="%s" alt="%s" title="%s"/>', 
+	    				self.default_picture_path,
 	    				alt,
 	    				alt
 	    				));

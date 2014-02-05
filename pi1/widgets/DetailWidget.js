@@ -10,6 +10,14 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  },	
   
   start: 0,
+  
+  default_picture_path: null, 
+  
+  init: function(){
+	  	    
+	    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_large.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));		  
+  }, 
+  
 	
   beforeRequest: function () {
     //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
@@ -65,8 +73,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  var data =  {
 		  		media:{
 		  			title:doc.title_first,		  			
-			  		//image: sprintf("http://cstest:8180/collectionspace/tenant/smk/download/%s/Original", doc.medium_image_data),
-		  			image: doc.medium_image_url,
+		  			image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 			  		copyright: "copyright",
 			  		img_id:doc.id
 		  		},
@@ -201,7 +208,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
-	        .append(sprintf('<img src="http://%s/%spi1/images/default_picture_2_large.png" />', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base")));
+	        .append(sprintf('<img src="%s" />', self.default_picture_path));
 	    	$target.fadeIn();
 	    	
 	    	// trig "this image is loaded" event	      
