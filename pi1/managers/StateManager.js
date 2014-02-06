@@ -31,15 +31,15 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
 	  //* start loading mode for some choosen widgets  
 	  // teasers
-	  this.add_modal_loading_to_widget(this.manager.widgets['teasers'].target);
+	  this.add_modal_loading_to_widget(this.manager.widgets['teasers']);
 	  // searchfilters
 	  for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
-		  this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field].target);
+		  this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field]);
 	  };
 	  // details
-	  this.add_modal_loading_to_widget(this.manager.widgets['details'].target);	 
+	  this.add_modal_loading_to_widget(this.manager.widgets['details']);	 
 	  // related
-	  this.add_modal_loading_to_widget(this.manager.widgets['related'].target);
+	  this.add_modal_loading_to_widget(this.manager.widgets['related']);
   },
   
 
@@ -62,9 +62,9 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
    * start loading mode for a given widget.
    * - only if widget's state is "active"
    */
-  add_modal_loading_to_widget: function(target){
-	  if(this.isThisWidgetActive(target))
-		  $(target).addClass("modal_loading");
+  add_modal_loading_to_widget: function(widget){
+	  if(this.isThisWidgetActive(widget))
+		  $(widget.target).addClass("modal_loading");
   },
   
   /*
@@ -81,8 +81,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  }
   },
   
-  isThisWidgetActive: function(target){
-	  return !$(target).is(':hidden')
+  isThisWidgetActive: function(widget){
+	  return widget.getRefresh();
   },
   
   allWidgetsProcessed: function(){

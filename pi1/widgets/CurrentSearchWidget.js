@@ -5,13 +5,15 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   
   fq: new Array(),
 
-  afterRequest: function () {
-	  
-	if ($(this.target).is(':hidden'))
-	  	return;	
+  afterRequest: function () {	  	
 	  
 	var self = this;
     var links = [];
+    
+	if (!self.getRefresh()){
+		self.setRefresh(true);
+		return;
+	}	 		  
 
 //    var q = this.manager.store.get('q').val();
 //    if (q != '*:*') {

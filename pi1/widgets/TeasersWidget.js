@@ -28,12 +28,14 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
   afterRequest: function () {
 	  
-	if ($(this.target).is(':hidden'))
-		  	return;		
-	  
 	var self = this;
 	var $target = $(this.target);
 	
+	if (!self.getRefresh()){
+		self.setRefresh(true);
+		return;
+	}	 		  
+  	
 	//* save current article visualization classes	
 	var teaser_article_class = $target.find('#teaser-container-grid article').attr('class');	
 				

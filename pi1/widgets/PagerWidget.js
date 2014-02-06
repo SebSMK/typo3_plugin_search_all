@@ -150,6 +150,9 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
   clickHandler: function (page) {
     var self = this;
     return function () {
+      $(self).trigger({
+		type: "smk_search_pager_changed"
+	  });	
       self.manager.store.get('start').val((page - 1) * self.perPage());
       self.doRequest();
       return false;

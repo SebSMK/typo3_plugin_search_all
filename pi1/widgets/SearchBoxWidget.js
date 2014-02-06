@@ -17,17 +17,22 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 	
 	
 	afterRequest : function() {
-
-		if ($(this.target).is(':hidden'))
-		  	return;	
+		
+		var self = this;
+		
+		if (!self.getRefresh()){
+			self.setRefresh(true);
+			return;
+		}	 		  
+	  
 		$(this.target).find('input#search.typeahead').val('');
 		
 		$(this.target).find('form').bind(
 				'submit',
 				{
-					mmgr : this.manager,
+					mmgr : self.manager,
 					$input : $(this.target).find('input#search.typeahead'),
-					caller : this
+					caller : self
 					//,mdf : this.displayFields
 				},
 				function(e) {
@@ -76,12 +81,12 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 					};// end if
 				}); // end binded action.
 
-		if (undefined === this.manager.store.last
-				|| this.manager.store.last.length < 1)
+		if (undefined === self.manager.store.last
+				|| self.manager.store.last.length < 1)
 			return;
-		if (!this.hightlight)
+		if (!self.hightlight)
 			return;
-		var vArray = this.manager.store.last.split(" ");
+		var vArray = self.manager.store.last.split(" ");
 		jQuery('#smk_teasers .teaser__content').highlight(vArray);
 		
 	}

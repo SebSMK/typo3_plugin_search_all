@@ -30,8 +30,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;
 	var $target = $(this.target);
 	
-	if ($target.is(':hidden'))
-	  	return;
+	if (!self.getRefresh()){
+		self.setRefresh(true);
+		return;
+	}	 		  
 				
 	//* remove all existing articles
 	var $all_articles = $target.find('#teaser-container-grid article');

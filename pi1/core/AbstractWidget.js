@@ -72,7 +72,25 @@ AjaxSolr.AbstractWidget = AjaxSolr.Class.extend(
    */
   doRequest: function (start, servlet) {
     this.manager.doRequest(start || this.start, servlet || this.servlet);
+  },
+  
+  
+  getRefresh: function(){	  
+	  if ($(this.target).is(':hidden') || $(this.target).hasClass('no_refresh')){		  
+		  return false;
+	  }
+	  return true;	  	  
+  },
+  
+  setRefresh: function(bool){	  
+	  if (!bool){
+		  $(this.target).addClass('no_refresh');		  
+	  }
+	  else{
+		  $(this.target).removeClass('no_refresh');
+	  }
   }
+  
 });
 
 }));

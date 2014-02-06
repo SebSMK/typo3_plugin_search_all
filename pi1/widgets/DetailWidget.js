@@ -23,13 +23,15 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
     //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
   },
 
-  afterRequest: function () {
-	  
-	if ($(this.target).is(':hidden'))
-		  	return;		
-  
+  afterRequest: function () {	  
+	
 	var self = this;		
-	var $target = $(this.target);		
+	var $target = $(this.target);
+	
+	if (!self.getRefresh()){
+		self.setRefresh(true);
+		return;
+	}	 		  	
 	
 	$target.empty();
 	

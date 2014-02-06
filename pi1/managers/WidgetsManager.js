@@ -108,11 +108,26 @@ var Manager;
 	   	 Manager.widgets['teasers'].switch_list_grid(event.value);
 	});
     
-	//* switch between categories
+	//* selected category changed
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
     	Manager.widgets['state_manager'].categoryChanged({category:event.category});
-    });            
-    
+    	Manager.widgets['currentsearch'].setRefresh(false);
+    }); 
+    //* searchfilters changed
+    for (var i = 0, l = tagcloudFields.length; i < l; i++) {
+    	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_changed', function(event){
+    		Manager.widgets['currentsearch'].setRefresh(false);
+    	});
+  	};
+    //* pagers changed
+    $(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){     	
+    	Manager.widgets['currentsearch'].setRefresh(false);
+		Manager.widgets['category'].setRefresh(false);
+		for (var i = 0, l = tagcloudFields.length; i < l; i++) {
+	    	Manager.widgets[tagcloudFields[i].field].setRefresh(false);
+	  	};	
+    }); 
+
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
@@ -138,7 +153,7 @@ var Manager;
     	Manager.widgets['currentsearch'].removeAllCurrentSearch(); 
     	Manager.widgets['thumbs'].current_selec = null;
     });	
-	
+	        
     //* searchfilters has finished loading
     for (var i = 0, l = tagcloudFields.length; i < l; i++) {
     	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_loaded', function(event){

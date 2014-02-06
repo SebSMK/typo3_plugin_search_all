@@ -32,8 +32,10 @@ constructor: function (attributes) {
 	  	var $select = $(this.target).find('select');
 	  	var templ_path = 'pi1/templates/chosen.html';
 	  	
-	  	if ($target.is(':hidden'))
-		  	return;			  		
+	  	if (!self.getRefresh()){
+			self.setRefresh(true);
+			return;
+		}	 		  	  			  		
 	  		  	
 	  	//* just in case...
 	  	if (self.manager.response.facet_counts.facet_fields[self.field] === undefined) {
@@ -152,6 +154,9 @@ constructor: function (attributes) {
     var self = this, meth = this.multivalue ? 'add' : 'set';
     return function (event, params) {
     	event.stopImmediatePropagation(); 
+    	$(self).trigger({
+			type: "smk_search_filter_changed"
+		});
     	if (params.selected !== undefined){
     		if (self[meth].call(self, params.selected)){
                 self.doRequest();

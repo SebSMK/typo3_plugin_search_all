@@ -21,7 +21,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
         	 objectedItems.push({"facetname": key, "facettext": value, "count": '0', "active": false}); 
         });
         
-          //* add "all" facet
+        //* add "all" facet
         objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": '0', "active": true});
           
         var html = this.template_integration_json(objectedItems, 'pi1/templates/category.html');
@@ -32,15 +32,14 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	var self = this;  
 	var $target = $(this.target);
 	
-	if ($target.is(':hidden'))
-	 	return;
+    //* active tab
+    $(this.target).find('li').removeClass('tab--active');
+    $(this.target).find('li[name='+self.activeCategory+']').addClass('tab--active');
 	
-	//$target.empty();
-	  
-    if (self.manager.response.facet_counts.facet_fields[this.field] === undefined) {
-    	$target.html('no items found in current selection');
-      return;
-    }
+	if (!self.getRefresh()){
+		self.setRefresh(true);
+		return;
+	}	 		  
 
     var maxCount = 0;
     var allCount = 0;
@@ -51,37 +50,24 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     	$target.find('li[name='+key+'] span').text('(0)'); 
    });
    
-    //* proceed facets
+    //* proceed facets count
     for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
       var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
       allCount = allCount + count;
       if (count > maxCount) {
         maxCount = count;
-      }
+      };
       
-      $(this.target).find('li[name='+facet+'] span').text(sprintf('(%s)', count));            
-      
-      //objectedItems.push({ "facetname": facet, "facettext": self.categoryList[facet], "count": count, "active": facet == self.activeCategory});
+      $(this.target).find('li[name='+facet+'] span').text(sprintf('(%s)', count));                  
     }
     
-    //* add "all" facet
+    //* add "all" facet count
     $(this.target).find('li[name=all] span').text(sprintf('(%s)', allCount));
-    
-    //* active tab
-    $(this.target).find('li').removeClass('tab--active');
-    $(this.target).find('li[name='+self.activeCategory+']').addClass('tab--active');
-    
-    
-    //objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": allCount, "active": "all" == self.activeCategory});
-
-    //* merge data and template
-    //var html = self.template_integration_json(objectedItems, 'pi1/templates/category.html');
-    //$target.html(html);
-    
+        
     //* add click handling
     $target.find("li").click(self.clickHandler());
         
-  },  
+  },   
   
   template_integration_json: function (data, templ_path){	  
 	var template = Mustache.getTemplate(templ_path);	
@@ -105,7 +91,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 		$(self).trigger({
 			type: "smk_search_category_changed",
 			category: selectedTab
-		  });  
+		});  
 	    self.doRequest();
 	  }
 	  return false;
@@ -113,7 +99,23 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
   },
   
   setActiveTab: function (tab){
-	  this.activeCategory = tab;	  	  	  
+	  this.activeCategory = tab;
+	  
+//	  switch(this.activeCategory){
+//		  case "samlingercollectionspace":		 			  			  				  
+//			  this.setRefresh(false);
+//			  break;
+//		  case "nyheder":
+//		  case "kalender":
+//		  case "artikel":
+//		  case "praktisk":
+//		  case "all":
+//			  this.setRefresh(true);
+//		  	  break;
+//		  default:	
+//			  this.setRefresh(true);
+//		  	  break;		  
+//	  }	  
   },
   
   /**

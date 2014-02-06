@@ -19,8 +19,10 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	var self = this;		
 	var $target = $(this.target);
 	
-	if ($target.is(':hidden') || $(this.target).length == 0)
-	  	return;		  			
+	if (!self.getRefresh() ||  $(this.target).length == 0){
+		self.setRefresh(true);
+		return;
+	}	 		  
 	
 	$target.empty();
 	
