@@ -61,7 +61,7 @@ constructor: function (attributes) {
 	    }); 	    	    
 	    	
 	    //* merge facet data and template
-	    var json_data = {"options" : new Array({title:this.title, values:objectedItems}) };	    	    	    
+	    var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    
 	    var html = self.template_integration_json(json_data, templ_path); 
 		
 	    //** refresh view
@@ -76,15 +76,26 @@ constructor: function (attributes) {
 	  	//* remove all options in 'select'...
 	  	$select.empty();	  	
 	  	//*... and copy the new option list
-	  	$select.append($(html).find('option'));	  	
-	  	
-//	  	$target.empty();	  	
-////	  	//*... and copy the new option list
-//	  	$target.html(html);
+	  	$select.append($(html).find('option'));	  		  	
 	  	
 		//* add previous selected values in the target 'select' component
-		if (previous_values.length > 0)
+		if (previous_values.length > 0){
+			
+			// if there were no result after the request, we add 'manually' the previous selected values in the "select" component
+			if (objectedItems.length == 0){
+				for (var i = 0, l = previous_values.length; i < l; i++) {
+					var facet = previous_values[i];
+					objectedItems.push({ "value": facet, "text": facet.charAt(0).toUpperCase() + facet.slice(1), "count": '0' });					
+				}	
+				var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    
+				var html = self.template_integration_json(json_data, templ_path);
+				$select.append($(html).find('option'));
+			}
+			
+			// add previous selected values 
 			$target.find('select').val(previous_values);
+		}
+			
 		//**
 		
 		//* add behaviour on select change
