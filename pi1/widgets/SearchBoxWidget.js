@@ -62,7 +62,7 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 								
 								// ...send event back to "teaser" view
 								$(caller).trigger({
-									type: "smk_search_call_teasers",
+									type: "smk_search_box_from_detail_call_teasers",
 									value: fq_value,
 									text: value
 								});								

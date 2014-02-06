@@ -147,7 +147,8 @@ var Manager;
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});    	
     	Manager.widgets['thumbs'].current_selec = null;
     });	
-    $(Manager.widgets['searchbox']).on('smk_search_call_teasers', function(event){     	
+    // call from searchbox when in "detail" view
+    $(Manager.widgets['searchbox']).on('smk_search_box_from_detail_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['state_manager'].categoryChanged({category:""});
     	Manager.widgets['currentsearch'].removeAllCurrentSearch(); 
@@ -217,7 +218,7 @@ var Manager;
     Manager.init();
 
     //* prepare and start init request
-    Manager.store.addByValue('q', '-(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) -(id:(ORIG*) AND category:samlingercollectionspace) -(id:(EKS*) AND category:samlingercollectionspace)');    
+    Manager.store.addByValue('q', '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace) -(id_s:(ORIG*) AND category:samlingercollectionspace) -(id_s:(EKS*) AND category:samlingercollectionspace)');    
     var params = {
       facet: true,
       'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],

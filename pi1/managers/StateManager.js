@@ -114,9 +114,9 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
     
     switch(newstate["view"]){
 	  case "teasers":		  
-		  $target.find("#thumbnails").hide();
-		  $target.find("#smk_detail").hide();		  
-		  $target.find("#related-artworks").hide();
+		  $target.find("#thumbnails").empty().hide();
+		  $target.find("#smk_detail").empty().hide();		  
+		  $target.find("#related-artworks").empty().hide();
 		  
 		  
 		  self.showWidget($target.find("#currentsearch"));
