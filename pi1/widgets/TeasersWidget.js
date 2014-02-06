@@ -89,7 +89,22 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  				  });
 		  		    	
 		  		    	return;
-		  	    })		
+		  	    })	
+		      
+		  	  //* ...else if the current article is a link, open a new window on click on title
+		      $article.find('.article_link')
+		      .click({detail_id: artwork_data.img_id, caller:this}, 
+		      		function (event) {
+		  	    		event.preventDefault();		  	    		
+		  	    		
+		  	    		var url = $(this).attr("href");
+	                    var windowName = $(this).attr("alt");	                    
+	                    window.open(url, windowName);
+	                    
+	                    return;
+		  	    });	
+		  	    		  	    
+		  	    
 		      
 		      //* append the current article to list
 		      $target.find('#teaser-container-grid').append($article);	      
@@ -221,10 +236,17 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		    .click({detail_id: img_id, caller:self}, 
 	    		function (event) {
 		    		event.preventDefault();
-			    	$(event.data.caller).trigger({
-						type: "smk_search_call_detail",
-						detail_id: event.data.detail_id
-					  });
+		    		
+		    		if (this.hasClass("article_artwork")){
+		    			$(event.data.caller).trigger({
+							type: "smk_search_call_detail",
+							detail_id: event.data.detail_id
+						 });
+		    		}else if (this.hasClass("article_link")){
+		    			var url = $(this).attr("href");
+	                    var windowName = $(this).attr("alt");	                    
+	                    window.open(url, windowName);		    			
+		    		}			    	
 			    	
 			    	return;
 		     })	
