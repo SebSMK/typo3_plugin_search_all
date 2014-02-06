@@ -71,7 +71,7 @@ constructor: function (attributes) {
 	  		previous_values.push(this.value);	  		
 	  	});
 	  		  	
-	  	$target.hide('fast'); // hide until all styling is ready
+	  	$target.hide(); // hide until all styling is ready
 	  	
 	  	//* remove all options in 'select'...
 	  	$select.empty();	  	
@@ -94,61 +94,17 @@ constructor: function (attributes) {
 			
 			// add previous selected values 
 			$target.find('select').val(previous_values);
-		}
-			
-		//**
+		}			
 		
 		//* add behaviour on select change
 		$target.find('select').change(self.clickHandler());
 		
-//		//* init 'chosen' plugin
-		//self.init_chosen();
-		
-		$target.find('select').trigger("chosen:updated");
-		
-		//ררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררר
-						// Multiple select (always open).
-						  $target.find('.chosen--multiple.chosen--open').each( function() {
-						    
-							    // This 'fix' allows the user to see the select options before he has
-							    // interacted with the select box.
-							    // 
-							    // Chosen do not show the contents of the select boxes by default, so we
-							    // have to show them ourselves. In the code below we loop through the options
-							    // in the select boxes, adds these to an array, and append each array item
-							    // to the <ul> called .chosen-results. Chosen uses .chosen-results to show
-							    // the options.
-						
-							    var chosenResults = $(this).find('.chosen-results');
-							    var selectOptions = [];
-							    
-							    // Put all select options in an array
-							    $(this).find('select option').each( function() {
-							      selectOptions.push( $(this).text() );
-							    });
-						
-							    // For each item in the array, append a <li> to .chosen-results
-							    $.each(selectOptions, function(i, val) {
-							      if(this != "") {
-							        chosenResults.append('<li class="active-result" data-option-array-index="' + i + '">' + this + '</li>');
-						      }
-						    });
-						  });
-				
-						  // Subtle select
-						  $target.find('.chosen--simple select').chosen({
-						    disable_search: true
-						  });  
-		//ררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררררר
-		
-//	  	$select.change(function(event) {
-//	  		var value = $(this).find("option:selected").text().split('(')[0] ;
-//	  		$(this).find("input").val(value);
-//	  		$(this).change();
-//	  	});
+		//* update 'chosen' plugin		
+		$target.find('select').trigger("chosen:updated");		
+		self.open_multiple_select();		
 		
 		//* show component
-		$target.fadeIn();
+		$target.show();
 		
 		//* send "loaded" event
 		$(this).trigger({
@@ -202,6 +158,12 @@ constructor: function (attributes) {
 	    width: "100%"
 	  });
 
+	  this.open_multiple_select();
+	   
+  },
+  
+  open_multiple_select: function(){
+	  var $target = $(this.target); 
 	  // Multiple select (always open).
 	  $target.find('.chosen--multiple.chosen--open').each( function() {
 	    
@@ -233,7 +195,7 @@ constructor: function (attributes) {
 	  // Subtle select
 	  $target.find('.chosen--simple select').chosen({
 	    disable_search: true
-	  });  
+	  });    	  	  
   },
   
   removeAllSelectedFilters: function(){
