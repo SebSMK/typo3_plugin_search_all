@@ -233,22 +233,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	        // then insert our image
 	        .find('a')
 	        // call detailed view on click on image
-		    .click({detail_id: img_id, caller:self}, 
-	    		function (event) {
-		    		event.preventDefault();
-		    		
-		    		if (this.hasClass("article_artwork")){
-		    			$(event.data.caller).trigger({
-							type: "smk_search_call_detail",
-							detail_id: event.data.detail_id
-						 });
-		    		}else if (this.hasClass("article_link")){
-		    			var url = $(this).attr("href");
-	                    var windowName = $(this).attr("alt");	                    
-	                    window.open(url, windowName);		    			
-		    		}			    	
-			    	
-			    	return;
+		    .click(function (event) {
+		    	event.preventDefault();		    		
 		     })	
 	        .append(this);
 	    
@@ -259,11 +245,6 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     	  $(self).trigger({
   			type: "smk_teasers_this_img_loaded"
   		  });  	    	  
-        	  
-//	   	 // if all images are loaded & list view mode, align images
-//    	  if ($container.find('.image_loading .teaser--list').length == 0){
-//	    	  self.verticalAlign(); 
-//	      }
 		 
 	    })
 	    
@@ -275,15 +256,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	        .find('a')	    	
 	    	.append(sprintf('<img src="%s" />', self.default_picture_path));
 	    	// call detailed view on click on image
-		    $target.find('a').click({detail_id: img_id, caller:self}, 
-	    		function (event) {
-		    		event.preventDefault();
-			    	$(event.data.caller).trigger({
-						type: "smk_search_call_detail",
-						detail_id: event.data.detail_id
-					  });
-			    	
-			    	return;
+		    $target.find('a').click(function (event) {
+		    	event.preventDefault();
 		     });
 	    	$target.fadeIn();
 	    	
@@ -291,11 +265,6 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    	$(self).trigger({
 	    		type: "smk_teasers_this_img_loaded"
 	  		});  	    	  	     
-	    	  
-//	    	// all images are loaded
-//	    	if ($container.find('.image_loading').length == 0){
-//	    		self.verticalAlign(); 
-//		    }
 	    })	    	
 
 	    .attr('alt', alt)
