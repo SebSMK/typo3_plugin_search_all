@@ -93,7 +93,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    description: doc.description_note,
 		  		    technique: {
 		  		    	key: "teknik",  
-		  		    	value: doc.prod_technique.charAt(0).toUpperCase() + doc.prod_technique.slice(1) 
+		  		    	value: doc.prod_technique !== undefined ? doc.prod_technique.charAt(0).toUpperCase() + doc.prod_technique.slice(1) : "-" 
 		  		    },
 		  		    meta: {
 		  		    	key: "inv.num.",  
