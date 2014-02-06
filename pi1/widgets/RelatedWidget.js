@@ -36,8 +36,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	}	 		  
 				
 	//* remove all existing articles
-	var $all_articles = $target.find('#teaser-container-grid article');
-	$target.find('#teaser-container-grid').masonry('remove', $all_articles);		
+	self.removeAllArticles();
 			
 	//* create new articles
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
@@ -96,11 +95,16 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	 //* add image + link to detail on click on image to all articles
 	 $target.find('article').each(function() {    	    	
 		self.getImage($(this), $(this).find('.image_loading'));
-	 });		
-
-
-    
+	 });		    
   }, 
+  
+  removeAllArticles: function(){
+	  var $target = $(this.target); 
+	  var $all_articles = $target.find('#teaser-container-grid article');
+	  
+	  if($all_articles.length > 0 )
+		  $target.find('#teaser-container-grid').masonry('remove', $all_articles);		 	  
+  },
   
   template_integration_json: function (data, templ_path){	  
 		var template = Mustache.getTemplate(templ_path);	
