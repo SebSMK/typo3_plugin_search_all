@@ -135,7 +135,7 @@ var Manager;
     $(Manager.widgets['searchbox']).on('smk_search_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['state_manager'].categoryChanged({category:""});
-    	Manager.widgets['currentsearch'].removeAllFacets(); 
+    	Manager.widgets['currentsearch'].removeAllCurrentSearch(); 
     	Manager.widgets['thumbs'].current_selec = null;
     });	
 	

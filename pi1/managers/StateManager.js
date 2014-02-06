@@ -185,15 +185,23 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  case "samlingercollectionspace":		 			  			  				  
 				  this.showWidget($target.find("#search-filters"));
 				  //$target.find("#search-filters").show().children().show();		
-				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();				 				  
+				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();
+				  this.manager.widgets['category'].setActiveTab(newstate["category"]);
 				  break;
 			  case "nyheder":
 			  case "kalender":
 			  case "artikel":
 			  case "praktisk":
+			  case "all":
 				  $target.find("#search-filters").hide();
 			  	  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
 			  	  this.manager.widgets['category'].setActiveTab(newstate["category"]);
+			  	  
+			  	  // remove all search filters
+			  	  for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {			  		  
+					  this.manager.widgets[this.manager.searchfilterList[i].field].removeAllSelectedFilters();
+				  };
+			  	  
 			  	  break;
 			  default:		    			  			   							  
 			  	  $target.find("#search-filters").hide();

@@ -218,6 +218,16 @@ constructor: function (attributes) {
 	  $target.find('.chosen--simple select').chosen({
 	    disable_search: true
 	  });  
+  },
+  
+  removeAllSelectedFilters: function(){
+	  var self = this;
+	  var $select = $(self.target).find('select');
+	  
+	  $select.find("option:selected").each(function (){
+	  		$(this).removeAttr("selected");
+	  		self.manager.store.removeByValue('fq', self.fq(this.value));
+	  });	  	  
   }
 });
 

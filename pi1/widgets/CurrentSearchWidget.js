@@ -87,7 +87,7 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 	  this.fq.push({'value':value, 'text':text});	  	  
   },
   
-  removeAllFacets: function(){
+  removeAllCurrentSearch: function(){
 	  var self = this;
 	  for (var i = 0, l = self.fq.length; i < l; i++) {	 
 		  self.removeFacet(self.fq[i].value);
