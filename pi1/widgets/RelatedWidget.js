@@ -168,7 +168,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	        .find('a')
 	    	.append(sprintf('<img src="%s" />', self.default_picture_path));
 	    	// call detailed view on click on image
-		    $target.find('img').click({detail_id: img_id, caller:self}, 
+		    $target.find('a').click({detail_id: img_id, caller:self}, 
 	    		function (event) {
 		    		event.preventDefault();
 			    	$(event.data.caller).trigger({

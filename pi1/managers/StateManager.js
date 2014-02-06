@@ -116,7 +116,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  case "teasers":		  
 		  $target.find("#thumbnails").empty().hide();
 		  $target.find("#smk_detail").empty().hide();		  
-		  $target.find("#related-artworks").empty().hide();
+		  		  
+		  var $all_related_articles = $target.find('#related-artworks #teaser-container-grid article');
+		  $target.find('#related-artworks #teaser-container-grid article').masonry('remove', $all_related_articles);			
+		  $target.find("#related-artworks").hide();
 		  
 		  
 		  self.showWidget($target.find("#currentsearch"));

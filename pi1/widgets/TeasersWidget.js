@@ -26,8 +26,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  
   },  
 
-  afterRequest: function () {
-	  
+  afterRequest: function () {  
 	var self = this;
 	var $target = $(this.target);
 	
@@ -234,7 +233,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	        .find('a')
 	        // call detailed view on click on image
 		    .click(function (event) {
-		    	event.preventDefault();		    		
+		    	event.preventDefault();	
+		    	// ... then ---> bubbles op to "click on title"	    		
 		     })	
 	        .append(this);
 	    
@@ -258,6 +258,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    	// call detailed view on click on image
 		    $target.find('a').click(function (event) {
 		    	event.preventDefault();
+		    	// ... then ---> bubbles op to "click on title"		    	
 		     });
 	    	$target.fadeIn();
 	    	
