@@ -217,7 +217,10 @@ constructor: function (attributes) {
 	  $select.find("option:selected").each(function (){
 	  		$(this).removeAttr("selected");
 	  		self.manager.store.removeByValue('fq', self.fq(this.value));
-	  });	  	  
+	  });	
+	  
+	//* update 'chosen' plugin		
+	$select.trigger("chosen:updated");
   }
 });
 

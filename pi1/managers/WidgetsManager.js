@@ -166,7 +166,7 @@ var Manager;
     // call to teasers view from searchbox when in "detail" view
     $(Manager.widgets['searchbox']).on('smk_search_box_from_detail_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
-    	Manager.widgets['state_manager'].categoryChanged({category:""});
+    	Manager.widgets['state_manager'].categoryChanged({category:"all"});
     	Manager.widgets['currentsearch'].removeAllCurrentSearch();
     	//Manager.widgets['sorter'].resetSelect();
     	Manager.widgets['thumbs'].current_selec = null;
