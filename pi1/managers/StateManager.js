@@ -123,6 +123,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  self.showWidget($target.find("#currentsearch"));
 		  self.showWidget($target.find("#category"));
 		  self.showWidget($target.find("#viewpicker"));
+		  self.showWidget($(this.manager.widgets['sorter'].target));
 		  self.showWidget($target.find("#pager"));
 		  self.showWidget($target.find("#pager-header"));
 		  self.showWidget($(this.manager.widgets['teasers'].target));
@@ -151,6 +152,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $target.find("#currentsearch").hide();
 		  $target.find("#category").hide();
 		  $target.find("#viewpicker").hide();
+		  $(this.manager.widgets['sorter'].target).hide();	
 		  $target.find("#pager").hide();
 		  $target.find("#pager-header").hide();
 		  

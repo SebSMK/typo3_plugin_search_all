@@ -17,7 +17,7 @@ var Manager;
     Manager = new AjaxSolr.smkManager({
     	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v4/',
     	store: new AjaxSolr.smkParameterStore({
-    		exposed: ["fq", "q", "start", "limit"]
+    		exposed: ["fq", "q", "start", "limit", "sort"]
     	}),
     	searchfilterList: tagcloudFields,
     	allWidgetsProcessed: allWidgetsProcessedBound
@@ -54,6 +54,11 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.ViewPickerWidget({
 	    id: 'viewpicker',
 	    target: '#viewpicker'
+	  })); 
+	
+	Manager.addWidget(new AjaxSolr.SorterWidget({
+	    id: 'sorter',
+	    target: '#sorter'
 	  })); 
 	
 	Manager.addWidget(new AjaxSolr.CategoryWidget({
@@ -113,13 +118,15 @@ var Manager;
     	Manager.widgets['state_manager'].categoryChanged({category:event.category});
     	Manager.widgets['currentsearch'].setRefresh(false);
     }); 
+    
     //* searchfilters changed
     for (var i = 0, l = tagcloudFields.length; i < l; i++) {
     	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_changed', function(event){
     		Manager.widgets['currentsearch'].setRefresh(false);
     	});
   	};
-    //* pagers changed
+  	
+    //* pager changed
     $(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){     	
     	Manager.widgets['currentsearch'].setRefresh(false);
 		Manager.widgets['category'].setRefresh(false);
@@ -128,6 +135,15 @@ var Manager;
 	  	};	
     }); 
 
+    //* sorter changed
+    $(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
+    	Manager.widgets['currentsearch'].setRefresh(false);
+		Manager.widgets['category'].setRefresh(false);
+		for (var i = 0, l = tagcloudFields.length; i < l; i++) {
+	    	Manager.widgets[tagcloudFields[i].field].setRefresh(false);
+	  	};	
+    }); 
+  	
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
@@ -147,11 +163,12 @@ var Manager;
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});    	
     	Manager.widgets['thumbs'].current_selec = null;
     });	
-    // call from searchbox when in "detail" view
+    // call to teasers view from searchbox when in "detail" view
     $(Manager.widgets['searchbox']).on('smk_search_box_from_detail_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
     	Manager.widgets['state_manager'].categoryChanged({category:""});
-    	Manager.widgets['currentsearch'].removeAllCurrentSearch(); 
+    	Manager.widgets['currentsearch'].removeAllCurrentSearch();
+    	//Manager.widgets['sorter'].resetSelect();
     	Manager.widgets['thumbs'].current_selec = null;
     });	
 	        

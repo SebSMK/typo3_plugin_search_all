@@ -150,7 +150,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		location: false,
 				  		
 		  				ref_number: doc.id,		  				
-		  				artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text,
+		  				artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,			  						  				  						  					  						  				
 					};

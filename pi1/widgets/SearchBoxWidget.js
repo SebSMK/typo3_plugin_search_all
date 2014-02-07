@@ -54,11 +54,14 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 							if (caller.getCurrentState() != null && caller.getCurrentState()["view"] !== undefined && caller.getCurrentState()["view"] == 'detail'){
 								// if in "detail" view...								
 
-								//...call previous search request
+								//...call previous search request..
 								mgr.store.load(true); 
 								
-								// ...remove all previous fq
+								// ...remove all previous fq...
 								mgr.store.remove('fq');
+								
+								// ...remove all previous sort...
+								//mgr.store.remove('sort');
 								
 								// ...send event back to "teaser" view
 								$(caller).trigger({

@@ -207,11 +207,6 @@ constructor: function (attributes) {
 		        chosenResults.append('<li class="active-result" data-option-array-index="' + i + '">' + this + '</li>');
 	      }
 	    });
-	  });
-
-	  // Subtle select
-	  $target.find('.chosen--simple select').chosen({
-	    disable_search: true
 	  });    	  	  
   },
   
