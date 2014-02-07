@@ -49,16 +49,33 @@ constructor: function (attributes) {
 	  	//* proceed facet values
 	    var maxCount = 0;
 	    var objectedItems = [];
-	    for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
-	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
-	      if (count > maxCount) {
-	        maxCount = count;
-	      }
-	      objectedItems.push({ "value": facet, "text": facet.charAt(0).toUpperCase() + facet.slice(1), "count": count });
+
+	    if(self.field =='object_production_century_earliest'){
+	    	for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
+	  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
+	  	      if (count > maxCount) {
+	  	        maxCount = count;
+	  	      };	  	      	  	      	    	  
+	  	      objectedItems.push({ "value": facet, "text": sprintf('%s%s', parseInt(facet), '.&aring;rh.'), "count": count });  	  	    	  	      
+	  	    }
+	  	    objectedItems.sort(function (a, b) {
+	  	      return parseInt(a.value)-parseInt(b.value);	  	      
+	  	    });
+	    	
+	    }else{	    	
+	    	for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
+	  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
+	  	      if (count > maxCount) {
+	  	        maxCount = count;
+	  	      };
+	  	      
+	  	      objectedItems.push({ "value": facet, "text": facet.charAt(0).toUpperCase() + facet.slice(1), "count": count });	    	  	  	      	  	      
+	  	    }
+	  	    objectedItems.sort(function (a, b) {
+	  	    	return a.value < b.value ? -1 : 1;	  	      
+	  	    });
 	    }
-	    objectedItems.sort(function (a, b) {
-	      return a.value < b.value ? -1 : 1;
-	    }); 	    	    
+	     	    	    
 	    	
 	    //* merge facet data and template
 	    var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    

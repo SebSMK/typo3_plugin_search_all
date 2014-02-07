@@ -221,8 +221,7 @@ var Manager;
     Manager.store.addByValue('q', '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace) -(id_s:(ORIG*) AND category:samlingercollectionspace) -(id_s:(EKS*) AND category:samlingercollectionspace)');    
     var params = {
       facet: true,
-      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],
-      'f.prod_technique.facet.limit': -1,
+      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],      
       //'f.prod_technique.facet.mincount': 20,
       'facet.limit': -1,
       'facet.mincount': 1,
