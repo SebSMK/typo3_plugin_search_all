@@ -3,16 +3,15 @@ var Manager;
 (function ($) {
 
   $(function () {
-	 
-	var current_language = $.cookie("smk_search_all_current_language");  
 	
-	var lang = new Language.constructor();
-	
+	//** init multi language script 
+	var lang = new Language.constructor();	
 	lang.load_json("pi1/language/language.json");
+	var current_language = $.cookie("smk_search_all_current_language");  
+	lang.setLanguage(current_language);	
 	
-	var title = lang.getLabel("title");
-	  
-	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
+	//** init variables
+	var tagcloudFields = [ {field:'artist_name_ss', title:lang.getLabel('tagCloud_artist')}, {field:'artist_natio', title:lang.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:lang.getLabel('tagCloud_period')}, {field:'object_type', title:lang.getLabel('tagCloud_art_type')} ];
 		
 	var stateManager = new AjaxSolr.StateManager({
 	    id: 'state_manager',
@@ -20,6 +19,7 @@ var Manager;
 	    currentState: {view:'teasers', category:''}
 	});
 	
+	//** init manager
 	// this function will be passed as parameter in the manager - we've got to bind it to an environment
 	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);	
     Manager = new AjaxSolr.smkManager({
@@ -73,8 +73,8 @@ var Manager;
 	    id: 'category',
 	    target: '#category',
 	    field: 'category',
-	    multivalue:false,
-	    categoryList: {"samlingercollectionspace":"V&aelig;rker", "nyheder":"Nyheder", "kalender":"Kalender", "artikel":"Artikler",  "praktisk":"Praktisk info"},
+	    multivalue:false,	    
+	    categoryList: {"all":lang.getLabel('category_all'), "samlingercollectionspace":lang.getLabel('category_artwork'), "nyheder":lang.getLabel('category_news'), "kalender":lang.getLabel('category_calendar'), "artikel":lang.getLabel('category_article'),  "praktisk":lang.getLabel('category_info')},
 	    activeCategory: "all"
 	  }));	
 		

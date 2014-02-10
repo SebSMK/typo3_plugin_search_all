@@ -10,7 +10,7 @@
 		</languageKey>
 		
 		<languageKey index="default" type="array">
-			<label index="language">eng</label>	
+			<label index="language">en</label>	
 		</languageKey>
 	</data>
 </T3locallang>

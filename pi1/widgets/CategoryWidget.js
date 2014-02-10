@@ -18,11 +18,12 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
         var objectedItems = new Array(); 
 
         $.each(this.categoryList , function(key, value) { 
+        	if (key != "all")
         	 objectedItems.push({"facetname": key, "facettext": value, "count": '0', "active": false}); 
         });
         
         //* add "all" facet
-        objectedItems.unshift({"facetname": "all", "facettext" : "Alle", "count": '0', "active": true});
+        objectedItems.unshift({"facetname": "all", "facettext" : this.categoryList["all"], "count": '0', "active": true});
           
         var html = this.template_integration_json(objectedItems, 'pi1/templates/category.html');
         $(this.target).html(html);

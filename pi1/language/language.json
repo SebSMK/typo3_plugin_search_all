@@ -4,17 +4,32 @@
   },
   "language": {
     "en": {
-      "tagCloud_artist": "Artist",
-      "tagCloud_period": "Period",
-      "tagCloud_country": "Country",
-      "tagCloud_art_type": "Technique"
+	  "tagCloud_artist": 		"Artist",
+	  "tagCloud_period": 		"Period",
+	  "tagCloud_country": 		"Country",
+	  "tagCloud_art_type": 		"Technique",
+      
+      "category_artwork" : 		"Artworks",
+	  "category_news" : 		"News",
+	  "category_calendar" : 	"Calendar",
+	  "category_article" : 		"Article",
+	  "category_info" : 		"Visiting info",
+	  "category_all" :	 		"All"
       
     },
     "dk": {
-      "tagCloud_artist": "Kunstner",
-      "tagCloud_period": "Periode",
-      "tagCloud_country": "Land",
-      "tagCloud_art_type": "Teknik"      
+      "tagCloud_artist": 		"Kunstner",
+      "tagCloud_period": 		"Periode",
+      "tagCloud_country": 		"Land",
+      "tagCloud_art_type": 		"Teknik",
+      
+      "category_artwork" : 		"V&aelig;rker",
+	  "category_news" : 		"Nyheder",
+	  "category_calendar" : 	"Kalender",
+	  "category_article" : 		"Artikler",
+	  "category_info" : 		"Praktisk info",
+	  "category_all" :	 		"Alle"      
     }
   }
 }
+
