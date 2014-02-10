@@ -1,0 +1,20 @@
+{
+  "config": {
+    "default": "dk"
+  },
+  "language": {
+    "en": {
+      "tagCloud_artist": "Artist",
+      "tagCloud_period": "Period",
+      "tagCloud_country": "Country",
+      "tagCloud_art_type": "Technique"
+      
+    },
+    "dk": {
+      "tagCloud_artist": "Kunstner",
+      "tagCloud_period": "Periode",
+      "tagCloud_country": "Land",
+      "tagCloud_art_type": "Teknik"      
+    }
+  }
+}

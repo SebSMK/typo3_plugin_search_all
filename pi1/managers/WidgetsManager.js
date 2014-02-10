@@ -3,6 +3,14 @@ var Manager;
 (function ($) {
 
   $(function () {
+	 
+	var current_language = $.cookie("smk_search_all_current_language");  
+	
+	var lang = new Language.constructor();
+	
+	lang.load_json("pi1/language/language.json");
+	
+	var title = lang.getLabel("title");
 	  
 	var tagcloudFields = [ {field:'artist_name_ss', title:'Kunstner'}, {field:'artist_natio', title:'Land'}, {field:'object_production_century_earliest', title:'Periode'}, {field:'object_type', title:'Teknik'} ];
 		
