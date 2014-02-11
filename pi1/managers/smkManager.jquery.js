@@ -20,7 +20,8 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
 		    AjaxSolr.smkManager.__super__.constructor.apply(this, arguments);
 		    AjaxSolr.extend(this, {
 		    	searchfilterList: [],
-		    	allWidgetsProcessed: null
+		    	allWidgetsProcessed: null,
+		    	translator:null
 		    }, attributes);
 	 },	  	  
 	  

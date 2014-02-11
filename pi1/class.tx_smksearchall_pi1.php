@@ -110,7 +110,10 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 			setcookie("smk_search_all_current_language", "", time()-3600);
 		setcookie("smk_search_all_current_language", $this->pi_getLL('language'));		
 		
-		$content='<div id="smk_search_wrapper" class="modal_loading"></div>';
+		$content='	<script>
+						var dir_base = "mooc";
+					</script>
+					<div id="smk_search_wrapper" class="modal_loading"></div>';
 	
 		return $this->pi_wrapInBaseClass($content);
 	}

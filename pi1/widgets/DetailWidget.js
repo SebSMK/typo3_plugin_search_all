@@ -8,20 +8,17 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	      thumbnails_target: null
 	    }, attributes);
 	  },	
-  
+	  
   start: 0,
+  
+  current_language: null,
   
   default_picture_path: null, 
   
-  init: function(){
-	  	    
-	    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_large.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));		  
+  init: function(){	  	    
+	 this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_large.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));
+	 this.current_language = this.manager.translator.getLanguage();
   }, 
-  
-	
-  beforeRequest: function () {
-    //$(this.target).html($('<img>').attr('src', 'images/ajax-loader.gif'));
-  },
 
   afterRequest: function () {	  
 	
@@ -79,7 +76,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   get_data: function (doc){
 	  var data =  {
 		  		media:{
-		  			title:doc.title_first,		  			
+		  			title: this.getTitle(doc),		  			
 		  			image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 			  		copyright: "copyright",
 			  		img_id:doc.id
@@ -87,16 +84,16 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		
 		  		info:{
 		  			
-		  			title:doc.title_first,	
-		  			artist_data: doc.artist_name_ss === undefined ? '' : this.getArtistLabel(doc),
+		  			title: this.getTitle(doc),	
+		  			artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
 		  		    artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
-		  		    description: doc.description_note,
+		  		    description: this.getDescriptionNote(doc),
 		  		    technique: {
-		  		    	key: "teknik",  
-		  		    	value: doc.prod_technique !== undefined ? doc.prod_technique.charAt(0).toUpperCase() + doc.prod_technique.slice(1) : "-" 
+		  		    	key: this.manager.translator.getLabel('detail_technique'),  
+		  		    	value: smkCommon.firstCapital(this.getTechnique(doc)) 
 		  		    },
 		  		    meta: {
-		  		    	key: "inv.num.",  
+		  		    	key: this.manager.translator.getLabel('detail_reference'),
 		  		    	value: doc.id
 		  		    },
 		  		    
@@ -112,9 +109,9 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  //* add acquisition data
 	  if (doc.acq_date !== undefined || doc.acq_method !== undefined){
 		  data.info.acq = {
-			key: "erhvervelse",  
+			key: this.manager.translator.getLabel('detail_acquisition'),  
 			date: doc.acq_date,
-			method: doc.acq_method !== undefined ? sprintf('%s, ', doc.acq_method.charAt(0).toUpperCase() + doc.acq_method.slice(1)) : null,
+			method: doc.acq_method !== undefined ? sprintf('%s, ', smkCommon.firstCapital(doc.acq_method)) : null,
 			source: doc.acq_source !== undefined ? sprintf('%s - ', doc.acq_source) : null
 		  };
 		  
@@ -125,9 +122,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  if (doc.heigth_net !== undefined || doc.width_net !== undefined || doc.heigth_brut !== undefined || doc.width_brut !== undefined){
 		  
 		  data.info.dim = {
-	    	key: "dimension", 			    	
+			key: this.manager.translator.getLabel('detail_dimension'),			    	
 	    	net: false,
-	    	brut: false
+	    	net_label: smkCommon.firstCapital(this.manager.translator.getLabel('detail_dimension_net')),
+	    	brut: false,
+	    	brut_label: smkCommon.firstCapital(this.manager.translator.getLabel('detail_dimension_brut'))
 		  };
 		  
 		  if (doc.heigth_net !== undefined || doc.width_net !== undefined){
@@ -149,9 +148,9 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  };
 	  
 	  //* add location	 
-	  if (this.getlocationLabel(doc.location_name))
+	  if (this.getlocation(doc.location_name))
 		  	data.info.location = {
-			  key:"location",
+			  key: this.manager.translator.getLabel('detail_location'),
 			  value:doc.location_name
 	  		};	  	  
 	  
@@ -159,7 +158,48 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
   },     
   
-  getArtistLabel: function(doc){
+  getTechnique: function (doc){
+	  var technique;
+	  var default_value = "-";
+	  
+	  switch(this.current_language){
+	  case "dk":		 			  			  			  
+		  technique = doc.prod_technique_dk !== undefined ? doc.prod_technique_dk : default_value;					  			  			  
+		  break;
+	  case "en":
+		  technique = doc.prod_technique_en !== undefined ? doc.prod_technique_en : default_value;
+		  break;
+	  default:	
+		  technique = default_value;
+	  	  break;		  
+	  }
+	  
+	  return technique;
+  
+  },
+
+  getDescriptionNote: function (doc){
+	  var note;
+	  var default_value = "";
+	  
+	  switch(this.current_language){
+	  case "dk":		 			  			  			  
+		  note = doc.description_note_dk !== undefined ? doc.description_note_dk : default_value;					  			  			  
+		  break;
+	  case "en":
+		  note = doc.description_note_en !== undefined ? doc.description_note_en : default_value;
+		  break;
+	  default:		
+		  technique = default_value;
+	  	  break;		  
+	  }
+	  
+	  return note;
+  
+  },
+  
+  
+  getArtist: function(doc){
 	  var artistLabel = new Array();
 	  
 	  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
@@ -177,6 +217,26 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  }
 	  
 	  return artistLabel;
+  },
+  
+  
+  getTitle: function(doc){
+	  
+	  var title;
+	  
+	  switch(this.current_language){
+	  case "dk":		 			  			  			  
+		  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
+		  break;
+	  case "en":
+		  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
+		  break;
+	  default:		    			  			   							  
+	  	  title = doc.title_first		  	 		  	  
+	  	  break;		  
+	  }
+	  
+	  return title;
   },
   
   getImage: function ($target){
@@ -254,9 +314,9 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    .attr('src', path); 
   },
   
-  getlocationLabel: function (location){
+  getlocation: function (location){
 	  
-		if(location !== undefined && location.toUpperCase().indexOf('SAL') != -1)
+		if(location !== undefined)
 			return true;
 			  
 		return false;	  

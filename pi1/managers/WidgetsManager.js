@@ -23,12 +23,13 @@ var Manager;
 	// this function will be passed as parameter in the manager - we've got to bind it to an environment
 	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);	
     Manager = new AjaxSolr.smkManager({
-    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v4/',
+    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v5/',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit", "sort"]
     	}),
     	searchfilterList: tagcloudFields,
-    	allWidgetsProcessed: allWidgetsProcessedBound
+    	allWidgetsProcessed: allWidgetsProcessedBound,
+    	translator: lang
     });
 
 	//** load widgets
@@ -96,7 +97,7 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.DetailWidget({
 	      id: 'details',
 	      target: '#smk_detail',
-	      thumbnails_target:'#thumbnails' 
+	      thumbnails_target:'#thumbnails'
 	 }));
 	Manager.addWidget(new AjaxSolr.ThumbsWidget({
 	      id: 'thumbs',
@@ -243,7 +244,7 @@ var Manager;
     Manager.init();
 
     //* prepare and start init request
-    Manager.store.addByValue('q', '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace) -(id_s:(ORIG*) AND category:samlingercollectionspace) -(id_s:(EKS*) AND category:samlingercollectionspace)');    
+    Manager.store.addByValue('q', '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)');    
     var params = {
       facet: true,
       'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],      
@@ -251,6 +252,7 @@ var Manager;
       'facet.limit': -1,
       'facet.mincount': 1,
       'rows':12,
+      'start':Math.floor((Math.random()*2000)+1),
       'json.nl': 'map'
     };
     for (var name in params) {

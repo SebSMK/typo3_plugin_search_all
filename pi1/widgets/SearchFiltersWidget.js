@@ -69,7 +69,7 @@ constructor: function (attributes) {
 	  	        maxCount = count;
 	  	      };
 	  	      
-	  	      objectedItems.push({ "value": facet, "text": facet.charAt(0).toUpperCase() + facet.slice(1), "count": count });	    	  	  	      	  	      
+	  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": count });	    	  	  	      	  	      
 	  	    }
 	  	    objectedItems.sort(function (a, b) {
 	  	    	return a.value < b.value ? -1 : 1;	  	      
@@ -102,7 +102,7 @@ constructor: function (attributes) {
 			if (objectedItems.length == 0){
 				for (var i = 0, l = previous_values.length; i < l; i++) {
 					var facet = previous_values[i];
-					objectedItems.push({ "value": facet, "text": facet.charAt(0).toUpperCase() + facet.slice(1), "count": '0' });					
+					objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": '0' });					
 				}	
 				var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    
 				var html = self.template_integration_json(json_data, templ_path);

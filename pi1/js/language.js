@@ -74,6 +74,13 @@
 		this.setLanguage = function(lang){
 			this.current_lang = lang;
 		};
+		
+		/*
+		 * get current language
+		 */
+		this.getLanguage = function(){
+			return this.current_lang;
+		};
 	
 		/*
 		 * variables

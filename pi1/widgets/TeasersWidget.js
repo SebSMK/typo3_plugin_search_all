@@ -277,7 +277,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   
   getlocationLabel: function (location){
 		  
-	if(location !== undefined && location.toUpperCase().indexOf('SAL') != -1)
+	if(location !== undefined)
 		return "Kan ses p&aring; museet";
 		  
 	return "Kan ses efter aftale";	  
