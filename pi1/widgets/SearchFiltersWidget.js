@@ -159,8 +159,7 @@ constructor: function (attributes) {
 		var template = Mustache.getTemplate(templ_path);			
 		var html = Mustache.to_html($(template).find('#chosenTemplate').html(), json_data);
 		return html;
-  },
-  
+  }, 
   
   init_chosen: function() {
 	  /*

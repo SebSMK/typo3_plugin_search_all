@@ -28,7 +28,9 @@
 	  "pager_to":				"to",
 	  "pager_af":				"of",
 	  
-	  "related_reference":		"reference"
+	  "related_reference":		"reference",
+	  
+	  "search_box_default":		"Search artwork, title, artist, visiting info etc..."
       
     },
     "dk": {
@@ -56,7 +58,9 @@
 	  "pager_to":				"til",
 	  "pager_af":				"af",
 	  
-	  "related_reference":		"inv.num"
+	  "related_reference":		"inv.num",
+	  	  
+	  "search_box_default":		"S&oslash;g efter kunstv&aelig;rker, title, kunstner, praktisk info etc.."
 	        
     }
   }

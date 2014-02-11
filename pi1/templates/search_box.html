@@ -1,5 +1,11 @@
- <form role="search" method="get" class="search-box" action="">
-   <label for="search">Search for</label>
-   <input class="typeahead field" type="text" value="" name="search" id="search" placeholder="S&oslash;g efter kunstv&aelig;rker, praktisk info og alt andet..." autocomplete="off" spellcheck="false" dir="auto" />
-   <input class="button" type="submit" value="Search" />
- </form>
+<div>	
+	 <script id="searchboxTemplate" type="text/template">
+
+		 <form role="search" method="get" class="search-box" action="">
+		   <label for="search">Search for</label>
+		   <input class="typeahead field" type="text" value="" name="search" id="search" placeholder="{{{default_text}}}" autocomplete="off" spellcheck="false" dir="auto" />
+		   <input class="button" type="submit" value="Search" />
+		 </form>
+ 
+ 	</script>
+</div>
