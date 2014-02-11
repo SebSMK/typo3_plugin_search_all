@@ -22,7 +22,11 @@
 	  "detail_dimension":		"dimensions",	  
 	  "detail_dimension_net":	"net",
 	  "detail_dimension_brut":	"brut",
-	  "detail_location":		"location"
+	  "detail_location":		"location",
+	  
+	  "pager_display":			"displaying",
+	  "pager_to":				"to",
+	  "pager_af":				"of"
       
     },
     "dk": {
@@ -44,7 +48,12 @@
 	  "detail_dimension":		"dimension",
 	  "detail_dimension_net":	"netto",
 	  "detail_dimension_brut":	"brutto",
-	  "detail_location":		"location"      
+	  "detail_location":		"location",
+	  
+	  "pager_display":			"viser",
+	  "pager_to":				"til",
+	  "pager_af":				"af"
+	        
     }
   }
 }

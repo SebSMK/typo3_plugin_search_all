@@ -5,13 +5,13 @@ var Manager;
   $(function () {
 	
 	//** init multi language script 
-	var lang = new Language.constructor();	
-	lang.load_json("pi1/language/language.json");
+	var translator = new Language.constructor();	
+	translator.load_json("pi1/language/language.json");
 	var current_language = $.cookie("smk_search_all_current_language");  
-	lang.setLanguage(current_language);	
+	translator.setLanguage(current_language);	
 	
 	//** init variables
-	var tagcloudFields = [ {field:'artist_name_ss', title:lang.getLabel('tagCloud_artist')}, {field:'artist_natio', title:lang.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:lang.getLabel('tagCloud_period')}, {field:'object_type', title:lang.getLabel('tagCloud_art_type')} ];
+	var tagcloudFields = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
 		
 	var stateManager = new AjaxSolr.StateManager({
 	    id: 'state_manager',
@@ -29,7 +29,7 @@ var Manager;
     	}),
     	searchfilterList: tagcloudFields,
     	allWidgetsProcessed: allWidgetsProcessedBound,
-    	translator: lang
+    	translator: translator
     });
 
 	//** load widgets
@@ -56,7 +56,7 @@ var Manager;
 	    nextLabel: '&gt;',
 	    innerWindow: 1,
 	    renderHeader: function (perPage, offset, total) {
-	      $('#pager-header').html($('<span></span>').text(' displaying ' + Math.min(total, offset + 1) + ' to ' + Math.min(total, offset + perPage) + ' of ' + total));
+	      $('#pager-header').html($('<span></span>').text( sprintf(' %s ', translator.getLabel('pager_display')) + Math.min(total, offset + 1) + sprintf(' %s ', translator.getLabel('pager_to')) + Math.min(total, offset + perPage) + sprintf(' %s ', translator.getLabel('pager_af')) + total));
 	    }
 	  }));
 	
@@ -75,7 +75,7 @@ var Manager;
 	    target: '#category',
 	    field: 'category',
 	    multivalue:false,	    
-	    categoryList: {"all":lang.getLabel('category_all'), "samlingercollectionspace":lang.getLabel('category_artwork'), "nyheder":lang.getLabel('category_news'), "kalender":lang.getLabel('category_calendar'), "artikel":lang.getLabel('category_article'),  "praktisk":lang.getLabel('category_info')},
+	    categoryList: {"all":translator.getLabel('category_all'), "samlingercollectionspace":translator.getLabel('category_artwork'), "nyheder":translator.getLabel('category_news'), "kalender":translator.getLabel('category_calendar'), "artikel":translator.getLabel('category_article'),  "praktisk":translator.getLabel('category_info')},
 	    activeCategory: "all"
 	  }));	
 		
