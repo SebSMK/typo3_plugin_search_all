@@ -26,7 +26,9 @@
 	  
 	  "pager_display":			"displaying",
 	  "pager_to":				"to",
-	  "pager_af":				"of"
+	  "pager_af":				"of",
+	  
+	  "related_reference":		"reference"
       
     },
     "dk": {
@@ -52,7 +54,9 @@
 	  
 	  "pager_display":			"viser",
 	  "pager_to":				"til",
-	  "pager_af":				"af"
+	  "pager_af":				"af",
+	  
+	  "related_reference":		"inv.num"
 	        
     }
   }

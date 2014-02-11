@@ -124,7 +124,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		  		id: id,
 		  		title: title_first,	 
 		  		thumbnail: medium_image_data,				  						  		
-		  		meta: [{key: "inv.num.", value: id}],				  		
+		  		meta: [{key: this.manager.translator.getLabel('related_reference'), value: id}],				  		
 		  		img_id: id,
 		  		artist_name: artist_name			  				
     };
@@ -134,7 +134,8 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
   getImage: function ($container, $target){
 	  var img_id = $target.attr("img_id");
 	  var path = $target.attr("src");
-	  var alt = $target.attr("alt");	  
+	  var alt = $target.attr("alt");
+	  var title = $target.attr("alt");
 	  var img = new Image();
 	  var self = this;
 	  	   
@@ -205,6 +206,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	          })		
 
 	    .attr('alt', alt)
+	    .attr('title', title)
 	    
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
