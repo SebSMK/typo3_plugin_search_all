@@ -13,8 +13,6 @@ constructor: function (attributes) {
 	  var self = this;
 	  var $target = $(this.target);
 	  var templ_path = 'pi1/templates/chosen.html';
-	  	  
-	  //$target.hide('fast'); // hide until all styling is ready
 	  
 	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": ''}]})};	 
 	  var html = self.template_integration_json(json_data, templ_path); 				  
@@ -50,31 +48,55 @@ constructor: function (attributes) {
 	    var maxCount = 0;
 	    var objectedItems = [];
 
-	    if(self.field =='object_production_century_earliest'){
-	    	for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
-	  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
-	  	      if (count > maxCount) {
-	  	        maxCount = count;
-	  	      };	  	      	  	      	    	  
-	  	      objectedItems.push({ "value": facet, "text": sprintf('%s%s', parseInt(facet), '.&aring;rh.'), "count": count });  	  	    	  	      
-	  	    }
-	  	    objectedItems.sort(function (a, b) {
-	  	      return parseInt(a.value)-parseInt(b.value);	  	      
-	  	    });
-	    	
-	    }else{	    	
-	    	for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
-	  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
-	  	      if (count > maxCount) {
-	  	        maxCount = count;
-	  	      };
-	  	      
-	  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": count });	    	  	  	      	  	      
-	  	    }
-	  	    objectedItems.sort(function (a, b) {
-	  	    	return a.value < b.value ? -1 : 1;	  	      
-	  	    });
-	    }
+	    
+	    switch (self.field){
+			  case 'object_production_century_earliest':		 			  			  			  
+				  	for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
+				  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
+				  	      if (count > maxCount) {
+				  	        maxCount = count;
+				  	      };	
+				  	      
+				  	      objectedItems.push({ "value": facet, "text": this.getCentury(facet), "count": count });  	  	    	  	      
+			  	    };
+			  	    objectedItems.sort(function (a, b) {
+			  	      return parseInt(a.value)-parseInt(b.value);	  	      
+			  	    });				  			  			  
+			  	    break;	
+			  
+			  case 'artist_natio':
+			  case 'object_type':
+					  for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
+				  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
+				  	      if (count > maxCount) {
+				  	        maxCount = count;
+				  	      };
+				  	      
+				  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(self.manager.translator.getLabel(smkCommon.replace_dansk_char(facet))), "count": count });	    	  	  	      	  	      
+			  	    };
+			  	    objectedItems.sort(function (a, b) {
+			  	    	if (self.manager.translator.getLanguage() == 'dk')
+			  	    		return a.value < b.value ? -1 : 1;
+			  	    	
+			  	    	return a.text < b.text ? -1 : 1;
+			  	    });	  	 		  	  
+			  	  	break;					  
+			  
+			  default:		    			  			   							  
+				  	for (var facet in self.manager.response.facet_counts.facet_fields[self.field]) {
+				  	      var count = parseInt(self.manager.response.facet_counts.facet_fields[self.field][facet]);
+				  	      if (count > maxCount) {
+				  	        maxCount = count;
+				  	      };
+				  	      
+				  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": count });	    	  	  	      	  	      
+			  	    };
+			  	    objectedItems.sort(function (a, b) {
+			  	    	return a.value < b.value ? -1 : 1;	  	      
+			  	    });	  	 		  	  
+			  	  	break;		  
+		  };
+	    
 	     	    	    
 	    	
 	    //* merge facet data and template
@@ -127,6 +149,26 @@ constructor: function (attributes) {
 		$(this).trigger({
 			type: "smk_search_filter_loaded"
 		});
+  },
+  
+  
+  getCentury: function(facet){
+	  
+	  var number = parseInt(facet);
+	  var ordinal = "";
+	  var century = this.manager.translator.getLabel("search_filter_cent");
+	  
+	  switch (this.manager.translator.getLanguage()){
+		  case "dk":		 			  			  			  
+			  ordinal = "."					  			  			  
+			  break;
+		  case "en":		 			  			  			  
+			  ordinal = smkCommon.ordinal_suffix(number);					  			  			  
+			  break;		  
+	  };
+
+	  return sprintf('%s%s%s', number, ordinal, century); 
+	  
   },
   
   /**

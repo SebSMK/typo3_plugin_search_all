@@ -19,7 +19,7 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 		  var self = this;
 		  var $target = $(this.target);
 		  var templ_path = 'pi1/templates/search_box.html';		  
-		  var json_data = {"default_text" : this.manager.translator.getLabel("search_box_default")};	 
+		  var json_data = {"default_text" : this.manager.translator.getLabel("search_box_default"), 'search': this.manager.translator.getLabel("search_box_button")};	 
 		  var html = self.template_integration_json(json_data, templ_path);
 		  
 		  $target.html(html);		
@@ -100,7 +100,7 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 		if (!self.hightlight)
 			return;
 		var vArray = self.manager.store.last.split(" ");
-		jQuery('#smk_teasers .teaser__content').highlight(vArray);
+		jQuery('#smk_teasers .article_artwork').highlight(vArray);
 		
 	},  
 	  
