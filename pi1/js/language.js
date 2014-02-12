@@ -29,14 +29,25 @@
 					  var array = [];
 						for (var key in json) {
 							var item = json[key];
-							if (key == "language") {		        		
-						        for (var lang in item) {
-						        	this.labels[lang] = item[lang]; 		        		        		
-						        };		        			        
-						    }else if(key = "config"){
-						    	if(item.hasOwnProperty("default"))						    		
-						    		this.default_lang = item.default;
-						    }
+														
+							 switch(key){
+								  case "language":		 			  			  			  
+									  for (var lang in item) {
+								        	this.labels[lang] = item[lang]; 		        		        		
+								        };					  			  			  
+									  break;
+									  
+								  case "collections":		 			  			  			  
+									  for (var lang in item) {
+								        	this.collections[lang] = item[lang]; 		        		        		
+								        };					  			  			  
+									  break;
+									  
+								  case "config":		 			  			  			  
+									  if(item.hasOwnProperty("default"))						    		
+								    		this.default_lang = item.default;				  			  			  
+									  break;		  
+							  }
 						};					  					  
 				  }, this)
 				});  
@@ -57,15 +68,43 @@
 			if(!this.labels[this.current_lang].hasOwnProperty(label)){
 				// if it doesn't exist in current language, try default language
 				if(!this.labels.hasOwnProperty(this.default_lang))
-					return "label unknow in language " + this.default_lang;
+					return "label unknow in language " + this.current_lang;
 				
 				if(!this.labels[this.default_lang].hasOwnProperty(label))
-					return "label unknow in language " + this.default_lang;
+					return "label unknow in language " + this.current_lang;
 				
 				return this.labels[this.default_lang][label];					
 			};				
 			
 			return this.labels[this.current_lang][label];		
+		};
+		
+		
+		/*
+		 * get collection by artwork's location in the current language
+		 * * if no current language was set, use default language
+		 * * if the location doesn't exist in the current language, try default language
+		 * * otherwise, return "default" label		 
+		 */		
+		this.getCollection = function(collection){
+			
+			// check language
+			if(!this.collections.hasOwnProperty(this.current_lang))
+				if(!this.collections.hasOwnProperty(this.default_lang))
+					return "neither selected or default language";
+			
+			if(!this.collections[this.current_lang].hasOwnProperty(collection)){
+				// if it doesn't exist in current language, try default language
+				if(!this.collections.hasOwnProperty(this.default_lang))
+					return this.collections[this.current_lang]["default"];
+				
+				if(!this.collections[this.default_lang].hasOwnProperty(collection))
+					return this.collections[this.current_lang]["default"];
+				
+				return this.collections[this.default_lang][collection];					
+			};				
+			
+			return this.collections[this.current_lang][collection];		
 		}
 	
 		/*
@@ -86,6 +125,7 @@
 		 * variables
 		 */
 		this.labels = {}; // list of labels in different languages
+		this.collections = {}; // list of collections by location in different languages
 		this.current_lang = null; // current language
 		this.default_lang = null; // default language
 		

@@ -6,6 +6,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
   default_picture_path: null, 
   
+  current_language: null,
+  
   init: function(){
 	  
 	var self = this;
@@ -23,7 +25,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     });
     
     this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_medium.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));
-	  
+    this.current_language = this.manager.translator.getLanguage();
+    
   },  
 
   afterRequest: function () {  
@@ -139,12 +142,12 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
 			 data = {
 				  		id:doc.id,
-				  		title:doc.title_first,	 
+				  		title:this.getTitle(doc),	 
 				  		thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
-				  		categories: {name: "Samlinger", url:"#"},
-				  		meta: {key: "Inv.num.", value: doc.id},				  		
+				  		categories: {name: this.manager.translator.getCollection(doc.location_name), url:"#"},
+				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
-				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtistLabel(doc),	
+				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
 				  		location: false,
@@ -156,7 +159,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 					};
 			 
 			 if (location !== undefined)
-				 data.location = {label: this.getlocationLabel(doc.location_name)};
+				 data.location = {label: smkCommon.firstCapital(this.getLocation(doc.location_name))};
 			     	
 		    break;	  
 		    
@@ -192,7 +195,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   
   },  
   
-  getArtistLabel: function(doc){
+  getArtist: function(doc){
 	  var artistLabel = new Array();
 	  
 	  if(doc.artist_name_ss.length != doc.artist_auth.length)
@@ -209,10 +212,39 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return artistLabel;
   },
   
+  getTitle: function(doc){
+	  
+	  var title;
+	  
+	  switch(this.current_language){
+	  case "dk":		 			  			  			  
+		  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
+		  break;
+	  case "en":
+		  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
+		  break;
+	  default:		    			  			   							  
+	  	  title = doc.title_first		  	 		  	  
+	  	  break;		  
+	  }
+	  
+	  return title;
+  },
+  
+  getLocation: function (location){
+		  
+	if(location !== undefined)
+		return this.manager.translator.getLabel("teaser_on_display"); "Kan ses p&aring; museet";
+		  
+	return this.manager.translator.getLabel("teaser_appoint");"Kan ses efter aftale";	  
+	  
+  },
+  
   getImage: function ($container, $target){
 	  var img_id = $target.attr("img_id");
 	  var path = $target.attr("src");
-	  var alt = $target.attr("alt");	  
+	  var alt = $target.attr("alt");
+	  var title = $target.attr("alt");
 	  var self = this;
 	  
 	  //
@@ -269,20 +301,12 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	    })	    	
 
 	    .attr('alt', alt)
+	    .attr('title', title)
 	    
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 
   },
 
-  
-  getlocationLabel: function (location){
-		  
-	if(location !== undefined)
-		return "Kan ses p&aring; museet";
-		  
-	return "Kan ses efter aftale";	  
-	  
-  },
   
   img_id_generator: function(text){	  	  	
 	  	var hash = 0, i, char;
