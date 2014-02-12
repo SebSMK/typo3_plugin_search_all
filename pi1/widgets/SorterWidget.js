@@ -7,9 +7,9 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
 	  var $target = $(this.target);
 	  
 	  //* init template
-	  var options = ([{"value": "score desc", "text" : "Relevans", "selected": true},
-                      {"value": "object_production_date_earliest asc", "text" : "Dato (&aelig;ldst f&oslash;rst)", "selected": false},
-                      {"value": "object_production_date_earliest desc", "text" : "Dato (nyest f&oslash;rst)", "selected": false}
+	  var options = ([{"value": "score desc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_relevans")), "selected": true},
+                      {"value": "object_production_date_earliest asc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_dato_asc")), "selected": false},
+                      {"value": "object_production_date_earliest desc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_dato_desc")), "selected": false}
   					]);
 	  var objectedItems = new Array(); 
       
@@ -63,7 +63,8 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
   
   template_integration_json: function (data, templ_path){	  
 		var template = Mustache.getTemplate(templ_path);	
-		var json_data = {"options": data};
+		var json_data =	{"label": smkCommon.firstCapital(this.manager.translator.getLabel("sorter_sort")),
+		                 "options": data};
 		var html = Mustache.to_html($(template).find('#sorterItemsTemplate').html(), json_data);
 		return html;
   },

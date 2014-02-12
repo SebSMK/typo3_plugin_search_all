@@ -34,6 +34,12 @@
 	  "search_box_button":		"search",
 	  
 	  "search_filter_cent":		" c.",
+	  
+	  "sorter_sort":			"sort by:",
+	  "sorter_relevans":		"relevance",
+	  "sorter_dato_desc":		"date (most recent first)",
+	  "sorter_dato_asc":		"date (older first)",
+	  
 	  		
 		"amerikansk":			"United States",
 		"belgisk":				"Belgium",
@@ -241,6 +247,12 @@
 	  "search_box_button":		"s&oslash;g",
 	  
 	  "search_filter_cent":		"&aring;rh.",
+	  
+	  "sorter_sort":			"sortere efter:",
+	  "sorter_relevans":		"relevans",
+	  "sorter_dato_desc":		"dato (nyest f&oslash;rst)",
+	  "sorter_dato_asc":		"dato (&aelig;ldst f&oslash;rst)",
+	  
 	  
 	  "amerikansk":				"amerikansk",
 		"belgisk":				"belgisk",
