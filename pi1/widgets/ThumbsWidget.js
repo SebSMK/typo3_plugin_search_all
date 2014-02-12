@@ -51,7 +51,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   
   template_integration_json: function (data, templ_path){	  
 		var template = Mustache.getTemplate(templ_path);	
-		var json_data = {"thumbnails": data};
+		var json_data = {"thumbnails":data};
 		var html = Mustache.to_html($(template).find('#thumbTemplate').html(), json_data);
 		return html;
   },
@@ -108,11 +108,11 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 		  this.push_work_til_thumb(work_children[i], thumbnails);
 	  }
 	  
-	  data = {thumb : thumbnails};  	  
+	  data = {"label": this.manager.translator.getLabel("thumbs_label"), "thumb" : thumbnails};  	  
 	  
 	  return data;	  
   
-  },     
+  },       
   
   push_work_til_thumb: function(work, thumbnails){
 	  var id = work[1];		  
@@ -132,6 +132,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	  var img_id = $target.attr("img_id");
 	  var path = $target.attr("src");
 	  var alt = $target.attr("alt");
+	  var title = $target.attr("alt");
 	  var img = new Image();
 	  var self = this;
 	  	   
@@ -231,6 +232,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	    })	    	    
 
 	    .attr('alt', alt)
+	    .attr('title', title)
 	    
 	    // *finally*, set the src attribute of the new image to our image
 	    .attr('src', path); 

@@ -29,6 +29,7 @@
 	  "pager_af":				"of",
 	  
 	  "related_reference":		"reference",
+	  "related_label":			"related artworks",
 	  
 	  "search_box_default":		"Search artwork, title, artist, visiting info etc...",
 	  "search_box_button":		"search",
@@ -44,6 +45,7 @@
 	  "teaser_appoint":			"view by appointement",
 	  "teaser_on_display": 		"on display",
 	  
+	  "thumbs_label":	 		"associated works",
 	  		
 		"amerikansk":			"United States",
 		"belgisk":				"Belgium",
@@ -240,6 +242,7 @@
 	  "pager_af":				"af",
 	  
 	  "related_reference":		"inv.num",
+	  "related_label":			"relaterede v&aelig;rker",
 	  	  
 	  "search_box_default":		"S&oslash;g efter kunstv&aelig;rker, title, kunstner, praktisk info etc..",
 	  "search_box_button":		"s&oslash;g",
@@ -255,7 +258,7 @@
 	  "teaser_appoint":			"kan ses efter aftale",
 	  "teaser_on_display": 		"kan ses p&aring; museet",
 	  
-	  
+	  "thumbs_label":	 		"delv&aelig;rker",
 	  
 	  "amerikansk":				"amerikansk",
 		"belgisk":				"belgisk",

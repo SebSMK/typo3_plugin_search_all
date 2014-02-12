@@ -6,8 +6,6 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
   default_picture_path: null, 
   
-  current_language: null,
-  
   init: function(){
 	  
 	var self = this;
@@ -24,8 +22,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
         transitionDuration: 0
     });
     
-    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_medium.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));
-    this.current_language = this.manager.translator.getLanguage();
+    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_medium.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));    
     
   },  
 
@@ -216,16 +213,16 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  var title;
 	  
-	  switch(this.current_language){
-	  case "dk":		 			  			  			  
-		  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
-		  break;
-	  case "en":
-		  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
-		  break;
-	  default:		    			  			   							  
-	  	  title = doc.title_first		  	 		  	  
-	  	  break;		  
+	  switch(this.manager.translator.getLanguage()){
+		  case "dk":		 			  			  			  
+			  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
+			  break;
+		  case "en":
+			  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
+			  break;
+		  default:		    			  			   							  
+		  	  title = doc.title_first		  	 		  	  
+		  	  break;		  
 	  }
 	  
 	  return title;

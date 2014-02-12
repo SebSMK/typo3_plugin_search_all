@@ -137,13 +137,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 //		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
 		  switch(newstate["category"]){
-		  case "samlingercollectionspace":		 			  			  			  
-			  self.showWidget($target.find("#search-filters"));
-			  //$target.find("#search-filters").show().children().show();					  			  			  
-			  break;	
-		  default:		    			  			   							  
-		  	  $target.find("#search-filters").hide();		  	 		  	  
-		  	  break;		  
+			  case "samlingercollectionspace":		 			  			  			  
+				  self.showWidget($target.find("#search-filters"));
+				  //$target.find("#search-filters").show().children().show();					  			  			  
+				  break;	
+			  default:		    			  			   							  
+			  	  $target.find("#search-filters").hide();		  	 		  	  
+			  	  break;		  
 		  }
 		  
 		  break;

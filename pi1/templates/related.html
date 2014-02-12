@@ -1,9 +1,11 @@
 <div>
     <script id="relatedInitTemplate" type="text/template">	
-		<h3 class="heading--l heading--bordered">Relaterede v&aelig;ker</h3>
+		{{#artworks}}
+		<h3 class="heading--l heading--bordered">{{{label}}}</h3>
 		<div id="teaser-container-grid" class="full-width">	
         	<article class="teaser--grid"></article>
 		</div>
+		{{/artworks}}
 	 </script>
 	 	
 	 <script id="relatedArticleTemplate" type="text/template">	

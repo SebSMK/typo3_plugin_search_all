@@ -163,15 +163,15 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  var default_value = "-";
 	  
 	  switch(this.current_language){
-	  case "dk":		 			  			  			  
-		  technique = doc.prod_technique_dk !== undefined ? doc.prod_technique_dk : default_value;					  			  			  
-		  break;
-	  case "en":
-		  technique = doc.prod_technique_en !== undefined ? doc.prod_technique_en : default_value;
-		  break;
-	  default:	
-		  technique = default_value;
-	  	  break;		  
+		  case "dk":		 			  			  			  
+			  technique = doc.prod_technique_dk !== undefined ? doc.prod_technique_dk : default_value;					  			  			  
+			  break;
+		  case "en":
+			  technique = doc.prod_technique_en !== undefined ? doc.prod_technique_en : default_value;
+			  break;
+		  default:	
+			  technique = default_value;
+		  	  break;		  
 	  }
 	  
 	  return technique;
@@ -183,15 +183,15 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  var default_value = "";
 	  
 	  switch(this.current_language){
-	  case "dk":		 			  			  			  
-		  note = doc.description_note_dk !== undefined ? doc.description_note_dk : default_value;					  			  			  
-		  break;
-	  case "en":
-		  note = doc.description_note_en !== undefined ? doc.description_note_en : default_value;
-		  break;
-	  default:		
-		  technique = default_value;
-	  	  break;		  
+		  case "dk":		 			  			  			  
+			  note = doc.description_note_dk !== undefined ? doc.description_note_dk : default_value;					  			  			  
+			  break;
+		  case "en":
+			  note = doc.description_note_en !== undefined ? doc.description_note_en : default_value;
+			  break;
+		  default:		
+			  technique = default_value;
+		  	  break;		  
 	  }
 	  
 	  return note;
@@ -225,15 +225,15 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  var title;
 	  
 	  switch(this.current_language){
-	  case "dk":		 			  			  			  
-		  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
-		  break;
-	  case "en":
-		  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
-		  break;
-	  default:		    			  			   							  
-	  	  title = doc.title_first		  	 		  	  
-	  	  break;		  
+		  case "dk":		 			  			  			  
+			  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
+			  break;
+		  case "en":
+			  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
+			  break;
+		  default:		    			  			   							  
+		  	  title = doc.title_first		  	 		  	  
+		  	  break;		  
 	  }
 	  
 	  return title;

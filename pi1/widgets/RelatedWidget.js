@@ -12,8 +12,8 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	var $target = $(this.target);		
 	
 	//* load empty template
-	var html = Mustache.getTemplate('pi1/templates/related.html');    
-	$target.html($(html).find('#relatedInitTemplate').html());		
+	var html = self.template_integration_json({"label": smkCommon.firstCapital(this.manager.translator.getLabel("related_label"))}, 'pi1/templates/related.html', 'relatedInitTemplate');
+	$target.html(html);
 	
 	$target.find('#teaser-container-grid article').hide();
 	
@@ -59,7 +59,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		      artwork_data = self.getData(entry);	      	      
 		      
 		      //* merge data and template
-		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html');     
+		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html', 'relatedArticleTemplate');     
 		      var $article = $(html);
 
 //			      //* add image + link to detail on click on image to the current article
@@ -106,10 +106,11 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		  $target.find('#teaser-container-grid').masonry('remove', $all_articles);		 	  
   },
   
-  template_integration_json: function (data, templ_path){	  
+  template_integration_json: function (data, templ_path, id){	  
 		var template = Mustache.getTemplate(templ_path);	
 		var json_data = {"artworks": data};
-		var html = Mustache.to_html($(template).find('#relatedArticleTemplate').html(), json_data);
+		//var html = Mustache.to_html($(template).find('#relatedArticleTemplate').html(), json_data);
+		var html = Mustache.to_html($(template).find('#' + id).html(), json_data);
 		return html;
 	  },
     
@@ -124,7 +125,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		  		id: id,
 		  		title: title_first,	 
 		  		thumbnail: medium_image_data,				  						  		
-		  		meta: [{key: this.manager.translator.getLabel('related_reference'), value: id}],				  		
+		  		meta: [{key: smkCommon.firstCapital(this.manager.translator.getLabel('related_reference')), value: id}],				  		
 		  		img_id: id,
 		  		artist_name: artist_name			  				
     };
