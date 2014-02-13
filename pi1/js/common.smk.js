@@ -33,11 +33,15 @@
 	common.replace_dansk_char = function(text) {				
 		var res = text;
 		
-		// Hard to explain why regex below requires utf8 encoding. But it works (tested FF 26.0 & Chrome 32.0)
+		// utf8 encoding (JSON)
 		if (text.match(/[Ã¦Ã¸Ã¥Ã©]/g) != null)
 			res = text.replace( /[Ã¦]/g, "ae" ).replace( /[Ã¸]/g, "oe" ).replace( /[Ã¥]/g, "aa" ).replace( /[Ã©]/g, "e" );						
-				
+
+		// 
+		if (res.match(/[æåøé]/g) != null)
+			res = text.replace( /æ/g, "ae" ).replace( /ø/g, "oe" ).replace( /å/g, "aa" ).replace( /é/g, "e" );						
+		
 		return res;
-	};
+	};		
 	
 }));

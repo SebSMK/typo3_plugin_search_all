@@ -25,7 +25,8 @@ var Manager;
     Manager = new AjaxSolr.smkManager({
     	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v5/',
     	store: new AjaxSolr.smkParameterStore({
-    		exposed: ["fq", "q", "start", "limit", "sort"]
+    		exposed: ["fq", "q", "start", "limit", "sort", "qf"],    		
+    		q_default: '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)'
     	}),
     	searchfilterList: tagcloudFields,
     	allWidgetsProcessed: allWidgetsProcessedBound,
@@ -235,16 +236,16 @@ var Manager;
 		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['details'].target);   	   	 	       	  		      	
     });
     
-    //* a new search on a word has been added in search box
-    $(Manager.widgets['searchbox']).on('smk_search_fq_added', function(event){     	
-    	Manager.widgets['currentsearch'].add_fq(event.value, event.text );    	
+    //* a new search term input in search box
+    $(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){     	
+    	Manager.widgets['currentsearch'].add_q(event.value, event.text );    	
     });	
         
     //* init all widgets
     Manager.init();
 
     //* prepare and start init request
-    Manager.store.addByValue('q', '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)');    
+    Manager.store.addByValue('q', Manager.store.q_default);    
     var params = {
       facet: true,
       'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],      
@@ -252,6 +253,8 @@ var Manager;
       'facet.limit': -1,
       'facet.mincount': 1,
       'rows':12,
+      'defType': 'edismax',      
+      'qf': 'id^2 title_dk^1.5 title_eng^1.5 title_first^1.5 artist_name^1.5 page_content page_title^2', //description_note_dk^20 description_note_en^20 prod_technique_dk^10 prod_technique_en^10 object_type^10'
       'start':Math.floor((Math.random()*2000)+1),
       'json.nl': 'map'
     };

@@ -14,7 +14,7 @@
 	  "category_calendar" : 	"calendar",
 	  "category_article" : 		"article",
 	  "category_info" : 		"visiting info",
-	  "category_all" :	 		"all",
+	  "category_all" :	 		"all results",
 	  
 	  "detail_technique":		"technique",
 	  "detail_acquisition":		"acquisition",
@@ -36,7 +36,7 @@
 	  
 	  "search_filter_cent":		" c.",
 	  
-	  "sorter_sort":			"sort by:",
+	  "sorter_sort":			"sort:",
 	  "sorter_relevans":		"relevance",
 	  "sorter_dato_desc":		"date (most recent first)",
 	  "sorter_dato_asc":		"date (older first)",
@@ -227,7 +227,7 @@
 	  "category_calendar" : 	"kalender",
 	  "category_article" : 		"artikler",
 	  "category_info" : 		"praktisk info",
-	  "category_all" :	 		"alle",
+	  "category_all" :	 		"alle resultater",
 	  
 	  "detail_technique":		"teknik",
 	  "detail_acquisition":		"erhvervelse",
@@ -249,7 +249,7 @@
 	  
 	  "search_filter_cent":		"&aring;rh.",
 	  
-	  "sorter_sort":			"sortere efter:",
+	  "sorter_sort":			"sort&eacute;r:",
 	  "sorter_relevans":		"relevans",
 	  "sorter_dato_desc":		"dato (nyest f&oslash;rst)",
 	  "sorter_dato_asc":		"dato (&aelig;ldst f&oslash;rst)",
@@ -414,7 +414,7 @@
 		"tegning":	"tegning",
 		"tekstil":	"tekstil",
 		"torso":	"torso",
-		"toernaal":	"t&aring;rn&aring;l",
+		"toernaal":	"t&oslash;rn&aring;l",
 		"traesnit":	"tr&aelig;snit",
 		"tympanon":	"tympanon",
 		"vase":	"vase",

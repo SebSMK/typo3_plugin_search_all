@@ -3,7 +3,7 @@
 AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   start: 0,
   
-  fq: new Array(),
+  q: new Array(),
 
   afterRequest: function () {	  	
 	  
@@ -26,12 +26,12 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 //    }
 
     //var fq = this.manager.store.values('fq');
-    for (var i = 0, l = self.fq.length; i < l; i++) {
+    for (var i = 0, l = self.q.length; i < l; i++) {
       //links.push($('<a href="#"></a>').text('(x) ' + fq[i]).click(self.removeFacet(fq[i])));
-    	if (self.fq[i].text === undefined){
-    		links.push({"fq": self.fq[i].value});
+    	if (self.q[i].text === undefined){
+    		links.push({"q": self.q[i].value});
     	}else{
-    		links.push({"fq": self.fq[i].value, "label": self.fq[i].text});
+    		links.push({"q": self.q[i].value, "label": self.q[i].text});
     	}
     	
     }
@@ -61,13 +61,13 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   removeClickedFacet: function () {
     var self = this;
     return function (event) {
-      var facet = $(this).attr('fq');    	
-      if (self.manager.store.removeByValue('fq', facet)) {   
+      var facet = $(this).attr('q');    	
+      if (self.manager.store.removeElementFrom_q(facet)) {   
     	$(self.target).empty();
     	
-    	for (var i = 0, l = self.fq.length; i < l; i++) {	 
-	    	if (self.fq[i].value == facet){
-	    		self.fq.splice(i, 1);	    		
+    	for (var i = 0, l = self.q.length; i < l; i++) {	 
+	    	if (self.q[i].value == facet){
+	    		self.q.splice(i, 1);	    		
 	    		break;
 	    	}    	    	
     	 }
@@ -85,26 +85,26 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 		return html;
   },
   
-  add_fq: function(value, text){
-	  this.fq.push({'value':value, 'text':text});	  	  
+  add_q: function(value, text){
+	  this.q.push({'value':value, 'text':text});	  	  
   },
   
   removeAllCurrentSearch: function(){
 	  var self = this;
-	  for (var i = 0, l = self.fq.length; i < l; i++) {	 
-		  self.removeFacet(self.fq[i].value);
+	  for (var i = 0, l = self.q.length; i < l; i++) {	 
+		  self.removeFacet(self.q[i].value);
   	 	}    	        	  
-	  self.fq = new Array();
+	  self.q = new Array();
 	  
   },
   
   removeFacet: function (facet) {
 	  var self = this;	    
 	        	
-      if (self.manager.store.removeByValue('fq', facet)) {       	    	
-    	for (var i = 0, l = self.fq.length; i < l; i++) {	 
-	    	if (self.fq[i].value == facet){
-	    		self.fq.splice(i, 1);	    		
+      if (self.manager.store.removeElementFrom_q(facet)) {       	    	
+    	for (var i = 0, l = self.q.length; i < l; i++) {	 
+	    	if (self.q[i].value == facet){
+	    		self.q.splice(i, 1);	    		
 	    		break;
 	    	}    	    	
     	 }    	        
