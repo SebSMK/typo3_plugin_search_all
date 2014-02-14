@@ -159,8 +159,9 @@ constructor: function (attributes) {
 	  var century = this.manager.translator.getLabel("search_filter_cent");
 	  
 	  switch (this.manager.translator.getLanguage()){
-		  case "dk":		 			  			  			  
-			  ordinal = "."					  			  			  
+		  case "dk":
+			  number = (number -1) * 100; 
+			  ordinal = "-";					  			  			  
 			  break;
 		  case "en":		 			  			  			  
 			  ordinal = smkCommon.ordinal_suffix(number);					  			  			  

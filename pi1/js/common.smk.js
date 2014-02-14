@@ -51,8 +51,9 @@
 	 */
 	common.computeCopyright = function(doc) {
 		
-		//return false; // debug mode : all images visibles
-		
+		//***
+		return false; //-->debug mode : all images visibles
+		//***
 		
 		if (doc === undefined || doc.artist_name_ss === undefined)
 			return false;
