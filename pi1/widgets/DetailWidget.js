@@ -77,8 +77,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  var data =  {
 		  		media:{
 		  			title: this.getTitle(doc),		  			
-		  			image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
-			  		copyright: "copyright",
+		  			image: doc.medium_image_url !== undefined && smkCommon.computeCopyright(doc) == false ? doc.medium_image_url : this.default_picture_path,
+			  		copyright: smkCommon.computeCopyright(doc),
 			  		img_id:doc.id
 		  		},
 		  		

@@ -140,7 +140,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 data = {
 				  		id:doc.id,
 				  		title:this.getTitle(doc),	 
-				  		thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
+				  		thumbnail: doc.medium_image_url !== undefined && smkCommon.computeCopyright(doc) == false ? doc.medium_image_url : this.default_picture_path,
 				  		categories: {name: this.manager.translator.getCollection(doc.location_name), url:"#"},
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks

@@ -42,7 +42,8 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 		//* load data
 		var artwork_data = null;						
-		var doc = this.manager.response.response.docs[i];	      	      	      
+		var doc = this.manager.response.response.docs[i];	
+		var copyright = smkCommon.computeCopyright(doc) == false; // compute copyright for the current artwork and apply it to all related artworks  
 		
 		//* in case there are no results, remove all ".image_loading" class in the widget and send "widget loaded" event
 		if (doc.related_id === undefined){
@@ -56,7 +57,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 			
 		doc.related_id.split(';-;').forEach( function(entry){
 			  //* load data for this artwork
-		      artwork_data = self.getData(entry);	      	      
+		      artwork_data = self.getData(entry, copyright);	      	      
 		      
 		      //* merge data and template
 		      var html = self.template_integration_json(artwork_data, 'pi1/templates/related.html', 'relatedArticleTemplate');     
@@ -114,10 +115,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		return html;
 	  },
     
-  getData: function (entry){
+  getData: function (entry, copyright){
 	  
 	  var title_first = entry.split(';--;')[2];
-	  var medium_image_data = entry.split(';--;')[3] != "" ? entry.split(';--;')[3] : this.default_picture_path;
+	  var medium_image_data = entry.split(';--;')[3] != "" && copyright ? entry.split(';--;')[3] : this.default_picture_path;
 	  var id = entry.split(';--;')[0];
 	  var artist_name = entry.split(';--;')[1];
 	  

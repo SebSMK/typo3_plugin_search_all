@@ -23,7 +23,7 @@ var Manager;
 	// this function will be passed as parameter in the manager - we've got to bind it to an environment
 	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);	
     Manager = new AjaxSolr.smkManager({
-    	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v5/',
+    	solrUrl: 'http://solr.smk.dk:8180/solr-example/SMK_All_v5/',    	    	
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit", "sort", "qf"],    		
     		q_default: '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)',
