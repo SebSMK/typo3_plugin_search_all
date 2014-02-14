@@ -16,7 +16,8 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
 	  constructor: function (attributes) {
 		    AjaxSolr.smkParameterStore.__super__.constructor.apply(this, arguments);
 		    AjaxSolr.extend(this, {
-		    	q_default:null
+		    	q_default:null,
+		    	qf_default:null
 		    }, attributes);
 	 },	 
 	  
@@ -104,7 +105,26 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
 //      }
     }
     return false;
+  },
+  
+  set_qf: function(json){
+	  this.qf_default = json;	  
+  },
+  
+  
+  get_qf_string: function(){
+	  
+	  var res = "";
+	  
+	  if( this.qf_default != null){
+		  $.each(this.qf_default, function(k, v) {
+				res = res.concat(sprintf(' %s^%s', k, v));
+		  });		  
+	  };
+	  
+	  return res;
   }
+  
   
 });
 

@@ -26,13 +26,27 @@ var Manager;
     	solrUrl: 'http://csdev-seb:8180/solr-example/SMK_All_v5/',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit", "sort", "qf"],    		
-    		q_default: '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)'
+    		q_default: '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)',
+    		qf_default:{id:'20', 
+    					title_dk:'15', 
+    					title_eng:'15', 
+    					title_first:'15', 
+    					artist_name:'15', 
+    					page_content:'10', 
+    					page_title:'15', 
+    					description_note_dk:'10', 
+    					description_note_en:'10', 
+    					prod_technique_dk:'5', 
+    					prod_technique_en:'5', 
+    					object_type:'10'    			
+    				}
     	}),
     	searchfilterList: tagcloudFields,
     	allWidgetsProcessed: allWidgetsProcessedBound,
     	translator: translator
     });
 
+    
 	//** load widgets
     //* stateManagerWidget must be registred in first place
 	Manager.addWidget(stateManager);
@@ -254,8 +268,8 @@ var Manager;
       'facet.mincount': 1,
       'rows':12,
       'defType': 'edismax',      
-      'qf': 'id^2 title_dk^1.5 title_eng^1.5 title_first^1.5 artist_name^1.5 page_content page_title^2', //description_note_dk^20 description_note_en^20 prod_technique_dk^10 prod_technique_en^10 object_type^10'
-      'start':Math.floor((Math.random()*2000)+1),
+      'qf': Manager.store.get_qf_string(),
+      'start': Math.floor((Math.random()*2000)+1),
       'json.nl': 'map'
     };
     for (var name in params) {
