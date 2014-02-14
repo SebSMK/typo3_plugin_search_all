@@ -72,13 +72,13 @@ constructor: function (attributes) {
 				  	        maxCount = count;
 				  	      };
 				  	      
-				  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(self.manager.translator.getLabel(smkCommon.replace_dansk_char(facet))), "count": count });	    	  	  	      	  	      
+				  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(self.manager.translator.getLabel(smkCommon.replace_dansk_char(facet))).trim(), "count": count });	    	  	  	      	  	      
 			  	    };
 			  	    objectedItems.sort(function (a, b) {
 			  	    	if (self.manager.translator.getLanguage() == 'dk')
-			  	    		return a.value < b.value ? -1 : 1;
+			  	    		return typeof (a.value === 'string') && typeof (b.value === 'string') ? (a.value.trim() < b.value.trim() ? -1 : 1) : (a.value < b.value ? -1 : 1);
 			  	    	
-			  	    	return a.text < b.text ? -1 : 1;
+			  	    	return typeof (a.text === 'string') && typeof (b.text === 'string') ? (a.text.trim() < b.text.trim() ? -1 : 1) : (a.text < b.text ? -1 : 1);
 			  	    });	  	 		  	  
 			  	  	break;					  
 			  
@@ -89,10 +89,10 @@ constructor: function (attributes) {
 				  	        maxCount = count;
 				  	      };
 				  	      
-				  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": count });	    	  	  	      	  	      
+				  	      objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet).trim(), "count": count });	    	  	  	      	  	      
 			  	    };
 			  	    objectedItems.sort(function (a, b) {
-			  	    	return a.value < b.value ? -1 : 1;	  	      
+			  	    	return typeof (a.value === 'string') && typeof (b.value === 'string') ? (a.value.trim() < b.value.trim() ? -1 : 1) : (a.value < b.value ? -1 : 1);	  	      
 			  	    });	  	 		  	  
 			  	  	break;		  
 		  };
