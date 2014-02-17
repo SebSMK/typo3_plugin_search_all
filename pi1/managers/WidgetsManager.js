@@ -174,11 +174,13 @@ var Manager;
     	Manager.widgets['details'].call_detail(event.detail_id, true);    	
     });	 
     $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
-    	Manager.widgets['state_manager'].viewChanged({view:"detail"});
+    	//Manager.widgets['state_manager'].viewChanged({view:"detail"});
+    	Manager.widgets['state_manager'].empty_detail_view();
     	Manager.widgets['details'].call_detail(event.detail_id, false);
     });	
     $(Manager.widgets['thumbs']).on('smk_search_call_detail', function(event){     	    	
-    	Manager.widgets['state_manager'].viewChanged({view:"detail"});
+    	Manager.widgets['state_manager'].empty_detail_view();
+    	//Manager.widgets['state_manager'].viewChanged({view:"detail"});
     	Manager.widgets['details'].call_detail(event.detail_id, false);
     });
     

@@ -96,7 +96,10 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	 //* add image + link to detail on click on image to all articles
 	 $target.find('article').each(function() {    	    	
 		self.getImage($(this), $(this).find('.image_loading'));
-	 });		    
+	 });
+	 
+	 //* show the whole widget (in case some parts were hidden)	 
+	 $target.show().children().show();
   }, 
   
   removeAllArticles: function(){

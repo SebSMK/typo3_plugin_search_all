@@ -161,7 +161,9 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  
 		  self.showWidget($target.find("#smk_detail"));
 		  self.showWidget($target.find("#thumbnails"));
-		  self.showWidget($target.find("#related-artworks"));
+		  
+		  self.showWidget($(this.manager.widgets['related'].target));
+		  $(this.manager.widgets['related'].target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
 		  
 		  
 //		  $target.find("#smk_detail").show().children().show();
@@ -239,6 +241,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
   showWidget: function($target){
 	  $target.show().children().not('.modal').show();	  	  
+  },
+  
+  empty_detail_view: function(){		  
+	  //empty related widget
+	  $(this.manager.widgets['related'].target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")	  
+	  this.manager.widgets['related'].removeAllArticles();	  
+	  //empty detail widget
+	  $(this.manager.widgets['detail']).empty();	  	  
   },
   
   getNewState: function(stateChange) {
