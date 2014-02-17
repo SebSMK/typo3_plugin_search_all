@@ -121,31 +121,15 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  
 	  //* add dimension data
-	  if (doc.heigth_net !== undefined || doc.width_net !== undefined || doc.heigth_brut !== undefined || doc.width_brut !== undefined){
+	  if (doc.heigth !== undefined || doc.width !== undefined || doc.depth !== undefined ){
 		  
 		  data.info.dim = {
 			key: this.manager.translator.getLabel('detail_dimension'),			    	
-	    	net: false,
-	    	net_label: smkCommon.firstCapital(this.manager.translator.getLabel('detail_dimension_net')),
-	    	brut: false,
-	    	brut_label: smkCommon.firstCapital(this.manager.translator.getLabel('detail_dimension_brut'))
+			heigth : doc.heigth !== undefined ? doc.heigth : "-",
+			width : doc.width !== undefined ? sprintf(' x %s', doc.width) : " x -",
+			depth : doc.depth !== undefined ? sprintf(' x %s', doc.depth) : "",
+			unit : doc.heigthunit
 		  };
-		  
-		  if (doc.heigth_net !== undefined || doc.width_net !== undefined){
-			  data.info.dim.net = {
-	    		heigth : doc.heigth_net !== undefined ? doc.heigth_net : "-",
-		    	width : doc.width_net !== undefined ? doc.width_net : "-",
-		    	unit : doc.heigthunit_net
-			  };	  		  
-		  };
-		  
-		  if (doc.heigth_brut !== undefined || doc.width_brut !== undefined){
-			  data.info.dim.brut = {
-	    		heigth : doc.heigth_brut !== undefined ? doc.heigth_brut : "-",
-		    	width : doc.width_brut !== undefined ? doc.width_brut : "-",
-		    	unit : doc.heigthunit_brut
-			 };		  		    			  		    				    				    	  		  
-		  }; 
 		  
 	  };
 	  
