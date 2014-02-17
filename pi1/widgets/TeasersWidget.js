@@ -142,6 +142,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		title:this.getTitle(doc),	 
 				  		thumbnail: doc.medium_image_url !== undefined && smkCommon.computeCopyright(doc) == false ? doc.medium_image_url : this.default_picture_path,
 				  		categories: {name: this.manager.translator.getCollection(doc.location_name), url:"#"},
+			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
 				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),	
@@ -191,6 +192,27 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return data;
   
   },  
+  
+  
+  getTechnique: function (doc){
+	  var technique;
+	  var default_value = false;
+	  
+	  switch(this.manager.translator.getLanguage()){
+		  case "dk":		 			  			  			  
+			  technique = doc.prod_technique_dk !== undefined ? doc.prod_technique_dk : default_value;					  			  			  
+			  break;
+		  case "en":
+			  technique = doc.prod_technique_en !== undefined ? doc.prod_technique_en : default_value;
+			  break;
+		  default:	
+			  technique = default_value;
+		  	  break;		  
+	  }
+	  
+	  return technique;
+  
+  },
   
   getArtist: function(doc){
 	  var artistLabel = new Array();
