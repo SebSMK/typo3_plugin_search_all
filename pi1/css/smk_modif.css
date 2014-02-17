@@ -83,41 +83,7 @@ a span{
 }
 
 
-.view #teaser-container-grid.col_4-grid{    
-    width: 660px;
-    float: right;
-}
 
-.view #teaser-container-grid.col_3-grid{    
-    width: 880px;
-    float: left;
-}
-
-.view #teaser-container-grid .teaser--grid.col_4--grid{    
-    width: 198px;
-}
-
-.view #teaser-container-grid .teaser--grid.col_3--grid{    
-    width: 198px;
-}
-
-.view #related-container-grid.col_4-grid{    
-    width: 660px;
-    float: right;
-}
-
-.view #related-container-grid.col_3-grid{    
-    width: 880px;
-    float: left;
-}
-
-.view #related-container-grid .related--grid.col_4--grid{    
-    width: 198px;
-}
-
-.view #related-container-grid .related--grid.col_3--grid{    
-    width: 198px;
-}
 
 
 /* Jacques' Code  modif */
