@@ -1,8 +1,11 @@
-<form class="view-picker" method="post">
-  <input type="radio" name="view" value="grid" id="grid" checked />
-  <label for="grid" class="grid">Grid</label>
-
-  <input type="radio" name="view" value="list" id="list" />
-  <label for="list" class="list">List</label>
-
-</form>
+<div>	
+	<script id="viewpickerTemplate" type="text/template">		 		
+		<form class="view-picker" method="post">			
+			  <input type="radio" name="view" value="grid" id="grid" checked />
+			  <label data-tip="{{{tip_text}}}" for="grid" class="grid">Grid</label>
+			
+			  <input type="radio" name="view" value="list" id="list" />
+			  <label data-tip="{{{tip_text}}}" for="list" class="list">List</label>			
+		</form>
+	</script>	
+</div>

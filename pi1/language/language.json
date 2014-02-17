@@ -25,7 +25,7 @@
 	  "detail_location":		"location",
 	  "detail_provenance":		"provenance",
 	  
-	  
+	  "viewpicker_tip":			"switch between grid and list view",
 	  
 	  "pager_display":			"displaying",
 	  "pager_to":				"to",
@@ -241,6 +241,8 @@
 	  "detail_dimension_brut":	"brutto",
 	  "detail_location":		"location",
 	  "detail_provenance":		"proveniens",
+	  
+	  "viewpicker_tip":			"valg mellem grid og list visning",	  
 	  
 	  "pager_display":			"viser",
 	  "pager_to":				"til",
