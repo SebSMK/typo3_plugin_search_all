@@ -102,6 +102,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    dim: false,
 		  		    
 		  		    location:false,
+		  		    
+		  		    proveniens:false
 	  		    
 		  		}	  
 			};	
@@ -153,10 +155,23 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 			  key: this.manager.translator.getLabel('detail_location'),
 			  value:doc.location_name
 	  		};	  	  
+
+	  
+	  //* add provenance	 
+	  if (this.getProvenance(doc))	  
+		  	data.info.proveniens = {
+			  key: this.manager.translator.getLabel('detail_provenance'),
+			  value: doc.proveniens
+	  		};	  	  
+
 	  
 	  return data;	  
   
   },     
+  
+  getProvenance: function(doc){
+	 return this.current_language == "dk" && doc.proveniens !== undefined ? true : false 
+  },
   
   getTechnique: function (doc){
 	  var technique;

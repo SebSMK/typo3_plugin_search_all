@@ -23,6 +23,9 @@
 	  "detail_dimension_net":	"net",
 	  "detail_dimension_brut":	"brut",
 	  "detail_location":		"location",
+	  "detail_provenance":		"provenance",
+	  
+	  
 	  
 	  "pager_display":			"displaying",
 	  "pager_to":				"to",
@@ -237,6 +240,7 @@
 	  "detail_dimension_net":	"netto",
 	  "detail_dimension_brut":	"brutto",
 	  "detail_location":		"location",
+	  "detail_provenance":		"proveniens",
 	  
 	  "pager_display":			"viser",
 	  "pager_to":				"til",
