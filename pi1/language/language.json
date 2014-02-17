@@ -44,6 +44,7 @@
 	  "teaser_reference":		"reference",
 	  "teaser_appoint":			"view by appointement",
 	  "teaser_on_display": 		"on display",
+	  "teaser_last_update":		"last updated",
 	  
 	  "thumbs_label":	 		"associated works",
 	  		
@@ -231,7 +232,7 @@
 	  
 	  "detail_technique":		"teknik",
 	  "detail_acquisition":		"erhvervelse",
-	  "detail_reference":		"inv.num.",
+	  "detail_reference":		"inv.nr.",
 	  "detail_dimension":		"dimension",
 	  "detail_dimension_net":	"netto",
 	  "detail_dimension_brut":	"brutto",
@@ -254,9 +255,10 @@
 	  "sorter_dato_desc":		"dato (nyest f&oslash;rst)",
 	  "sorter_dato_asc":		"dato (&aelig;ldst f&oslash;rst)",
 	  
-	  "teaser_reference":		"inv.num.",
+	  "teaser_reference":		"inv.nr.",
 	  "teaser_appoint":			"kan ses efter aftale",
 	  "teaser_on_display": 		"kan ses p&aring; museet",
+	  "teaser_last_update":		"sidst opdateret",
 	  
 	  "thumbs_label":	 		"delv&aelig;rker",
 	  

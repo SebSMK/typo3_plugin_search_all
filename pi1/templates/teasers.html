@@ -30,7 +30,7 @@
               <h3 class="teaser__heading">
                	<!-- show an artwork -->
 				{{#is_artwork}} 
-					<a href="#" alt="{{title}}" class="article_artwork">{{{artist_data}}}<br>{{title}}&nbsp({{artwork_date}})</a> 
+					<a href="#" alt="{{title}}" class="article_artwork">{{{artist_data}}}<br><i>{{title}}</i>&nbsp<span>{{artwork_date}}</span></a> 
 				{{/is_artwork}}
 				
 				<!-- not showing an artwork -->
@@ -43,10 +43,9 @@
                 {{description}}
               </div>
 
-			  <!-- inv.num & location -->
+			  <!-- location -->
               <ul class="teaser__meta">
-                {{#meta}}
-                  <li><span>{{key}}</span> {{value}}</li>
+                {{#meta}}                  
 				  {{#is_artwork}}
 				  	{{#location}}
 						<li>{{{label}}}</li>

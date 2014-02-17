@@ -150,7 +150,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		location: false,
 				  		
 		  				ref_number: doc.id,		  				
-		  				artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
+		  				artwork_date: doc.object_production_date_text , //=== undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,			  						  				  						  					  						  				
 					};
@@ -169,7 +169,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 			thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 			 			description: sprintf("%s...", doc.page_content.substring(0, 50)),
 			 			url: doc.page_url,				 			
-			 			meta: [{key: "last modified", value: sprintf("%s-%s-%s", (new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDay())}],
+			 			meta: [{key: this.manager.translator.getLabel("teaser_last_update"), value: sprintf("%s.%s.%s", (new Date()).getDay(), (new Date()).getMonth(), (new Date()).getFullYear() )}],
 			 			is_artwork: false,
 			 			not_is_artwork: true,
 			 			

@@ -86,7 +86,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  			
 		  			title: this.getTitle(doc),	
 		  			artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
-		  		    artwork_date: doc.object_production_date_text === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
+		  		    artwork_date: doc.object_production_date_text, // === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
 		  		    description: this.getDescriptionNote(doc),
 		  		    technique: {
 		  		    	key: this.manager.translator.getLabel('detail_technique'),  
