@@ -85,7 +85,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		info:{
 		  			
 		  			title: this.getTitle(doc),	
-		  			artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
+		  			artist: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
 		  		    artwork_date: doc.object_production_date_text, // === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
 		  		    description: this.getDescriptionNote(doc),
 		  		    technique: {
@@ -201,18 +201,21 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   getArtist: function(doc){
 	  var artistLabel = new Array();
 	  
-	  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
+	  // check if all arrays containing artist's data have the same size
+	  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_natio.length)  && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
 		  return doc.artist_name_ss;
 	  
 	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 		  var name = doc.artist_name_ss[i];
-		  var role = doc.artist_auth[i] != 'original' ? sprintf('<span>%s</span>', doc.artist_auth[i].toLowerCase()) : "";
+		  var role = doc.artist_auth[i] != 'original' ? doc.artist_auth[i].toLowerCase() : "";
 		  var birth = doc.artist_birth[i];
 		  var death = doc.artist_death[i] != '(?)' ? doc.artist_death[i] : (doc.artist_death[i] < 1800) ? doc.artist_death[i] : "";
-		  var dates = sprintf('(%s - %s)', birth, death);
-		  var padding = i > 0 ? "<br>" : "";
-		  var label = role == "" ? sprintf('%s%s&nbsp;<span>%s</span>', padding, name, dates) : sprintf('%s%s&nbsp;%s&nbsp;<span>%s</span>', padding, role, name, dates);
-		  artistLabel.push(label);		  		  
+		  var dates = sprintf('%s - %s', birth, death);
+		  var nationality = doc.artist_natio[i] != '(?)' ? sprintf('%s, ', doc.artist_natio[i]) : ""
+		  var padding = "";
+		  
+		  var label = sprintf('%s%s&nbsp;<span>%s</span> <br><span>%s%s</span>', padding, name, role, nationality, dates);
+		  artistLabel.push({'artist_data' : label});		  		  
 	  }
 	  
 	  return artistLabel;
