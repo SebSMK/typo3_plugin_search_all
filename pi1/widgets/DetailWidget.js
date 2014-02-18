@@ -207,7 +207,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 		  var name = doc.artist_name_ss[i];
-		  var role = doc.artist_auth[i] != 'original' ? doc.artist_auth[i].toLowerCase() : "";
+		  var role = doc.artist_auth[i] != 'original' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
 		  var birth = doc.artist_birth[i];
 		  var death = doc.artist_death[i] != '(?)' ? doc.artist_death[i] : (doc.artist_death[i] < 1800) ? doc.artist_death[i] : "";
 		  var dates = sprintf('%s - %s', birth, death);
