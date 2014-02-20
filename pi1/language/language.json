@@ -24,6 +24,7 @@
 	  "detail_dimension_brut":	"brut",
 	  "detail_location":		"location",
 	  "detail_provenance":		"provenance",
+	  "detail_no_photo":		"The work is not photographed. Please feel free to contact the photo unit at SMK (fotoadm@smk.dk) and hear about the opportunities for an additional fee to book a photography.",
 	  
 	  "viewpicker_tip":			"switch between grid and list view",
 	  
@@ -241,6 +242,7 @@
 	  "detail_dimension_brut":	"brutto",
 	  "detail_location":		"location",
 	  "detail_provenance":		"proveniens",
+	  "detail_no_photo":		"V&aelig;rket er ikke fotograferet. Du er velkommen til at kontakte fotoenheden p&aring; SMK (fotoadm@smk.dk) og h&oslash;re om mulighederne for mod betaling at bestille en fotografering.",
 	  
 	  "viewpicker_tip":			"valg mellem grid og list visning",	  
 	  

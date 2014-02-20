@@ -78,7 +78,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		media:{
 		  			title: this.getTitle(doc),		  			
 		  			image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
-			  		copyright: smkCommon.computeCopyright(doc),
+			  		copyright: doc.medium_image_url !== undefined ? smkCommon.computeCopyright(doc) : this.manager.translator.getLabel("detail_no_photo"),
 			  		img_id:doc.id
 		  		},
 		  		
