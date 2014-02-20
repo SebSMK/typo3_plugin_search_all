@@ -140,7 +140,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 data = {
 				  		id:doc.id,
 				  		title:this.getTitle(doc),	 
-				  		thumbnail: doc.medium_image_url !== undefined && smkCommon.computeCopyright(doc) == false ? doc.medium_image_url : this.default_picture_path,
+				  		thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 				  		categories: {name: this.manager.translator.getCollection(doc.location_name), url:"#"},
 			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
@@ -149,6 +149,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		not_is_artwork: false,
 				  		is_artwork: true,
 				  		location: false,
+				  		copyright: smkCommon.computeCopyright(doc),
 				  		
 		  				ref_number: doc.id,		  				
 		  				artwork_date: doc.object_production_date_text , //=== undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
@@ -173,6 +174,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 			meta: [{key: this.manager.translator.getLabel("teaser_last_update"), value: sprintf("%s.%s.%s", (new Date()).getDay(), (new Date()).getMonth(), (new Date()).getFullYear() )}],
 			 			is_artwork: false,
 			 			not_is_artwork: true,
+			 			
 			 			
 			 			img_id: this.img_id_generator(doc.id),
 		  				ref_number: sprintf("%s(...)", doc.page_content.substring(0, 300)),			  				

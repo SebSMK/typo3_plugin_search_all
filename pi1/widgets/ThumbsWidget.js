@@ -59,7 +59,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   get_data: function (doc){
 	  var data = null;	  		  	  
 	  var thumbnails = new Array();
-	  var copyright = smkCommon.computeCopyright(doc) == false; // compute copyright for the current artwork and apply it to all other artwork's parts  
+	  var copyright = smkCommon.computeCopyright(doc) != false; // compute copyright for the artwork in the current detail view and apply it to all artwork's parts  
 	  
 	  var multi_works = doc.multi_work_ref.split(';-;');
 	  var work_parent = new Array();
@@ -91,22 +91,23 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 		  thumbnails.push({
 			  img_id : doc.id,
 			  title : doc.title_first,
-			  image : copyright ? doc.medium_image_url : this.default_picture_path,
-			  current: this.current_selec == doc.id
+			  image : doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
+			  current: this.current_selec == doc.id,
+			  copyright: copyright ? sprintf('&copy; %s', doc.artist_name) : false 
 		  }); 		
 	  }
 	  else{
 		  for (var i = 0; i < work_parent.length; i++) {		  
-			  this.push_work_til_thumb(work_parent[i], thumbnails, copyright);
+			  this.push_work_til_thumb(work_parent[i], thumbnails, copyright ? sprintf('&copy; %s', doc.artist_name) : false);
 		  }
 	  };
 		  
 	  for (var i = 0; i < work_siblings.length; i++) {		  
-		  this.push_work_til_thumb(work_siblings[i], thumbnails, copyright);
+		  this.push_work_til_thumb(work_siblings[i], thumbnails, copyright ? sprintf('&copy; %s', doc.artist_name) : false);
 	  }		
 	  
 	  for (var i = 0; i < work_children.length; i++) {		  
-		  this.push_work_til_thumb(work_children[i], thumbnails, copyright);
+		  this.push_work_til_thumb(work_children[i], thumbnails, copyright ? sprintf('&copy; %s', doc.artist_name) : false);
 	  }
 	  
 	  data = {"label": this.manager.translator.getLabel("thumbs_label"), "thumb" : thumbnails};  	  
@@ -118,13 +119,14 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   push_work_til_thumb: function(work, thumbnails, copyright){
 	  var id = work[1];		  
 	  var title = work[2];
-	  var thumb = work[3] != "" && copyright ? work[3] : this.default_picture_path;			   
+	  var thumb = work[3] != "" ? work[3] : this.default_picture_path;			   
 	  
 	  thumbnails.push({
 			  img_id : id,
-			  title : sprintf('%s - %s', id, title),
+			  title : title,
 			  image : thumb,
-			  current: this.current_selec == id
+			  current: this.current_selec == id,
+			  copyright: copyright 
 		  });  
 	  
   },

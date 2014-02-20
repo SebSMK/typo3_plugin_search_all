@@ -9,7 +9,7 @@
 		{{#artworks}}
         <article class="teaser--grid">
           <div class="teaser__wrapper">
-            <div class="teaser__thumbnail image_loading" src="{{thumbnail}}" alt="{{title}}" img_id="{{img_id}}">
+            <div class="teaser__thumbnail image_loading" src="{{thumbnail}}" alt="{{#copyright}}{{{copyright}}}{{/copyright}}" img_id="{{img_id}}">
               	{{#is_artwork}} 
 					<a href="{{url}}" alt="{{title}}" class="article_artwork"></a>
 				{{/is_artwork}}

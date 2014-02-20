@@ -43,7 +43,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		//* load data
 		var artwork_data = null;						
 		var doc = this.manager.response.response.docs[i];	
-		var copyright = smkCommon.computeCopyright(doc) == false; // compute copyright for the current artwork and apply it to all related artworks  
+		var copyright = smkCommon.computeCopyright(doc) != false; // compute copyright for the artwork in the current detail view and apply it to all related artworks  
 		
 		//* in case there are no results, remove all ".image_loading" class in the widget and send "widget loaded" event
 		if (doc.related_id === undefined){
@@ -121,7 +121,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
   getData: function (entry, copyright){
 	  
 	  var title_first = entry.split(';--;')[2];
-	  var medium_image_data = entry.split(';--;')[3] != "" && copyright ? entry.split(';--;')[3] : this.default_picture_path;
+	  var medium_image_data = entry.split(';--;')[3] != "" ? entry.split(';--;')[3] : this.default_picture_path;
 	  var id = entry.split(';--;')[0];
 	  var artist_name = entry.split(';--;')[1];
 	  
@@ -131,7 +131,8 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		  		thumbnail: medium_image_data,				  						  		
 		  		meta: [{key: smkCommon.firstCapital(this.manager.translator.getLabel('related_reference')), value: id}],				  		
 		  		img_id: id,
-		  		artist_name: artist_name			  				
+		  		artist_name: artist_name,
+		  		copyright: copyright ? sprintf('&copy; %s', artist_name) : false  
     };
   
   },  
