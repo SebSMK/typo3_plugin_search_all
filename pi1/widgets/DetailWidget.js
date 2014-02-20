@@ -97,6 +97,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    	value: doc.id
 		  		    },
 		  		    
+		  		    image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
+		  		    
 		  		    acq: false,
 		  		    
 		  		    dim: false,
