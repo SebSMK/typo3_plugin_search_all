@@ -141,14 +141,14 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		id:doc.id,
 				  		title:this.getTitle(doc),	 
 				  		thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
-				  		categories: {name: this.manager.translator.getCollection(doc.location_name), url:"#"},
+				  		categories: {name: this.manager.translator.getCollection(smkCommon.replace_dansk_char(doc.location_name)), url:"#"},
 			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
 				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),	
 				  		not_is_artwork: false,
 				  		is_artwork: true,
-				  		location: false,
+				  		location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
 				  		copyright: smkCommon.computeCopyright(doc),
 				  		
 		  				ref_number: doc.id,		  				
@@ -157,8 +157,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,			  						  				  						  					  						  				
 					};
 			 
-			 if (location !== undefined)
-				 data.location = {label: smkCommon.firstCapital(this.getLocation(doc.location_name))};
+			 
 			     	
 		    break;	  
 		    
@@ -255,9 +254,9 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   getLocation: function (location){
 		  
 	if(location !== undefined)
-		return this.manager.translator.getLabel("teaser_on_display"); "Kan ses p&aring; museet";
+		return this.manager.translator.getLabel("teaser_on_display"); 
 		  
-	return this.manager.translator.getLabel("teaser_appoint");"Kan ses efter aftale";	  
+	return this.manager.translator.getLabel("teaser_appoint");	  
 	  
   },
   

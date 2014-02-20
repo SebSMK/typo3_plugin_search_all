@@ -31,6 +31,10 @@
 	};
 		
 	common.replace_dansk_char = function(text) {				
+		
+		if (text === undefined)
+			return text;			
+		
 		var res = text;
 		
 		// utf8 encoding (JSON)
