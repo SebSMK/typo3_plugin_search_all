@@ -26,7 +26,8 @@
 	  "detail_provenance":		"provenance",
 	  "detail_no_photo":		"The work is not photographed. Please feel free to contact the photo unit at SMK (fotoadm@smk.dk) and hear about the opportunities for an additional fee to book a photography.",
 	  
-	  "viewpicker_tip":			"switch between grid and list view",
+	  "viewpicker_tip_grid":	"Grid view",
+	  "viewpicker_tip_list":	"List view",
 	  
 	  "pager_display":			"displaying",
 	  "pager_to":				"to",
@@ -244,7 +245,8 @@
 	  "detail_provenance":		"proveniens",
 	  "detail_no_photo":		"V&aelig;rket er ikke fotograferet. Du er velkommen til at kontakte fotoenheden p&aring; SMK (fotoadm@smk.dk) og h&oslash;re om mulighederne for mod betaling at bestille en fotografering.",
 	  
-	  "viewpicker_tip":			"valg mellem grid og list visning",	  
+	  "viewpicker_tip_grid":	"Grid visning",
+	  "viewpicker_tip_list":	"List visning",	  
 	  
 	  "pager_display":			"viser",
 	  "pager_to":				"til",
