@@ -269,7 +269,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	        .append(this);
 	    
 	      // fade our image in to create a nice effect
-	      $target.fadeIn();
+	      $target.show();
 	      
 	      // trig "this image is loaded" event	      
     	  $(self).trigger({

@@ -53,9 +53,9 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   /*
    * stop general modal loading screen 
    */
-  stop_modal_loading: function(){
+  stop_modal_loading: function(){	  
 	  $(this.target).removeClass("modal_loading"); 
-	  this.allWidgetProcessed = false;	
+	  this.allWidgetProcessed = false;	  
   },
   
   /*

@@ -30,11 +30,17 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
 		var doc = this.manager.response.response.docs[i];  
 		
-		//* if not a multi-part work of art, return
-		if(doc.multi_work_ref === undefined)
-			return;
-		
-      	artwork_data = self.get_data(doc);
+		if(doc.multi_work_ref !== undefined){
+			artwork_data = self.get_data(doc);
+		}else{
+			// this piece of code below does basically nothing - but it's the only way we found so that to have 
+			// the delay-function to work properly on "back button: opacity:1" in "Detail" (see WidgetManager: "$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');" )
+			// If you find a more rational method to achieve that, feel free to implement it.
+			var html = self.template_integration_json(artwork_data, 'pi1/templates/thumb.html');	        
+		    $target.html(html);
+		    return;
+		}
+			
     }
 		
 	//* merge data and template

@@ -247,10 +247,12 @@ var Manager;
     });
     
     //* image has finished loading in "detail"
-    $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	            		
-		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['details'].target);   
-		$(Manager.widgets['state_manager'].target).find('a.back-button').css('opacity', '1');	
-		$(Manager.widgets['state_manager'].target).find('a.back-button').css('opacity', '1');	
+    $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	            		    	
+    	Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['details'].target);   
+    	// show "back-button" in Detail view - in order to have the delay (specified in app.css) on showing to work properly, 
+    	// we had to implement a tricky little piece of code, see ThumbnailsWidget-> after "doc.multi_work_ref !== undefined"
+		// If you find a more rational method to achieve that, feel free to implement it.
+    	$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');
     });
     
     //* a new search term input in search box
