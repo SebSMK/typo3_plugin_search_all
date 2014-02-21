@@ -56,17 +56,32 @@
     font-size: 0.8em;
 }
 
-#pager,
-#pager-header,
-#viewpicker {
-  display: inline;
+#pager-header {    
+    float: left;
+    margin-top: -0.1em;
+    
 }
 
-#pager li,
-.links li {
-  list-style-type: none;
-  display: inline;
-  margin: 1px;
+#pager-header li {
+    display: inline-block;
+    margin-bottom: 0;
+    padding: 0.25em 0.2em;    
+    color: #111111;
+    font-family: "hill bold",sans-serif;
+    font-weight: normal;    
+    line-height: 1.16;
+    color: #A2A2A5;
+ }
+
+#pager-header span {
+	color: inherit;
+	font-size: 1.25em;
+	/*
+	background: none repeat scroll 0 0 #111111;
+    border-radius: 2px;
+    color: #FFFFFF;
+    padding: 0.15em 0.2em;
+    */
 }
 
 .search-choice span{	

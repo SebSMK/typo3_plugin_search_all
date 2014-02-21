@@ -236,11 +236,18 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
     return parseInt(this.manager.response.responseHeader && this.manager.response.responseHeader.params && this.manager.response.responseHeader.params.start || this.manager.store.get('start').val() || 0);
   },
 
-  afterRequest: function () {
-	  
-	  if ($(this.target).is(':hidden'))
-		  	return;
   
+  init: function(){	  
+	  $(this.target).html('&nbsp;');	   	  
+  },
+  
+  afterRequest: function () {
+		
+	if (!this.getRefresh()){
+		this.setRefresh(true);
+		return;
+	}	 	
+	  	    
     var perPage = this.perPage();
     var offset  = this.getOffset();
     var total   = parseInt(this.manager.response.response.numFound);

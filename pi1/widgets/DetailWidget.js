@@ -29,6 +29,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		self.setRefresh(true);
 		return;
 	}	 		  	
+		
 	
 	$target.empty();
 	
@@ -47,7 +48,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  		self.getImage($(this));
 	});      	
 	
-    //* add link to back button
+    //* add link to back button	  
+    //$target.find('a.back-button').css('opacity', '1');
 	$target.find('a.back-button').click(
 		  {caller:self}, 
 		  function (event) {
@@ -62,7 +64,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 			  });  		    	
 	    	return;  		    		            
 		  }
-	);		
+	);
+	
     
   },  
   

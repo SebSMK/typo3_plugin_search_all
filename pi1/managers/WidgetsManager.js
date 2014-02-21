@@ -71,7 +71,7 @@ var Manager;
 	    nextLabel: '&gt;',
 	    innerWindow: 1,
 	    renderHeader: function (perPage, offset, total) {
-	      $('#pager-header').html($('<span></span>').text( sprintf(' %s ', translator.getLabel('pager_display')) + Math.min(total, offset + 1) + sprintf(' %s ', translator.getLabel('pager_to')) + Math.min(total, offset + perPage) + sprintf(' %s ', translator.getLabel('pager_af')) + total));
+	      $('#pager-header').html($('<li></li>').html( sprintf(' %s <span>%s</span> %s <span>%s</span> %s <span>%s</span>', translator.getLabel('pager_display'), Math.min(total, offset + 1), translator.getLabel('pager_to'), Math.min(total, offset + perPage),translator.getLabel('pager_af'), total)));
 	    }
 	  }));
 	
@@ -248,8 +248,9 @@ var Manager;
     
     //* image has finished loading in "detail"
     $(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){     	            		
-		// stop the modal "waiting image" for this widget
-		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['details'].target);   	   	 	       	  		      	
+		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['details'].target);   
+		$(Manager.widgets['state_manager'].target).find('a.back-button').css('opacity', '1');	
+		$(Manager.widgets['state_manager'].target).find('a.back-button').css('opacity', '1');	
     });
     
     //* a new search term input in search box
