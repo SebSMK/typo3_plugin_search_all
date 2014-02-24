@@ -145,14 +145,14 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
-				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),	
+				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
+				  		artwork_date: this.getObjectProdDate(doc),
 				  		not_is_artwork: false,
 				  		is_artwork: true,
 				  		location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
 				  		copyright: smkCommon.computeCopyright(doc),
 				  		
-		  				ref_number: doc.id,		  				
-		  				artwork_date: doc.object_production_date_text , //=== undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
+		  				ref_number: doc.id,		  						  				
 		  				img_data_bool: doc.medium_image_data != null ? true :  false,
 		  				non_img_data_bool: doc.medium_image_data != null ? false : true,			  						  				  						  					  						  				
 					};
@@ -193,7 +193,26 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return data;
   
   },  
+    
+  getObjectProdDate: function (doc){
+	  var date;
+	  var default_value = "";
+	  
+	  switch(this.manager.translator.getLanguage()){
+		  case "dk":		 			  			  			  
+			  date = doc.object_production_date_text_dk !== undefined ? doc.object_production_date_text_dk : default_value;					  			  			  
+			  break;
+		  case "en":
+			  date = doc.object_production_date_text_en !== undefined ? doc.object_production_date_text_en : default_value;
+			  break;
+		  default:	
+			  date = default_value;
+		  	  break;		  
+	  }
+	  
+	  return date;
   
+  },
   
   getTechnique: function (doc){
 	  var technique;

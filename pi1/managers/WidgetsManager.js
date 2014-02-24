@@ -276,7 +276,7 @@ var Manager;
       'rows':12,
       'defType': 'edismax',      
       'qf': Manager.store.get_qf_string(),
-      'start': 0, //Math.floor((Math.random()*2000)+1),
+      'start': Math.floor((Math.random()*2000)+1),
       'json.nl': 'map'
     };
     for (var name in params) {

@@ -90,7 +90,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  			
 		  			title: this.getTitle(doc),	
 		  			artist: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
-		  		    artwork_date: doc.object_production_date_text, // === undefined? '?' : doc.object_production_date_text.replace(/[()]/g, ''),
+		  			artwork_date: this.getObjectProdDate(doc),
 		  		    description: this.getDescriptionNote(doc),
 		  		    technique: {
 		  		    	key: this.manager.translator.getLabel('detail_technique'),  
@@ -157,7 +157,27 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  return data;	  
   
-  },     
+  },   
+  
+  getObjectProdDate: function (doc){
+	  var date;
+	  var default_value = "";
+	  
+	  switch(this.manager.translator.getLanguage()){
+		  case "dk":		 			  			  			  
+			  date = doc.object_production_date_text_dk !== undefined ? doc.object_production_date_text_dk : default_value;					  			  			  
+			  break;
+		  case "en":
+			  date = doc.object_production_date_text_en !== undefined ? doc.object_production_date_text_en : default_value;
+			  break;
+		  default:	
+			  date = default_value;
+		  	  break;		  
+	  }
+	  
+	  return date;
+  
+  },
   
   getProvenance: function(doc){
 	 return this.current_language == "dk" && doc.proveniens !== undefined ? true : false 
