@@ -133,5 +133,11 @@
 	common.getSolrPath = function (){
 		return smkSearchAllConf.solrPath;
 	};
+	
+	common.getSearchPOST = function (){
+		return smkSearchAllConf.searchStringPOST;
+	};
+	
+	
 				
 }));

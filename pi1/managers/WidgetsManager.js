@@ -264,7 +264,9 @@ var Manager;
     Manager.init();
 
     //* prepare and start init request
-    Manager.store.addByValue('q', Manager.store.q_default);    
+    var postedSearchString = smkCommon.getSearchPOST(); 
+    var q = [Manager.store.q_default, postedSearchString];
+    Manager.store.addByValue('q', q);    
     var params = {
       facet: true,
       'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],      
@@ -274,7 +276,7 @@ var Manager;
       'rows':12,
       'defType': 'edismax',      
       'qf': Manager.store.get_qf_string(),
-      'start': Math.floor((Math.random()*2000)+1),
+      'start': 0, //Math.floor((Math.random()*2000)+1),
       'json.nl': 'map'
     };
     for (var name in params) {

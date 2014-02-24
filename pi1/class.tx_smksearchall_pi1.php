@@ -91,6 +91,10 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 		
 // 		$GLOBALS['TSFE']->additionalHeaderData['smk_soeg_collection_css_art'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'pi1/css/art-and-artists.css" media="screen" />';
 // 		$GLOBALS['TSFE']->additionalHeaderData['smk_soeg_collection_css_switch'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'pi1/css/switch.css" media="screen" />';
+
+		
+		//* get search string in POST
+		$sword =  htmlspecialchars($this->piVars['sword']);
 		
 		$dir_base = dirname($_SERVER['PHP_SELF']) == '/' ? "" :  dirname($_SERVER['PHP_SELF']);
 		$dir_base .= t3lib_extMgm::siteRelPath('smk_search_all');				
@@ -104,7 +108,8 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 								solrPath: "%s",
 								pluginDir: "%s",
 								serverName: "%s",
-								currentLanguage: "%s"		
+								currentLanguage: "%s",
+								searchStringPOST: "%s"		
 							}
 						
 					</script>
@@ -112,7 +117,9 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 					$solr_path,
 					$dir_base,
 					$_SERVER['SERVER_NAME'],
-					$this->pi_getLL('language')
+					$this->pi_getLL('language'),
+					$sword
+					
 					);
 	
 		return $this->pi_wrapInBaseClass($content);
