@@ -45,6 +45,7 @@
 	  "sorter_relevans":		"relevance",
 	  "sorter_dato_desc":		"date (most recent first)",
 	  "sorter_dato_asc":		"date (older first)",
+	  "sorter_last_updated":	"last updated",
 	  
 	  "teaser_reference":		"reference",
 	  "teaser_appoint":			"view by appointement",
@@ -264,6 +265,9 @@
 	  "sorter_relevans":		"relevans",
 	  "sorter_dato_desc":		"dato (nyest f&oslash;rst)",
 	  "sorter_dato_asc":		"dato (&aelig;ldst f&oslash;rst)",
+	  "sorter_last_updated":	"sidst opdateret",	  
+	  
+	  "sorter_last_updated":	"sidst opdateret",
 	  
 	  "teaser_reference":		"inv.nr.",
 	  "teaser_appoint":			"kan ses efter aftale",

@@ -9,7 +9,8 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
 	  //* init template
 	  var options = ([{"value": "score desc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_relevans")), "selected": true},
                       {"value": "object_production_date_earliest asc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_dato_asc")), "selected": false},
-                      {"value": "object_production_date_earliest desc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_dato_desc")), "selected": false}
+                      {"value": "object_production_date_earliest desc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_dato_desc")), "selected": false},
+                      {"value": "last_update desc", "text" : smkCommon.firstCapital(self.manager.translator.getLabel("sorter_last_updated")), "selected": false}
   					]);
 	  var objectedItems = new Array(); 
       
