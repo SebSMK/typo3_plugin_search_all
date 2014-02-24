@@ -1,0 +1,2 @@
+# cat=basic/enable; type=string; label=Address of Solr server
+SolrPath = http://tomcat-01:8080/TelefonBogWebService/services/processTelList?wsdl 

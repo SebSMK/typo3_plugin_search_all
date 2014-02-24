@@ -7,7 +7,7 @@ var Manager;
 	//** init multi language script 
 	var translator = new Language.constructor();	
 	translator.load_json("pi1/language/language.json");
-	var current_language = $.cookie("smk_search_all_current_language");  
+	var current_language = smkCommon.getCurrentLanguage();  
 	translator.setLanguage(current_language);	
 	
 	//** init variables
@@ -23,7 +23,7 @@ var Manager;
 	// this function will be passed as parameter in the manager - we've got to bind it to an environment
 	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);	
     Manager = new AjaxSolr.smkManager({
-    	solrUrl: 'http://solr.smk.dk:8180/solr-example/SMK_All_v6/',    	    	
+    	solrUrl: smkCommon.getSolrPath(),    	    	
     	store: new AjaxSolr.smkParameterStore({
     		exposed: ["fq", "q", "start", "limit", "sort", "qf"],    		
     		q_default: '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)',

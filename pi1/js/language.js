@@ -18,7 +18,7 @@
 		 * 
 		 */
 		this.load_json = function(path){
-			var rootsite = $.cookie("smk_search_all_plugin_dir_base"); // "rootsite" value is copied into the cookie in class.tx_smksearchall_pi1.php	 
+			var rootsite = smkCommon.getCurrentPluginDir(); 
 			var url = rootsite.concat(path);
 
 			 $.ajax({

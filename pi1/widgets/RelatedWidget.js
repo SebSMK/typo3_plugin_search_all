@@ -22,7 +22,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
         transitionDuration: 0
     });
     
-    this.default_picture_path = sprintf('http://%s/%spi1/images/default_picture_2_large.png', $.cookie("smk_search_all_plugin_server_name"), $.cookie("smk_search_all_plugin_dir_base"));
+    this.default_picture_path = smkCommon.getDefaultPicture('medium');
 	  
   },  
 

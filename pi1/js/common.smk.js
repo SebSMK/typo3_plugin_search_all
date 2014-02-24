@@ -95,9 +95,43 @@
 		return res;
 	};
 	
-	common.getDefaultPicture = function(){
+	common.getDefaultPicture = function(size){		
+		var picturePath = ""
+		var server = common.getCurrentServerName();
+		var pluginPath = common.getCurrentPluginDir();
+			
+		switch(size){
+		  case "small":		 			  			  			  
+			  picturePath = 'http://%s/%spi1/images/default_picture_2_small.png';					  			  			  
+			  break;
+		  case "medium":		 			  			  			  
+			  picturePath = 'http://%s/%spi1/images/default_picture_2_medium.png';					  			  			  
+			  break;
+		  case "large":		 			  			  			  
+			  picturePath = 'http://%s/%spi1/images/default_picture_2_large.png';					  			  			  
+			  break;
+		  default:		    			  			   							  
+			  picturePath = 'http://%s/%spi1/images/default_picture_2_small.png';		  	 		  	  
+		  	  break;		  
+		}	
 		
-		return;
-	}
+		return sprintf(picturePath, server, pluginPath);
+	};
 	
+	common.getCurrentLanguage = function(){		
+		return smkSearchAllConf.currentLanguage;
+	};
+	
+	common.getCurrentPluginDir = function(){		
+		return smkSearchAllConf.pluginDir;
+	};
+	
+	common.getCurrentServerName = function(){		
+		return smkSearchAllConf.serverName;
+	};
+	
+	common.getSolrPath = function (){
+		return smkSearchAllConf.solrPath;
+	};
+				
 }));

@@ -91,29 +91,29 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 		
 // 		$GLOBALS['TSFE']->additionalHeaderData['smk_soeg_collection_css_art'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'pi1/css/art-and-artists.css" media="screen" />';
 // 		$GLOBALS['TSFE']->additionalHeaderData['smk_soeg_collection_css_switch'] = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'pi1/css/switch.css" media="screen" />';
-
-		// store plugin dir		
+		
 		$dir_base = dirname($_SERVER['PHP_SELF']) == '/' ? "" :  dirname($_SERVER['PHP_SELF']);
-		$dir_base .= t3lib_extMgm::siteRelPath('smk_search_all');
+		$dir_base .= t3lib_extMgm::siteRelPath('smk_search_all');				
 		
-		if (isset($_COOKIE["smk_search_all_plugin_dir_base"]))
-			setcookie("smk_search_all_plugin_dir_base", "", time()-3600);			
-		setcookie("smk_search_all_plugin_dir_base", $dir_base);
+		$sysconf = (array)unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$solr_path = (string)$sysconf['SolrPath'];
 		
-		// store server name
-		if (isset($_COOKIE["smk_search_all_plugin_server_name"]))
-			setcookie("smk_search_all_plugin_server_name", "", time()-3600);
-		setcookie("smk_search_all_plugin_server_name", $_SERVER['SERVER_NAME']);
-
-		// store current language
-		if (isset($_COOKIE["smk_search_all_current_language"]))
-			setcookie("smk_search_all_current_language", "", time()-3600);
-		setcookie("smk_search_all_current_language", $this->pi_getLL('language'));		
-		
-		$content='	<script>
-						var dir_base = "mooc";
+		$content=sprintf('	<script>
+				
+						var smkSearchAllConf = {
+								solrPath: "%s",
+								pluginDir: "%s",
+								serverName: "%s",
+								currentLanguage: "%s"		
+							}
+						
 					</script>
-					<div id="smk_search_wrapper" class="modal_loading"></div>';
+					<div id="smk_search_wrapper" class="modal_loading"></div>',
+					$solr_path,
+					$dir_base,
+					$_SERVER['SERVER_NAME'],
+					$this->pi_getLL('language')
+					);
 	
 		return $this->pi_wrapInBaseClass($content);
 	}
