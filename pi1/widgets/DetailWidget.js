@@ -79,7 +79,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   get_data: function (doc){
 	  var data =  {
 		  		media:{
-		  			title: this.getTitle(doc),		  			
+		  			title: this.getTitle(doc),	
+		  			alt: this.getAlt(doc),		  						
 		  			image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 			  		copyright: doc.medium_image_url !== undefined ? smkCommon.computeCopyright(doc) : this.manager.translator.getLabel("detail_no_photo"),
 			  		img_id:doc.id
@@ -162,6 +163,16 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	 return this.current_language == "dk" && doc.proveniens !== undefined ? true : false 
   },
   
+  
+  getAlt: function (doc){	  
+	  var artist = this.getArtistName(doc) == '' ? '' : this.getArtistName(doc) + ' - ';
+	  var title = this.getTitle(doc);
+	  var copyright = smkCommon.computeCopyright(doc); 
+	  
+	  return  copyright == false ? sprintf('%s%s', artist, title) : sprintf('%s - %s', copyright, title); 	  
+  },
+  
+  
   getTechnique: function (doc){
 	  var technique;
 	  var default_value = "-";
@@ -227,6 +238,14 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   },
   
   
+  getArtistName: function(doc){	  	  	  
+	  // we take only the first name
+	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
+		  return doc.artist_name_ss[i];		  		  		  
+	  }
+  },
+  
+  
   getTitle: function(doc){
 	  
 	  var title;
@@ -260,14 +279,37 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    .load(function () {
 	      // set the image hidden by default    
 	      $target.hide();
-	    
-	      // with the holding div #loader, apply:
-	      $target
-	        // remove the loading class (so no background spinner), 
-	        .removeClass('image_loading')
-	        // then insert our image
-	        .append(this);
-	    
+
+	      //* if not default picture
+	      if ($(this).attr("src") != self.default_picture_path){
+	    	  // with the holding div #loader, apply:
+		      $target
+		        // remove the loading class (so no background spinner), 
+		        .removeClass('image_loading')
+		        .find('a')
+		        // then insert our image
+		        .append(this);
+	    	  
+	    	  // add fancybox
+		      $target.find('a').addClass('fancybox');
+		      $(this).fancybox({
+	    		  afterClose: function(){
+	    		   	 $target.find('img').show();
+	    		  }
+	      	  });
+	      }
+	      //* default picture
+	      else{
+	    	
+	    	  $target
+		        // remove the loading class (so no background spinner), 
+		        .removeClass('image_loading')
+		        // remove link
+		        .remove('a')
+		        // then insert our image
+		        .append(this);
+	      };	          
+	      
 	      // fade our image in to create a nice effect
 	      $target.show();
 	      
@@ -283,7 +325,9 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    	$target
 	        // remove the loading class (so no background spinner), 
 	        .removeClass('image_loading')
+	        .remove('a')
 	        .append(sprintf('<img src="%s" />', self.default_picture_path));
+	    	
 	    	$target.fadeIn();
 	    	
 	    	// trig "this image is loaded" event	      
@@ -320,7 +364,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	    .attr('title', title)
 	    
 	    // *finally*, set the src attribute of the new image to our image
-	    .attr('src', path); 
+	    .attr('src', path);	  	   
   },
   
   getlocation: function (location){

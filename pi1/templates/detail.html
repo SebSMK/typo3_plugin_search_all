@@ -7,7 +7,9 @@
 {{#media}}
 	<div id="media-container">
 	  <div class="gallery">
-	    <div class="gallery__main image_loading" src="{{image}}" title="{{title}}" alt="{{#copyright}}{{{copyright}}} - {{title}}{{/copyright}}" img_id="{{img_id}}"></div>
+	    <div class="gallery__main image_loading" src="{{image}}" title="{{title}}" alt="{{{alt}}}" img_id="{{img_id}}">
+			<a href="{{image}}" alt="{{title}}"></a>
+		</div>
 	
 	    <!-- Copyright notice -->
 		{{#copyright}}
