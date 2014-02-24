@@ -205,7 +205,12 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
    * @param {Array} links The links for the visible page numbers.
    */
   renderLinks: function (links) {
-    if (this.totalPages) {
+	if (this.totalPages == 0) {
+	  $(this.target).html('&nbsp;'); // otherwise the pager becomes invisible (and thus not refreshed)
+	  return;		  
+    };
+	  
+	if (this.totalPages) {
       links.unshift(this.pageLinkOrSpan(this.previousPage(), [ 'pager-disabled', 'pager-prev' ], this.prevLabel));
       links.push(this.pageLinkOrSpan(this.nextPage(), [ 'pager-disabled', 'pager-next' ], this.nextLabel));
 
@@ -238,7 +243,7 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
 
   
   init: function(){	  
-	  $(this.target).html('&nbsp;');	   	  
+	  $(this.target).html('&nbsp;'); // otherwise the pager becomes invisible (and thus not refreshed)	   	  
   },
   
   afterRequest: function () {
