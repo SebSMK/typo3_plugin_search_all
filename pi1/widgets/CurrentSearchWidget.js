@@ -52,7 +52,7 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
     $target.empty();
     
     if (links.length) {                  
-      var html = this.template_integration_json(links, 'pi1/templates/current.html');
+      var html = this.template_integration_json({"current": links}, '#currentItemsTemplate');
       $(this.target).html(html);
       $(this.target).find('a').click(self.removeClickedFacet());            
     }
@@ -76,12 +76,11 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
       }
       return false;
     };
-  },  
+  },    
   
-  template_integration_json: function (data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);	
-		var json_data = {"current": data};
-		var html = Mustache.to_html($(template).find('#currentItemsTemplate').html(), json_data);
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
   },
   

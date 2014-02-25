@@ -56,12 +56,14 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.SearchBoxWidget({
 		  id: 'searchbox',
 		  target: '#searchbox',
-		  getCurrentState: getCurrentStateBound
+		  getCurrentState: getCurrentStateBound,
+		  template: Mustache.getTemplate('pi1/templates/search_box.html')
 	}));
 	
 	Manager.addWidget(new AjaxSolr.CurrentSearchWidget({
 	    id: 'currentsearch',
-	    target: '#currentsearch'
+	    target: '#currentsearch',
+	    template: Mustache.getTemplate('pi1/templates/current.html')
 	  })); 
 	
 	Manager.addWidget(new AjaxSolr.PagerWidget({
@@ -77,12 +79,14 @@ var Manager;
 	
 	Manager.addWidget(new AjaxSolr.ViewPickerWidget({
 	    id: 'viewpicker',
-	    target: '#viewpicker'
+	    target: '#viewpicker',
+	    template: Mustache.getTemplate('pi1/templates/view_picker.html')
 	  })); 
 	
 	Manager.addWidget(new AjaxSolr.SorterWidget({
 	    id: 'sorter',
-	    target: '#sorter'
+	    target: '#sorter',
+	    template: Mustache.getTemplate('pi1/templates/sorter.html')
 	  })); 
 	
 	Manager.addWidget(new AjaxSolr.CategoryWidget({
@@ -91,37 +95,43 @@ var Manager;
 	    field: 'category',
 	    multivalue:false,	    
 	    categoryList: {"all":translator.getLabel('category_all'), "samlingercollectionspace":translator.getLabel('category_artwork'), "nyheder":translator.getLabel('category_news'), "kalender":translator.getLabel('category_calendar'), "artikel":translator.getLabel('category_article'),  "praktisk":translator.getLabel('category_info')},
-	    activeCategory: "all"
+	    activeCategory: "all",
+	    template: Mustache.getTemplate('pi1/templates/category.html')
 	  }));	
 		
 	Manager.addWidget(new AjaxSolr.TeasersWidget({
 	    id: 'teasers',
-	    target: '#smk_teasers'
+	    target: '#smk_teasers',
+	    template: Mustache.getTemplate('pi1/templates/teasers.html')
 	  }));
 	
 	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
-	    id: tagcloudFields[i].field,
-	    title: tagcloudFields[i].title,
-	    target: '#' + tagcloudFields[i].field,
-	        field: tagcloudFields[i].field
-	      }));
+		    id: tagcloudFields[i].field,
+		    title: tagcloudFields[i].title,
+		    target: '#' + tagcloudFields[i].field,
+		    field: tagcloudFields[i].field,
+		    template: Mustache.getTemplate('pi1/templates/chosen.html')
+	   }));
 	};				
 	
 	//* Detail and Thumbs widgets are tightly coupled
 	Manager.addWidget(new AjaxSolr.DetailWidget({
 	      id: 'details',
 	      target: '#smk_detail',
-	      thumbnails_target:'#thumbnails'
+	      thumbnails_target:'#thumbnails',
+	      template: Mustache.getTemplate('pi1/templates/detail.html')
 	 }));
 	Manager.addWidget(new AjaxSolr.ThumbsWidget({
 	      id: 'thumbs',
-	      target: '#thumbnails'
+	      target: '#thumbnails',
+	      template: Mustache.getTemplate('pi1/templates/thumb.html')
 	 }));	
 	
 	Manager.addWidget(new AjaxSolr.RelatedWidget({
 	    id: 'related',
-	    target: '#related-artworks'
+	    target: '#related-artworks',
+	    template: Mustache.getTemplate('pi1/templates/related.html')
 	 }));
 
 	//******************************

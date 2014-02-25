@@ -192,6 +192,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 				  //$target.find("#search-filters").show().children().show();		
 				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();
 				  this.manager.widgets['category'].setActiveTab(newstate["category"]);
+				  this.manager.widgets['teasers'].removeAllArticles();
 				  break;
 			  case "nyheder":
 			  case "kalender":

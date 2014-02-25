@@ -6,13 +6,15 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 
   default_picture_path: null, 
   
+  teaser_article_class: null, // current article visualization classes	
+  
   init: function(){
 	  
 	var self = this;
 	var $target = $(this.target);		
 	
 	//* load empty template
-	var html = Mustache.getTemplate('pi1/templates/teasers.html');    
+	var html = self.template;     
 	$target.html($(html).find('#teaserInitTemplate').html());		
 	
 	$target.find('#teaser-container-grid article').hide();
@@ -22,7 +24,8 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
         transitionDuration: 0
     });
     
-    this.default_picture_path = smkCommon.getDefaultPicture('medium');     
+    this.default_picture_path = smkCommon.getDefaultPicture('medium');      
+	this.teaser_article_class = $target.find('#teaser-container-grid article').attr('class');	
     
   },  
 
@@ -34,22 +37,17 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		self.setRefresh(true);
 		return;
 	}	 		  
-  	
-	//* save current article visualization classes	
-	var teaser_article_class = $target.find('#teaser-container-grid article').attr('class');	
 				
 	//* remove all articles
-	var $all_articles = $target.find('#teaser-container-grid article');
-	$target.find('#teaser-container-grid').masonry('remove', $all_articles);		
-	
-	
+	self.removeAllArticles();		
+		
 	//* in case there are no results, we create an empty-invisible article - but with the correct visualization class
 	//* ...and send "teaser loaded" event
 	if (this.manager.response.response.docs.length == 0){
-		  var html = self.template_integration_json({}, 'pi1/templates/teasers.html');     
+		  var html = self.template_integration_json({"artworks": {}}, '#teaserArticleTemplate');     
 	      var $article = $(html);	      
 	      //* load current article visualization classes
-	      $article.removeClass().addClass(teaser_article_class);	      
+	      $article.removeClass().addClass(self.teaser_article_class);	      
 	      $target.find('#teaser-container-grid').append($article);	      	        
 	      $target.find('#teaser-container-grid').masonry('appended', $article);	 
 	      $target.find('.image_loading').removeClass('image_loading').hide();
@@ -71,11 +69,11 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		      artwork_data = self.getData(doc);	      	      
 		      
 		      //* merge data and template
-		      var html = self.template_integration_json(artwork_data, 'pi1/templates/teasers.html');     
+		      var html = self.template_integration_json({"artworks": artwork_data}, '#teaserArticleTemplate');     
 		      var $article = $(html);
 		      
 		      //* load current article visualization classes
-		      $article.removeClass().addClass(teaser_article_class);		      
+		      $article.removeClass().addClass(self.teaser_article_class);		      
 		      
 		      //* if the current article is an artwork, add a link to detail on click on title
 		      $article.find('.article_artwork')
@@ -120,13 +118,23 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     
   }, 
   
-  template_integration_json: function (data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);	
-		var json_data = {"artworks": data};
-		var html = Mustache.to_html($(template).find('#teaserArticleTemplate').html(), json_data);
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
-	  },
-    
+  },
+  
+  removeAllArticles: function(){
+	  var $target = $(this.target); 
+	  var $all_articles = $target.find('#teaser-container-grid article');
+	  
+	  if($all_articles.length > 0 ){
+		  //* save current visualization class
+		  this.teaser_article_class = $target.find('#teaser-container-grid article').attr('class');
+		  $target.find('#teaser-container-grid').masonry('remove', $all_articles);		
+	  };		  
+  },
+  
   getData: function (doc){
 	  var data;
 	  
@@ -146,6 +154,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
 				  		img_id: doc.id, // for verso and sub-artworks
 				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
+				  		title_pad: doc.artist_name_ss === undefined ? false : true, 		
 				  		artwork_date: this.getObjectProdDate(doc),
 				  		not_is_artwork: false,
 				  		is_artwork: true,
@@ -237,16 +246,18 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
   getArtist: function(doc){
 	  var artistLabel = new Array();
 	  
-	  if(doc.artist_name_ss.length != doc.artist_auth.length)
-		  return doc.artist_name_ss;
-	  
-	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
-		  var name = doc.artist_name_ss[i].trim();
-		  var role = doc.artist_auth[i] != 'original' ? sprintf('<span>(%s)</span>', doc.artist_auth[i].toLowerCase()) : "";
-		  var padding = i > 0 ? "<br>" : "";
-		  var label = role == "" ? sprintf('%s%s', padding, name) : sprintf('%s%s&nbsp;%s', padding, name, role);
-		  artistLabel.push(label);		  		  
-	  }
+	  if (doc.artist_name_ss !== undefined){
+		  if(doc.artist_name_ss.length != doc.artist_auth.length)
+			  return doc.artist_name_ss;
+		  
+		  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
+			  var name = doc.artist_name_ss[i].trim();
+			  var role = doc.artist_auth[i] != 'original' ? sprintf('<span>(%s)</span>', doc.artist_auth[i].toLowerCase()) : "";
+			  var padding = i > 0 ? "<br>" : "";
+			  var label = role == "" ? sprintf('%s%s', padding, name) : sprintf('%s%s&nbsp;%s', padding, name, role);
+			  artistLabel.push(label);		  		  
+		  }
+	  }	  
 	  
 	  return artistLabel;
   },

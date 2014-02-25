@@ -25,10 +25,16 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
         //* add "all" facet
         objectedItems.unshift({"facetname": "all", "facettext" : this.categoryList["all"], "count": '0', "active": true});
           
-        var html = this.template_integration_json(objectedItems, 'pi1/templates/category.html');
+        var html = this.template_integration_json({"categories": objectedItems}, '#categoryItemsTemplate');
         $(this.target).html(html);
 	},	         
 
+	
+  beforeRequest: function (){
+	  $(this.target).find('li').removeClass('tab--active');
+	  $(this.target).find('li[name='+this.activeCategory+']').addClass('tab--active');	
+  },	
+	
   afterRequest: function () {
 	var self = this;  
 	var $target = $(this.target);
@@ -70,11 +76,10 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
         
   },   
   
-  template_integration_json: function (data, templ_path){	  
-	var template = Mustache.getTemplate(templ_path);	
-	var json_data = {"categories": data};
-	var html = Mustache.to_html($(template).find('#categoryItemsTemplate').html(), json_data);
-	return html;
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
+		return html;
   },
   
   /**
@@ -101,7 +106,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
   
   setActiveTab: function (tab){
 	  this.activeCategory = tab;
-	  
+	  	  
 //	  switch(this.activeCategory){
 //		  case "samlingercollectionspace":		 			  			  				  
 //			  this.setRefresh(false);

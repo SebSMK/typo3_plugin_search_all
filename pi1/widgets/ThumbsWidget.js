@@ -36,7 +36,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			// this piece of code below does basically nothing - but it's the only way we found so that to have 
 			// the delay-function to work properly on "back button: opacity:1" in "Detail" (see WidgetManager: "$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');" )
 			// If you find a more rational method to achieve that, feel free to implement it.
-			var html = self.template_integration_json(artwork_data, 'pi1/templates/thumb.html');	        
+			 var html = self.template_integration_json({"thumbnails":artwork_data}, '#thumbTemplate'); 	        
 		    $target.html(html);
 		    return;
 		}
@@ -44,8 +44,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
     }
 		
 	//* merge data and template
-    var html = self.template_integration_json(artwork_data, 'pi1/templates/thumb.html');
-        
+    var html = self.template_integration_json({"thumbnails":artwork_data}, '#thumbTemplate');        
     $target.html(html);
     
     //* add image + link to detail on click on images
@@ -53,12 +52,11 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	  	self.getImage($(this));
 	});    			    			
  
-  },  
+  },  	  
   
-  template_integration_json: function (data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);	
-		var json_data = {"thumbnails":data};
-		var html = Mustache.to_html($(template).find('#thumbTemplate').html(), json_data);
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
   },
   

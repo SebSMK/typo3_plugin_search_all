@@ -10,7 +10,7 @@ AjaxSolr.ViewPickerWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  //var template = Mustache.getTemplate('pi1/templates/view_picker.html');	
 	  
-	  var html = self.template_integration_json({'tip_text_grid':this.manager.translator.getLabel('viewpicker_tip_grid'), 'tip_text_list':this.manager.translator.getLabel('viewpicker_tip_list')}, 'pi1/templates/view_picker.html');
+	  var html = self.template_integration_json({'tip_text_grid':this.manager.translator.getLabel('viewpicker_tip_grid'), 'tip_text_list':this.manager.translator.getLabel('viewpicker_tip_list')}, '#viewpickerTemplate');
 	  $target.html(html);	  
 	  
 	  $target.find('.tooltip').tooltipster();
@@ -35,11 +35,10 @@ AjaxSolr.ViewPickerWidget = AjaxSolr.AbstractWidget.extend({
 //	  });
 
   },
-
-  template_integration_json: function (data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);	
-		var json_data =	data;
-		var html = Mustache.to_html($(template).find('#viewpickerTemplate').html(), json_data);
+  
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
   },
   

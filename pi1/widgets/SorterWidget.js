@@ -18,7 +18,10 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
     	  objectedItems.push(options[i]);    	  
       }
  
-      var html = self.template_integration_json(objectedItems, 'pi1/templates/sorter.html');
+      var html = self.template_integration_json(
+    		  {	"label": smkCommon.firstCapital(this.manager.translator.getLabel("sorter_sort")),
+    			"options": objectedItems}, 
+    			'#sorterItemsTemplate');
       $target.html(html);
       
       //* add behaviour on select change
@@ -26,7 +29,6 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
       
       self.init_chosen();
   },	         
-
   
 
   /**
@@ -62,11 +64,9 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
     }
   },
   
-  template_integration_json: function (data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);	
-		var json_data =	{"label": smkCommon.firstCapital(this.manager.translator.getLabel("sorter_sort")),
-		                 "options": data};
-		var html = Mustache.to_html($(template).find('#sorterItemsTemplate').html(), json_data);
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
   },
     

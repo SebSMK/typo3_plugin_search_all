@@ -12,10 +12,9 @@ constructor: function (attributes) {
   init: function () {
 	  var self = this;
 	  var $target = $(this.target);
-	  var templ_path = 'pi1/templates/chosen.html';
 	  
 	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": ''}]})};	 
-	  var html = self.template_integration_json(json_data, templ_path); 				  
+	  var html = self.template_integration_json(json_data, '#chosenTemplate'); 				  
 	  $target.html(html);	  
 	  
 	  //* init 'chosen' plugin
@@ -101,7 +100,7 @@ constructor: function (attributes) {
 	    	
 	    //* merge facet data and template
 	    var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    
-	    var html = self.template_integration_json(json_data, templ_path); 
+	    var html = self.template_integration_json(json_data, '#chosenTemplate'); 
 		
 	    //** refresh view
 	    //* save previous selected values in the target 'select' component
@@ -127,7 +126,7 @@ constructor: function (attributes) {
 					objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": '0' });					
 				}	
 				var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    
-				var html = self.template_integration_json(json_data, templ_path);
+				var html = self.template_integration_json(json_data, '#chosenTemplate');
 				$select.append($(html).find('option'));
 			}
 			
@@ -197,13 +196,13 @@ constructor: function (attributes) {
     	return false;
     }
   },  
-  
-  template_integration_json: function (json_data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);			
-		var html = Mustache.to_html($(template).find('#chosenTemplate').html(), json_data);
+    
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
-  }, 
-  
+  },
+
   init_chosen: function() {
 	  /*
 	   § Chosen

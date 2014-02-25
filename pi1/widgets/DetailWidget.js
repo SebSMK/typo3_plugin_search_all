@@ -40,7 +40,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
     }
 		
 	//* merge data and template
-    var html = self.template_integration_json(artwork_data, 'pi1/templates/detail.html');    
+    var html = self.template_integration_json({"detail": artwork_data}, '#detailTemplate');    
     $target.html(html);
     
     //* add main image
@@ -68,11 +68,10 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	
     
   },  
-  
-  template_integration_json: function (data, templ_path){	  
-		var template = Mustache.getTemplate(templ_path);	
-		var json_data = {"detail": data};
-		var html = Mustache.to_html($(template).find('#detailTemplate').html(), json_data);
+   
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
   },
   
@@ -236,30 +235,35 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
   getArtist: function(doc){
 	  var artistLabel = new Array();
-	  
-	  // check if all arrays containing artist's data have the same size
-	  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_natio.length)  && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
-		  return doc.artist_name_ss;
-	  
-	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
-		  var name = doc.artist_name_ss[i];
-		  var role = doc.artist_auth[i] != 'original' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
-		  var birth = doc.artist_birth[i];
-		  var death = doc.artist_death[i] != '(?)' ? doc.artist_death[i] : (doc.artist_death[i] < 1800) ? doc.artist_death[i] : "";
-		  var dates = sprintf('%s - %s', birth, death);
-		  var nationality = doc.artist_natio[i] != '(?)' ? sprintf('%s, ', doc.artist_natio[i]) : ""
-		  var padding = "";
+
+	  if (doc.artist_name_ss !== undefined){
+		  // check if all arrays containing artist's data have the same size
+		  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_natio.length)  && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
+			  return doc.artist_name_ss;
 		  
-		  var label = sprintf('%s%s&nbsp;<span>%s</span> <br><span>%s%s</span>', padding, name, role, nationality, dates);
-		  artistLabel.push({'artist_data' : label});		  		  
-	  }
-	  
+		  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
+			  var name = doc.artist_name_ss[i];
+			  var role = doc.artist_auth[i] != 'original' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
+			  var birth = doc.artist_birth[i];
+			  var death = doc.artist_death[i] != '(?)' ? doc.artist_death[i] : (doc.artist_death[i] < 1800) ? doc.artist_death[i] : "";
+			  var dates = sprintf('%s - %s', birth, death);
+			  var nationality = doc.artist_natio[i] != '(?)' ? sprintf('%s, ', doc.artist_natio[i]) : ""
+			  var padding = "";
+			  
+			  var label = sprintf('%s%s&nbsp;<span>%s</span> <br><span>%s%s</span>', padding, name, role, nationality, dates);
+			  artistLabel.push({'artist_data' : label});		  		  
+		  }		  		  
+	  }	  
+
 	  return artistLabel;
   },
   
   
   getArtistName: function(doc){	  	  	  
 	  // we take only the first name
+	  if (doc.artist_name_ss === undefined)
+		  return '';
+	  
 	  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 		  return doc.artist_name_ss[i];		  		  		  
 	  }
