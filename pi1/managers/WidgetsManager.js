@@ -94,7 +94,7 @@ var Manager;
 	    target: '#category',
 	    field: 'category',
 	    multivalue:false,	    
-	    categoryList: {"all":translator.getLabel('category_all'), "samlingercollectionspace":translator.getLabel('category_artwork'), "nyheder":translator.getLabel('category_news'), "kalender":translator.getLabel('category_calendar'), "artikel":translator.getLabel('category_article'),  "praktisk":translator.getLabel('category_info')},
+	    categoryList: {"all":translator.getLabel('category_all'), "samlingercollectionspace":translator.getLabel('category_artwork'), "nyheder":translator.getLabel('category_news'), "kalender":translator.getLabel('category_calendar'), "praktisk":translator.getLabel('category_info')},
 	    activeCategory: "all",
 	    template: Mustache.getTemplate('pi1/templates/category.html')
 	  }));	

@@ -24,7 +24,7 @@
 	  "detail_dimension_brut":	"brut",
 	  "detail_location":		"location",
 	  "detail_provenance":		"provenance",
-	  "detail_no_photo":		"The work is not photographed. Please feel free to contact the photo unit at SMK (fotoadm@smk.dk) and hear about the opportunities for an additional fee to book a photography.",
+	  "detail_no_photo":		"The work is not photographed. Please feel free to contact the photo unit at SMK and hear about the opportunities for an additional fee to book a photography.",
 	  
 	  "viewpicker_tip_grid":	"Grid view",
 	  "viewpicker_tip_list":	"List view",
@@ -233,7 +233,7 @@
 	  "category_news" : 		"nyheder",
 	  "category_calendar" : 	"kalender",
 	  "category_article" : 		"artikler",
-	  "category_info" : 		"praktisk info",
+	  "category_info" : 		"praktisk information",
 	  "category_all" :	 		"alle resultater",
 	  
 	  "detail_technique":		"teknik",
@@ -244,10 +244,10 @@
 	  "detail_dimension_brut":	"brutto",
 	  "detail_location":		"location",
 	  "detail_provenance":		"proveniens",
-	  "detail_no_photo":		"V&aelig;rket er ikke fotograferet. Du er velkommen til at kontakte fotoenheden p&aring; SMK (fotoadm@smk.dk) og h&oslash;re om mulighederne for mod betaling at bestille en fotografering.",
+	  "detail_no_photo":		"V&aelig;rket er ikke fotograferet. Du er velkommen til at kontakte fotoenheden p&aring; SMK og h&oslash;re om mulighederne for mod betaling at bestille en fotografering.",
 	  
 	  "viewpicker_tip_grid":	"Grid visning",
-	  "viewpicker_tip_list":	"List visning",	  
+	  "viewpicker_tip_list":	"Listevisning",	  
 	  
 	  "pager_display":			"viser",
 	  "pager_to":				"til",
@@ -256,7 +256,7 @@
 	  "related_reference":		"inv.num",
 	  "related_label":			"relaterede v&aelig;rker",
 	  	  
-	  "search_box_default":		"S&oslash;g efter kunstv&aelig;rker, title, kunstner, praktisk info etc..",
+	  "search_box_default":		"S&oslash;g efter kunstv&aelig;rker, titel, kunstner, nyheder osv.",
 	  "search_box_button":		"s&oslash;g",
 	  
 	  "search_filter_cent":		"tallet",

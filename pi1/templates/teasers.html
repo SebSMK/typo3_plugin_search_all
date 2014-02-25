@@ -30,7 +30,7 @@
               <h3 class="teaser__heading">
                	<!-- show an artwork -->
 				{{#is_artwork}} 
-					<a href="#" alt="{{title}}" class="article_artwork">{{{artist_data}}}{{#title_pad}}<br>{{/title_pad}}<i>{{title}}</i>&nbsp<span>{{artwork_date}}</span></a> 
+					<a href="#" alt="{{title}}" class="article_artwork">{{{artist_data}}}{{#title_pad}}<br>{{/title_pad}}{{title}},&nbsp<span>{{artwork_date}}</span></a> 
 				{{/is_artwork}}
 				
 				<!-- not showing an artwork -->
