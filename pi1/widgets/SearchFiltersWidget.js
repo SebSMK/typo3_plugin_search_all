@@ -59,7 +59,7 @@ constructor: function (attributes) {
 				  	      objectedItems.push({ "value": facet, "text": this.getCentury(facet), "count": count });  	  	    	  	      
 			  	    };
 			  	    objectedItems.sort(function (a, b) {
-			  	      return parseInt(a.value)-parseInt(b.value);	  	      
+			  	      return parseInt(b.value)-parseInt(a.value);	  	      
 			  	    });				  			  			  
 			  	    break;	
 			  

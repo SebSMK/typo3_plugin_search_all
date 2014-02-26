@@ -84,6 +84,11 @@
     */
 }
 
+
+.sharing--iconified .print{
+	float: right;	
+}
+
 .search-choice span{	
 	color: #ffffff;
 }
@@ -103,6 +108,9 @@ a span{
 
 /* Jacques' Code  modif */
 
+.chosen--multiple.chosen--open .chosen-drop .chosen-results {
+  height: 84px;
+}
 
 .view #teaser-container-grid {
     
