@@ -4,14 +4,22 @@ var Manager;
 
   $(function () {
 	
+	var current_language = smkCommon.getCurrentLanguage();
+	
+	//** load solr conf  
+	var solr_conf = new Configurator.constructor();
+	solr_conf.load_json("pi1/conf/solr_conf.json");
+	var exposed = solr_conf.get_exposed_params();
+	var q_default = solr_conf.get_q_default();
+	var qf_default = solr_conf.get_qf_default(current_language);
+	  
 	//** init multi language script 
 	var translator = new Language.constructor();	
-	translator.load_json("pi1/language/language.json");
-	var current_language = smkCommon.getCurrentLanguage();  
+	translator.load_json("pi1/language/language.json");	
 	translator.setLanguage(current_language);	
 	
-	//** init variables
-	var tagcloudFields = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
+	//** init searchFields
+	var searchFieldsTypes = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
 		
 	var stateManager = new AjaxSolr.StateManager({
 	    id: 'state_manager',
@@ -25,23 +33,11 @@ var Manager;
     Manager = new AjaxSolr.smkManager({
     	solrUrl: smkCommon.getSolrPath(),    	    	
     	store: new AjaxSolr.smkParameterStore({
-    		exposed: ["fq", "q", "start", "limit", "sort", "qf"],    		
-    		q_default: '-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)',
-    		qf_default:{id:'20', 
-    					title_dk:'15', 
-    					title_eng:'15', 
-    					title_first:'15', 
-    					artist_name:'15', 
-    					page_content:'10', 
-    					page_title:'15', 
-    					description_note_dk:'5', 
-    					description_note_en:'5', 
-    					prod_technique_dk:'5', 
-    					prod_technique_en:'5', 
-    					object_type:'10'    			
-    				}
+    		exposed: exposed,    		
+    		q_default: q_default,
+    		qf_default: qf_default
     	}),
-    	searchfilterList: tagcloudFields,
+    	searchfilterList: searchFieldsTypes,
     	allWidgetsProcessed: allWidgetsProcessedBound,
     	translator: translator
     });
@@ -105,12 +101,12 @@ var Manager;
 	    template: Mustache.getTemplate('pi1/templates/teasers.html')
 	  }));
 	
-	for (var i = 0, l = tagcloudFields.length; i < l; i++) {
+	for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 	  Manager.addWidget(new AjaxSolr.SearchFiltersWidget({
-		    id: tagcloudFields[i].field,
-		    title: tagcloudFields[i].title,
-		    target: '#' + tagcloudFields[i].field,
-		    field: tagcloudFields[i].field,
+		    id: searchFieldsTypes[i].field,
+		    title: searchFieldsTypes[i].title,
+		    target: '#' + searchFieldsTypes[i].field,
+		    field: searchFieldsTypes[i].field,
 		    template: Mustache.getTemplate('pi1/templates/chosen.html')
 	   }));
 	};				
@@ -154,8 +150,8 @@ var Manager;
     }); 
     
     //* searchfilters changed
-    for (var i = 0, l = tagcloudFields.length; i < l; i++) {
-    	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_changed', function(event){
+    for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
+    	$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_changed', function(event){
     		Manager.widgets['currentsearch'].setRefresh(false);
     	});
   	};
@@ -164,8 +160,8 @@ var Manager;
     $(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){     	
     	Manager.widgets['currentsearch'].setRefresh(false);
 		Manager.widgets['category'].setRefresh(false);
-		for (var i = 0, l = tagcloudFields.length; i < l; i++) {
-	    	Manager.widgets[tagcloudFields[i].field].setRefresh(false);
+		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
+	    	Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
 	  	};	
     }); 
 
@@ -173,8 +169,8 @@ var Manager;
     $(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
     	Manager.widgets['currentsearch'].setRefresh(false);
 		Manager.widgets['category'].setRefresh(false);
-		for (var i = 0, l = tagcloudFields.length; i < l; i++) {
-	    	Manager.widgets[tagcloudFields[i].field].setRefresh(false);
+		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
+	    	Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
 	  	};	
     }); 
   	
@@ -209,8 +205,8 @@ var Manager;
     });	
 	        
     //* searchfilters has finished loading
-    for (var i = 0, l = tagcloudFields.length; i < l; i++) {
-    	$(Manager.widgets[tagcloudFields[i].field]).on('smk_search_filter_loaded', function(event){
+    for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
+    	$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_loaded', function(event){
     		Manager.widgets['state_manager'].remove_modal_loading_from_widget(event.currentTarget.target);
     	});
   	};	

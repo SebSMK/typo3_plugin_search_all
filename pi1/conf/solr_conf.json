@@ -1,0 +1,35 @@
+{
+    "exposed": 							["fq", "q", "start", "limit", "sort", "qf"],
+    "q_default": 						"-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)",
+    
+    "qf_default":{	
+		"dk":{
+				"id":					"20", 
+				"title_dk":				"15", 
+				"title_eng":			"5", 
+				"title_first":			"15", 
+				"artist_name":			"15", 
+				"page_content":			"10", 
+				"page_title":			"15", 
+				"description_note_dk":	"5", 
+				"description_note_en":	"2", 
+				"prod_technique_dk":	"5", 
+				"prod_technique_en":	"2", 
+				"object_type":			"10"    			
+			},
+		"en":{
+				"id":					"20", 
+				"title_dk":				"5", 
+				"title_eng":			"15", 
+				"title_first":			"15", 
+				"artist_name":			"15", 
+				"page_content":			"10", 
+				"page_title":			"15", 
+				"description_note_dk":	"2", 
+				"description_note_en":	"5", 
+				"prod_technique_dk":	"2", 
+				"prod_technique_en":	"5", 
+				"object_type":			"10"    			
+			}
+	}
+}
