@@ -27,7 +27,6 @@ constructor: function (attributes) {
 	  	var self = this;
 	  	var $target = $(this.target);
 	  	var $select = $(this.target).find('select');
-	  	var templ_path = 'pi1/templates/chosen.html';
 	  	
 	  	if (!self.getRefresh()){
 			self.setRefresh(true);

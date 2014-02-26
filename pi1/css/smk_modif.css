@@ -34,6 +34,10 @@
 */                
 }
 
+.highlight{
+	background-color: #FFF8AC;
+}
+
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
 #smk_search_wrapper.modal_loading

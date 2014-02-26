@@ -10,17 +10,11 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 	
 	hightlight : true,
 	
-	init: function () {		
-//		var template = Mustache.getTemplate('pi1/templates/search_box.html');	
-//		//$(template).find('#search').attr("placeholder", this.manager.translator.getLabel("search_box_default"));
-//		$(this.target).html(template);
-//		$(this.target).find('#search').attr("placeholder", this.manager.translator.getLabel("search_box_default"));
-				
+	init: function () {						
 		  var self = this;
 		  var $target = $(this.target);		  
 		  var json_data = {"default_text" : this.manager.translator.getLabel("search_box_default"), 'search': this.manager.translator.getLabel("search_box_button")};	 
-		  var html = self.template_integration_json(json_data, '#searchboxTemplate');
-		  
+		  var html = self.template_integration_json(json_data, '#searchboxTemplate');		  
 		  $target.html(html);		
 	},	
 	
@@ -110,14 +104,6 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 						//}
 					};// end if
 				}); // end binded action.
-
-		if (undefined === self.manager.store.last
-				|| self.manager.store.last.length < 1)
-			return;
-		if (!self.hightlight)
-			return;
-		var vArray = self.manager.store.last.split(" ");
-		jQuery('#smk_teasers .article_artwork').highlight(vArray);
 		
 	},  
 

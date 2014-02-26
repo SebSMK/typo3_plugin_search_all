@@ -34,8 +34,8 @@ var Manager;
     					artist_name:'15', 
     					page_content:'10', 
     					page_title:'15', 
-    					description_note_dk:'10', 
-    					description_note_en:'10', 
+    					description_note_dk:'5', 
+    					description_note_en:'5', 
     					prod_technique_dk:'5', 
     					prod_technique_en:'5', 
     					object_type:'10'    			
@@ -221,6 +221,11 @@ var Manager;
     	
     	//* check if there are still images loading in "teaser"
     	if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0){
+    		    		
+    		// highlight search string in teasers
+    		var vArray = Manager.store.get('q').value;
+    		if (undefined !== vArray && vArray.length > 0)    			
+        		$(Manager.widgets['teasers'].target).highlight(vArray);    		
     		
     		// if all images are loaded, we stop the modal "waiting image" for this widget
     		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['teasers'].target);

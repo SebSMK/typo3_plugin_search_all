@@ -5,11 +5,7 @@ AjaxSolr.ViewPickerWidget = AjaxSolr.AbstractWidget.extend({
  	init: function () {
     
 	  var self = this;
-
-	  var $target = $(this.target);	
-	  
-	  //var template = Mustache.getTemplate('pi1/templates/view_picker.html');	
-	  
+	  var $target = $(this.target);		  		  
 	  var html = self.template_integration_json({'tip_text_grid':this.manager.translator.getLabel('viewpicker_tip_grid'), 'tip_text_list':this.manager.translator.getLabel('viewpicker_tip_list')}, '#viewpickerTemplate');
 	  $target.html(html);	  
 	  
