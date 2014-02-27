@@ -220,8 +220,16 @@ var Manager;
     		    		
     		// highlight search string in teasers
     		var vArray = Manager.store.get('q').value;
-    		if (undefined !== vArray && vArray.length > 0)    			
-        		$(Manager.widgets['teasers'].target).highlight(vArray);    		
+    		if (undefined !== vArray && vArray.length > 1){ //  > 1 -> do not take into account the (first) q default value   			
+    			var words = [];
+    			
+    			for (var i = 1, l = vArray.length; i < l; i++) {    				
+    				words = words.concat(vArray[i].trim().split(" "));    				
+    			};
+
+    			$(Manager.widgets['teasers'].target).highlight(words);
+    		}    			
+        		    		
     		
     		// if all images are loaded, we stop the modal "waiting image" for this widget
     		Manager.widgets['state_manager'].remove_modal_loading_from_widget(Manager.widgets['teasers'].target);
@@ -275,8 +283,11 @@ var Manager;
     Manager.init();
 
     //* prepare and start init request
-    var postedSearchString = smkCommon.getSearchPOST(); 
-    var q = [Manager.store.q_default, postedSearchString];
+    var q = [Manager.store.q_default];
+    var postedSearchString = smkCommon.getSearchPOST();         
+    if(postedSearchString !== undefined && postedSearchString != '')
+    	q = q.concat(postedSearchString);
+    
     Manager.store.addByValue('q', q);    
     var params = {
       facet: true,
