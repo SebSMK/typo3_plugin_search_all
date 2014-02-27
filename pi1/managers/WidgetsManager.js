@@ -219,7 +219,7 @@ var Manager;
     	if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0){
     		    		
     		// highlight search string in teasers
-    		var vArray = Manager.store.get('q').value;
+    		var vArray = [].concat(Manager.store.get('q').value);
     		if (undefined !== vArray && vArray.length > 1){ //  > 1 -> do not take into account the (first) q default value   			
     			var words = [];
     			
