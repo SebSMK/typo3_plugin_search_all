@@ -235,17 +235,31 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
   getArtist: function(doc){
 	  var artistLabel = new Array();
-
+	  var docBirth;
+	  var docDeath;
+	  
+	  switch(this.current_language){
+	  case "dk":		 			  			  			  
+		  docBirth = doc.artist_birth_dk;
+		  docDeath = doc.artist_death_dk;					  			  			  
+		  break;
+	  case "en":
+		  docBirth = doc.artist_birth_en;
+		  docDeath = doc.artist_death_en;
+		  break;
+	  }
+	  
+	  
 	  if (doc.artist_name_ss !== undefined){
 		  // check if all arrays containing artist's data have the same size
-		  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_natio.length)  && (doc.artist_name_ss.length != doc.artist_birth.length) && (doc.artist_name_ss.length != doc.artist_death.length))
+		  if((doc.artist_name_ss.length != doc.artist_auth.length) && (doc.artist_name_ss.length != doc.artist_natio.length)  && (doc.artist_name_ss.length != docBirth.length) && (doc.artist_name_ss.length != docDeath.length))
 			  return doc.artist_name_ss;
 		  
 		  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 			  var name = doc.artist_name_ss[i];
 			  var role = doc.artist_auth[i] != 'original' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
-			  var birth = doc.artist_birth[i];
-			  var death = doc.artist_death[i] != '(?)' ? doc.artist_death[i] : (doc.artist_death[i] < 1800) ? doc.artist_death[i] : "";
+			  var birth = docBirth[i];
+			  var death = docDeath[i] != '(?)' ? docDeath[i] : (docDeath[i] < 1800) ? docDeath[i] : "";
 			  var dates = sprintf('%s - %s', birth, death);
 			  var nationality = doc.artist_natio[i] != '(?)' ? sprintf('%s, ', doc.artist_natio[i]) : ""
 			  var padding = "";

@@ -55,11 +55,11 @@
 	 */
 	common.computeCopyright = function(doc) {
 		
-		//***
-		//return false; //-->debug mode : no copyright
+		//*** //-->debug mode : no copyright
+		//return false; 
 		//***
 		
-		if (doc === undefined || doc.artist_name_ss === undefined)
+		if (doc === undefined || doc.artist_name_ss === undefined || doc.artist_birth_first === undefined || doc.artist_death_first === undefined)
 			return false;
 		
 		var res = true;
@@ -68,8 +68,8 @@
 		
 		// check artist dates
 		for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
-			  var birth = doc.artist_birth[i] === undefined ?'-' : doc.artist_birth[i];
-			  var death = doc.artist_death[i] === undefined ?'-' : doc.artist_death[i];
+			  var birth = doc.artist_birth_first[i] === undefined ?'-' : doc.artist_birth_first[i];
+			  var death = doc.artist_death_first[i] === undefined ?'-' : doc.artist_death_first[i];
 			  
 			  if (i == 0)
 				  copyright_owner = doc.artist_name_ss[0]; // if multiple artists, copyright owner is the first in the list	
