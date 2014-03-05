@@ -1,0 +1,144 @@
+<dataConfig>
+  <dataSource driver="org.postgresql.Driver"
+     url="jdbc:postgresql://csdev-seb:5432/nuxeo"
+     user="postgres"
+     password="2Pica2s0" />
+  <document>
+    <entity name="page" pk="csid"
+	query="
+
+
+
+SELECT
+
+        collectionobjects_common.objectnumber                                         AS id,
+         hierarchy0.name                                                               AS csid,
+   
+        core.updatedat                                                                AS last_update
+        
+ 
+FROM public.collectionobjects_common collectionobjects_common
+
+    INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+ 
+    /* verifies that the objet is available*/
+    INNER JOIN public.collectionspace_core core ON core.id = collectionobjects_common.id
+    INNER JOIN public.misc misc ON misc.id = collectionobjects_common.id 
+    
+WHERE core.tenantid = 5 AND misc.lifecyclestate != 'deleted' 
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+/*AND hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+ 
+GROUP BY
+
+   
+
+    collectionobjects_common.objectnumber,   
+    core.updatedat,
+    hierarchy0.name                                                               
+                                                        
+
+"
+
+
+		deltaImportQuery="
+
+SELECT
+
+        collectionobjects_common.objectnumber                                         AS id,
+         hierarchy0.name                                                               AS csid,
+   
+        TIMESTAMP '${dih.delta.updatedat}'                                             AS last_update
+        
+ 
+FROM public.collectionobjects_common collectionobjects_common
+
+    INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+ 
+    /* verifies that the objet is available*/
+    INNER JOIN public.collectionspace_core core ON core.id = collectionobjects_common.id
+    INNER JOIN public.misc misc ON misc.id = collectionobjects_common.id 
+    
+WHERE core.tenantid = 5 AND misc.lifecyclestate != 'deleted' 
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+AND hierarchy0.name = '${dih.delta.csid}'
+ 
+GROUP BY
+
+   
+
+    collectionobjects_common.objectnumber,   
+    core.updatedat    ,
+    hierarchy0.name                                                               
+
+
+ 
+
+
+
+"
+
+
+                deltaQuery="
+
+    SELECT
+    
+       collectionobjects_common.objectnumber  AS id,
+    	hierarchy0.name                        AS csid,
+    	MAX (collectionspace_core.updatedat)   AS updatedat
+    
+    FROM public.collectionspace_core
+    
+    /* a related person has been changed */
+    LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.id = collectionspace_core.id
+    LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson 
+    LEFT JOIN public.hierarchy hierarchy_prodgroup ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+    
+    /* a related media has been changed */
+    LEFT JOIN public.hierarchy hierarchy_media ON hierarchy_media.id = collectionspace_core.id
+    LEFT JOIN public.relations_common relation_media ON relation_media.subjectcsid = hierarchy_media.name
+    LEFT JOIN public.hierarchy hierarchy_media_related  ON relation_media.objectcsid = hierarchy_media_related.name
+    
+    /* relation changed between the object and a related procedure - doesn't take in account when a related procedure has been changed */
+    /* but take into account when the related location is changed */
+    LEFT JOIN public.relations_common relation_proc ON relation_proc.id = collectionspace_core.id
+    LEFT JOIN public.hierarchy hierarchy_proc ON relation_proc.objectcsid = hierarchy_proc.name
+    
+    LEFT JOIN public.collectionobjects_common ON (
+            collectionobjects_common.id = collectionspace_core.id OR 
+            collectionobjects_common.id = hierarchy_prodgroup.parentid OR
+            collectionobjects_common.id = hierarchy_media_related.id OR
+            collectionobjects_common.id = hierarchy_proc.id
+            )
+    
+    /* an object as been deleted*/
+    LEFT JOIN public.misc ON misc.id = collectionobjects_common.id AND misc.lifecyclestate = 'deleted'
+            
+    LEFT JOIN public.hierarchy hierarchy0 ON collectionobjects_common.id = hierarchy0.id
+        
+    WHERE collectionspace_core.tenantid = 5
+    AND collectionspace_core.updatedat &gt; '${dih.last_index_time}'
+    AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+    AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+    
+    GROUP BY collectionobjects_common.objectnumber, hierarchy0.name
+
+"
+
+	transformer="RegexTransformer"
+	> 
+
+	<field column="artist_split" 
+		splitBy=";-;" 
+		sourceColName="artists_data" />
+
+    	<field column="artist_data" sourceColName="artist_split" 
+      		regex="^(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*)$"
+	      groupNames="artist_name,artist_birth_first,artist_birth_dk,artist_birth_en,artist_death_first,artist_death_dk,artist_death_en,artist_natio,artist_auth"/>   
+   </entity>
+  </document>
+</dataConfig>

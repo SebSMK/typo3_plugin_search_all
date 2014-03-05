@@ -1,0 +1,1651 @@
+<dataConfig>
+  <dataSource driver="org.postgresql.Driver"
+     url="jdbc:postgresql://csdev-seb:5432/nuxeo"
+     user="postgres"
+     password="2Pica2s0" />
+  <document>
+    <entity name="page" pk="csid"
+	query="
+
+
+
+SELECT
+
+        collectionobjects_common.objectnumber                                         AS id,
+        
+        artist.artists_data                                                           AS artists_data,         
+        smkstructureddatesmkgroup_obj_acq_date.datesmkdisplaytext                     AS acq_date,
+        vocabularyitems_common_acq.displayname                                        AS acq_method,
+        acquisitions_smk.smkacquistionsource                                          AS acq_source,
+        
+        collectionobjects_finearts.facopyrightstatement                               AS copyright,
+        hierarchy0.name                                                               AS csid,
+        core.createdat                                                                AS created,
+        
+        description_note_dk.note                                                      AS description_note_dk,
+        description_note_en.note                                                      AS description_note_en,               
+        
+        CASE WHEN lower(loc_name.termdisplayname) NOT LIKE 'sal%'
+        THEN NULL
+        ELSE loc_name.termdisplayname
+        END                                                                           AS location_name,               
+        core.updatedat                                                                AS last_update,
+          
+        array_to_string(media.medium_image_url,',')                                   AS medium_image_url,
+        multi_work.multi_work_ref                                                     AS multi_work_ref,
+        
+        concepttermgroup.termdisplayname                                              AS object_type,           
+        smkstructureddatesmkgroup_obj_prod_date.datesmkearliestscalarvalue            AS object_production_date_earliest,
+        smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue              AS object_production_date_latest,
+        smkstructureddatesmkgroup_obj_prod_date.datesmkdisplaytext                    AS object_production_date_text_dk,
+        smkstructureddatesmkgroup_obj_prod_date.datesmkdisplayengtext                 AS object_production_date_text_en,
+        
+        CASE WHEN (smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue) IS NULL
+        THEN NULL
+        ELSE EXTRACT (CENTURY FROM smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue)
+        END                                                                           AS object_production_century_earliest,
+        
+        faproductiontechniquegroup_en.faproductiontechnique                           AS prod_technique_en,
+        faproductiontechniquegroup_dk.faproductiontechnique                           AS prod_technique_dk,
+        proveniens.proveniens                                                         AS proveniens,
+        
+        reference_text.reference_text                                                 AS reference_texts,
+        related_work.related_id                                                       AS related_id,
+        
+        (title_dk.title_dk)                                                           AS title_dk,
+        (title_eng.title_eng)                                                         AS title_eng,
+        (smktitlegroup_first.smktitle)                                                AS title_first,
+        
+        meas.heigthunit                                                       AS heigthunit,
+        CAST (meas.heigth AS TEXT)                                            AS heigth,
+        meas.widthunit                                                        AS widthunit,
+        CAST (meas.width AS TEXT)                                             AS width,
+        meas.depthunit                                                        AS depthunit,
+        CAST (meas.depth AS TEXT)                                             AS depth        
+ 
+FROM public.collectionobjects_common collectionobjects_common
+
+    INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+    
+/* - object -*/
+    /* object production type*/
+    /* dansk */
+    LEFT JOIN(
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(faproductiontechniquegroup_tmp.faproductiontechnique,';-;') as faproductiontechnique
+
+        FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)    
+            LEFT JOIN public.hierarchy hierarchy_obj_fab ON collectionobjects_common.id = hierarchy_obj_fab.parentid AND hierarchy_obj_fab.primarytype = 'faProductionTechniqueGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'dansk'
+            RIGHT JOIN public.faproductiontechniquegroup faproductiontechniquegroup_tmp ON faproductiontechniquegroup_tmp.id = hierarchy_obj_fab.id AND faproductiontechniquegroup_tmp.faproductiontechniquelanguage = vocabularyitems_common_dk.refname
+
+  /*     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+      
+        GROUP BY
+            collectionobjects_common.id
+
+    ) AS faproductiontechniquegroup_dk
+
+    ON collectionobjects_common.id = faproductiontechniquegroup_dk.objid
+
+    /* english */
+    LEFT JOIN(
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(faproductiontechniquegroup_tmp.faproductiontechnique,';-;') as faproductiontechnique
+
+        FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)    
+            LEFT JOIN public.hierarchy hierarchy_obj_fab ON collectionobjects_common.id = hierarchy_obj_fab.parentid AND hierarchy_obj_fab.primarytype = 'faProductionTechniqueGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'engelsk'
+            RIGHT JOIN public.faproductiontechniquegroup faproductiontechniquegroup_tmp ON faproductiontechniquegroup_tmp.id = hierarchy_obj_fab.id AND faproductiontechniquegroup_tmp.faproductiontechniquelanguage = vocabularyitems_common_dk.refname
+
+   /*     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+      
+        GROUP BY
+            collectionobjects_common.id
+
+    ) AS faproductiontechniquegroup_en
+
+    ON collectionobjects_common.id = faproductiontechniquegroup_en.objid
+    
+    /* responsible department*/
+    LEFT JOIN public.collectionobjects_common_responsibledepartments ccrd ON collectionobjects_common.id = ccrd.id
+    
+     /* object production date */
+    LEFT JOIN public.hierarchy hierarchy_smk_obj_prod_date_group ON collectionobjects_common.id = hierarchy_smk_obj_prod_date_group.parentid AND hierarchy_smk_obj_prod_date_group.pos = 0 AND hierarchy_smk_obj_prod_date_group.primarytype = 'smkObjectProductionDateGroup'
+    LEFT JOIN public.smkobjectproductiondategroup smkobjectproductiondategroup ON smkobjectproductiondategroup.id = hierarchy_smk_obj_prod_date_group.id
+    LEFT JOIN public.hierarchy hierarchy_smk_obj_prod_date ON smkobjectproductiondategroup.id = hierarchy_smk_obj_prod_date.parentid AND hierarchy_smk_obj_prod_date.name = 'smkObjectProductionDate'
+    LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_obj_prod_date ON smkstructureddatesmkgroup_obj_prod_date.id = hierarchy_smk_obj_prod_date.id
+
+        /* object acquisition*/
+        LEFT JOIN public.hierarchy hierarchy_obj_acq ON collectionobjects_common.id = hierarchy_obj_acq.id AND hierarchy_obj_acq.primarytype = 'CollectionObjectTenant5'
+        LEFT JOIN public.relations_common relations_common_obj_acq ON relations_common_obj_acq.subjectcsid = hierarchy_obj_acq.name AND relations_common_obj_acq.objectdocumenttype = 'Acquisition' AND relations_common_obj_acq.objectcsid IS NOT NULL
+        LEFT JOIN public.hierarchy hierarchy_obj_acq_smk ON relations_common_obj_acq.objectcsid = hierarchy_obj_acq_smk.name
+        LEFT JOIN public.acquisitions_common acquisitions_common ON acquisitions_common.id = hierarchy_obj_acq_smk.id
+        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_acq ON vocabularyitems_common_acq.refname = acquisitions_common.acquisitionmethod
+        LEFT JOIN public.acquisitions_smk acquisitions_smk ON acquisitions_smk.id = hierarchy_obj_acq_smk.id
+   
+        /* object acquisition date */
+        LEFT JOIN public.hierarchy hierarchy_obj_acq_date ON acquisitions_common.id = hierarchy_obj_acq_date.parentid AND hierarchy_obj_acq_date.name = 'acquisitions_smk:smkAcquisitionDate'
+        LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_obj_acq_date ON smkstructureddatesmkgroup_obj_acq_date.id = hierarchy_obj_acq_date.id
+
+        /* object type */
+        LEFT JOIN public.collectionobjects_smk collectionobjects_smk ON collectionobjects_common.id = collectionobjects_smk.id
+        LEFT JOIN public.concepts_common concepts_common ON concepts_common.refname = collectionobjects_smk.smkobjectname
+        LEFT JOIN public.hierarchy hierarchy_smk_object_type ON concepts_common.id = hierarchy_smk_object_type.parentid AND hierarchy_smk_object_type.primarytype = 'conceptTermGroup'
+        LEFT JOIN public.concepttermgroup concepttermgroup ON concepttermgroup.id = hierarchy_smk_object_type.id
+        
+         /* object history (proveniens) */
+        LEFT JOIN(
+
+                SELECT
+
+                collectionobjects_common.id AS objectid,
+                string_agg(smkobjecthistorygroup.smkobjecthistory,';-;') AS proveniens
+
+                FROM public.collectionobjects_common collectionobjects_common
+
+                INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+                LEFT JOIN public.hierarchy hierarchy_object_history ON collectionobjects_common.id = hierarchy_object_history.parentid AND hierarchy_object_history.primarytype = 'smkObjectHistoryGroup'
+                LEFT JOIN public.smkobjecthistorygroup smkobjecthistorygroup ON smkobjecthistorygroup.id = hierarchy_object_history.id
+
+  /*       WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+
+                GROUP BY objectid
+
+        ) AS proveniens
+
+        ON collectionobjects_common.id = proveniens.objectid
+
+ /* copyright */
+    LEFT JOIN public.collectionobjects_finearts ON collectionobjects_common.id = collectionobjects_finearts.id
+
+/* location */
+LEFT JOIN public.locations_common loc_common ON collectionobjects_common.computedcurrentlocation = loc_common.refname
+LEFT JOIN public.hierarchy hierarchy_loc_name ON loc_common.id = hierarchy_loc_name.parentid AND hierarchy_loc_name.primarytype = 'locTermGroup'
+LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
+
+/* - artist -*/
+    LEFT JOIN(
+         SELECT
+             objectid,
+             string_agg(sub_artist.artists_data,';-;') AS artists_data    
+         FROM    
+             (
+                          
+                SELECT    
+                       sub_sub_artist.objectid,
+                       sub_sub_artist.artists_data,
+                       sub_sub_artist.pos
+                FROM(
+                                /* the artist is a person */
+                               SELECT
+                            
+                                            collectionobjects_common.id AS objectid,
+                                            hierarchy_prodgroup.pos,
+                                                
+                                                
+                                                format ('%s;%s;%s;%s;%s;%s;%s;%s;%s' ,
+                                                        (persontermgroup_artist.termdisplayname),                                                        
+
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear
+                                                        END,
+                                                        
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkdisplaytext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_birth.datesmkdisplaytext
+                                                        END,
+
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkdisplayengtext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_birth.datesmkdisplayengtext
+                                                        END,
+                                                        
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_death.datesmkthirddateyear) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_death.datesmkthirddateyear
+                                                        END,
+                                
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_death.datesmkdisplaytext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_death.datesmkdisplaytext
+                                                        END,
+                                                        
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext
+                                                        END,
+                                
+                                                        CASE WHEN (vocabularyitems_common_artist.displayname) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE initcap(vocabularyitems_common_artist.displayname)
+                                                        END,
+                                                        
+                                                        CASE WHEN (vocabularyitems_common_auth_artist.displayname) IS NULL
+                                                        THEN 'original'
+                                                        ELSE initcap(vocabularyitems_common_auth_artist.displayname)
+                                                        END
+                                                        )
+                                           AS artists_data
+                            
+                                            FROM public.collectionobjects_common collectionobjects_common
+                            
+                                            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+                            
+                                            LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
+                                            LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
+                            
+                                            /* artist nationality */
+                                            LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
+                                            LEFT JOIN public.persons_common_nationalities persons_common_nationalities_artist ON persons_common_artist.id = persons_common_nationalities_artist.id AND persons_common_nationalities_artist.pos = 0
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_artist ON vocabularyitems_common_artist.refname = persons_common_nationalities_artist.item
+                            
+                                            /* artist name */
+                                            RIGHT JOIN public.hierarchy hierarchy_artist_1 ON persons_common_artist.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'personTermGroup' AND hierarchy_artist_1.pos = 0
+                                            LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
+                            
+                                            /* artist birth and death date */
+                                            LEFT JOIN public.hierarchy hierarchy_artist_2 ON persons_common_artist.id = hierarchy_artist_2.parentid AND hierarchy_artist_2.name = 'persons_smk:smkDeathDate'
+                                            LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_death ON smkstructureddatesmkgroup_artist_death.id = hierarchy_artist_2.id
+                                            LEFT JOIN public.hierarchy hierarchy_artist_3 ON persons_common_artist.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'persons_smk:smkBirthDate'
+                                            LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_birth ON smkstructureddatesmkgroup_artist_birth.id = hierarchy_artist_3.id
+                            
+                                            /*  authenticity */
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+                              
+                        
+   /*          WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                         
+                           
+                                            GROUP BY
+                                                    objectid,
+                                                    persontermgroup_artist.id,
+                                                    vocabularyitems_common_auth_artist.displayname,
+                                                    persontermgroup_artist.forename,
+                                                    persontermgroup_artist.surname,
+                                                    vocabularyitems_common_artist.displayname,
+                                                    smkstructureddatesmkgroup_artist_birth.datesmkdisplaytext,
+                                                    smkstructureddatesmkgroup_artist_death.datesmkdisplaytext,
+                                                    smkstructureddatesmkgroup_artist_birth.datesmkdisplayengtext,
+                                                    smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext,
+                                                    smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear,
+                                                    smkstructureddatesmkgroup_artist_death.datesmkthirddateyear,
+                                                    hierarchy_prodgroup.pos                                                             
+                                        
+                                        
+                                        
+                                UNION
+                        
+                        
+                                       /* the artist is an organization */
+                                        SELECT
+                        
+                                        collectionobjects_common.id AS objectid,
+                                        hierarchy_prodgroup.pos,                                                
+                                        format ('%s;%s;%s;%s;%s;%s;%s;;original' ,
+                                                org_name.termdisplayname,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear
+                                                END,
+                        
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext
+                                                END,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext
+                                                END,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear
+                                                END,
+                        
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext
+                                                END,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext
+                                                END )
+                        
+                                        AS artists_data
+                        
+                                        FROM public.collectionobjects_common collectionobjects_common
+                        
+                                        INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+                        
+                                        LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
+                                        LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
+                        
+                                        LEFT JOIN public.organizations_common org_common ON org_common.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
+                                        LEFT JOIN public.hierarchy hierarchy_org_name ON org_common.id = hierarchy_org_name.parentid AND hierarchy_org_name.primarytype = 'orgTermGroup'
+                                        LEFT JOIN public.orgtermgroup org_name ON hierarchy_org_name.id = org_name.id
+                        
+                                        /* artist name - organization */
+                                        RIGHT JOIN public.hierarchy hierarchy_artist_1 ON org_common.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'orgTermGroup' AND hierarchy_artist_1.pos = 0
+                                        LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
+                        
+                                        /* artist organization - creation and dissolution date */
+                                        LEFT JOIN public.hierarchy hierarchy_artist_2 ON org_common.id = hierarchy_artist_2.parentid AND hierarchy_artist_2.name = 'organizations_smk:smkFoundingDateGroup'
+                                        LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_dissolution ON smkstructureddatesmkgroup_artist_org_dissolution.id = hierarchy_artist_2.id
+                                        LEFT JOIN public.hierarchy hierarchy_artist_3 ON org_common.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'organizations_smk:smkDissolutionDateGroup'
+                                        LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_creation ON smkstructureddatesmkgroup_artist_org_creation.id = hierarchy_artist_3.id
+                        
+                                        /* authenticity - organization */
+                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+                        
+   /*                     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                        
+                                        GROUP BY
+                                                objectid,
+                                                org_name.termdisplayname,
+                                                org_common.foundingplace,
+                                                hierarchy_prodgroup.pos,
+                                                smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext,
+                                                smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext,
+                                                smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext,
+                                                smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext,
+                                                smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear,
+                                                smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear
+                    
+                        ) AS sub_sub_artist
+                        
+                        GROUP BY sub_sub_artist.objectid, sub_sub_artist.artists_data, sub_sub_artist.pos
+                        
+                        ORDER BY sub_sub_artist.objectid, sub_sub_artist.pos  
+
+                ) AS sub_artist
+    
+          GROUP BY objectid
+
+    ) AS artist
+
+    ON collectionobjects_common.id = artist.objectid
+
+/* - title -*/
+      /* title in danish */
+    LEFT JOIN(
+            SELECT
+            collectionobjects_common.id as objid,
+            string_agg(smktitlegroup.smktitle, ';-;') as title_dk
+
+            FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+            /* title in danish */
+            LEFT JOIN public.hierarchy hierarchy_title ON collectionobjects_common.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'dansk'
+            LEFT JOIN public.smktitlegroup smktitlegroup ON smktitlegroup.id = hierarchy_title.id AND smktitlegroup.smktitlelanguage = vocabularyitems_title_dk.refname
+ 
+   /*     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+         
+            GROUP BY
+            collectionobjects_common.id
+
+    ) AS title_dk
+
+    ON collectionobjects_common.id = title_dk.objid
+
+    /* title in english */
+    LEFT JOIN(
+            SELECT
+            collectionobjects_common.id as objid,
+            string_agg(smktitletranslationsubgroup.smktitletranslation, ';-;') as title_eng
+
+            FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+             /* title in english */
+            LEFT JOIN public.hierarchy hierarchy_title ON collectionobjects_common.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+            LEFT JOIN public.hierarchy hierarchy_title_eng ON hierarchy_title.id = hierarchy_title_eng.parentid AND hierarchy_title_eng.pos = 0
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_eng ON vocabularyitems_common_eng.displayname = 'engelsk'
+            LEFT JOIN public.smktitletranslationsubgroup smktitletranslationsubgroup ON smktitletranslationsubgroup.id = hierarchy_title_eng.id AND smktitletranslationsubgroup.smktitletranslationlanguage = vocabularyitems_common_eng.refname
+          
+ /*WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+
+            GROUP BY
+            collectionobjects_common.id
+
+    ) AS title_eng
+
+    ON collectionobjects_common.id = title_eng.objid
+
+/* - description note -*/
+
+ /* dansk */
+ LEFT JOIN(
+
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(farelatedworklabelgroup.farelatedworklabel, ';-;') as note
+
+            FROM public.collectionobjects_common collectionobjects_common
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+            LEFT JOIN public.hierarchy hierarchy_descr_note ON collectionobjects_common.id = hierarchy_descr_note.parentid AND hierarchy_descr_note.primarytype = 'faRelatedWorkLabelGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'dansk'
+            LEFT JOIN public.farelatedworklabelgroup faRelatedWorkLabelGroup ON hierarchy_descr_note.id = faRelatedWorkLabelGroup.id AND faRelatedWorkLabelGroup.farelatedworklabellanguage = vocabularyitems_title_dk.refname
+           
+    /*    WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+
+            GROUP BY
+            collectionobjects_common.id
+            
+
+    ) AS description_note_dk
+
+    ON collectionobjects_common.id = description_note_dk.objid
+
+ /* english */
+ LEFT JOIN(
+
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(farelatedworklabelgroup.farelatedworklabel, ';-;') as note
+
+            FROM public.collectionobjects_common collectionobjects_common
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+            LEFT JOIN public.hierarchy hierarchy_descr_note ON collectionobjects_common.id = hierarchy_descr_note.parentid AND hierarchy_descr_note.primarytype = 'faRelatedWorkLabelGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'engelsk'
+            LEFT JOIN public.farelatedworklabelgroup faRelatedWorkLabelGroup ON hierarchy_descr_note.id = faRelatedWorkLabelGroup.id AND faRelatedWorkLabelGroup.farelatedworklabellanguage = vocabularyitems_title_dk.refname
+           
+   /*    WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+
+            GROUP BY
+            collectionobjects_common.id
+
+    ) AS description_note_en
+
+    ON collectionobjects_common.id = description_note_en.objid
+    
+/* - dimensions - take the first dimension in the list */
+        /* height / width / bredth */
+        LEFT JOIN (
+
+                 SELECT
+
+                collectionobjects_common.id AS objectid,
+                string_agg(CAST (CAST (dimensionsubgroup_hojde.value AS NUMERIC ) AS TEXT),',') AS heigth,
+                string_agg(CAST (CAST (dimensionsubgroup_bredde.value AS NUMERIC ) AS TEXT),',') AS width,
+                string_agg(CAST (CAST (dimensionsubgroup_dybde.value AS NUMERIC ) AS TEXT),',') AS depth,
+                string_agg(dimensionsubgroup_hojde.measurementunit,',') AS heigthunit,
+                string_agg(dimensionsubgroup_bredde.measurementunit,',') AS widthunit,
+                string_agg(dimensionsubgroup_dybde.measurementunit,',') AS depthunit
+
+                FROM public.collectionobjects_common collectionobjects_common
+
+                INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+                LEFT JOIN public.hierarchy hierarchy_meas_group ON collectionobjects_common.id = hierarchy_meas_group.parentid AND hierarchy_meas_group.primarytype = 'measuredPartGroup' AND hierarchy_meas_group.pos = 0
+                RIGHT JOIN public.measuredpartgroup measuredpartgroup ON hierarchy_meas_group.id = measuredpartgroup.id
+                LEFT JOIN public.hierarchy hierarchy_meas ON measuredpartgroup.id = hierarchy_meas.parentid AND hierarchy_meas.primarytype = 'dimensionSubGroup'
+
+                LEFT JOIN public.dimensionsubgroup dimensionsubgroup_hojde ON hierarchy_meas.id = dimensionsubgroup_hojde.id AND dimensionsubgroup_hojde.dimension = 'hojde'
+                LEFT JOIN public.dimensionsubgroup dimensionsubgroup_bredde ON hierarchy_meas.id = dimensionsubgroup_bredde.id AND dimensionsubgroup_bredde.dimension = 'bredde'
+                LEFT JOIN public.dimensionsubgroup dimensionsubgroup_dybde ON hierarchy_meas.id = dimensionsubgroup_dybde.id AND dimensionsubgroup_dybde.dimension = 'dybde'
+
+        
+    /*    WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+ 
+                GROUP BY objectid
+
+        ) AS meas
+
+        ON collectionobjects_common.id = meas.objectid  
+
+    /* first title (independant of language) */
+    LEFT JOIN public.hierarchy hierarchy_title ON collectionobjects_common.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+    LEFT JOIN public.smktitlegroup smktitlegroup_first ON smktitlegroup_first.id = hierarchy_title.id
+
+/* - reference text -*/
+        LEFT JOIN(
+
+                SELECT
+
+                        objectid,
+                        string_agg(reference_text,';-;') AS reference_text
+                FROM
+                       ( SELECT
+                        collectionobjects_common.id AS objectid,
+                        
+                        CASE WHEN (smkreferencetext IS NULL)
+                                THEN NULL
+                        ELSE 
+                                format('%s;-1>;: %s',
+                                vocabularyitems_common_ref_text.displayname,
+                                smkreferencetext)        
+                        END AS reference_text
+
+                        FROM public.collectionobjects_common collectionobjects_common
+
+                        INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+                        LEFT JOIN public.hierarchy hierarchy_ref_text ON collectionobjects_common.id = hierarchy_ref_text.parentid AND hierarchy_ref_text.primarytype = 'smkReferenceTextGroup'
+                        RIGHT JOIN public.smkreferencetextgroup smkreferencetextgroup ON hierarchy_ref_text.id = smkreferencetextgroup.id
+                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_ref_text ON vocabularyitems_common_ref_text.refname = smkreferencetextgroup.smkreferencetexttype
+ 
+    /*   WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+ 
+                        GROUP BY objectid, vocabularyitems_common_ref_text.displayname, smkreferencetext
+                  )
+                  AS sub_reference_text
+
+                GROUP BY objectid
+        ) AS reference_text
+
+        ON collectionobjects_common.id = reference_text.objectid
+ 
+ 
+  /* - related works -*/
+        LEFT JOIN (
+
+               SELECT
+
+                relations_common_related.objectcsid AS objectcsid,
+                string_agg(
+                        format('%s;--;%s %s;--;%s;--;%s',
+                                related_object.objectnumber, 
+                                initcap(persontermgroup_artist.forename),
+                                initcap(persontermgroup_artist.surname),                                
+                                smktitlegroup_first.smktitle,
+                                array_to_string(media.medium_image_url,',')),                                
+                ';-;') AS related_id
+              
+
+                FROM public.relations_common relations_common_related
+
+                LEFT JOIN public.hierarchy hierarchy_related ON relations_common_related.subjectcsid= hierarchy_related.name
+                LEFT JOIN public.collectionobjects_common related_object ON related_object.id = hierarchy_related.id
+                 /* related object - first title (independant of language) */
+                LEFT JOIN public.hierarchy hierarchy_title ON related_object.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+                LEFT JOIN public.smktitlegroup smktitlegroup_first ON smktitlegroup_first.id = hierarchy_title.id
+                
+                /* related object - artist name */
+                LEFT JOIN public.hierarchy hierarchy_prodgroup ON related_object.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup' AND hierarchy_prodgroup.pos = 0
+                LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
+                LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname                     
+                LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
+                 
+                RIGHT JOIN public.hierarchy hierarchy_artist_1 ON persons_common_artist.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'personTermGroup' AND hierarchy_artist_1.pos = 0
+                LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
+
+                /* related object - picture */
+                LEFT JOIN artworks_and_associated_pictures AS media ON related_object.id = media.objcsid
+
+
+                WHERE
+                        relations_common_related.subjectdocumenttype='CollectionObject'
+                        AND relations_common_related.relationshiptype='affects'
+ 
+    /*    AND relations_common_related.objectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+        
+                GROUP BY relations_common_related.objectcsid
+
+        ) AS related_work
+
+        ON hierarchy0.name = related_work.objectcsid
+                    
+
+  /* - multiple works -*/
+        LEFT JOIN (
+
+             SELECT
+
+                sub_multi_work.objectcsid AS objectcsid,
+                string_agg(sub_multi_work.multi_work_ref,';-;') AS multi_work_ref
+
+                FROM(
+
+                        SELECT
+
+                        relations_common_related.reference_point AS objectcsid,                      
+                        format('%s;--;%s;--;%s;--;%s',
+                                relations_common_related.relation_type,
+                                related_object.objectnumber,
+                                smktitlegroup.smktitle,
+                                array_to_string(media.medium_image_url,',')
+                         )
+                        AS multi_work_ref
+
+                        FROM (
+                                        SELECT
+                                        CAST('parent' AS TEXT) AS relation_type,
+                                        parents.objectcsid AS related_objects,
+                                        parents.subjectcsid AS reference_point,
+                                        parents.objectrefname AS refname
+                                        
+                                        FROM public.relations_common parents
+                                        
+                                        WHERE
+                                                parents.subjectdocumenttype = 'CollectionObject'
+                                                AND parents.relationshiptype = 'hasBroader'
+                                                AND parents.subjectcsid IS NOT NULL
+                                        
+                                       
+      /*          AND parents.subjectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                                
+                                UNION
+                                
+                                
+                                        SELECT
+                                        CAST('child' AS TEXT) AS relation_type,
+                                        children.subjectcsid AS related_objects,
+                                        children.objectcsid AS reference_point,
+                                        children.subjectrefname AS refname
+                                        
+                                
+                                        FROM public.relations_common children                        
+                                       
+                                        WHERE
+                                                children.subjectdocumenttype = 'CollectionObject'
+                                                AND children.relationshiptype = 'hasBroader'
+                                                AND children.objectcsid IS NOT NULL
+                                
+                                
+        /*               AND children.objectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                                
+                                UNION
+                                
+                                        SELECT
+                                        CAST('sibling' AS TEXT) AS relation_type,        
+                                        siblings.related_objects,
+                                        parents.subjectcsid AS reference_point,
+                                        siblings.refname 
+                                        
+                                        FROM public.relations_common parents
+                                        
+                                        LEFT JOIN(
+                                        
+                                                        SELECT
+                                
+                                                        children.subjectcsid AS related_objects,
+                                                        children.subjectrefname AS refname,
+                                                        children.objectcsid                         
+                                
+                                                        FROM public.relations_common children                        
+                                                       
+                                                        WHERE
+                                                                children.subjectdocumenttype = 'CollectionObject'
+                                                                AND children.relationshiptype = 'hasBroader'
+                                                                AND children.objectcsid IS NOT NULL
+                                                
+                                        ) AS siblings
+                                        ON siblings.objectcsid = parents.objectcsid
+                                        
+                                        WHERE
+                                                parents.subjectdocumenttype = 'CollectionObject'
+                                                AND parents.relationshiptype = 'hasBroader'
+                                                AND parents.subjectcsid IS NOT NULL
+                                        
+                                        
+        /*        AND parents.subjectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                        
+                        ) 
+                        
+                        AS relations_common_related
+
+                        LEFT JOIN public.hierarchy hierarchy_related ON relations_common_related.related_objects = hierarchy_related.name
+                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'dansk'
+                        LEFT JOIN public.collectionobjects_common related_object ON related_object.id = hierarchy_related.id
+                        LEFT JOIN public.hierarchy hierarchy_title ON related_object.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup'  AND hierarchy_title.pos = 0
+                        LEFT JOIN public.smktitlegroup smktitlegroup ON smktitlegroup.id = hierarchy_title.id
+
+                        /* related object - picture */                        
+                        LEFT JOIN artworks_and_associated_pictures AS media ON related_object.id = media.objcsid
+   
+    /*   WHERE relations_common_related.reference_point = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+
+                       GROUP BY
+                                relations_common_related.reference_point,
+                                relations_common_related.relation_type,
+                                related_object.objectnumber,
+                                smktitlegroup.smktitle, 
+                                media.medium_image_url
+     
+                ) AS sub_multi_work
+
+                GROUP BY sub_multi_work.objectcsid
+
+        ) AS multi_work
+
+        ON hierarchy0.name = multi_work.objectcsid
+
+/* - picture -*/
+    LEFT JOIN artworks_and_associated_pictures AS media ON collectionobjects_common.id = media.objcsid
+ 
+    /* verifies that the objet is available*/
+    INNER JOIN public.collectionspace_core core ON core.id = collectionobjects_common.id
+    INNER JOIN public.misc misc ON misc.id = collectionobjects_common.id 
+    
+WHERE core.tenantid = 5 AND misc.lifecyclestate != 'deleted' 
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+/*AND hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+ 
+GROUP BY
+
+    artist.artists_data,
+    acquisitions_smk.smkacquistionsource   ,
+
+    collectionobjects_common.objectnumber,
+    ccrd.item,
+    collectionobjects_common.id,
+    concepttermgroup.termdisplayname,    
+    collectionobjects_finearts.facopyrightstatement,
+    core.createdat ,
+    core.updatedat ,
+
+    description_note_dk.note,
+    description_note_en.note,
+
+    faproductiontechniquegroup_en.faproductiontechnique   ,    
+    faproductiontechniquegroup_dk.faproductiontechnique   ,    
+    
+    hierarchy0.name,
+        
+    loc_name.termdisplayname,
+
+    media.medium_image_url,
+    multi_work.multi_work_ref,
+    
+    meas.heigth   ,
+    meas.width  ,
+    meas.depth,
+    meas.heigthunit  ,
+    meas.widthunit,    
+    meas.depthunit,
+
+    object_production_century_earliest,
+    
+    proveniens.proveniens   ,
+
+    reference_text.reference_text  ,
+    related_work.related_id,
+
+    smktitlegroup_first.smktitle,
+    smkstructureddatesmkgroup_obj_prod_date.datesmkdisplaytext ,
+    smkstructureddatesmkgroup_obj_prod_date.datesmkearliestscalarvalue,
+    smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue ,
+    smkstructureddatesmkgroup_obj_acq_date.datesmkdisplaytext ,
+    smkstructureddatesmkgroup_obj_prod_date.datesmkdisplayengtext,
+
+    title_dk.title_dk,
+    title_eng.title_eng,
+    vocabularyitems_common_acq.displayname                                                               
+                                                        
+
+"
+
+
+		deltaImportQuery="
+
+    
+
+SELECT
+
+        collectionobjects_common.objectnumber                                         AS id,
+        
+        artist.artists_data                                                           AS artists_data,         
+        smkstructureddatesmkgroup_obj_acq_date.datesmkdisplaytext                     AS acq_date,
+        vocabularyitems_common_acq.displayname                                        AS acq_method,
+        acquisitions_smk.smkacquistionsource                                          AS acq_source,
+        
+        collectionobjects_finearts.facopyrightstatement                               AS copyright,
+        hierarchy0.name                                                               AS csid,
+        core.createdat                                                                AS created,
+        
+        description_note_dk.note                                                      AS description_note_dk,
+        description_note_en.note                                                      AS description_note_en,               
+        
+        CASE WHEN lower(loc_name.termdisplayname) NOT LIKE 'sal%'
+        THEN NULL
+        ELSE loc_name.termdisplayname
+        END                                                                           AS location_name,               
+        TIMESTAMP '${dih.delta.updatedat}'                                            AS last_update,
+          
+        array_to_string(media.medium_image_url,',')                                   AS medium_image_url,
+        multi_work.multi_work_ref                                                     AS multi_work_ref,
+        
+        concepttermgroup.termdisplayname                                              AS object_type,           
+        smkstructureddatesmkgroup_obj_prod_date.datesmkearliestscalarvalue            AS object_production_date_earliest,
+        smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue              AS object_production_date_latest,
+        smkstructureddatesmkgroup_obj_prod_date.datesmkdisplaytext                    AS object_production_date_text_dk,
+        smkstructureddatesmkgroup_obj_prod_date.datesmkdisplayengtext                 AS object_production_date_text_en,
+        
+        CASE WHEN (smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue) IS NULL
+        THEN NULL
+        ELSE EXTRACT (CENTURY FROM smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue)
+        END                                                                           AS object_production_century_earliest,
+        
+        faproductiontechniquegroup_en.faproductiontechnique                           AS prod_technique_en,
+        faproductiontechniquegroup_dk.faproductiontechnique                           AS prod_technique_dk,
+        proveniens.proveniens                                                         AS proveniens,
+        
+        reference_text.reference_text                                                 AS reference_texts,
+        related_work.related_id                                                       AS related_id,
+        
+        (title_dk.title_dk)                                                           AS title_dk,
+        (title_eng.title_eng)                                                         AS title_eng,
+        (smktitlegroup_first.smktitle)                                                AS title_first,
+        
+        meas.heigthunit                                                       AS heigthunit,
+        CAST (meas.heigth AS TEXT)                                            AS heigth,
+        meas.widthunit                                                        AS widthunit,
+        CAST (meas.width AS TEXT)                                             AS width,
+        meas.depthunit                                                        AS depthunit,
+        CAST (meas.depth AS TEXT)                                             AS depth        
+ 
+FROM public.collectionobjects_common collectionobjects_common
+
+    INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+    
+/* - object -*/
+    /* object production type*/
+    /* dansk */
+    LEFT JOIN(
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(faproductiontechniquegroup_tmp.faproductiontechnique,';-;') as faproductiontechnique
+
+        FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)    
+            LEFT JOIN public.hierarchy hierarchy_obj_fab ON collectionobjects_common.id = hierarchy_obj_fab.parentid AND hierarchy_obj_fab.primarytype = 'faProductionTechniqueGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'dansk'
+            RIGHT JOIN public.faproductiontechniquegroup faproductiontechniquegroup_tmp ON faproductiontechniquegroup_tmp.id = hierarchy_obj_fab.id AND faproductiontechniquegroup_tmp.faproductiontechniquelanguage = vocabularyitems_common_dk.refname
+
+       WHERE hierarchy0.name = '${dih.delta.csid}'
+      
+        GROUP BY
+            collectionobjects_common.id
+
+    ) AS faproductiontechniquegroup_dk
+
+    ON collectionobjects_common.id = faproductiontechniquegroup_dk.objid
+
+    /* english */
+    LEFT JOIN(
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(faproductiontechniquegroup_tmp.faproductiontechnique,';-;') as faproductiontechnique
+
+        FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)    
+            LEFT JOIN public.hierarchy hierarchy_obj_fab ON collectionobjects_common.id = hierarchy_obj_fab.parentid AND hierarchy_obj_fab.primarytype = 'faProductionTechniqueGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'engelsk'
+            RIGHT JOIN public.faproductiontechniquegroup faproductiontechniquegroup_tmp ON faproductiontechniquegroup_tmp.id = hierarchy_obj_fab.id AND faproductiontechniquegroup_tmp.faproductiontechniquelanguage = vocabularyitems_common_dk.refname
+
+        WHERE hierarchy0.name = '${dih.delta.csid}'
+      
+        GROUP BY
+            collectionobjects_common.id
+
+    ) AS faproductiontechniquegroup_en
+
+    ON collectionobjects_common.id = faproductiontechniquegroup_en.objid
+    
+    /* responsible department*/
+    LEFT JOIN public.collectionobjects_common_responsibledepartments ccrd ON collectionobjects_common.id = ccrd.id
+    
+     /* object production date */
+    LEFT JOIN public.hierarchy hierarchy_smk_obj_prod_date_group ON collectionobjects_common.id = hierarchy_smk_obj_prod_date_group.parentid AND hierarchy_smk_obj_prod_date_group.pos = 0 AND hierarchy_smk_obj_prod_date_group.primarytype = 'smkObjectProductionDateGroup'
+    LEFT JOIN public.smkobjectproductiondategroup smkobjectproductiondategroup ON smkobjectproductiondategroup.id = hierarchy_smk_obj_prod_date_group.id
+    LEFT JOIN public.hierarchy hierarchy_smk_obj_prod_date ON smkobjectproductiondategroup.id = hierarchy_smk_obj_prod_date.parentid AND hierarchy_smk_obj_prod_date.name = 'smkObjectProductionDate'
+    LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_obj_prod_date ON smkstructureddatesmkgroup_obj_prod_date.id = hierarchy_smk_obj_prod_date.id
+
+        /* object acquisition*/
+        LEFT JOIN public.hierarchy hierarchy_obj_acq ON collectionobjects_common.id = hierarchy_obj_acq.id AND hierarchy_obj_acq.primarytype = 'CollectionObjectTenant5'
+        LEFT JOIN public.relations_common relations_common_obj_acq ON relations_common_obj_acq.subjectcsid = hierarchy_obj_acq.name AND relations_common_obj_acq.objectdocumenttype = 'Acquisition' AND relations_common_obj_acq.objectcsid IS NOT NULL
+        LEFT JOIN public.hierarchy hierarchy_obj_acq_smk ON relations_common_obj_acq.objectcsid = hierarchy_obj_acq_smk.name
+        LEFT JOIN public.acquisitions_common acquisitions_common ON acquisitions_common.id = hierarchy_obj_acq_smk.id
+        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_acq ON vocabularyitems_common_acq.refname = acquisitions_common.acquisitionmethod
+        LEFT JOIN public.acquisitions_smk acquisitions_smk ON acquisitions_smk.id = hierarchy_obj_acq_smk.id
+   
+        /* object acquisition date */
+        LEFT JOIN public.hierarchy hierarchy_obj_acq_date ON acquisitions_common.id = hierarchy_obj_acq_date.parentid AND hierarchy_obj_acq_date.name = 'acquisitions_smk:smkAcquisitionDate'
+        LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_obj_acq_date ON smkstructureddatesmkgroup_obj_acq_date.id = hierarchy_obj_acq_date.id
+
+        /* object type */
+        LEFT JOIN public.collectionobjects_smk collectionobjects_smk ON collectionobjects_common.id = collectionobjects_smk.id
+        LEFT JOIN public.concepts_common concepts_common ON concepts_common.refname = collectionobjects_smk.smkobjectname
+        LEFT JOIN public.hierarchy hierarchy_smk_object_type ON concepts_common.id = hierarchy_smk_object_type.parentid AND hierarchy_smk_object_type.primarytype = 'conceptTermGroup'
+        LEFT JOIN public.concepttermgroup concepttermgroup ON concepttermgroup.id = hierarchy_smk_object_type.id
+        
+         /* object history (proveniens) */
+        LEFT JOIN(
+
+                SELECT
+
+                collectionobjects_common.id AS objectid,
+                string_agg(smkobjecthistorygroup.smkobjecthistory,';-;') AS proveniens
+
+                FROM public.collectionobjects_common collectionobjects_common
+
+                INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+                LEFT JOIN public.hierarchy hierarchy_object_history ON collectionobjects_common.id = hierarchy_object_history.parentid AND hierarchy_object_history.primarytype = 'smkObjectHistoryGroup'
+                LEFT JOIN public.smkobjecthistorygroup smkobjecthistorygroup ON smkobjecthistorygroup.id = hierarchy_object_history.id
+
+         WHERE hierarchy0.name = '${dih.delta.csid}'
+
+                GROUP BY objectid
+
+        ) AS proveniens
+
+        ON collectionobjects_common.id = proveniens.objectid
+
+ /* copyright */
+    LEFT JOIN public.collectionobjects_finearts ON collectionobjects_common.id = collectionobjects_finearts.id
+
+/* location */
+LEFT JOIN public.locations_common loc_common ON collectionobjects_common.computedcurrentlocation = loc_common.refname
+LEFT JOIN public.hierarchy hierarchy_loc_name ON loc_common.id = hierarchy_loc_name.parentid AND hierarchy_loc_name.primarytype = 'locTermGroup'
+LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
+
+/* - artist -*/
+    LEFT JOIN(
+         SELECT
+             objectid,
+             string_agg(sub_artist.artists_data,';-;') AS artists_data    
+         FROM    
+             (
+                          
+                SELECT    
+                       sub_sub_artist.objectid,
+                       sub_sub_artist.artists_data,
+                       sub_sub_artist.pos
+                FROM(
+                                /* the artist is a person */
+                               SELECT
+                            
+                                            collectionobjects_common.id AS objectid,
+                                            hierarchy_prodgroup.pos,
+                                                
+                                                
+                                                format ('%s;%s;%s;%s;%s;%s;%s;%s;%s' ,
+                                                        (persontermgroup_artist.termdisplayname),                                                        
+
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear
+                                                        END,
+                                                        
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkdisplaytext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_birth.datesmkdisplaytext
+                                                        END,
+
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkdisplayengtext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_birth.datesmkdisplayengtext
+                                                        END,
+                                                        
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_death.datesmkthirddateyear) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_death.datesmkthirddateyear
+                                                        END,
+                                
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_death.datesmkdisplaytext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_death.datesmkdisplaytext
+                                                        END,
+                                                        
+                                                        CASE WHEN (smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext
+                                                        END,
+                                
+                                                        CASE WHEN (vocabularyitems_common_artist.displayname) IS NULL
+                                                        THEN '(?)'
+                                                        ELSE initcap(vocabularyitems_common_artist.displayname)
+                                                        END,
+                                                        
+                                                        CASE WHEN (vocabularyitems_common_auth_artist.displayname) IS NULL
+                                                        THEN 'original'
+                                                        ELSE initcap(vocabularyitems_common_auth_artist.displayname)
+                                                        END
+                                                        )
+                                           AS artists_data
+                            
+                                            FROM public.collectionobjects_common collectionobjects_common
+                            
+                                            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+                            
+                                            LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
+                                            LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
+                            
+                                            /* artist nationality */
+                                            LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
+                                            LEFT JOIN public.persons_common_nationalities persons_common_nationalities_artist ON persons_common_artist.id = persons_common_nationalities_artist.id AND persons_common_nationalities_artist.pos = 0
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_artist ON vocabularyitems_common_artist.refname = persons_common_nationalities_artist.item
+                            
+                                            /* artist name */
+                                            RIGHT JOIN public.hierarchy hierarchy_artist_1 ON persons_common_artist.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'personTermGroup' AND hierarchy_artist_1.pos = 0
+                                            LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
+                            
+                                            /* artist birth and death date */
+                                            LEFT JOIN public.hierarchy hierarchy_artist_2 ON persons_common_artist.id = hierarchy_artist_2.parentid AND hierarchy_artist_2.name = 'persons_smk:smkDeathDate'
+                                            LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_death ON smkstructureddatesmkgroup_artist_death.id = hierarchy_artist_2.id
+                                            LEFT JOIN public.hierarchy hierarchy_artist_3 ON persons_common_artist.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'persons_smk:smkBirthDate'
+                                            LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_birth ON smkstructureddatesmkgroup_artist_birth.id = hierarchy_artist_3.id
+                            
+                                            /*  authenticity */
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+                              
+                        
+             WHERE hierarchy0.name = '${dih.delta.csid}'
+                         
+                           
+                                            GROUP BY
+                                                    objectid,
+                                                    persontermgroup_artist.id,
+                                                    vocabularyitems_common_auth_artist.displayname,
+                                                    persontermgroup_artist.forename,
+                                                    persontermgroup_artist.surname,
+                                                    vocabularyitems_common_artist.displayname,
+                                                    smkstructureddatesmkgroup_artist_birth.datesmkdisplaytext,
+                                                    smkstructureddatesmkgroup_artist_death.datesmkdisplaytext,
+                                                    smkstructureddatesmkgroup_artist_birth.datesmkdisplayengtext,
+                                                    smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext,
+                                                    smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear,
+                                                    smkstructureddatesmkgroup_artist_death.datesmkthirddateyear,
+                                                    hierarchy_prodgroup.pos                                                                
+                                        
+                                        
+                                        
+                                UNION
+                        
+                        
+                                       /* the artist is an organization */
+                                        SELECT
+                        
+                                        collectionobjects_common.id AS objectid,
+                                        hierarchy_prodgroup.pos,                                                
+                                        format ('%s;%s;%s;%s;%s;%s;%s;;original' ,
+                                                org_name.termdisplayname,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear
+                                                END,
+                        
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext
+                                                END,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext
+                                                END,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear
+                                                END,
+                        
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext
+                                                END,
+                                                
+                                                CASE WHEN (smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext) IS NULL
+                                                THEN '(?)'
+                                                ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext
+                                                END )
+                        
+                                        AS artists_data
+                        
+                                        FROM public.collectionobjects_common collectionobjects_common
+                        
+                                        INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+                        
+                                        LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
+                                        LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
+                        
+                                        LEFT JOIN public.organizations_common org_common ON org_common.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
+                                        LEFT JOIN public.hierarchy hierarchy_org_name ON org_common.id = hierarchy_org_name.parentid AND hierarchy_org_name.primarytype = 'orgTermGroup'
+                                        LEFT JOIN public.orgtermgroup org_name ON hierarchy_org_name.id = org_name.id
+                        
+                                        /* artist name - organization */
+                                        RIGHT JOIN public.hierarchy hierarchy_artist_1 ON org_common.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'orgTermGroup' AND hierarchy_artist_1.pos = 0
+                                        LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
+                        
+                                        /* artist organization - creation and dissolution date */
+                                        LEFT JOIN public.hierarchy hierarchy_artist_2 ON org_common.id = hierarchy_artist_2.parentid AND hierarchy_artist_2.name = 'organizations_smk:smkFoundingDateGroup'
+                                        LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_dissolution ON smkstructureddatesmkgroup_artist_org_dissolution.id = hierarchy_artist_2.id
+                                        LEFT JOIN public.hierarchy hierarchy_artist_3 ON org_common.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'organizations_smk:smkDissolutionDateGroup'
+                                        LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_creation ON smkstructureddatesmkgroup_artist_org_creation.id = hierarchy_artist_3.id
+                        
+                                        /* authenticity - organization */
+                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+                        
+                        WHERE hierarchy0.name = '${dih.delta.csid}'
+                        
+                                        GROUP BY
+                                                objectid,
+                                                org_name.termdisplayname,
+                                                org_common.foundingplace,
+                                                hierarchy_prodgroup.pos,
+                                                smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext,
+                                                smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext,
+                                                smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext,
+                                                smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext,
+                                                smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear,
+                                                smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear
+
+                    
+                        ) AS sub_sub_artist
+                        
+                        GROUP BY sub_sub_artist.objectid, sub_sub_artist.artists_data, sub_sub_artist.pos
+                        
+                        ORDER BY sub_sub_artist.objectid, sub_sub_artist.pos  
+
+                ) AS sub_artist
+    
+          GROUP BY objectid
+
+    ) AS artist
+
+    ON collectionobjects_common.id = artist.objectid
+
+/* - title -*/
+      /* title in danish */
+    LEFT JOIN(
+            SELECT
+            collectionobjects_common.id as objid,
+            string_agg(smktitlegroup.smktitle, ';-;') as title_dk
+
+            FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+            /* title in danish */
+            LEFT JOIN public.hierarchy hierarchy_title ON collectionobjects_common.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'dansk'
+            LEFT JOIN public.smktitlegroup smktitlegroup ON smktitlegroup.id = hierarchy_title.id AND smktitlegroup.smktitlelanguage = vocabularyitems_title_dk.refname
+ 
+        WHERE hierarchy0.name = '${dih.delta.csid}'
+         
+            GROUP BY
+            collectionobjects_common.id
+
+    ) AS title_dk
+
+    ON collectionobjects_common.id = title_dk.objid
+
+    /* title in english */
+    LEFT JOIN(
+            SELECT
+            collectionobjects_common.id as objid,
+            string_agg(smktitletranslationsubgroup.smktitletranslation, ';-;') as title_eng
+
+            FROM public.collectionobjects_common collectionobjects_common
+
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+             /* title in english */
+            LEFT JOIN public.hierarchy hierarchy_title ON collectionobjects_common.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+            LEFT JOIN public.hierarchy hierarchy_title_eng ON hierarchy_title.id = hierarchy_title_eng.parentid AND hierarchy_title_eng.pos = 0
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_eng ON vocabularyitems_common_eng.displayname = 'engelsk'
+            LEFT JOIN public.smktitletranslationsubgroup smktitletranslationsubgroup ON smktitletranslationsubgroup.id = hierarchy_title_eng.id AND smktitletranslationsubgroup.smktitletranslationlanguage = vocabularyitems_common_eng.refname
+          
+ WHERE hierarchy0.name = '${dih.delta.csid}'
+
+            GROUP BY
+            collectionobjects_common.id
+
+    ) AS title_eng
+
+    ON collectionobjects_common.id = title_eng.objid
+
+/* - description note -*/
+
+ /* dansk */
+ LEFT JOIN(
+
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(farelatedworklabelgroup.farelatedworklabel, ';-;') as note
+
+            FROM public.collectionobjects_common collectionobjects_common
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+            LEFT JOIN public.hierarchy hierarchy_descr_note ON collectionobjects_common.id = hierarchy_descr_note.parentid AND hierarchy_descr_note.primarytype = 'faRelatedWorkLabelGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'dansk'
+            LEFT JOIN public.farelatedworklabelgroup faRelatedWorkLabelGroup ON hierarchy_descr_note.id = faRelatedWorkLabelGroup.id AND faRelatedWorkLabelGroup.farelatedworklabellanguage = vocabularyitems_title_dk.refname
+           
+        WHERE hierarchy0.name = '${dih.delta.csid}'
+
+            GROUP BY
+            collectionobjects_common.id
+            
+
+    ) AS description_note_dk
+
+    ON collectionobjects_common.id = description_note_dk.objid
+
+ /* english */
+ LEFT JOIN(
+
+        SELECT
+            collectionobjects_common.id as objid,
+            string_agg(farelatedworklabelgroup.farelatedworklabel, ';-;') as note
+
+            FROM public.collectionobjects_common collectionobjects_common
+            INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+            LEFT JOIN public.hierarchy hierarchy_descr_note ON collectionobjects_common.id = hierarchy_descr_note.parentid AND hierarchy_descr_note.primarytype = 'faRelatedWorkLabelGroup'
+            LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'engelsk'
+            LEFT JOIN public.farelatedworklabelgroup faRelatedWorkLabelGroup ON hierarchy_descr_note.id = faRelatedWorkLabelGroup.id AND faRelatedWorkLabelGroup.farelatedworklabellanguage = vocabularyitems_title_dk.refname
+           
+       WHERE hierarchy0.name = '${dih.delta.csid}'
+
+            GROUP BY
+            collectionobjects_common.id
+
+    ) AS description_note_en
+
+    ON collectionobjects_common.id = description_note_en.objid
+    
+/* - dimensions - take the first dimension in the list */
+        /* height / width / bredth */
+        LEFT JOIN (
+
+                 SELECT
+
+                collectionobjects_common.id AS objectid,
+                string_agg(CAST (CAST (dimensionsubgroup_hojde.value AS NUMERIC ) AS TEXT),',') AS heigth,
+                string_agg(CAST (CAST (dimensionsubgroup_bredde.value AS NUMERIC ) AS TEXT),',') AS width,
+                string_agg(CAST (CAST (dimensionsubgroup_dybde.value AS NUMERIC ) AS TEXT),',') AS depth,
+                string_agg(dimensionsubgroup_hojde.measurementunit,',') AS heigthunit,
+                string_agg(dimensionsubgroup_bredde.measurementunit,',') AS widthunit,
+                string_agg(dimensionsubgroup_dybde.measurementunit,',') AS depthunit
+
+                FROM public.collectionobjects_common collectionobjects_common
+
+                INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+
+                LEFT JOIN public.hierarchy hierarchy_meas_group ON collectionobjects_common.id = hierarchy_meas_group.parentid AND hierarchy_meas_group.primarytype = 'measuredPartGroup' AND hierarchy_meas_group.pos = 0
+                RIGHT JOIN public.measuredpartgroup measuredpartgroup ON hierarchy_meas_group.id = measuredpartgroup.id
+                LEFT JOIN public.hierarchy hierarchy_meas ON measuredpartgroup.id = hierarchy_meas.parentid AND hierarchy_meas.primarytype = 'dimensionSubGroup'
+
+                LEFT JOIN public.dimensionsubgroup dimensionsubgroup_hojde ON hierarchy_meas.id = dimensionsubgroup_hojde.id AND dimensionsubgroup_hojde.dimension = 'hojde'
+                LEFT JOIN public.dimensionsubgroup dimensionsubgroup_bredde ON hierarchy_meas.id = dimensionsubgroup_bredde.id AND dimensionsubgroup_bredde.dimension = 'bredde'
+                LEFT JOIN public.dimensionsubgroup dimensionsubgroup_dybde ON hierarchy_meas.id = dimensionsubgroup_dybde.id AND dimensionsubgroup_dybde.dimension = 'dybde'
+
+        
+        WHERE hierarchy0.name = '${dih.delta.csid}'
+ 
+                GROUP BY objectid
+
+        ) AS meas
+
+        ON collectionobjects_common.id = meas.objectid  
+
+    /* first title (independant of language) */
+    LEFT JOIN public.hierarchy hierarchy_title ON collectionobjects_common.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+    LEFT JOIN public.smktitlegroup smktitlegroup_first ON smktitlegroup_first.id = hierarchy_title.id
+
+/* - reference text -*/
+        LEFT JOIN(
+
+                SELECT
+
+                        objectid,
+                        string_agg(reference_text,';-;') AS reference_text
+                FROM
+                       ( SELECT
+                        collectionobjects_common.id AS objectid,
+                        
+                        CASE WHEN (smkreferencetext IS NULL)
+                                THEN NULL
+                        ELSE 
+                                format('%s;-1>;: %s',
+                                vocabularyitems_common_ref_text.displayname,
+                                smkreferencetext)        
+                        END AS reference_text
+
+                        FROM public.collectionobjects_common collectionobjects_common
+
+                        INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
+                        LEFT JOIN public.hierarchy hierarchy_ref_text ON collectionobjects_common.id = hierarchy_ref_text.parentid AND hierarchy_ref_text.primarytype = 'smkReferenceTextGroup'
+                        RIGHT JOIN public.smkreferencetextgroup smkreferencetextgroup ON hierarchy_ref_text.id = smkreferencetextgroup.id
+                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_ref_text ON vocabularyitems_common_ref_text.refname = smkreferencetextgroup.smkreferencetexttype
+ 
+       WHERE hierarchy0.name = '${dih.delta.csid}'
+ 
+                        GROUP BY objectid, vocabularyitems_common_ref_text.displayname, smkreferencetext
+                  )
+                  AS sub_reference_text
+
+                GROUP BY objectid
+        ) AS reference_text
+
+        ON collectionobjects_common.id = reference_text.objectid
+ 
+ 
+  /* - related works -*/
+        LEFT JOIN (
+
+               SELECT
+
+                relations_common_related.objectcsid AS objectcsid,
+                string_agg(
+                        format('%s;--;%s %s;--;%s;--;%s',
+                                related_object.objectnumber, 
+                                initcap(persontermgroup_artist.forename),
+                                initcap(persontermgroup_artist.surname),                                
+                                smktitlegroup_first.smktitle,
+                                array_to_string(media.medium_image_url,',')),                                
+                ';-;') AS related_id
+              
+
+                FROM public.relations_common relations_common_related
+
+                LEFT JOIN public.hierarchy hierarchy_related ON relations_common_related.subjectcsid= hierarchy_related.name
+                LEFT JOIN public.collectionobjects_common related_object ON related_object.id = hierarchy_related.id
+                 /* related object - first title (independant of language) */
+                LEFT JOIN public.hierarchy hierarchy_title ON related_object.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup' AND hierarchy_title.pos = 0
+                LEFT JOIN public.smktitlegroup smktitlegroup_first ON smktitlegroup_first.id = hierarchy_title.id
+                
+                /* related object - artist name */
+                LEFT JOIN public.hierarchy hierarchy_prodgroup ON related_object.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup' AND hierarchy_prodgroup.pos = 0
+                LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
+                LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname                     
+                LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
+                 
+                RIGHT JOIN public.hierarchy hierarchy_artist_1 ON persons_common_artist.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'personTermGroup' AND hierarchy_artist_1.pos = 0
+                LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
+
+                /* related object - picture */
+                LEFT JOIN artworks_and_associated_pictures AS media ON related_object.id = media.objcsid
+
+
+                WHERE
+                        relations_common_related.subjectdocumenttype='CollectionObject'
+                        AND relations_common_related.relationshiptype='affects'
+ 
+        AND relations_common_related.objectcsid = '${dih.delta.csid}'
+        
+                GROUP BY relations_common_related.objectcsid
+
+        ) AS related_work
+
+        ON hierarchy0.name = related_work.objectcsid
+                    
+
+  /* - multiple works -*/
+        LEFT JOIN (
+
+             SELECT
+
+                sub_multi_work.objectcsid AS objectcsid,
+                string_agg(sub_multi_work.multi_work_ref,';-;') AS multi_work_ref
+
+                FROM(
+
+                        SELECT
+
+                        relations_common_related.reference_point AS objectcsid,                      
+                        format('%s;--;%s;--;%s;--;%s',
+                                relations_common_related.relation_type,
+                                related_object.objectnumber,
+                                smktitlegroup.smktitle,
+                                array_to_string(media.medium_image_url,',')
+                         )
+                        AS multi_work_ref
+
+                        FROM (
+                                        SELECT
+                                        CAST('parent' AS TEXT) AS relation_type,
+                                        parents.objectcsid AS related_objects,
+                                        parents.subjectcsid AS reference_point,
+                                        parents.objectrefname AS refname
+                                        
+                                        FROM public.relations_common parents
+                                        
+                                        WHERE
+                                                parents.subjectdocumenttype = 'CollectionObject'
+                                                AND parents.relationshiptype = 'hasBroader'
+                                                AND parents.subjectcsid IS NOT NULL
+                                        
+                                       
+                AND parents.subjectcsid = '${dih.delta.csid}'
+                                
+                                UNION
+                                
+                                
+                                        SELECT
+                                        CAST('child' AS TEXT) AS relation_type,
+                                        children.subjectcsid AS related_objects,
+                                        children.objectcsid AS reference_point,
+                                        children.subjectrefname AS refname
+                                        
+                                
+                                        FROM public.relations_common children                        
+                                       
+                                        WHERE
+                                                children.subjectdocumenttype = 'CollectionObject'
+                                                AND children.relationshiptype = 'hasBroader'
+                                                AND children.objectcsid IS NOT NULL
+                                
+                                
+                       AND children.objectcsid = '${dih.delta.csid}'
+                                
+                                UNION
+                                
+                                        SELECT
+                                        CAST('sibling' AS TEXT) AS relation_type,        
+                                        siblings.related_objects,
+                                        parents.subjectcsid AS reference_point,
+                                        siblings.refname 
+                                        
+                                        FROM public.relations_common parents
+                                        
+                                        LEFT JOIN(
+                                        
+                                                        SELECT
+                                
+                                                        children.subjectcsid AS related_objects,
+                                                        children.subjectrefname AS refname,
+                                                        children.objectcsid                         
+                                
+                                                        FROM public.relations_common children                        
+                                                       
+                                                        WHERE
+                                                                children.subjectdocumenttype = 'CollectionObject'
+                                                                AND children.relationshiptype = 'hasBroader'
+                                                                AND children.objectcsid IS NOT NULL
+                                                
+                                        ) AS siblings
+                                        ON siblings.objectcsid = parents.objectcsid
+                                        
+                                        WHERE
+                                                parents.subjectdocumenttype = 'CollectionObject'
+                                                AND parents.relationshiptype = 'hasBroader'
+                                                AND parents.subjectcsid IS NOT NULL
+                                        
+                                        
+                AND parents.subjectcsid = '${dih.delta.csid}'
+                        
+                        ) 
+                        
+                        AS relations_common_related
+
+                        LEFT JOIN public.hierarchy hierarchy_related ON relations_common_related.related_objects = hierarchy_related.name
+                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'dansk'
+                        LEFT JOIN public.collectionobjects_common related_object ON related_object.id = hierarchy_related.id
+                        LEFT JOIN public.hierarchy hierarchy_title ON related_object.id = hierarchy_title.parentid AND hierarchy_title.primarytype = 'smkTitleGroup'  AND hierarchy_title.pos = 0
+                        LEFT JOIN public.smktitlegroup smktitlegroup ON smktitlegroup.id = hierarchy_title.id
+
+                        /* related object - picture */                        
+                        LEFT JOIN artworks_and_associated_pictures AS media ON related_object.id = media.objcsid
+   
+       WHERE relations_common_related.reference_point = '${dih.delta.csid}'
+
+                       GROUP BY
+                                relations_common_related.reference_point,
+                                relations_common_related.relation_type,
+                                related_object.objectnumber,
+                                smktitlegroup.smktitle, 
+                                media.medium_image_url
+     
+                ) AS sub_multi_work
+
+                GROUP BY sub_multi_work.objectcsid
+
+        ) AS multi_work
+
+        ON hierarchy0.name = multi_work.objectcsid
+
+/* - picture -*/
+    LEFT JOIN artworks_and_associated_pictures AS media ON collectionobjects_common.id = media.objcsid
+ 
+    /* verifies that the objet is available*/
+    INNER JOIN public.collectionspace_core core ON core.id = collectionobjects_common.id
+    INNER JOIN public.misc misc ON misc.id = collectionobjects_common.id 
+    
+WHERE core.tenantid = 5 AND misc.lifecyclestate != 'deleted' 
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+AND hierarchy0.name = '${dih.delta.csid}'
+ 
+GROUP BY
+
+    artist.artists_data,
+    acquisitions_smk.smkacquistionsource   ,
+
+    collectionobjects_common.objectnumber,
+    ccrd.item,
+    collectionobjects_common.id,
+    concepttermgroup.termdisplayname,    
+    collectionobjects_finearts.facopyrightstatement,
+    core.createdat ,
+    core.updatedat ,
+
+    description_note_dk.note,
+    description_note_en.note,
+
+    faproductiontechniquegroup_en.faproductiontechnique   ,    
+    faproductiontechniquegroup_dk.faproductiontechnique   ,    
+    
+    hierarchy0.name,
+        
+    loc_name.termdisplayname,
+
+    media.medium_image_url,
+    multi_work.multi_work_ref,
+    
+    meas.heigth   ,
+    meas.width  ,
+    meas.depth,
+    meas.heigthunit  ,
+    meas.widthunit,    
+    meas.depthunit,
+
+    object_production_century_earliest,
+    
+    proveniens.proveniens   ,
+
+    reference_text.reference_text  ,
+    related_work.related_id,
+
+    smktitlegroup_first.smktitle,
+    smkstructureddatesmkgroup_obj_prod_date.datesmkdisplaytext ,
+    smkstructureddatesmkgroup_obj_prod_date.datesmkearliestscalarvalue,
+    smkstructureddatesmkgroup_obj_prod_date.datesmklatestscalarvalue ,
+    smkstructureddatesmkgroup_obj_acq_date.datesmkdisplaytext ,
+    smkstructureddatesmkgroup_obj_prod_date.datesmkdisplayengtext,
+
+    title_dk.title_dk,
+    title_eng.title_eng,
+    vocabularyitems_common_acq.displayname   
+
+
+"
+
+
+                deltaQuery="
+
+SELECT
+
+        collectionobjects_common.objectnumber  AS id,
+	hierarchy0.name                        AS csid,
+	MAX (collectionspace_core.updatedat)   AS updatedat
+
+FROM public.collectionspace_core
+
+/* a related person has been changed */
+LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.id = collectionspace_core.id
+LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson 
+LEFT JOIN public.hierarchy hierarchy_prodgroup ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+
+/* a related media has been changed */
+LEFT JOIN public.hierarchy hierarchy_media ON hierarchy_media.id = collectionspace_core.id
+LEFT JOIN public.relations_common relation_media ON relation_media.subjectcsid = hierarchy_media.name
+LEFT JOIN public.hierarchy hierarchy_media_related  ON relation_media.objectcsid = hierarchy_media_related.name
+
+/* relation changed between the object and a related procedure - doesn't take in account when a related procedure has been changed */
+/* but take into account when the related location is changed */
+LEFT JOIN public.relations_common relation_proc ON relation_proc.id = collectionspace_core.id
+LEFT JOIN public.hierarchy hierarchy_proc ON relation_proc.objectcsid = hierarchy_proc.name
+
+LEFT JOIN public.collectionobjects_common ON (
+        collectionobjects_common.id = collectionspace_core.id OR 
+        collectionobjects_common.id = hierarchy_prodgroup.parentid OR
+        collectionobjects_common.id = hierarchy_media_related.id OR
+        collectionobjects_common.id = hierarchy_proc.id
+        )
+
+/* an object as been deleted*/
+LEFT JOIN public.misc ON misc.id = collectionobjects_common.id AND misc.lifecyclestate = 'deleted'
+        
+LEFT JOIN public.hierarchy hierarchy0 ON collectionobjects_common.id = hierarchy0.id
+    
+WHERE collectionspace_core.tenantid = 5
+AND collectionspace_core.updatedat &gt; '${dih.last_index_time}'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+
+GROUP BY collectionobjects_common.objectnumber, hierarchy0.name
+
+
+
+"
+
+	transformer="RegexTransformer"
+	> 
+
+	<field column="artist_split" 
+		splitBy=";-;" 
+		sourceColName="artists_data" />
+
+    	<field column="artist_data" sourceColName="artist_split" 
+      		regex="^(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*)$"
+	      groupNames="artist_name,artist_birth_first,artist_birth_dk,artist_birth_en,artist_death_first,artist_death_dk,artist_death_en,artist_natio,artist_auth"/>   
+   </entity>
+  </document>
+</dataConfig>
