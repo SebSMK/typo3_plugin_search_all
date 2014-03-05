@@ -266,6 +266,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   
   getCurrentState: function(){
 	  return this.currentState;
+  },
+    
+  generalSolrError: function(e){
+	  $(this.target).empty().html(sprintf('%s &nbsp;&nbsp; returned:&nbsp;&nbsp; %s<br>Please contact website administrator.', this.manager.solrUrl, e)); 
   }
 
 });

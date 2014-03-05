@@ -1,0 +1,5 @@
+nyheder
+samlingercollectionspace
+artikel
+kalender
+praktisk

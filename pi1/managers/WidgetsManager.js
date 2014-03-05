@@ -29,7 +29,9 @@ var Manager;
 	
 	//** init manager
 	// this function will be passed as parameter in the manager - we've got to bind it to an environment
-	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);	
+	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);
+	var generalSolrErrorProcessedBound = $.proxy(stateManager.generalSolrError, stateManager);
+	
     Manager = new AjaxSolr.smkManager({
     	solrUrl: smkCommon.getSolrPath(),    	    	
     	store: new AjaxSolr.smkParameterStore({
@@ -39,6 +41,7 @@ var Manager;
     	}),
     	searchfilterList: searchFieldsTypes,
     	allWidgetsProcessed: allWidgetsProcessedBound,
+    	generalSolrError: generalSolrErrorProcessedBound,
     	translator: translator
     });
 
