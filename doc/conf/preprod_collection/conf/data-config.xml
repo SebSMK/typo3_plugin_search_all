@@ -790,7 +790,7 @@ GROUP BY
 
     title_dk.title_dk,
     title_eng.title_eng,
-    vocabularyitems_common_acq.displayname      
+    vocabularyitems_common_acq.displayname                                                               
                                                         
 
 "
@@ -798,17 +798,7 @@ GROUP BY
 
 		deltaImportQuery="
 
- 
-
-
-"
-
-
-                deltaQuery="
-
-    SELECT
     
-       collectionobjects_common.obje
 
 SELECT
 
@@ -830,7 +820,7 @@ SELECT
         THEN NULL
         ELSE loc_name.termdisplayname
         END                                                                           AS location_name,               
-        core.updatedat                                                                AS last_update,
+        TIMESTAMP '${dih.delta.updatedat}'                                            AS last_update,
           
         array_to_string(media.medium_image_url,',')                                   AS medium_image_url,
         multi_work.multi_work_ref                                                     AS multi_work_ref,
@@ -1592,45 +1582,57 @@ GROUP BY
 
     title_dk.title_dk,
     title_eng.title_eng,
-    vocabularyitems_common_acq.displayname   ctnumber  AS id,
-    	hierarchy0.name                        AS csid,
-    	MAX (collectionspace_core.updatedat)   AS updatedat
-    
-    FROM public.collectionspace_core
-    
-    /* a related person has been changed */
-    LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.id = collectionspace_core.id
-    LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson 
-    LEFT JOIN public.hierarchy hierarchy_prodgroup ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
-    
-    /* a related media has been changed */
-    LEFT JOIN public.hierarchy hierarchy_media ON hierarchy_media.id = collectionspace_core.id
-    LEFT JOIN public.relations_common relation_media ON relation_media.subjectcsid = hierarchy_media.name
-    LEFT JOIN public.hierarchy hierarchy_media_related  ON relation_media.objectcsid = hierarchy_media_related.name
-    
-    /* relation changed between the object and a related procedure - doesn't take in account when a related procedure has been changed */
-    /* but take into account when the related location is changed */
-    LEFT JOIN public.relations_common relation_proc ON relation_proc.id = collectionspace_core.id
-    LEFT JOIN public.hierarchy hierarchy_proc ON relation_proc.objectcsid = hierarchy_proc.name
-    
-    LEFT JOIN public.collectionobjects_common ON (
-            collectionobjects_common.id = collectionspace_core.id OR 
-            collectionobjects_common.id = hierarchy_prodgroup.parentid OR
-            collectionobjects_common.id = hierarchy_media_related.id OR
-            collectionobjects_common.id = hierarchy_proc.id
-            )
-    
-    /* an object as been deleted*/
-    LEFT JOIN public.misc ON misc.id = collectionobjects_common.id AND misc.lifecyclestate = 'deleted'
-            
-    LEFT JOIN public.hierarchy hierarchy0 ON collectionobjects_common.id = hierarchy0.id
+    vocabularyitems_common_acq.displayname   
+
+
+"
+
+
+                deltaQuery="
+
+SELECT
+
+        collectionobjects_common.objectnumber  AS id,
+	hierarchy0.name                        AS csid,
+	MAX (collectionspace_core.updatedat)   AS updatedat
+
+FROM public.collectionspace_core
+
+/* a related person has been changed */
+LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.id = collectionspace_core.id
+LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson 
+LEFT JOIN public.hierarchy hierarchy_prodgroup ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
+
+/* a related media has been changed */
+LEFT JOIN public.hierarchy hierarchy_media ON hierarchy_media.id = collectionspace_core.id
+LEFT JOIN public.relations_common relation_media ON relation_media.subjectcsid = hierarchy_media.name
+LEFT JOIN public.hierarchy hierarchy_media_related  ON relation_media.objectcsid = hierarchy_media_related.name
+
+/* relation changed between the object and a related procedure - doesn't take in account when a related procedure has been changed */
+/* but take into account when the related location is changed */
+LEFT JOIN public.relations_common relation_proc ON relation_proc.id = collectionspace_core.id
+LEFT JOIN public.hierarchy hierarchy_proc ON relation_proc.objectcsid = hierarchy_proc.name
+
+LEFT JOIN public.collectionobjects_common ON (
+        collectionobjects_common.id = collectionspace_core.id OR 
+        collectionobjects_common.id = hierarchy_prodgroup.parentid OR
+        collectionobjects_common.id = hierarchy_media_related.id OR
+        collectionobjects_common.id = hierarchy_proc.id
+        )
+
+/* an object as been deleted*/
+LEFT JOIN public.misc ON misc.id = collectionobjects_common.id AND misc.lifecyclestate = 'deleted'
         
-    WHERE collectionspace_core.tenantid = 5
-    AND collectionspace_core.updatedat &gt; '${dih.last_index_time}'
-    AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
-    AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+LEFT JOIN public.hierarchy hierarchy0 ON collectionobjects_common.id = hierarchy0.id
     
-    GROUP BY collectionobjects_common.objectnumber, hierarchy0.name
+WHERE collectionspace_core.tenantid = 5
+AND collectionspace_core.updatedat &gt; '${dih.last_index_time}'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
+AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
+
+GROUP BY collectionobjects_common.objectnumber, hierarchy0.name
+
+
 
 "
 

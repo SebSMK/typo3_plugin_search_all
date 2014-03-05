@@ -1,8 +1,8 @@
 <dataConfig>
   <dataSource driver="org.postgresql.Driver"
-     url="jdbc:postgresql://csdev-seb:5432/nuxeo"
+     url="jdbc:postgresql://172.20.1.92:5432/nuxeo"
      user="postgres"
-     password="2Pica2s0" />
+     password="test" />
   <document>
     <entity name="page" pk="csid"
 	query="
