@@ -113,7 +113,7 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 							}
 						
 					</script>
-					<div id="smk_search_wrapper" class="modal_loading"></div>',
+					<div id="smk_search_wrapper"></div>',
 					$solr_path,
 					$dir_base,
 					$_SERVER['SERVER_NAME'],

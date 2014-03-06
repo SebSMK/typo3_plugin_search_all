@@ -28,10 +28,22 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	if (!self.getRefresh()){
 		self.setRefresh(true);
 		return;
-	}	 		  	
-		
-	
+	}	
+
 	$target.empty();
+	
+	// in case there are no results
+	if (this.manager.response.response.docs.length == 0){
+		$target
+        // remove the loading class (so the StateManager can remove background spinner), 
+        .removeClass('image_loading')
+        .html(this.manager.translator.getLabel("no_results"))	
+	  // trig "this image is loaded" event	      
+  	  $(self).trigger({
+			type: "smk_detail_this_img_loaded"
+	  });
+  	  return;		
+	}
 	
 	var artwork_data = null;
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
@@ -322,7 +334,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	      if ($(this).attr("src") != self.default_picture_path){
 	    	  // with the holding div #loader, apply:
 		      $target
-		        // remove the loading class (so no background spinner), 
+		        // remove the loading class (so the StateManager can remove background spinner), 
 		        .removeClass('image_loading')
 		        .find('a')
 		        // then insert our image
@@ -340,7 +352,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	      else{
 	    	
 	    	  $target
-		        // remove the loading class (so no background spinner), 
+	    	  	// remove the loading class (so the StateManager can remove background spinner), 
 		        .removeClass('image_loading')
 		        // remove link
 		        .remove('a')

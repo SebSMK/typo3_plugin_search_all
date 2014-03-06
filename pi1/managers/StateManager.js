@@ -16,6 +16,30 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  var $target = $(this.target);	
 	  
 	  var template = Mustache.getTemplate('pi1/templates/general_template.html');
+	  	  
+	  $( document ).ready(function() {
+		  $.address.strict(false); // init unique url manager - jquery address
+		  /*
+		   * Management of changes in address bar
+		   * */
+		  $.address.externalChange(function(e){	    
+				var params = e.value.split('=');
+				
+				if(params !== undefined && params.length > 1){
+					if (params[0] == 'id'){
+						$(self).trigger({
+		  					type: "smk_search_call_detail",
+		  					detail_id: params[1] 
+		  				});
+					}
+				}else{
+					$(self).trigger({
+							type: "smk_search_call_default_view"
+					});			
+				};
+		  });
+	  });
+	  
 	  
 	  $target.empty();	  
 	  $target.append(template);	
@@ -43,6 +67,24 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   },
   
 
+  /*
+   * unique URL management
+   */
+  uniqueURL: function(json){	    	  
+
+	  var uniqueURL = "";
+      
+      switch(json.key){
+	  case "id": 
+		  uniqueURL = sprintf('%s=%s', json.key, json.value);
+		  break;
+      }
+      
+	  //* set unique url	
+      $.address.value(uniqueURL);		
+
+  },
+  
   /*
    * start general modal loading screen 
    */

@@ -4,6 +4,9 @@
   },
   "language": {
     "en": {
+      
+      "no_results":				"No results were found. Please try a different search.",
+    
 	  "tagCloud_artist": 		"artist",
 	  "tagCloud_period": 		"period",
 	  "tagCloud_country": 		"nationality",
@@ -224,6 +227,9 @@
 		"zinktryk":	"Zinc engraving"
     },
     "dk": {
+    
+      "no_results":				"Desv&aelig;rre kan vi ikke finde nogle resultater til din s&oslash;gning.",	
+    
       "tagCloud_artist": 		"kunstner",
       "tagCloud_period": 		"periode",
       "tagCloud_country": 		"nationalitet",

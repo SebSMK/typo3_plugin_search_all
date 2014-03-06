@@ -180,24 +180,40 @@ var Manager;
     //* calls to detail view
     $(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	Manager.widgets['details'].call_detail(event.detail_id, true);    	
-    });	 
-    $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	
-    	//Manager.widgets['state_manager'].viewChanged({view:"detail"});
+    	Manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
+    	Manager.widgets['details'].call_detail(event.detail_id, true);      	
+    });	
+    $(Manager.widgets['state_manager']).on('smk_search_call_detail', function(event){     	
+    	Manager.widgets['state_manager'].viewChanged({view:"detail"});
+    	Manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
+    	Manager.widgets['details'].call_detail(event.detail_id, true);      	
+    });
+    $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	    	
     	Manager.widgets['state_manager'].empty_detail_view();
+    	Manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
     	Manager.widgets['details'].call_detail(event.detail_id, false);
     });	
     $(Manager.widgets['thumbs']).on('smk_search_call_detail', function(event){     	    	
     	Manager.widgets['state_manager'].empty_detail_view();
-    	//Manager.widgets['state_manager'].viewChanged({view:"detail"});
+    	Manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
     	Manager.widgets['details'].call_detail(event.detail_id, false);
     });
     
     //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
-    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});    	
+    	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
+    	Manager.widgets['state_manager'].uniqueURL({});
     	Manager.widgets['thumbs'].current_selec = null;
     });	
+    
+    //* call to default view
+    $(Manager.widgets['state_manager']).on('smk_search_call_default_view', function(event){     	
+    	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
+    	Manager.widgets['state_manager'].categoryChanged({category:"all"});
+    	Manager.widgets['state_manager'].uniqueURL({});
+    	Manager.doRequest();
+    });	
+    
     // call to teasers view from searchbox when in "detail" view
     $(Manager.widgets['searchbox']).on('smk_search_box_from_detail_call_teasers', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
@@ -280,14 +296,14 @@ var Manager;
     //* a new search term input in search box
     $(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){     	
     	Manager.widgets['currentsearch'].add_q(event.value, event.text );    	
-    });	
-        
-    //* init all widgets
-    Manager.init();
+    });	        
 
-    //* prepare and start init request
+    //* init all widgets
+    Manager.init();    
+    
+    //* default request parameters
     var q = [Manager.store.q_default];
-    var postedSearchString = smkCommon.getSearchPOST();         
+    var postedSearchString = 'barn';//smkCommon.getSearchPOST();         
     if(postedSearchString !== undefined && postedSearchString != '')
     	q = q.concat(postedSearchString);
     
@@ -307,8 +323,10 @@ var Manager;
     for (var name in params) {
       Manager.store.addByValue(name, params[name]);
     }
-    Manager.doRequest();  
     
+    if(postedSearchString !== undefined && postedSearchString != '')
+    	Manager.doRequest();    
+        
   });
 
 })(jQuery);

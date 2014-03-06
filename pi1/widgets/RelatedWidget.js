@@ -41,7 +41,17 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 				
 	//* remove all existing articles
 	self.removeAllArticles();
-			
+	
+	//* in case there's no results back from Solr, remove all ".image_loading" class in the widget and send "widget loaded" event
+	if (this.manager.response.response.docs.length == 0){
+		$target.removeClass('.image_loading');
+		$(self).trigger({
+  			type: "smk_related_this_img_loaded"
+  		});
+		$target.hide();
+		return;			
+	}
+	
 	//* create new articles
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 		//* load data
@@ -49,7 +59,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 		var doc = this.manager.response.response.docs[i];	
 		var copyright = smkCommon.computeCopyright(doc) != false; // compute copyright for the artwork in the current detail view and apply it to all related artworks  
 		
-		//* in case there are no results, remove all ".image_loading" class in the widget and send "widget loaded" event
+		//* in case there are no related works, remove all ".image_loading" class in the widget and send "widget loaded" event
 		if (doc.related_id === undefined){
 			$target.removeClass('.image_loading');
 			$(self).trigger({
