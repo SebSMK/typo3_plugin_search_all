@@ -15,6 +15,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
   default_picture_path: null, 
   
+  call_default_on_return: false,
+  
   init: function(){	  	    
 	 this.default_picture_path = smkCommon.getDefaultPicture('large');
 	 this.current_language = this.manager.translator.getLanguage();
@@ -66,14 +68,23 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  {caller:self}, 
 		  function (event) {
     		event.preventDefault();
-    		
-    		//restore previous search request
-    		event.data.caller.manager.store.load(true); 
-    		
-    		// send call to teaser view
-	    	$(event.data.caller).trigger({
-				type: "smk_search_call_teasers"
-			  });  		    	
+
+    		if (self.call_default_on_return){
+    			self.call_default_on_return =  false;
+    			// trigger the saved default request in default view
+    			$(self).trigger({
+    				type: "smk_search_call_default_view",
+					isDefault: true
+    			});	
+    		}else{ 
+        		//restore previous search request in the manager
+        		event.data.caller.manager.store.load(true); 
+        		// send call to teaser view restoring (but without sending a request to Solr)
+    	    	$(event.data.caller).trigger({
+    				type: "smk_search_call_teasers"
+    			});  		    
+    		}    		
+    			
 	    	return;  		    		            
 		  }
 	);
@@ -426,9 +437,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  
 	  },
   
-  call_detail: function (art_id, save_request) {
+  call_detail: function (art_id, save_request, call_default_on_return) {
 	  var self = this;
-			  	  
+	
+	  this.call_default_on_return = call_default_on_return !== undefined ? call_default_on_return : false;	   
+		  
 	  if(save_request){
 		  //* save current solr parameters
 		  self.manager.store.save();      		  	

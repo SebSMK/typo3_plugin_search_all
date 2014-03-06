@@ -18,9 +18,12 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  var template = Mustache.getTemplate('pi1/templates/general_template.html');
 	  	  
 	  $( document ).ready(function() {
-		  $.address.strict(false); // init unique url manager - jquery address
+		// init unique url manager - jquery address
+		  
+		  $.address.strict(false); 
 		  /*
 		   * Management of changes in address bar
+		   * n.b.: triggered also on document load
 		   * */
 		  $.address.externalChange(function(e){	    
 				var params = e.value.split('=');
@@ -33,8 +36,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  				});
 					}
 				}else{
+					// no parameters, trigger the saved current request in default view
 					$(self).trigger({
-							type: "smk_search_call_default_view"
+							type: "smk_search_call_default_view",
+							isDefault: false
 					});			
 				};
 		  });

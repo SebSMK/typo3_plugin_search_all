@@ -4,6 +4,9 @@ var Manager;
 
   $(function () {
 	
+	//******************************
+	//** load configuration
+	//****************************** 
 	var current_language = smkCommon.getCurrentLanguage();
 	
 	//** load solr conf  
@@ -20,18 +23,20 @@ var Manager;
 	
 	//** init searchFields
 	var searchFieldsTypes = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
-		
+	
+	//** init state manager widget (has to be initialized before the widgetManager)
 	var stateManager = new AjaxSolr.StateManager({
 	    id: 'state_manager',
 	    target: '#smk_search_wrapper',
 	    currentState: {view:'teasers', category:''}
 	});
-	
-	//** init manager
-	// this function will be passed as parameter in the manager - we've got to bind it to an environment
+	// those functions will be passed as parameter in the manager - we've got to bind it to an environment
 	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);
 	var generalSolrErrorProcessedBound = $.proxy(stateManager.generalSolrError, stateManager);
-	
+
+	//******************************
+	//** init widgetManager
+	//******************************    
     Manager = new AjaxSolr.smkManager({
     	solrUrl: smkCommon.getSolrPath(),    	    	
     	store: new AjaxSolr.smkParameterStore({
@@ -44,9 +49,33 @@ var Manager;
     	generalSolrError: generalSolrErrorProcessedBound,
     	translator: translator
     });
-
     
+    //* set and save default request parameters
+    var q = [Manager.store.q_default];
+    
+    Manager.store.addByValue('q', q);    
+    var params = {
+      facet: true,
+      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],      
+      //'f.prod_technique.facet.mincount': 20,
+      'facet.limit': -1,
+      'facet.mincount': 1,
+      'rows':12,
+      'defType': 'edismax',      
+      'qf': Manager.store.get_qf_string(),
+      'start': 0, // Math.floor((Math.random()*2000)+1),
+      'json.nl': 'map'
+    };
+    for (var name in params) {
+      Manager.store.addByValue(name, params[name]);
+    }
+    // save 'default request' parameters
+    Manager.store.save(true);
+    
+	//******************************
 	//** load widgets
+	//******************************
+    
     //* stateManagerWidget must be registred in first place
 	Manager.addWidget(stateManager);
 	
@@ -186,7 +215,7 @@ var Manager;
     $(Manager.widgets['state_manager']).on('smk_search_call_detail', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"detail"});
     	Manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
-    	Manager.widgets['details'].call_detail(event.detail_id, true);      	
+    	Manager.widgets['details'].call_detail(event.detail_id, true, true);      	
     });
     $(Manager.widgets['related']).on('smk_search_call_detail', function(event){     	    	
     	Manager.widgets['state_manager'].empty_detail_view();
@@ -206,13 +235,17 @@ var Manager;
     	Manager.widgets['thumbs'].current_selec = null;
     });	
     
-    //* call to default view
-    $(Manager.widgets['state_manager']).on('smk_search_call_default_view', function(event){     	
+    //* calls to default view
+    $(Manager.widgets['state_manager']).
+    add((Manager.widgets['details'])).
+    on('smk_search_call_default_view', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
     	Manager.widgets['state_manager'].categoryChanged({category:"all"});
     	Manager.widgets['state_manager'].uniqueURL({});
+    	Manager.widgets['currentsearch'].removeAllCurrentSearch();
+    	Manager.store.load(true, event.isDefault); 
     	Manager.doRequest();
-    });	
+    });	    
     
     // call to teasers view from searchbox when in "detail" view
     $(Manager.widgets['searchbox']).on('smk_search_box_from_detail_call_teasers', function(event){     	
@@ -297,36 +330,25 @@ var Manager;
     $(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){     	
     	Manager.widgets['currentsearch'].add_q(event.value, event.text );    	
     });	        
-
-    //* init all widgets
-    Manager.init();    
     
-    //* default request parameters
-    var q = [Manager.store.q_default];
-    var postedSearchString = 'barn';//smkCommon.getSearchPOST();         
-    if(postedSearchString !== undefined && postedSearchString != '')
+	//******************************
+	//** init all widgets
+	//****************************** 
+    Manager.init();   
+    
+	//******************************
+	//** get request string if POSTed
+	//******************************     
+    //* if a request string has been posted, add it to the manager (the request will be sent later in the StateManager)
+    var postedSearchString = smkCommon.getSearchPOST();         
+    if(postedSearchString !== undefined && postedSearchString != ''){
     	q = q.concat(postedSearchString);
-    
-    Manager.store.addByValue('q', q);    
-    var params = {
-      facet: true,
-      'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type', 'category'],      
-      //'f.prod_technique.facet.mincount': 20,
-      'facet.limit': -1,
-      'facet.mincount': 1,
-      'rows':12,
-      'defType': 'edismax',      
-      'qf': Manager.store.get_qf_string(),
-      'start': Math.floor((Math.random()*2000)+1),
-      'json.nl': 'map'
-    };
-    for (var name in params) {
-      Manager.store.addByValue(name, params[name]);
+    	Manager.widgets['currentsearch'].add_q(postedSearchString, postedSearchString);
     }
-    
-    if(postedSearchString !== undefined && postedSearchString != '')
-    	Manager.doRequest();    
-        
+    Manager.store.addByValue('q', q); 
+   // save request parameters in 'current request'
+    Manager.store.save(false);
+            
   });
 
 })(jQuery);
