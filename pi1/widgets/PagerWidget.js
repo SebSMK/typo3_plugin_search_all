@@ -151,10 +151,11 @@ AjaxSolr.PagerWidget = AjaxSolr.AbstractWidget.extend(
     var self = this;
     return function () {
       $(self).trigger({
-		type: "smk_search_pager_changed"
+		type: "smk_search_pager_changed",
+		start: (page - 1) * self.perPage()
 	  });	
-      self.manager.store.get('start').val((page - 1) * self.perPage());
-      self.doRequest();
+//      self.manager.store.get('start').val((page - 1) * self.perPage());
+//      self.doRequest();
       return false;
     }
   },

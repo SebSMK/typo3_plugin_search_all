@@ -435,32 +435,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 			  
 		return false;	  
 		  
-	  },
+	},
   
-  /**
-   * @param {string} id of the artwork that will be shown in detail view
-   * @param {bool} whether the current solr parameters must be saved or not 
-   * @param {bool} whether return after detail on default view or not
-   * */
-  call_detail: function (art_id, save_request, call_default_on_return) {
-	  var self = this;
-	
-	  this.call_default_on_return = call_default_on_return !== undefined ? call_default_on_return : false;	   
-		  
-	  if(save_request){
-		  //* save current solr parameters
-		  self.manager.store.save();      		  	
-	  }
-	  
-	  //* delete current (exposed) solr parameters
-	  self.manager.store.exposedReset();
-	  
-  	  var param = new AjaxSolr.Parameter({name: "q", value: 'id_s:"' + art_id +'"'}); 
-  	  self.manager.store.add(param.name, param);	     
-      	      
-      self.doRequest();
-      return false;
-  }
+	call_default_on_return: function () {	  	
+	  this.call_default_on_return = true;	   
+	}
   
 });
 

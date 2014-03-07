@@ -178,20 +178,24 @@ constructor: function (attributes) {
   clickHandler: function () {
     var self = this, meth = this.multivalue ? 'add' : 'set';
     return function (event, params) {
-    	event.stopImmediatePropagation(); 
-    	$(self).trigger({
-			type: "smk_search_filter_changed"
-		});
+    	event.stopImmediatePropagation();     	    	
+    	
+    	var trigg_event = false;
+    	
     	if (params.selected !== undefined){
-    		if (self[meth].call(self, params.selected)){
-                self.doRequest();
-        	}
-    	}else 
-    	if (params.deselected !== undefined){    		
-    		if (self.remove(params.deselected)) {
-                self.doRequest();
-        	}
-    	}    	    	
+    		if (self[meth].call(self, params.selected))
+    			trigg_event = true;
+    	}else if (params.deselected !== undefined){    		
+    		if (self.remove(params.deselected)) 
+    			trigg_event = true;
+    	};    	    	
+    	
+    	if (trigg_event){
+	    	$(self).trigger({
+				type: "smk_search_filter_changed"
+	    	});
+    	}
+    	
     	return false;
     }
   },  

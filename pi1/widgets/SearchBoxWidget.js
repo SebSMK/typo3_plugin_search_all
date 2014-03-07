@@ -54,6 +54,7 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 							//if (mgr.store.addByValue('q', 'id:(' + value + '*)^2 -(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
 							//var fq_value = 'id:(' + value + '*)^2 page_content:(*' + value + '*) page_title:(*' + value + '*)^1.5 title_dk:(*' + value + '*)^1.5 title_first:(*' + value + '*)^1.5 artist_name:(*' + value + '*)^1.5 ';														
 							var fq_value = value;
+							var teaser_view = false;
 							
 							//* check the current view...
 							if (caller.getCurrentState() != null && caller.getCurrentState()["view"] !== undefined && caller.getCurrentState()["view"] == 'detail'){
@@ -72,11 +73,10 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 								//mgr.store.remove('sort');
 								
 								// ...send a call to "teaser" view
-								$(caller).trigger({
-									type: "smk_search_box_from_detail_call_teasers",
-									value: fq_value,
-									text: value
-								});								
+//								$(caller).trigger({
+//									type: "smk_search_box_from_detail_call_teasers"
+//								});
+								teaser_view = true;
 							}
 							
 							//* concat the new search term to the previous term(s)
@@ -91,15 +91,15 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 								current_q_values.push(current_q.value);
 							};
 
-							//* do request
+							//* send call to request
 							if (mgr.store.addByValue('q', current_q_values.concat(fq_value))){							
 								//mgr.store.addByValue('fl', e.data.mdf);																					
 								$(caller).trigger({
 									type: "smk_search_q_added",
 									value: fq_value,
-									text: value
-								  });  		
-								//mgr.doRequest(0);								
+									text: value,
+									teaser_view: teaser_view
+								  });							
 							}														
 						//}
 					};// end if

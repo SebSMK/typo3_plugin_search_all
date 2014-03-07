@@ -15,38 +15,13 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 		return;
 	}	 		  
 
-//    var q = this.manager.store.get('q').val();
-//    if (q != '*:*') {
-//      links.push($('<a href="#"></a>').text('(x) ' + q).click(function () {
-//    	  self.manager.store.remove('q');
-//    	  self.manager.store.get('q').val('*:*');
-//        self.doRequest();
-//        return false;
-//      }));
-//    }
-
-    //var fq = this.manager.store.values('fq');
-    for (var i = 0, l = self.q.length; i < l; i++) {
-      //links.push($('<a href="#"></a>').text('(x) ' + fq[i]).click(self.removeFacet(fq[i])));
+    for (var i = 0, l = self.q.length; i < l; i++) {      
     	if (self.q[i].text === undefined){
     		links.push({"q": self.q[i].value});
     	}else{
     		links.push({"q": self.q[i].value, "label": self.q[i].text});
-    	}
-    	
+    	}    	
     }
-
-//    if (links.length > 1) {
-//      links.unshift($('<a href="#"></a>').text('Remove all').click(function () {
-//        self.manager.store.get('q').val('*:*');
-//        self.manager.store.remove('fq');
-//        $(self).trigger({
-//			type: "smk_search_category_removed"			
-//		  });  
-//        self.doRequest();
-//        return false;
-//      }));
-//    }
 
     var $target = $(this.target);
     $target.empty();
@@ -72,7 +47,11 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 	    	}    	    	
     	 }
     	
-        self.doRequest();
+    	$(self).trigger({
+			type: "smk_search_remove_one_search_string"
+    	});
+    	
+//        self.doRequest();
       }
       return false;
     };
