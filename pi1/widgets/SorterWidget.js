@@ -47,7 +47,7 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
     				$(self).trigger({
     					type: "smk_search_sorter_changed"
     				  });  		
-    				self.doRequest(0);	
+//    				self.doRequest(0);	
     				return false;
     			};
     		}
@@ -56,7 +56,7 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
 				$(self).trigger({
 					type: "smk_search_sorter_changed"
 				  });  		
-				self.doRequest(0);
+//				self.doRequest(0);
 				return false;
 			};													
     	};

@@ -47,6 +47,13 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
 
     
     /*
+     * write request string in address bar 
+     * */
+//    var currentval = $.address.value();
+//    $.address.value(sprintf('%s&%s', currentval, this.store.exposedString()));
+    
+    
+    /*
      * Executing request
      * */
     

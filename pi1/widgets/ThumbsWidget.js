@@ -176,7 +176,10 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 
 		    	$(event.data.caller).trigger({
 					type: "smk_search_call_detail",
-					detail_id: event.data.detail_id
+					detail_id: event.data.detail_id,
+  					detail_view_intern_call: false,
+  					save_current_request: false,
+  					call_default_on_return: false
 				  });
 		    	
 		    	return;
@@ -225,7 +228,10 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 
 				    	$(event.data.caller).trigger({
 							type: "smk_search_call_detail",
-							detail_id: event.data.detail_id
+							detail_id: event.data.detail_id,
+		  					detail_view_intern_call: false,
+		  					save_current_request: false,
+		  					call_default_on_return: false
 						  });
 				    	
 				    	return;

@@ -99,7 +99,7 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 									value: fq_value,
 									text: value
 								  });  		
-								mgr.doRequest(0);								
+								//mgr.doRequest(0);								
 							}														
 						//}
 					};// end if

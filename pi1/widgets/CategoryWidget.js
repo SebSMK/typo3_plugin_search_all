@@ -12,7 +12,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 
 	
   init: function () {
-        this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: this.field, locals: { ex:this.field } }));
+        //this.manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: this.field, locals: { ex:this.field } }));
         
         //* init template
         var objectedItems = new Array(); 
@@ -98,7 +98,7 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 			type: "smk_search_category_changed",
 			category: selectedTab
 		});  
-	    self.doRequest();
+//	    self.doRequest();
 	  }
 	  return false;
     }

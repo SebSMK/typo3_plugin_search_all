@@ -32,7 +32,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 					if (params[0] == 'id'){
 						$(self).trigger({
 		  					type: "smk_search_call_detail",
-		  					detail_id: params[1] 
+		  					detail_id: params[1],
+		  					detail_view_intern_call: false,
+		  					save_current_request: true,
+		  					call_default_on_return: true
 		  				});
 					}
 				}else{
@@ -233,13 +236,15 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    if (newstate["category"] === undefined )
 	    	return;
   
+	    this.manager.widgets['teasers'].removeAllArticles();
+	    
 		switch(newstate["category"]){
 			  case "samlingercollectionspace":		 			  			  				  
 				  this.showWidget($target.find("#search-filters"));
 				  //$target.find("#search-filters").show().children().show();		
 				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();
 				  this.manager.widgets['category'].setActiveTab(newstate["category"]);
-				  this.manager.widgets['teasers'].removeAllArticles();
+				  
 				  break;
 			  case "nyheder":
 			  case "kalender":

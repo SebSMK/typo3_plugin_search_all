@@ -82,7 +82,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  	    		event.preventDefault();
 		  		    	$(event.data.caller).trigger({
 		  					type: "smk_search_call_detail",
-		  					detail_id: event.data.detail_id
+		  					detail_id: event.data.detail_id,
+		  					detail_view_intern_call: false,
+		  					save_current_request: true,
+		  					call_default_on_return: false
 		  				  });
 		  		    	
 		  		    	return;

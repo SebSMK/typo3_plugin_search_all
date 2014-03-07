@@ -437,6 +437,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  
 	  },
   
+  /**
+   * @param {string} id of the artwork that will be shown in detail view
+   * @param {bool} whether the current solr parameters must be saved or not 
+   * @param {bool} whether return after detail on default view or not
+   * */
   call_detail: function (art_id, save_request, call_default_on_return) {
 	  var self = this;
 	
