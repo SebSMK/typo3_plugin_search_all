@@ -20,40 +20,76 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  $( document ).ready(function() {
 		// init unique url manager - jquery address
 		  
-		  $.address.strict(false); 
+		  $.address.strict(false);
 		  /*
 		   * Management of changes in address bar
 		   * n.b.: triggered also on document load
 		   * */
 		  $.address.externalChange(function(e){	    
-				var params = e.value.split('=');
+				var params = e.value.split('&');
+								
+				for (var i = 0, l = params.length; i < l; i++) {
+					
+					var param = params[i].split('=');
+					
+					if(param !== undefined && param.length > 1){
+						
+						
+						switch(param[0]){
+						  case "id":		 			  			  			  
+							  $(self).trigger({
+				  					type: "smk_search_call_detail",
+				  					detail_id: param[1],
+				  					detail_view_intern_call: false,
+				  					save_current_request: true,
+				  					call_default_on_return: true
+				  				});	
+							  return false;
+							  break;	
+						  case "category":
+							 var event = {category: param[1]};							 
+							 self.smk_search_category_changed(event);
+							 return false;
+							 break;		  
+						}
+					}										
+				}
 				
-				if(params !== undefined && params.length > 1){
-					if (params[0] == 'id'){
-						$(self).trigger({
-		  					type: "smk_search_call_detail",
-		  					detail_id: params[1],
-		  					detail_view_intern_call: false,
-		  					save_current_request: true,
-		  					call_default_on_return: true
-		  				});
-					}
-				}else{
-					// no parameters, trigger the saved current request in default view
-					$(self).trigger({
-							type: "smk_search_call_default_view",
-							isDefault: false
-					});			
-				};
+				// no parameters, trigger the saved current request in default view
+				$(self).trigger({
+						type: "smk_search_call_default_view",
+						isDefault: false
+				});		
+				
+				return false;
+				
+				
 		  });
 	  });
-	  
-	  
+	  	  
 	  $target.empty();	  
 	  $target.append(template);	
 	  
 	  this.viewChanged(this.currentState);
 	  this.categoryChanged(this.currentState);
+  },
+    
+/**
+ * Tab change request management
+ * */
+  smk_search_category_changed: function(event){
+	  
+	  var category = event.category;
+	  var method = event.method;
+	  var caller = this.manager.widgets['category'];
+	  
+	  if (caller.set(category)){   
+		  caller.setActiveTab(category);
+		  this.categoryChanged({category:category});
+		  this.manager.widgets['currentsearch'].setRefresh(false);
+		  $.address.value(sprintf('&category=%s', category));
+		  this.manager.doRequest();
+	  };	  
   },
   
   

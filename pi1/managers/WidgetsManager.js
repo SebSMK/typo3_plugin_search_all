@@ -186,13 +186,9 @@ var Manager;
     
 	//* selected category changed
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
-    	smk_search_category_changed(event);
+    	Manager.widgets['state_manager'].smk_search_category_changed(event);
     });     
-    function smk_search_category_changed(event){
-    	Manager.widgets['state_manager'].categoryChanged({category:event.category});
-    	Manager.widgets['currentsearch'].setRefresh(false);
-    	Manager.doRequest();
-    };
+   
     
     //* searchfilters changed
     for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {

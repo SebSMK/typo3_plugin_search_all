@@ -91,37 +91,21 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
     var self = this, meth = this.multivalue ? 'add' : 'set';
     return function (event) {      
       event.stopImmediatePropagation();
-      var selectedTab = $(event.currentTarget).attr("name");	
-	  if (self[meth].call(self, selectedTab)) {  
-		self.setActiveTab(selectedTab);  
-		$(self).trigger({
-			type: "smk_search_category_changed",
-			category: selectedTab
-		});  
-//	    self.doRequest();
-	  }
+      
+      var method = self[meth];
+      var selectedTab = $(event.currentTarget).attr("name");
+            
+      $(self).trigger({
+    	  type: "smk_search_category_changed",
+    	  category: selectedTab		  
+      }); 
+
 	  return false;
     }
   },
   
   setActiveTab: function (tab){
 	  this.activeCategory = tab;
-	  	  
-//	  switch(this.activeCategory){
-//		  case "samlingercollectionspace":		 			  			  				  
-//			  this.setRefresh(false);
-//			  break;
-//		  case "nyheder":
-//		  case "kalender":
-//		  case "artikel":
-//		  case "praktisk":
-//		  case "all":
-//			  this.setRefresh(true);
-//		  	  break;
-//		  default:	
-//			  this.setRefresh(true);
-//		  	  break;		  
-//	  }	  
   },
   
   /**
