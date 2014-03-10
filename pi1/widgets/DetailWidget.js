@@ -435,11 +435,11 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 			  
 		return false;	  
 		  
-	},
+  },
   
-	call_default_on_return: function () {	  	
+  set_call_default_on_return: function () {	  	
 	  this.call_default_on_return = true;	   
-	}
+  }
   
 });
 

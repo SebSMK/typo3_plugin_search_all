@@ -253,45 +253,8 @@ var Manager;
     .add(Manager.widgets['teasers'])
         
     .on('smk_search_call_detail', function(event){     	
-      	var detail_view_intern_call = event.detail_view_intern_call;
-    	var save_current_request = event.save_current_request;    	
-    	var call_default_on_return = event.call_default_on_return;    	
-    	
-    	if (!detail_view_intern_call)
-    		Manager.widgets['state_manager'].viewChanged({view:"detail"});
-    	else
-    		Manager.widgets['state_manager'].empty_detail_view();
-    		
-    	
-    	Manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
-
-    	if (call_default_on_return)
-    		Manager.widgets['details'].call_default_on_return();
-    	
-    	call_detail(event.detail_id, save_current_request);   
+    	Manager.widgets['state_manager'].smk_search_call_detail(event);
     });
-       
-    
-    /** ----------> SHOULD BE MOVED TO STATE MANAGER
-     * @param {string} id of the artwork that will be shown in detail view
-     * @param {bool} whether the current solr parameters must be saved or not 
-     * @param {bool} whether return after detail on default view or not
-     * */
-    function call_detail(art_id, save_request) {		   
-			  
-		if(save_request) //* save current solr parameters		  
-			Manager.store.save();      		  	
-				  
-		//* delete current (exposed) solr parameters
-		Manager.store.exposedReset();
-		  
-		var param = new AjaxSolr.Parameter({name: "q", value: 'id_s:"' + art_id +'"'}); 
-		Manager.store.add(param.name, param);	     
-					      
-		Manager.doRequest();
-    };
-    /** ----------> SHOULD BE MOVED TO STATE MANAGER ***/
-    
     
     //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	

@@ -32,7 +32,9 @@ AjaxSolr.CategoryWidget = AjaxSolr.AbstractFacetWidget.extend({
 	
   beforeRequest: function (){
 	  $(this.target).find('li').removeClass('tab--active');
-	  $(this.target).find('li[name='+this.activeCategory+']').addClass('tab--active');	
+	  $(this.target).find('li').blur();
+	  $(this.target).find('li[name='+this.activeCategory+']').addClass('tab--active');
+	  $(this.target).find('li[name='+this.activeCategory+']').focus();
   },	
 	
   afterRequest: function () {
