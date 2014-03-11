@@ -36,24 +36,15 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   removeClickedFacet: function () {
     var self = this;
     return function (event) {
-      var facet = $(this).attr('q');    	
-      if (self.manager.store.removeElementFrom_q(facet)) {   
-    	$(self.target).empty();
-    	
-    	for (var i = 0, l = self.q.length; i < l; i++) {	 
-	    	if (self.q[i].value == facet){
-	    		self.q.splice(i, 1);	    		
-	    		break;
-	    	}    	    	
-    	 }
-    	
-    	$(self).trigger({
-			type: "smk_search_remove_one_search_string"
-    	});
-    	
-//        self.doRequest();
-      }
-      return false;
+    	var facet = $(this).attr('q');    	
+      
+		$(self).trigger({
+			type: "smk_search_remove_one_search_string",
+			facet: facet,
+			current_q: self.q
+		});
+
+		return false;
     };
   },    
   
@@ -67,11 +58,16 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
 	  this.q.push({'value':value, 'text':text});	  	  
   },
   
+  set_q: function(value){
+	  this.q = value;
+  },
+  
   removeAllCurrentSearch: function(){
 	  var self = this;
-	  for (var i = 0, l = self.q.length; i < l; i++) {	 
-		  self.removeFacet(self.q[i].value);
-  	 	}    	        	  
+	  var all_q = self.q.slice();
+	  for (var i = 0, l = all_q.length; i < l; i++) {	 
+		  self.removeFacet(all_q[i].value);
+  	  }    	        	  
 	  self.q = new Array();
 	  
   },
@@ -79,14 +75,14 @@ AjaxSolr.CurrentSearchWidget = AjaxSolr.AbstractWidget.extend({
   removeFacet: function (facet) {
 	  var self = this;	    
 	        	
-      if (self.manager.store.removeElementFrom_q(facet)) {       	    	
+      //if (self.manager.store.removeElementFrom_q(facet)) {       	    	
     	for (var i = 0, l = self.q.length; i < l; i++) {	 
 	    	if (self.q[i].value == facet){
 	    		self.q.splice(i, 1);	    		
 	    		break;
 	    	}    	    	
     	 }    	        
-      }
+      //}
   }	    
   
 });

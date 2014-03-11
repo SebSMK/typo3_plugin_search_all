@@ -26,7 +26,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		   * n.b.: triggered also on document load
 		   * */
 		  $.address.externalChange(function(e){	    
-				var params = e.value.split('&');
+				var params = e.value.split('&&&');
 								
 				if (params === undefined || params.length == 0 ){
 					// no parameters, trigger the saved current request in default view
@@ -41,26 +41,53 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 					for (var i = 0, l = params.length; i < l; i++) {
 						
 						var param = params[i].split('=');
+						var value = '';
 						
-						if(param !== undefined && param.length > 1){
-							
+						if(param !== undefined && param.length > 1){														
 							
 							switch(param[0]){
-							  case "id":		 			  			  			  
-								  $(self).trigger({
-					  					type: "smk_search_call_detail",
-					  					detail_id: param[1],
-					  					detail_view_intern_call: false,
-					  					save_current_request: true,
-					  					call_default_on_return: true
-					  				});	
-								  //return false;
-								  break;	
-							  case "category":
-								 var event = {'category': param[1], 'view': 'teasers' };							 
-								 self.smk_search_category_changed(event);
-								 //return false;
-								 break;
+//							  case "id":		 			  		
+//								  value = param.replace('id=', '');
+//								  $(self).trigger({
+//					  					type: "smk_search_call_detail",
+//					  					detail_id: value,
+//					  					detail_view_intern_call: false,
+//					  					save_current_request: true,
+//					  					call_default_on_return: true
+//					  				});	
+//								  
+////								  	var event = {
+////						  					type: "smk_search_call_detail",
+////						  					detail_id: param[1],
+////						  					detail_view_intern_call: false,
+////						  					save_current_request: true,
+////						  					call_default_on_return: true
+////						  			};									  
+////									  	
+////									self.smk_search_call_detail(event);
+//								  								  
+//								  break;	
+//							  case "category":
+//								    value = param.replace('category=', '');
+//								  	var event = {'category': value, 'view': 'teasers' };							 
+//								  	self.smk_search_category_changed(event);
+//								  	break;
+								 
+							  case "req":
+								   	 value = params[i].replace('req=', '');
+								   	 
+								   	 Manager.store.load_req(value, true);
+								   	 
+								   	 var q_all = self.manager.store.get('q').value.slice();
+								   	 var q_wout_q_def = smkCommon.removeA(q_all, self.manager.store.q_default);
+								   	
+								   	 self.manager.widgets['currentsearch'].removeAllCurrentSearch(); 
+								   	 for (var i = 0, l = q_wout_q_def.length; i < l; i++) {
+								   		self.manager.widgets['currentsearch'].add_q(q_wout_q_def[i], q_wout_q_def[i] );
+								   	 };
+								   	 
+								   	 self.manager.doRequest(); 
+									 break;
 								 
 							  default:
 								// invalid parameters, trigger the saved current request in default view
@@ -89,7 +116,104 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  this.viewChanged(this.currentState);
 	  this.categoryChanged(this.currentState);
   },
-
+  
+  /**
+   * search string removed in Currentsearch
+   * */
+  smk_search_remove_one_search_string: function(event){
+  	
+	  var facet = event.facet;
+	  var current_q = event.current_q;	  	  
+  	
+	  if (this.manager.store.removeElementFrom_q(facet)) {   
+	  	$(this.manager.widgets['currentsearch'].target).empty();
+	
+	  	for (var i = 0, l = current_q.length; i < l; i++) {	 
+			if (current_q[i].value == facet){
+				current_q.splice(i, 1);
+				this.manager.widgets['currentsearch'].set_q(current_q);
+				break;
+			}    	    	
+	  	}    	
+	};
+  	
+	var qvalue = this.manager.store.exposedString();
+  	this.setUniqueURL({'key': 'req', 'value': qvalue});
+  	
+	this.manager.doRequest();    	    	
+  },  
+  
+  
+/**
+ * search string added in SearchBox
+ * */
+  smk_search_q_added: function(event){
+  	
+	var val = event.val;
+	var caller = this.manager.widgets['searchbox'];
+		
+	if (val != '') {
+		var text = jQuery.trim(val);
+		
+		this.manager.store.last = text;																																										
+		
+		var fq_value = text;
+		var teaser_view = false;
+		
+		//* check the current view...
+		if (caller.getCurrentState() != null && caller.getCurrentState()["view"] !== undefined && caller.getCurrentState()["view"] == 'detail'){
+			//...if in "detail" view...								
+			
+			//...call previous search request..
+			this.manager.store.load(true); 
+			
+			// ...remove all previous q...
+			this.manager.store.remove('q');
+			
+			// ...add default q...
+			this.manager.store.addByValue('q', this.manager.store.q_default);
+				
+			teaser_view = true;
+		}
+		
+		//* concat the new search term to the previous term(s)
+		var current_q = this.manager.store.get('q');
+		var current_q_values = new Array();							
+		
+		if (Object.prototype.toString.call( current_q.value ) === '[object Array]'){
+			for (var i = 0, l = current_q.value.length; i < l; i++) {
+				current_q_values.push(current_q.value[i]);								 
+			}
+		}else if(typeof current_q.value === 'string'){
+			current_q_values.push(current_q.value);
+		};
+		
+		//* send call to request
+		if (this.manager.store.addByValue('q', current_q_values.concat(fq_value))){																												
+			
+			if (teaser_view){
+		  	    // call to teasers view from searchbox when in "detail" view    	         	
+			    	this.viewChanged({view:"teasers"});
+			    	this.categoryChanged({category:"all"});
+			    	this.setUniqueURL({});    	
+			    	this.manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
+			    	this.manager.widgets['thumbs'].current_selec = null;	    	    		
+		  	}
+		  	
+		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
+		  	  	
+//			var tmp = this.manager.store.get('q').value;
+//			var qvalue = AjaxSolr.isArray(tmp) ? tmp.join(';-;') : tmp;	 
+			var qvalue = this.manager.store.exposedString();
+		  	this.setUniqueURL({'key': 'req', 'value': qvalue});
+		  	
+		  	this.manager.doRequest(0);  	
+			
+		};
+	};
+ },
+  
+  
 /**
  * Detail view call management
  * */  
@@ -99,13 +223,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	var save_current_request = event.save_current_request;    	
 	var call_default_on_return = event.call_default_on_return;  
 	var art_id = event.detail_id;
+	var qvalue = AjaxSolr.isArray(this.manager.store.get('q').value) ? this.manager.store.get('q').value.join(';-;') : this.manager.store.get('q').value;	  
 	
 	if (!detail_view_intern_call)
 		this.manager.widgets['state_manager'].viewChanged({view:"detail"});
 	else
 		this.manager.widgets['state_manager'].empty_detail_view();
 			
-	this.manager.widgets['state_manager'].uniqueURL({'key':'id', 'value': event.detail_id});
+	this.manager.widgets['state_manager'].setUniqueURL({'key':'id', 'value': event.detail_id});
 
 	if (call_default_on_return)
 		this.manager.widgets['details'].set_call_default_on_return();    	    	
@@ -118,7 +243,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
 	var param = new AjaxSolr.Parameter({name: "q", value: 'id_s:"' + art_id +'"'}); 
 	this.manager.store.add(param.name, param);	     
-				      
+	
+//	var tmp = this.manager.store.get('q').value;
+//	var qvalue = AjaxSolr.isArray(tmp) ? tmp.join(';-;') : tmp;	 
+	var qvalue = this.manager.store.exposedString();
+
+  	this.setUniqueURL({'key': 'req', 'value': qvalue});
+  	
 	this.manager.doRequest();  
   },
   
@@ -130,6 +261,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  var category = event.category;
 	  var view = event.view;
 	  var caller = this.manager.widgets['category'];
+	  var qvalue = AjaxSolr.isArray(this.manager.store.get('q').value) ? this.manager.store.get('q').value :  this.manager.store.get('q').value.join(';-;');	  	  
 	  
 	  if (caller.set(category)){   
 		  caller.setActiveTab(category);
@@ -139,7 +271,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  this.viewChanged({'view': 'teasers'});
 		  
 		  this.manager.widgets['currentsearch'].setRefresh(false);
-		  this.uniqueURL({'key': 'category', 'value': category});
+		  this.setUniqueURL({'key': 'category', 'value': category});
+		  
+//			var tmp = this.manager.store.get('q').value;
+//			var qvalue = AjaxSolr.isArray(tmp) ? tmp.join(';-;') : tmp;	 
+		  var qvalue = this.manager.store.exposedString();
+		  this.setUniqueURL({'key': 'req', 'value': qvalue});
+		  	
 		  this.manager.doRequest();
 	  };	  
   },
@@ -166,16 +304,33 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   /*
    * unique URL management
    */
-  uniqueURL: function(json){	    	  
+  setUniqueURL: function(json){	    	  
 
 	  var uniqueURL = "";
       
       switch(json.key){
-		  case "id": 
-			  uniqueURL = sprintf('%s=%s', json.key, json.value);
-			  break;
+		  case "id":
 		  case "category": 
+		  case "req":
 			  uniqueURL = sprintf('%s=%s', json.key, json.value);
+			  break;		 
+      }
+      
+	  //* set unique url	
+      $.address.value(uniqueURL);		
+
+  },
+  
+  addToUniqueURL: function(json){	    	  
+
+	  var uniqueURL = '';
+	  var previous = $.address.value() == '' ? $.address.value() : sprintf('%s&', $.address.value()); 
+      
+      switch(json.key){
+		  case "id":
+		  case "category": 
+		  case "req": 
+			  uniqueURL = sprintf('%s%s=%s', previous, json.key, json.value);
 			  break;
       }
       

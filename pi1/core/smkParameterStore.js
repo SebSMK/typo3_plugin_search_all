@@ -56,6 +56,16 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
     this.parseString(this.storedString(isdefault));
   },
   
+  load_req: function (req, reset) {
+		if (req === undefined)
+			return;  
+	    
+		if (reset === undefined || reset)  
+			this.exposedReset();
+	    
+	    this.parseString(req);
+  },
+  
   /**
    *
    * <p>Returns the string to parse from persistent storage.</p>

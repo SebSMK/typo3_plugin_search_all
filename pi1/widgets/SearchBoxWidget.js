@@ -36,73 +36,19 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 					mmgr : self.manager,
 					$input : $(this.target).find('input#search.typeahead'),
 					caller : self
-					//,mdf : this.displayFields
 				},
 				function(e) {
 					e.preventDefault();
 					e.stopImmediatePropagation(); 
 					
-					var mgr = e.data.mmgr;	
 					var val = e.data.$input.val();
 					var caller = e.data.caller;
 					
-					if (val != '') {
-						var value = jQuery.trim(val);
-						//if (mgr.store.last != value) {
-							mgr.store.last = value;																																										
-							
-							//if (mgr.store.addByValue('q', 'id:(' + value + '*)^2 -(id:(*/*) AND category:samlingercollectionspace) -(id:(*verso) AND category:samlingercollectionspace) page_content:(' + value + '*) page_title:(' + value + '*)^1.5 title_dk:(' + value + '*)^1.5 artist_name:(' + value + '*)^1.5 ')){
-							//var fq_value = 'id:(' + value + '*)^2 page_content:(*' + value + '*) page_title:(*' + value + '*)^1.5 title_dk:(*' + value + '*)^1.5 title_first:(*' + value + '*)^1.5 artist_name:(*' + value + '*)^1.5 ';														
-							var fq_value = value;
-							var teaser_view = false;
-							
-							//* check the current view...
-							if (caller.getCurrentState() != null && caller.getCurrentState()["view"] !== undefined && caller.getCurrentState()["view"] == 'detail'){
-								//...if in "detail" view...								
-
-								//...call previous search request..
-								mgr.store.load(true); 
-								
-								// ...remove all previous q...
-								mgr.store.remove('q');
-
-								// ...add default q...
-								mgr.store.addByValue('q', mgr.store.q_default);
-								
-								// ...remove all previous sort...
-								//mgr.store.remove('sort');
-								
-								// ...send a call to "teaser" view
-//								$(caller).trigger({
-//									type: "smk_search_box_from_detail_call_teasers"
-//								});
-								teaser_view = true;
-							}
-							
-							//* concat the new search term to the previous term(s)
-							var current_q = mgr.store.get('q');
-							var current_q_values = new Array();							
-							
-							if (Object.prototype.toString.call( current_q.value ) === '[object Array]'){
-								for (var i = 0, l = current_q.value.length; i < l; i++) {
-									current_q_values.push(current_q.value[i]);								 
-								}
-							}else if(typeof current_q.value === 'string'){
-								current_q_values.push(current_q.value);
-							};
-
-							//* send call to request
-							if (mgr.store.addByValue('q', current_q_values.concat(fq_value))){							
-								//mgr.store.addByValue('fl', e.data.mdf);																					
-								$(caller).trigger({
-									type: "smk_search_q_added",
-									value: fq_value,
-									text: value,
-									teaser_view: teaser_view
-								  });							
-							}														
-						//}
-					};// end if
+					$(caller).trigger({
+						type: "smk_search_q_added",
+						val: val
+					});		
+					
 				}); // end binded action.
 		
 	},  

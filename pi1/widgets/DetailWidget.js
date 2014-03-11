@@ -77,8 +77,6 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 					isDefault: true
     			});	
     		}else{ 
-        		//restore previous search request in the manager
-        		event.data.caller.manager.store.load(true); 
         		// send call to teaser view restoring (but without sending a request to Solr)
     	    	$(event.data.caller).trigger({
     				type: "smk_search_call_teasers"

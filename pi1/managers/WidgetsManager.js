@@ -222,24 +222,13 @@ var Manager;
     
     //* new search term input in search box
     $(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){
-    	
-    	if (event.teaser_view){
-    	    // call to teasers view from searchbox when in "detail" view    	         	
-	    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
-	    	Manager.widgets['state_manager'].categoryChanged({category:"all"});
-	    	Manager.widgets['state_manager'].uniqueURL({});    	
-	    	Manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-	    	Manager.widgets['thumbs'].current_selec = null;	    	    		
-    	}
-    	
-    	Manager.widgets['currentsearch'].add_q(event.value, event.text );  
-    	Manager.doRequest(0);
-    });	 
+    	Manager.widgets['state_manager'].smk_search_q_added(event);	    	
+    });	
     
     //* a search string has been removed in current search
     $(Manager.widgets['currentsearch']).on('smk_search_remove_one_search_string', function(event){     	
-    	Manager.doRequest();
-    });	 
+    	Manager.widgets['state_manager'].smk_search_remove_one_search_string(event);
+    });	
 	
     /*
 	 * Calls to view changes
@@ -256,21 +245,14 @@ var Manager;
     	Manager.widgets['state_manager'].smk_search_call_detail(event);
     });
     
-    //* calls to teasers view
-    $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){     	
+    //* calls to teasers view from Detail
+    $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){  
+		//restore previous search request in the manager
+		Manager.store.load(true); 
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
-    	Manager.widgets['state_manager'].uniqueURL({});
+    	Manager.widgets['state_manager'].setUniqueURL({});
     	Manager.widgets['thumbs'].current_selec = null;
     });	
-    
-//    // call to teasers view from searchbox when in "detail" view
-//    $(Manager.widgets['searchbox']).on('smk_search_box_from_detail_call_teasers', function(event){     	
-//    	Manager.widgets['state_manager'].viewChanged({view:"teasers"});
-//    	Manager.widgets['state_manager'].categoryChanged({category:"all"});
-//    	Manager.widgets['state_manager'].uniqueURL({});    	
-//    	Manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-//    	Manager.widgets['thumbs'].current_selec = null;
-//    });	
     
     //* calls to default view
     $(		Manager.widgets['state_manager'])
@@ -279,7 +261,7 @@ var Manager;
     .on('smk_search_call_default_view', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
     	Manager.widgets['state_manager'].categoryChanged({category:"all"});
-    	Manager.widgets['state_manager'].uniqueURL({});
+    	Manager.widgets['state_manager'].setUniqueURL({});
     	Manager.widgets['currentsearch'].removeAllCurrentSearch();
     	Manager.store.load(true, event.isDefault); 
     	Manager.doRequest();

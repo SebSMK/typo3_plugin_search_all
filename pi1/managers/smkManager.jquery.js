@@ -43,18 +43,10 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     }
     else {
       options.url = this.solrUrl + servlet + '?' + string + '&wt=json&json.wrf=?';
-    }
-
+    }    
     
     /*
-     * write request string in address bar 
-     * */
-//    var currentval = $.address.value();
-//    $.address.value(sprintf('%s&%s', currentval, this.store.exposedString()));
-    
-    
-    /*
-     * Executing request
+     * Executes request
      * */
     
     //* 1st method: direct -> JSON without error / timeout handling
