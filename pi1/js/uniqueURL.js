@@ -37,7 +37,12 @@
 					  case "view":
 					   	 value = params[i].replace('view=', '');
 					   	 res.view = value;						   	 
-						 break;						
+						 break;	
+						 
+					  case "category":
+						   	 value = params[i].replace('category=', '');
+						   	 res.category = value;						   	 
+							 break;	
 					}
 				}						
 			}

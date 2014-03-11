@@ -172,7 +172,10 @@
 	
 	
 	common.removeA = function (arr) {
-	    var what, a = arguments, L = a.length, ax;
+		if (!AjaxSolr.isArray(arr))
+			return [];
+		
+		var what, a = arguments, L = a.length, ax;
 	    while (L > 1 && arr.length) {
 	        what = a[--L];
 	        while ((ax= arr.indexOf(what)) !== -1) {

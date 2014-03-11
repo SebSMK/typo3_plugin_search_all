@@ -30,6 +30,17 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    var urlManager = new UniqueURL.constructor(e.value);
 			    var params = urlManager.getParams();			    			    
 			    
+			    //* process view
+			    if(params.view !== undefined){
+			    	self.viewChanged({'view': params.view});			    				    	
+			    }
+			    
+			    //* process category
+			    if(params.category !== undefined){
+			    	self.categoryChanged({'category': params.category});			    				    	
+			    }
+			    
+			    //* process Solr request
 				if(params.req !== undefined){
 					
 					// load Solr request in the manager
@@ -84,7 +95,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	};
   	
 	var qvalue = this.manager.store.exposedString();
-	this.setUniqueURL([{'key': 'req', 'value': qvalue}, {'key': 'view', 'value': this.getCurrentState()["view"]}]);
+	this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+	                   {'key': 'view', 'value': this.getCurrentState()["view"]},
+	                   {'key': 'category', 'value': this.getCurrentState()["category"]}
+	                   ]);
   	
 	this.manager.doRequest();    	    	
   },  
@@ -148,7 +162,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
 		  	  	
 			var qvalue = this.manager.store.exposedString();
-		  	this.setUniqueURL([{'key': 'req', 'value': qvalue}, {'key': 'view', 'value': this.getCurrentState()["view"]}]);
+			this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+			                   {'key': 'view', 'value': this.getCurrentState()["view"]},
+			                   {'key': 'category', 'value': this.getCurrentState()["category"]}
+			                   ]);
 		  	
 		  	this.manager.doRequest(0);  	
 			
@@ -165,8 +182,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	var detail_view_intern_call = event.detail_view_intern_call;
 	var save_current_request = event.save_current_request;    	
 	var call_default_on_return = event.call_default_on_return;  
-	var art_id = event.detail_id;
-	var qvalue = AjaxSolr.isArray(this.manager.store.get('q').value) ? this.manager.store.get('q').value.join(';-;') : this.manager.store.get('q').value;	  
+	var art_id = event.detail_id;		  
 	
 	if (!detail_view_intern_call)
 		this.manager.widgets['state_manager'].viewChanged({view:"detail"});
@@ -188,7 +204,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	this.manager.store.add(param.name, param);	     
 	
 	var qvalue = this.manager.store.exposedString();
-	this.setUniqueURL([{'key': 'req', 'value': qvalue}, {'key': 'view', 'value': this.getCurrentState()["view"]}]);
+	this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+	                   {'key': 'view', 'value': this.getCurrentState()["view"]},
+	                   {'key': 'category', 'value': this.getCurrentState()["category"]}
+	                   ]);
   	
 	this.manager.doRequest();  
   },
@@ -200,8 +219,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
 	  var category = event.category;
 	  var view = event.view;
-	  var caller = this.manager.widgets['category'];
-	  var qvalue = AjaxSolr.isArray(this.manager.store.get('q').value) ? this.manager.store.get('q').value :  this.manager.store.get('q').value.join(';-;');	  	  
+	  var caller = this.manager.widgets['category'];	  	  	  
 	  
 	  if (caller.set(category)){   
 		  caller.setActiveTab(category);
@@ -211,12 +229,12 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  this.viewChanged({'view': 'teasers'});
 		  
 		  this.manager.widgets['currentsearch'].setRefresh(false);
-		  //this.setUniqueURL({'key': 'category', 'value': category});
-		  
-//			var tmp = this.manager.store.get('q').value;
-//			var qvalue = AjaxSolr.isArray(tmp) ? tmp.join(';-;') : tmp;	 
+
 		  var qvalue = this.manager.store.exposedString();
-		  this.setUniqueURL([{'key': 'req', 'value': qvalue}, {'key': 'view', 'value': this.getCurrentState()["view"]}]);
+		  this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+			                 {'key': 'view', 'value': this.getCurrentState()["view"]},
+			                 {'key': 'category', 'value': this.getCurrentState()["category"]}
+			                 ]);
 		  	
 		  this.manager.doRequest();
 	  };	  
@@ -257,6 +275,9 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  uniqueURL = sprintf('%s=%s', json[i].key, json[i].value);
 			  break;
 		  case "view":
+			  uniqueURL = sprintf('%s&&%s=%s', uniqueURL, json[i].key, json[i].value);
+			  break;
+		  case "category":
 			  uniqueURL = sprintf('%s&&%s=%s', uniqueURL, json[i].key, json[i].value);
 			  break;
 	      }		  
