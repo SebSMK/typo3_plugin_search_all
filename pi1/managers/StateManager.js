@@ -16,15 +16,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  var $target = $(this.target);	
 	  
 	  var template = Mustache.getTemplate('pi1/templates/general_template.html');
-	  	  
-	  $( document ).ready(function() {
-		// init unique url manager - jquery address
+	  	  	  
+	  $.address.strict(false);
+	  /*
+	   * Management of changes in address bar
+	   * n.b.: triggered also on document load
+	   * */
+	  $( document ).ready(function() {				  
 		  
-		  $.address.strict(false);
-		  /*
-		   * Management of changes in address bar
-		   * n.b.: triggered also on document load
-		   * */
 		  $.address.externalChange(function(e){	 
 			  
 			    var urlManager = new UniqueURL.constructor(e.value);
@@ -95,7 +94,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	};
   	
 	var qvalue = this.manager.store.exposedString();
-	this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+	(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': qvalue}, 
 	                   {'key': 'view', 'value': this.getCurrentState()["view"]},
 	                   {'key': 'category', 'value': this.getCurrentState()["category"]}
 	                   ]);
@@ -162,7 +161,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
 		  	  	
 			var qvalue = this.manager.store.exposedString();
-			this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+			(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': qvalue},
 			                   {'key': 'view', 'value': this.getCurrentState()["view"]},
 			                   {'key': 'category', 'value': this.getCurrentState()["category"]}
 			                   ]);
@@ -204,7 +203,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	this.manager.store.add(param.name, param);	     
 	
 	var qvalue = this.manager.store.exposedString();
-	this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+	(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': qvalue},
 	                   {'key': 'view', 'value': this.getCurrentState()["view"]},
 	                   {'key': 'category', 'value': this.getCurrentState()["category"]}
 	                   ]);
@@ -231,7 +230,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  this.manager.widgets['currentsearch'].setRefresh(false);
 
 		  var qvalue = this.manager.store.exposedString();
-		  this.setUniqueURL([{'key': 'req', 'value': qvalue}, 
+		  (new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': qvalue}, 
 			                 {'key': 'view', 'value': this.getCurrentState()["view"]},
 			                 {'key': 'category', 'value': this.getCurrentState()["category"]}
 			                 ]);
@@ -256,55 +255,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  this.add_modal_loading_to_widget(this.manager.widgets['details']);	 
 	  // related
 	  this.add_modal_loading_to_widget(this.manager.widgets['related']);
-  },
-  
-
-  /*
-   * unique URL management
-   */
-  setUniqueURL: function(json){	    	  
-
-	  var uniqueURL = "";
-      
-	  for (var i = 0, l = json.length; i < l; i++) {
-		  
-	      switch(json[i].key){
-//		  case "id":
-//		  case "category": 
-		  case "req":
-			  uniqueURL = sprintf('%s=%s', json[i].key, json[i].value);
-			  break;
-		  case "view":
-			  uniqueURL = sprintf('%s&&%s=%s', uniqueURL, json[i].key, json[i].value);
-			  break;
-		  case "category":
-			  uniqueURL = sprintf('%s&&%s=%s', uniqueURL, json[i].key, json[i].value);
-			  break;
-	      }		  
-	  } 	  
-      
-	  //* set unique url	
-      $.address.value(uniqueURL);		
-
-  },
-  
-//  addToUniqueURL: function(json){	    	  
-//
-//	  var uniqueURL = '';
-//	  var previous = $.address.value() == '' ? $.address.value() : sprintf('%s&', $.address.value()); 
-//      
-//      switch(json.key){
-//		  case "id":
-//		  case "category": 
-//		  case "req": 
-//			  uniqueURL = sprintf('%s%s=%s', previous, json.key, json.value);
-//			  break;
-//      }
-//      
-//	  //* set unique url	
-//      $.address.value(uniqueURL);		
-//
-//  },
+  },  
   
   /*
    * start general modal loading screen 

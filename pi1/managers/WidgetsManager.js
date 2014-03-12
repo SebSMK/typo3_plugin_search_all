@@ -250,7 +250,7 @@ var Manager;
 		//restore previous search request in the manager
 		Manager.store.load(true); 
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
-    	Manager.widgets['state_manager'].setUniqueURL({});
+    	(new UniqueURL.constructor()).setUniqueURL({});
     	Manager.widgets['thumbs'].current_selec = null;
     });	
     
@@ -261,7 +261,7 @@ var Manager;
     .on('smk_search_call_default_view', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
     	Manager.widgets['state_manager'].categoryChanged({category:"all"});
-    	Manager.widgets['state_manager'].setUniqueURL({});
+    	(new UniqueURL.constructor()).setUniqueURL({});
     	Manager.widgets['currentsearch'].removeAllCurrentSearch();
     	Manager.store.load(true, event.isDefault); 
     	Manager.doRequest();
@@ -351,16 +351,17 @@ var Manager;
 	//******************************
 	//** if POSTed, add request string 
 	//******************************     
-    //* if a request string has been posted, add it to the manager (the request will be sent later in the StateManager)
+    //* if a request string has been posted, add it to the manager (the request will be handled on page load by $.address.externalChange
     var postedSearchString = smkCommon.getSearchPOST();         
     if(postedSearchString !== undefined && postedSearchString != ''){
     	q = q.concat(postedSearchString);
-    	Manager.widgets['currentsearch'].add_q(postedSearchString, postedSearchString);
+    	Manager.store.addByValue('q', q);
+    	var req = Manager.store.exposedString();
+		(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': req}, 
+		                 			                 {'key': 'view', 'value': 'teasers'},
+		                 			                 {'key': 'category', 'value': 'all'}
+		                 			                 ]);
     }
-    Manager.store.addByValue('q', q); 
-   // save request parameters in 'current request'
-    Manager.store.save(false);
-            
   });
 
 })(jQuery);
