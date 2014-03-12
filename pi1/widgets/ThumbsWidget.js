@@ -70,8 +70,8 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	  var work_siblings = new Array();
 	  var work_children = new Array();
 	  
-	  if (this.current_selec == null)
-		  this.current_selec = doc.id;
+	  if (this.getCurrent_selec() == null)
+		  this.setCurrent_selec(doc.id);
 	  
 	  for ( var i = 0, l = multi_works.length; i<l; ++i ) {
 		  
@@ -96,7 +96,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			  img_id : doc.id,
 			  title : doc.title_first,
 			  image : doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
-			  current: this.current_selec == doc.id,
+			  current: this.getCurrent_selec() == doc.id,
 			  copyright: copyright ? sprintf('&copy; %s', doc.artist_name) : false 
 		  }); 		
 	  }
@@ -129,7 +129,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			  img_id : id,
 			  title : title,
 			  image : thumb,
-			  current: this.current_selec == id,
+			  current: this.getCurrent_selec() == id,
 			  copyright: copyright 
 		  });  
 	  
@@ -165,7 +165,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	    		if ($(this).attr("class") == 'current')
 	    			return;
 	    		
-	    		event.data.caller.current_selec = img_id;
+	    		event.data.caller.setCurrent_selec(img_id);
 	    		
 //	    		// ...otherwise, change current selected thumnail
 //	    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
@@ -217,7 +217,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 			    		if ($(this).parent().attr("class") == 'current')
 			    			return;
 			    		
-			    		event.data.caller.current_selec = img_id;
+			    		event.data.caller.setCurrent_selec(img_id);
 			    		
 //			    		// ...otherwise, change current selected thumnail
 //			    		$(event.data.caller.target).find('a').removeClass('current');	    			    		
@@ -269,7 +269,15 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
 	      $(this).css('margin-top', verticalOffset + 'px');
 	    }
 	  });  
-  }  
+  },
+   
+  setCurrent_selec: function(value){
+	this.current_selec = value;  
+  },
+  
+  getCurrent_selec: function(){
+	return this.current_selec;  
+  }
   
 });
 

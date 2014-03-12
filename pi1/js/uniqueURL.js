@@ -82,6 +82,7 @@
 
 				// public method for encoding
 				encode : function (input) {
+
 				    var output = "";
 				    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
 				    var i = 0;
@@ -116,6 +117,7 @@
 
 				// public method for decoding
 				decode : function (input) {
+					
 				    var output = "";
 				    var chr1, chr2, chr3;
 				    var enc1, enc2, enc3, enc4;

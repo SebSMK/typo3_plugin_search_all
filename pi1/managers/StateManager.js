@@ -20,7 +20,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  $.address.strict(false);
 	  /*
 	   * Management of changes in address bar
-	   * n.b.: triggered also on document load
+	   * n.b.: externalChange is triggered also on document load
 	   * */
 	  $( document ).ready(function() {				  
 		  
@@ -35,8 +35,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    }
 			    
 			    //* process category
-			    if(params.category !== undefined){
-			    	self.categoryChanged({'category': params.category});			    				    	
+			    if(params.category !== undefined && params.view !== undefined){
+			    	if (params.view != 'detail'){
+			    		self.categoryChanged({'category': params.category});
+			    	}else{
+			    		self.manager.widgets['details'].set_call_default_on_return(true);
+			    		self.manager.widgets['thumbs'].setCurrent_selec(null);	
+			    	}
 			    }
 			    
 			    //* process Solr request
@@ -59,8 +64,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 				}else{					
 					// no request, trigger default request in default view
 					$(self).trigger({
-							type: "smk_search_call_default_view",
-							isDefault: true
+						type: "smk_search_call_default_view",
+						isDefault: true
 					});						
 				};															   	 
 		  });
@@ -155,7 +160,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    	this.categoryChanged({category:"all"});
 			    	//this.setUniqueURL({});    	
 			    	this.manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-			    	this.manager.widgets['thumbs'].current_selec = null;	    	    		
+			    	this.manager.widgets['thumbs'].setCurrent_selec(null);	    	    		
 		  	}
 		  	
 		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
@@ -191,7 +196,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	//this.manager.widgets['state_manager'].setUniqueURL({'key':'id', 'value': event.detail_id});
 
 	if (call_default_on_return)
-		this.manager.widgets['details'].set_call_default_on_return();    	    	
+		this.manager.widgets['details'].set_call_default_on_return(true);    	    	
 	
 	if(save_current_request) //* save current solr parameters		  
 		this.manager.store.save();      		  	

@@ -250,8 +250,14 @@ var Manager;
 		//restore previous search request in the manager
 		Manager.store.load(true); 
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
-    	(new UniqueURL.constructor()).setUniqueURL({});
-    	Manager.widgets['thumbs'].current_selec = null;
+    	
+    	var req = Manager.store.exposedString();
+    	(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': req}, 
+    	                   {'key': 'view', 'value': Manager.widgets['state_manager'].getCurrentState()["view"]},
+    	                   {'key': 'category', 'value': Manager.widgets['state_manager'].getCurrentState()["category"]}
+    	                   ]);
+    	
+    	Manager.widgets['thumbs'].setCurrent_selec(null);
     });	
     
     //* calls to default view
@@ -263,6 +269,8 @@ var Manager;
     	Manager.widgets['state_manager'].categoryChanged({category:"all"});
     	(new UniqueURL.constructor()).setUniqueURL({});
     	Manager.widgets['currentsearch'].removeAllCurrentSearch();
+    	Manager.widgets['thumbs'].setCurrent_selec(null);
+    	Manager.widgets['details'].set_call_default_on_return(false);
     	Manager.store.load(true, event.isDefault); 
     	Manager.doRequest();
     });	    

@@ -435,8 +435,8 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  
   },
   
-  set_call_default_on_return: function () {	  	
-	  this.call_default_on_return = true;	   
+  set_call_default_on_return: function (value) {	  	
+	  this.call_default_on_return = value == true ? true : false;	   
   }
   
 });
