@@ -57,6 +57,15 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
     var html = self.template_integration_json({"detail": artwork_data}, '#detailTemplate');    
     $target.html(html);
     
+    //* replace meta tag i header (for facebook)
+    $('head').find("meta[property='og:title']").remove();
+    $('head').append(sprintf('<meta property="og:title" content="%s" />', artwork_data.media.title ));
+    $('head').find("meta[property='og:description']").remove();
+    $('head').append(sprintf('<meta property="og:description" content="%s" />', artwork_data.media.alt ));
+    $('head').find("meta[property='og:image']").remove();
+    $('head').append(sprintf('<meta property="og:image" content="%s" />', artwork_data.media.image));
+    
+    
     //* add main image
     $target.find('.gallery__main.image_loading').each(function() {    	    	
 	  		self.getImage($(this));
@@ -120,7 +129,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    	key: this.manager.translator.getLabel('detail_reference'),
 		  		    	value: doc.id
 		  		    },
-		  		    
+		  		    pageurl: $.address.value(),
 		  		    image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 		  		    
 		  		    acq: false,

@@ -366,6 +366,9 @@ var Manager;
     //* if a request string has been posted, add it to the manager (the request will be handled on page load by $.address.externalChange
     var postedSearchString = smkCommon.getSearchPOST();         
     if(postedSearchString !== undefined && postedSearchString != ''){
+    	if (typeof _gaq !== undefined)
+    		_gaq.push(['_trackEvent','Search', 'Regular search', postedSearchString, 0, true]);
+    	
     	q = q.concat(postedSearchString);
     	Manager.store.addByValue('q', q);
     	var req = Manager.store.exposedString();

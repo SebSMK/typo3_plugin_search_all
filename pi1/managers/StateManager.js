@@ -151,8 +151,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			current_q_values.push(current_q.value);
 		};
 		
-		//* send call to request
+		//* send request
 		if (this.manager.store.addByValue('q', current_q_values.concat(fq_value))){																												
+			
+			if (typeof _gaq !== undefined)
+	    		_gaq.push(['_trackEvent','Search', 'Regular search', fq_value, 0, true]);
 			
 			if (teaser_view){
 		  	    // call to teasers view from searchbox when in "detail" view    	         	
