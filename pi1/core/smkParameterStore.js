@@ -54,17 +54,7 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
       this.exposedReset();
     }
     this.parseString(this.storedString(isdefault));
-  },
-  
-  load_req: function (req, reset) {
-		if (req === undefined)
-			return;  
-	    
-		if (reset === undefined || reset)  
-			this.exposedReset();
-	    
-	    this.parseString(req);
-  },
+  },  
   
   /**
    *
@@ -161,7 +151,22 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
 	  };
 	  
 	  return res;
-  }
+  },
+  
+  
+  _q_separator: ',',
+  
+  extract_q_from_manager: function(){	  
+	  var res = '';
+	  var q_all = this.get('q').value == null ? [] : this.get('q').value.slice();
+	  var q_wout_q_def = smkCommon.removeA(q_all, this.q_default);
+	  
+	  for (var i = 0, l = q_wout_q_def.length; i < l; i++) {
+	   		res = res + this._q_separator + q_wout_q_def[i];
+	   };	
+	   	
+	  return res.replace(this._q_separator, ''); 		  
+  },
   
   
 });

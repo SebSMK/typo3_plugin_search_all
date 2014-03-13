@@ -54,14 +54,11 @@ var Manager;
     	translator: translator
     });
     
-    //* set and save default request parameters
-    var q = [Manager.store.q_default];
-    
-    Manager.store.addByValue('q', q);    
+    //* set and save default request parameters                
     var params = {
-      facet: true,
+      'q': Manager.store.q_default,	
+      'facet': true,
       'facet.field': ['artist_name_ss', 'artist_natio', 'object_production_century_earliest', 'object_type'],
-      //'f.prod_technique.facet.mincount': 20,
       'facet.limit': -1,
       'facet.mincount': 1,
       'rows':12,
@@ -72,9 +69,8 @@ var Manager;
     };
     for (var name in params) {
       Manager.store.addByValue(name, params[name]);
-    }
-    
-    // add facet with locals params
+    }    
+    // add facet category with locals params
     Manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: 'category', locals: { ex:'category' } }));
     
     // save 'default request' parameters
@@ -203,17 +199,10 @@ var Manager;
   	};
   	
     //* pager changed
-    $(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){     	
-    	Manager.widgets['currentsearch'].setRefresh(false);
-		Manager.widgets['category'].setRefresh(false);
-		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-	    	Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
-	  	};
-	  	
-	    Manager.store.get('start').val(event.start);
-	    Manager.doRequest();
+    $(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){  
+    	Manager.widgets['state_manager'].smk_search_pager_changed(event.start, searchFieldsTypes);
     }); 
-
+    
     //* sorter changed
     $(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
     	Manager.widgets['currentsearch'].setRefresh(false);
@@ -249,14 +238,15 @@ var Manager;
     	Manager.widgets['state_manager'].smk_search_call_detail(event);
     });
     
-    //* calls to teasers view from Detail
+    //* calls to teasers view
     $(Manager.widgets['details']).on('smk_search_call_teasers', function(event){  
 		//restore previous search request in the manager
 		Manager.store.load(true); 
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
-    	
-    	var req = Manager.store.exposedString();
-    	(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': req}, 
+    	    	
+    	var qvalue = Manager.store.extract_q_from_manager(); //this.manager.store.exposedString();
+    	UniqueURL.setUniqueURL([
+    	                   {'key': 'q', 'value': qvalue}, 
     	                   {'key': 'view', 'value': Manager.widgets['state_manager'].getCurrentState()["view"]},
     	                   {'key': 'category', 'value': Manager.widgets['state_manager'].getCurrentState()["category"]}
     	                   ]);
@@ -271,7 +261,7 @@ var Manager;
     .on('smk_search_call_default_view', function(event){     	
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
     	Manager.widgets['state_manager'].categoryChanged({category:"all"});
-    	(new UniqueURL.constructor()).setUniqueURL({});
+    	UniqueURL.setUniqueURL({});
     	Manager.widgets['currentsearch'].removeAllCurrentSearch();
     	Manager.widgets['thumbs'].setCurrent_selec(null);
     	Manager.widgets['details'].set_call_default_on_return(false);
@@ -371,11 +361,12 @@ var Manager;
     	
     	q = q.concat(postedSearchString);
     	Manager.store.addByValue('q', q);
-    	var req = Manager.store.exposedString();
-		(new UniqueURL.constructor()).setUniqueURL([{'key': 'req', 'value': req}, 
-		                 			                 {'key': 'view', 'value': 'teasers'},
-		                 			                 {'key': 'category', 'value': 'all'}
-		                 			                 ]);
+    	var qvalue = Manager.store.extract_q_from_manager();
+		UniqueURL.setUniqueURL([
+		                        {'key': 'q', 'value': qvalue}, 
+		                 		{'key': 'view', 'value': 'teasers'},
+		                 		{'key': 'category', 'value': 'all'}
+		                 		]);
     }
   });
 
