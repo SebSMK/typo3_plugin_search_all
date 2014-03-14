@@ -9,6 +9,8 @@ constructor: function (attributes) {
     }, attributes);
   },
 
+  previous_values: {},
+  
   init: function () {
 	  var self = this;
 	  var $target = $(this.target);
@@ -16,6 +18,8 @@ constructor: function (attributes) {
 	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": ''}]})};	 
 	  var html = self.template_integration_json(json_data, '#chosenTemplate'); 				  
 	  $target.html(html);	  
+	  
+	  this.previous_values[this.field] = new Array(),
 	  
 	  //* init 'chosen' plugin
 	  self.init_chosen();
@@ -102,10 +106,9 @@ constructor: function (attributes) {
 	    var html = self.template_integration_json(json_data, '#chosenTemplate'); 
 		
 	    //** refresh view
-	    //* save previous selected values in the target 'select' component
-	  	var previous_values = new Array(); 
+	    //* save previous selected values in the target 'select' component	  	 
 	  	$select.find("option:selected").each(function (){
-	  		previous_values.push(this.value);	  		
+	  		self.previous_values[self.field].push(this.value.replace(/^"|"$/g, ''));	  		
 	  	});
 	  		  	
 	  	$target.hide(); // hide until all styling is ready
@@ -116,12 +119,12 @@ constructor: function (attributes) {
 	  	$select.append($(html).find('option'));	  		  	
 	  	
 		//* add previous selected values in the target 'select' component
-		if (previous_values.length > 0){
+		if (self.previous_values[self.field].length > 0){
 			
 			// if there were no result after the request, we add 'manually' the previous selected values in the "select" component
 			if (objectedItems.length == 0){
-				for (var i = 0, l = previous_values.length; i < l; i++) {
-					var facet = previous_values[i];
+				for (var i = 0, l = self.previous_values[self.field].length; i < l; i++) {
+					var facet = self.previous_values[self.field][i];
 					objectedItems.push({ "value": facet, "text": smkCommon.firstCapital(facet), "count": '0' });					
 				}	
 				var json_data = {"options" : new Array({title:this.title, values:objectedItems})};	    	    	    
@@ -130,7 +133,9 @@ constructor: function (attributes) {
 			}
 			
 			// add previous selected values 
-			$target.find('select').val(previous_values);
+			$(this.target).find('select').val(self.previous_values[self.field]); 	
+			
+			self.previous_values[self.field] = new Array();
 		}			
 		
 		//* add behaviour on select change
@@ -180,21 +185,10 @@ constructor: function (attributes) {
     return function (event, params) {
     	event.stopImmediatePropagation();     	    	
     	
-    	var trigg_event = false;
-    	
-    	if (params.selected !== undefined){
-    		if (self[meth].call(self, params.selected))
-    			trigg_event = true;
-    	}else if (params.deselected !== undefined){    		
-    		if (self.remove(params.deselected)) 
-    			trigg_event = true;
-    	};    	    	
-    	
-    	if (trigg_event){
-	    	$(self).trigger({
-				type: "smk_search_filter_changed"
-	    	});
-    	}
+    	$(self).trigger({
+			type: "smk_search_filter_changed",
+			params: params
+    	});    	    	
     	
     	return false;
     }
@@ -253,18 +247,28 @@ constructor: function (attributes) {
 	    });
 	  });    	  	  
   },
+ 
+  /**
+   * @param {String}
+   * */
+  addSelectedFilter: function (value){	 
+	this.previous_values[this.field].push(value.replace(/^"|"$/g, ''));
+  },
   
-  removeAllSelectedFilters: function(){
+  removeAllSelectedFilters: function(removeFromStore){
 	  var self = this;
 	  var $select = $(self.target).find('select');
 	  
 	  $select.find("option:selected").each(function (){
 	  		$(this).removeAttr("selected");
-	  		self.manager.store.removeByValue('fq', self.fq(this.value));
+	  		if(removeFromStore == true)
+	  			self.manager.store.removeByValue('fq', self.fq(this.value));
 	  });	
 	  
 	//* update 'chosen' plugin		
 	$select.trigger("chosen:updated");
+	
+	this.previous_values[this.field] = new Array();
   }
 });
 

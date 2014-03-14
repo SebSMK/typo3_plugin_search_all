@@ -27,42 +27,71 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  $.address.externalChange(function(e){	 
 			  			    
 			    var params = UniqueURL.getParams(e.value);			    			    
-			    
+
 			    //* process view
 			    if(params.view !== undefined){
 			    	self.viewChanged({'view': params.view});				    				    				    					    					    	
+			    }else{
+			    	self.viewChanged({'view': "teasers"});
 			    }
 			    
 			    //* process category
-			    if(params.category !== undefined && params.view !== undefined){
-			    	if (params.view != 'detail'){
+			    if(params.category !== undefined){
+			    	if (params.view != 'detail'){			    		
 			    		self.categoryChanged({'category': params.category});
 			    	}else{
 			    		self.manager.widgets['details'].set_call_default_on_return(true);
 			    		self.manager.widgets['thumbs'].setCurrent_selec(null);	
 			    	}
+			    }else if(params.category == undefined){
+			    	self.categoryChanged({'category': "all"});
 			    }
 			    
 			    //* process Solr request
 				
+				// reset exposed parameters
+			    self.manager.store.exposedReset();
+			    
 			    // q param
 			    var q = [self.manager.store.q_default];										
 				if(params.q !== undefined)
 					q = q.concat(params.q.split(self.manager.store._q_separator));
 				self.manager.store.addByValue('q', q);
 				
-				// qf param
-				if(params.view == "detail")			    		
-		    		self.manager.store.remove('qf');
+			    // fq param
+				if(params.fq !== undefined && AjaxSolr.isArray(params.fq)){
+					for (var i = 0, l = params.fq.length; i < l; i++) {						
+						self.manager.store.addByValue('fq', params.fq[i].value, params.fq[i].locals);
+				   	};											
+				};												
 				
+				// qf param
+				if(params.view != "detail")
+					self.manager.store.addByValue('qf', self.manager.store.get_qf_string());					    		
+												
 				// start param
 				if(params.start !== undefined){
 					self.manager.store.addByValue('start', params.start);
 				}else{
 					self.manager.store.addByValue('start', 0);
 				}
-					
-				//* process widgets				
+								
+				
+				//* process widgets
+				// remove all previous search filters
+			    for (var i = 0, l = self.manager.searchfilterList.length; i < l; i++) {			  		  
+			    	self.manager.widgets[self.manager.searchfilterList[i].field].removeAllSelectedFilters(false);
+			    };
+			    if (params.category == 'samlingercollectionspace' && params.fq !== undefined){
+	    			// add selected filters in searchFiltersWidget
+	    			for (var i = 0, l = params.fq.length; i < l; i++) {
+	    				var field = params.fq[i].value !== undefined ? params.fq[i].value.split(':')[0] : '';
+	    				
+	    				if (self.manager.widgets[field] !== undefined && self.manager.widgets[field].addSelectedFilter !== undefined)
+	    					self.manager.widgets[field].addSelectedFilter(params.fq[i].value.split(':')[1]);			    				
+	    			}			    			
+	    		}
+				
 			   	// copy "q" values in Currentsearch widget	
 				var q_wout_q_def = self.manager.store.extract_q_from_manager().split(self.manager.store._q_separator);
 			   	
@@ -92,6 +121,36 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   },
   
   /**
+   * search filter  added / removed (only in "search in collection" view)
+   * */
+  smk_search_filter_changed: function (caller, params){
+	
+	var trigg_req = false;
+	
+	if (params.selected !== undefined){
+		if (caller.add(params.selected))
+			trigg_req = true;
+	}else if (params.deselected !== undefined){    		
+		if (caller.remove(params.deselected)) 
+			trigg_req = true;
+	};    	    	
+	
+	if (trigg_req){
+		this.manager.widgets['currentsearch'].setRefresh(false);
+		 var fqvalue = this.manager.store.extract_fq_from_manager();
+		 var qvalue = this.manager.store.extract_q_from_manager();
+		 UniqueURL.setUniqueURL([
+		                     {'key': 'q', 'value': qvalue},
+		                     {'key': 'fq', 'value': fqvalue},
+			                 {'key': 'view', 'value': this.getCurrentState()["view"]},
+			                 {'key': 'category', 'value': this.getCurrentState()["category"]}
+			                 ]);
+		this.manager.doRequest();
+	}
+  },
+  
+  
+  /**
    * current page changed
    * */
   smk_search_pager_changed: function (start, searchFieldsTypes){
@@ -103,9 +162,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		
 		this.manager.store.get('start').val(start);
 		
-		var qvalue = this.manager.store.extract_q_from_manager();
-		UniqueURL.setUniqueURL([
-		                   {'key': 'q', 'value': qvalue}, 
+		 var fqvalue = this.manager.store.extract_fq_from_manager();
+		 var qvalue = this.manager.store.extract_q_from_manager();
+		 UniqueURL.setUniqueURL([
+		                     {'key': 'q', 'value': qvalue},
+		                     {'key': 'fq', 'value': fqvalue},
 		                   {'key': 'start', 'value': start}, 
 		                   {'key': 'view', 'value': this.getCurrentState()["view"]},
 		                   {'key': 'category', 'value': this.getCurrentState()["category"]}
@@ -135,9 +196,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  	}    	
 	};
   	
-	var qvalue = this.manager.store.extract_q_from_manager(); //this.manager.store.exposedString();
-	UniqueURL.setUniqueURL([
-	                   {'key': 'q', 'value': qvalue}, 
+	 var fqvalue = this.manager.store.extract_fq_from_manager();
+	 var qvalue = this.manager.store.extract_q_from_manager();
+	 UniqueURL.setUniqueURL([
+	                     {'key': 'q', 'value': qvalue},
+	                     {'key': 'fq', 'value': fqvalue},
 	                   {'key': 'view', 'value': this.getCurrentState()["view"]},
 	                   {'key': 'category', 'value': this.getCurrentState()["category"]}
 	                   ]);
@@ -205,9 +268,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  	
 		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
 		  	  	
-		  	var qvalue = this.manager.store.extract_q_from_manager(); //this.manager.store.exposedString();
-			UniqueURL.setUniqueURL([			                        
-			                   {'key': 'q', 'value': qvalue},
+			 var fqvalue = this.manager.store.extract_fq_from_manager();
+			 var qvalue = this.manager.store.extract_q_from_manager();
+			 UniqueURL.setUniqueURL([
+			                     {'key': 'q', 'value': qvalue},
+			                     {'key': 'fq', 'value': fqvalue},
 			                   {'key': 'view', 'value': this.getCurrentState()["view"]},
 			                   {'key': 'category', 'value': this.getCurrentState()["category"]}
 			                   ]);
@@ -220,7 +285,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   
   
 /**
- * Detail view call management
+ * Detail view call
  * */  
   
   smk_search_call_detail: function(event){
@@ -255,7 +320,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   },
   
 /**
- * Tab change call management
+ * Category changed
  * */
   smk_search_category_changed: function(event){
 	  
@@ -272,9 +337,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  
 		  this.manager.widgets['currentsearch'].setRefresh(false);
 
+		  var fqvalue = this.manager.store.extract_fq_from_manager();
 		  var qvalue = this.manager.store.extract_q_from_manager(); //this.manager.store.exposedString();
 		  UniqueURL.setUniqueURL([
-		                     {'key': 'q', 'value': qvalue}, 
+		                     {'key': 'q', 'value': qvalue},
+		                     {'key': 'fq', 'value': fqvalue},
 			                 {'key': 'view', 'value': this.getCurrentState()["view"]},
 			                 {'key': 'category', 'value': this.getCurrentState()["category"]}
 			                 ]);
@@ -465,7 +532,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  	  
 			  	  // remove all search filters
 			  	  for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {			  		  
-					  this.manager.widgets[this.manager.searchfilterList[i].field].removeAllSelectedFilters();
+					  this.manager.widgets[this.manager.searchfilterList[i].field].removeAllSelectedFilters(true);
 				  };
 			  	  
 			  	  break;

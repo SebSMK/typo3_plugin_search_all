@@ -2,6 +2,13 @@
 var	UniqueURL = {	
 		_separator: '&&',
 		
+		_fq_locals_separator: ';',
+		_fq_separator: ',',
+		
+		_default_category: 'all',
+		
+		_default_view: 'teasers',
+		
 		getParams: function(url){
 			    
 			var res = {};
@@ -36,18 +43,59 @@ var	UniqueURL = {
 					   	 res.category = decodeURIComponent(value);					   	 
 						 break;	
 					  
-					  case "fq":
-					   	 value = params[i].replace('fq=', '');
-					   	 res.fq = decodeURIComponent(value);					   	 
+					  case "fq":						  						  
+					   	value = params[i].replace('fq=', '');
+					   	 
+					   	var fq = decodeURIComponent(value).split(this._fq_separator);
+					   	
+						for (var j = 0, k = fq.length; j < k; j++) {
+						   	 var fqval= this.decode_fq(fq[j]);
+						   	 if (AjaxSolr.isArray(res.fq)){
+						   		res.fq = res.fq.concat(fqval);
+						   	 }else{
+						   		res.fq = [fqval]; 
+						   	 }
+						}					   	 
+					   	 					   	 
 						 break;	
 					}
 				}						
 			}
 			
 			return res;
-		}, 
+		}, 		
 		
+		decode_fq: function(fq){
+			var res = {};
+			var elements = fq.split(this._fq_locals_separator);
+			
+			for (var i = 0, l = elements.length; i < l; i++) {
+				var element = elements[i].split('=');
+				var value = '';
+				var locals = '';
 				
+				if(element !== undefined && element.length > 1){														
+					
+					switch(element[0]){
+						case "value":
+						   	 value = elements[i].replace('value=', '');
+						   	 res.value = decodeURIComponent(value);						   	 
+							 break;
+						case "locals": 
+						   	 locals = elements[i].replace('locals=', '');	
+						   	 res.locals = {};
+						   	 res.locals[decodeURIComponent(locals)] = '';
+							 break;
+					}											
+				}										
+			};
+			
+			if(res.locals !== undefined && res.locals.tag !== undefined && res.value !== undefined)
+				res.locals.tag = res.value.split(':')[0];		
+			
+			return res;
+		},
+		
 		setUniqueURL: function(json){	    	  
 
 			  var uniqueURL = "";
@@ -56,12 +104,17 @@ var	UniqueURL = {
 				  
 			      switch(json[i].key){
 					  case "q":
-					  case "view":
-					  case "category":
 					  case "start":
 					  case "fq":
 						  if (json[i].value != '')
-							  uniqueURL = sprintf('%s%s%s=%s', uniqueURL, this._separator, json[i].key, json[i].value);
+							  uniqueURL = sprintf('%s%s%s=%s', uniqueURL, this._separator, json[i].key, encodeURIComponent(json[i].value));
+						  
+						  break;
+
+					  case "view":
+					  case "category":
+						  if (json[i].value != '' && json[i].value != this._default_category && json[i].value != this._default_view)
+							  uniqueURL = sprintf('%s%s%s=%s', uniqueURL, this._separator, json[i].key, encodeURIComponent(json[i].value));
 						  
 						  break;
 			      }		  

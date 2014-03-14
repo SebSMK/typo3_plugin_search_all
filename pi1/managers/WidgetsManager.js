@@ -192,9 +192,8 @@ var Manager;
     
     //* searchfilters changed
     for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-    	$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_changed', function(event){
-    		Manager.widgets['currentsearch'].setRefresh(false);
-    		Manager.doRequest();
+    	$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_changed', {self: Manager.widgets[searchFieldsTypes[i].field]}, function(event){    		
+    		Manager.widgets['state_manager'].smk_search_filter_changed(event.data.self, event.params);    		    		    		    		
     	});
   	};
   	
