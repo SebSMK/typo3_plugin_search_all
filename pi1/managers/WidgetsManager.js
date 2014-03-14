@@ -243,9 +243,11 @@ var Manager;
 		Manager.store.load(true); 
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
     	    	
-    	var qvalue = Manager.store.extract_q_from_manager(); //this.manager.store.exposedString();
-    	UniqueURL.setUniqueURL([
-    	                   {'key': 'q', 'value': qvalue}, 
+		 var fqvalue = this.manager.store.extract_fq_from_manager();
+		 var qvalue = this.manager.store.extract_q_from_manager();
+		 UniqueURL.setUniqueURL([
+		                     {'key': 'q', 'value': qvalue},
+		                     {'key': 'fq', 'value': fqvalue},
     	                   {'key': 'view', 'value': Manager.widgets['state_manager'].getCurrentState()["view"]},
     	                   {'key': 'category', 'value': Manager.widgets['state_manager'].getCurrentState()["category"]}
     	                   ]);
@@ -358,11 +360,11 @@ var Manager;
     	if (typeof _gaq !== undefined)
     		_gaq.push(['_trackEvent','Search', 'Regular search', postedSearchString, 0, true]);
     	
-    	q = q.concat(postedSearchString);
-    	Manager.store.addByValue('q', q);
-    	var qvalue = Manager.store.extract_q_from_manager();
+//    	q = q.concat(postedSearchString);
+//    	Manager.store.addByValue('q', q);
+//    	var qvalue = Manager.store.extract_q_from_manager();
 		UniqueURL.setUniqueURL([
-		                        {'key': 'q', 'value': qvalue}, 
+		                        {'key': 'q', 'value': postedSearchString}, 
 		                 		{'key': 'view', 'value': 'teasers'},
 		                 		{'key': 'category', 'value': 'all'}
 		                 		]);

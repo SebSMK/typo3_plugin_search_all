@@ -43,7 +43,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    		self.manager.widgets['details'].set_call_default_on_return(true);
 			    		self.manager.widgets['thumbs'].setCurrent_selec(null);	
 			    	}
-			    }else if(params.category == undefined){
+			    }else if(params.category == undefined && params.view != 'detail'){
 			    	self.categoryChanged({'category': "all"});
 			    }
 			    
@@ -53,9 +53,16 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    self.manager.store.exposedReset();
 			    
 			    // q param
-			    var q = [self.manager.store.q_default];										
-				if(params.q !== undefined)
-					q = q.concat(params.q.split(self.manager.store._q_separator));
+			    var q = [];
+			    if (params.view != 'detail'){
+			    	q = [self.manager.store.q_default];										
+					if(params.q !== undefined)
+						q = q.concat(params.q.split(self.manager.store._q_separator));
+			    }else{
+			    	if(params.q !== undefined)
+			    		q = sprintf('id:%s', params.q);			    	
+			    };
+			    
 				self.manager.store.addByValue('q', q);
 				
 			    // fq param
