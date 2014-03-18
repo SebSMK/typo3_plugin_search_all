@@ -123,7 +123,7 @@ AjaxSolr.ThumbsWidget = AjaxSolr.AbstractWidget.extend({
   push_work_til_thumb: function(work, thumbnails, copyright){
 	  var id = work[1];		  
 	  var title = work[2];
-	  var thumb = work[3] != "" ? work[3] : this.default_picture_path;			   
+	  var thumb = work[3] != "" ? smkCommon.getScaledPicture (work[3], 'small') : this.default_picture_path;			   
 	  
 	  thumbnails.push({
 			  img_id : id,

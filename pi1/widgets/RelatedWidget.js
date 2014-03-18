@@ -136,7 +136,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
   getData: function (entry, copyright){
 	  
 	  var title_first = entry.split(';--;')[2];
-	  var medium_image_data = entry.split(';--;')[3] != "" ? entry.split(';--;')[3] : this.default_picture_path;
+	  var medium_image_data = entry.split(';--;')[3] != "" ? smkCommon.getScaledPicture (entry.split(';--;')[3], 'medium') : this.default_picture_path;
 	  var id = entry.split(';--;')[0];
 	  var artist_name = entry.split(';--;')[1];
 	  

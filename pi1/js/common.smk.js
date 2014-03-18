@@ -123,32 +123,31 @@
 		var pluginPath = common.getCurrentPluginDir();
 		
 		return sprintf('http://%s/%s', server, pluginPath);				
-	}
+	};	
 	
-	
-//	common.getScaledPicture = function(fullsizePath, size){								 
-//		
-//		var pictureScaleServerPath = 'cspic-01.smk.dk';		
-//		var pictureAdresse = common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '');
-//		var width = '';
-//			
-//		switch(size){
-//		  case "small":		 			  			  			  
-//			  width = '88';					  			  			  
-//			  break;
-//		  case "medium":		 			  			  			  
-//			  width = '198';					  			  			  
-//			  break;
-//		  case "large":		 			  			  			  
-//			  width = '418';					  			  			  
-//			  break;
-//		  default:		    			  			   							  
-//			  width = '88';		  	 		  	  
-//		  	  break;		  
-//		};	
-//		
-//		return sprintf('http://%s/?pic=%s&mode=width&width=%s', pictureScaleServerPath, pictureAdresse, width);
-//	};
+	common.getScaledPicture = function(fullsizePath, size){								 
+		
+		var pictureScaleServerPath = 'cspic-01.smk.dk';		
+		var pictureAdresse = common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '');
+		var width = '';
+			
+		switch(size){
+		  case "small":		 			  			  			  
+			  width = '88';					  			  			  
+			  break;
+		  case "medium":		 			  			  			  
+			  width = '198';					  			  			  
+			  break;
+		  case "large":		 			  			  			  
+			  width = '418';					  			  			  
+			  break;
+		  default:		    			  			   							  
+			  width = '88';		  	 		  	  
+		  	  break;		  
+		};	
+		
+		return sprintf('http://%s/?pic=%s&mode=width&width=%s', pictureScaleServerPath, pictureAdresse, width);
+	};
 	
 	common.getLocation = function(href) {
 	    var l = document.createElement("a");

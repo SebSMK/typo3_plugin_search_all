@@ -151,7 +151,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 data = {
 				  		id:doc.id,
 				  		title:this.getTitle(doc),	 
-				  		thumbnail: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
+				  		thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture (doc.medium_image_url, 'medium') : this.default_picture_path,
 				  		categories: {name: this.manager.translator.getCollection(smkCommon.replace_dansk_char(doc.location_name)), url:"#"},
 			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
