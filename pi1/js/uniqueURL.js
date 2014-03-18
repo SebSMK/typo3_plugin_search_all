@@ -1,6 +1,10 @@
 
 var	UniqueURL = {	
-		_separator: '&&',
+		_separator: '&',
+		
+		_cat_separator: '/',
+		
+		_q_separator: ',',
 		
 		_fq_locals_separator: ';',
 		_fq_separator: ',',
@@ -12,82 +16,103 @@ var	UniqueURL = {
 		getParams: function(url){
 			    
 			var res = {};
-			var params = url.split(this._separator);
 			
-			for (var i = 0, l = params.length; i < l; i++) {
+			var cats = url.replace(this._cat_separator, '').split(this._cat_separator);
+			
+			if(cats.length > 0){
 				
-				var param = params[i].split('=');
-				var value = '';
-				
-				if(param !== undefined && param.length > 1){														
+				switch(cats[0]){
+					case "detail":
+						res.q = decodeURIComponent(cats[1]);
+						res.view = cats[0];
+						break;	
 					
-					switch(param[0]){
-						 
-					  case "q":
-					   	 value = params[i].replace('q=', '');
-					   	 res.q = decodeURIComponent(value);						   	 
-						 break;
-						 
-					  case "start":
-					   	 value = params[i].replace('start=', '');
-					   	 res.start = decodeURIComponent(value);						   	 
-						 break;
-						 
-					  case "view":
-					   	 value = params[i].replace('view=', '');
-					   	 res.view = decodeURIComponent(value);						   	 
-						 break;	
-						 
-					  case "category":
-					   	 value = params[i].replace('category=', '');
-					   	 res.category = decodeURIComponent(value);					   	 
-						 break;	
-					  
-					  case "fq":						  						  
-					   	value = params[i].replace('fq=', '');
-					   	 
-					   	var fq = decodeURIComponent(value).split(this._fq_separator);
-					   	
-						for (var j = 0, k = fq.length; j < k; j++) {
-						   	 var fqval= this.decode_fq(fq[j]);
-						   	 if (AjaxSolr.isArray(res.fq)){
-						   		res.fq = res.fq.concat(fqval);
-						   	 }else{
-						   		res.fq = [fqval]; 
-						   	 }
-						}					   	 
-					   	 					   	 
-						 break;	
-					}
-				}						
+					case "category":						
+						
+						res.category = cats[1];
+						
+						var params = cats[2].split(this._separator);
+						
+						for (var i = 0, l = params.length; i < l; i++) {
+							
+							var param = params[i].split('=');
+							var value = '';
+							
+							if(param !== undefined && param.length > 1){														
+								
+								switch(param[0]){
+									 
+								  case "q":
+								   	 value = params[i].replace('q=', '');
+								   	 res.q = decodeURIComponent(value);						   	 
+									 break;
+									 
+								  case "start":
+								   	 value = params[i].replace('start=', '');
+								   	 res.start = decodeURIComponent(value);						   	 
+									 break;						 					  
+								  
+								  case "fq":						  						  
+								   	value = params[i].replace('fq=', '');
+								   	 
+								   	var fq = decodeURIComponent(value).split(this._fq_separator);
+								   	
+									for (var j = 0, k = fq.length; j < k; j++) {
+									   	 var fqval= this.decode_fq(fq[j]);
+									   	 if (AjaxSolr.isArray(res.fq)){
+									   		res.fq = res.fq.concat(fqval);
+									   	 }else{
+									   		res.fq = [fqval]; 
+									   	 }
+									}					   	 
+								   	 					   	 
+									 break;	
+								}
+							}						
+						}
+						
+						break;				
+				}
+				
 			}
 			
 			return res;
+
 		}, 		
 		
+		
+		setUniqueURL: function(json){	    	  
+
+			  var uniqueURL = "";		      
+			  
+			  if(json.view == 'detail'){
+				  uniqueURL = sprintf('%s%s%s%s', this._cat_separator, json.view, this._cat_separator, json.q );				  				  
+			  }else if(json.view != undefined){
+				  
+				  var cat = json.category != undefined && json.category != 'all' ? sprintf('%1$scategory%1$s%2$s%1$s', this._cat_separator,json.category) : '';
+				  var q =  json.q != undefined &&  this.encode_q(json.q) != '' ? sprintf('%sq=%s', this._separator, encodeURIComponent(this.encode_q(json.q))) : '';
+				  var fq =  json.fq != undefined && this.encode_fq(json.fq) != '' ? sprintf('%sfq=%s', this._separator, encodeURIComponent(this.encode_fq(json.fq))) : '';
+				  var start =  json.start != undefined && json.start != 0 ? sprintf('%sstart=%s', this._separator, encodeURIComponent(json.start)) : '';
+				  
+				  
+				  uniqueURL = sprintf('%s%s%s%s', cat, q, fq, start);
+				  
+			  }; 	  
+		      
+			  //* set unique url	
+		      $.address.value(uniqueURL.replace(this._separator, ''));		
+
+		 },
+		 
 		decode_fq: function(fq){
 			var res = {};
 			var elements = fq.split(this._fq_locals_separator);
 			
 			for (var i = 0, l = elements.length; i < l; i++) {
-				var element = elements[i].split('=');
-				var value = '';
-				var locals = '';
+				var element = elements[i].split(':');
 				
-				if(element !== undefined && element.length > 1){														
-					
-					switch(element[0]){
-						case "value":
-						   	 value = elements[i].replace('value=', '');
-						   	 res.value = decodeURIComponent(value);						   	 
-							 break;
-						case "locals": 
-						   	 locals = elements[i].replace('locals=', '');	
-						   	 res.locals = {};
-						   	 res.locals[decodeURIComponent(locals)] = '';
-							 break;
-					}											
-				}										
+				if(element !== undefined && element.length > 1)																			
+					res.value = decodeURIComponent(elements[i]);						   	 																												
 			};
 			
 			if(res.locals !== undefined && res.locals.tag !== undefined && res.value !== undefined)
@@ -96,42 +121,30 @@ var	UniqueURL = {
 			return res;
 		},
 		
-		setUniqueURL: function(json){	    	  
-
-			  var uniqueURL = "";
-		      
-			  for (var i = 0, l = json.length; i < l; i++) {
-				  
-			      switch(json[i].key){
-					  case "q":
-					  case "start":
-					  case "fq":
-						  if (json[i].value != '')
-							  uniqueURL = sprintf('%s%s%s=%s', uniqueURL, this._separator, json[i].key, encodeURIComponent(json[i].value));
-						  
-						  break;
-
-					  case "view":
-					  case "category":
-						  if (json[i].value != '' && json[i].value != this._default_category && json[i].value != this._default_view)
-							  uniqueURL = sprintf('%s%s%s=%s', uniqueURL, this._separator, json[i].key, encodeURIComponent(json[i].value));
-						  
-						  break;
-			      }		  
-			  } 	  
-		      
-			  //* set unique url	
-		      $.address.value(uniqueURL.replace(this._separator, ''));		
-
-		 }
+		encode_fq: function(getfq){
+			 var res = '';
+			  var fq = getfq == null ? [] : getfq.slice();	  
+			  
+			  for (var i = 0, l = fq.length; i < l; i++) {
+				  if(fq[i].value != null && fq[i].value != '' && fq[i].value.split(':')[0] != 'category')
+			   		res = sprintf('%s%s%s', res, this._fq_separator, fq[i].value);
+			   };	
+			   	
+			  return res.replace(this._fq_separator, ''); 		  			
+		},
+		
+		
+		encode_q: function(getq){	  
+			  var res = '';
+			  
+			  for (var i = 0, l = getq.length; i < l; i++) {
+			   		res = res + this._q_separator + getq[i];
+			   };	
+			   	
+			  return res.replace(this._q_separator, ''); 		  
+		}
 };
 	
-
-
-
-
-
-
 var Base64 = {
 	
 	// private property

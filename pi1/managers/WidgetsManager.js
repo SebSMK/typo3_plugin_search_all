@@ -240,14 +240,18 @@ var Manager;
 		Manager.store.load(true); 
     	Manager.widgets['state_manager'].viewChanged({view:"teasers"}); 
     	    	
-		 var fqvalue = this.manager.store.extract_fq_from_manager();
+		 var fqvalue = this.manager.store.get('fq');
 		 var qvalue = this.manager.store.extract_q_from_manager();
-		 UniqueURL.setUniqueURL([
-		                     {'key': 'q', 'value': qvalue},
-		                     {'key': 'fq', 'value': fqvalue},
-    	                   {'key': 'view', 'value': Manager.widgets['state_manager'].getCurrentState()["view"]},
-    	                   {'key': 'category', 'value': Manager.widgets['state_manager'].getCurrentState()["category"]}
-    	                   ]);
+		 var start = this.manager.store.get('start');
+		 
+		 var params = {};
+		 params.q = qvalue;
+		 params.fq = fqvalue;
+		 params.start = start.value;
+		 params.view = Manager.widgets['state_manager'].getCurrentState()["view"];
+		 params.category = Manager.widgets['state_manager'].getCurrentState()["category"];
+		 
+		 UniqueURL.setUniqueURL(params);
     	
     	Manager.widgets['thumbs'].setCurrent_selec(null);
     });	
@@ -360,11 +364,10 @@ var Manager;
 //    	q = q.concat(postedSearchString);
 //    	Manager.store.addByValue('q', q);
 //    	var qvalue = Manager.store.extract_q_from_manager();
-		UniqueURL.setUniqueURL([
-		                        {'key': 'q', 'value': postedSearchString}, 
-		                 		{'key': 'view', 'value': 'teasers'},
-		                 		{'key': 'category', 'value': 'all'}
-		                 		]);
+    	
+		 var params = {};
+		 params.q = postedSearchString;		 		 
+		 UniqueURL.setUniqueURL(params);    	
     }
   });
 

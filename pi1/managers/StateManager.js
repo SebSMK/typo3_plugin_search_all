@@ -103,7 +103,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    		}
 				
 			   	// copy "q" values in Currentsearch widget	
-				var q_wout_q_def = self.manager.store.extract_q_from_manager().split(self.manager.store._q_separator);
+				var q_wout_q_def = self.manager.store.extract_q_from_manager();
 			   	
 				self.manager.widgets['currentsearch'].removeAllCurrentSearch();					
 				for (var i = 0, l = q_wout_q_def.length; i < l; i++) {
@@ -131,7 +131,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   },
   
   /**
-   * search filter  added / removed (only in "search in collection" view)
+   * search filter added / removed (only in "search in collection" view)
    * */
   smk_search_filter_changed: function (caller, params){
 	
@@ -147,14 +147,21 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	
 	if (trigg_req){
 		this.manager.widgets['currentsearch'].setRefresh(false);
-		 var fqvalue = this.manager.store.extract_fq_from_manager();
+		
+		this.manager.store.get('start').val(0);
+		
+		 var fqvalue = this.manager.store.get('fq');
 		 var qvalue = this.manager.store.extract_q_from_manager();
-		 UniqueURL.setUniqueURL([
-		                     {'key': 'q', 'value': qvalue},
-		                     {'key': 'fq', 'value': fqvalue},
-			                 {'key': 'view', 'value': this.getCurrentState()["view"]},
-			                 {'key': 'category', 'value': this.getCurrentState()["category"]}
-			                 ]);
+		 
+		 var params = {};
+		 params.q = qvalue;
+		 params.fq = fqvalue;
+		 params.start = 0;
+		 params.view = this.getCurrentState()["view"];
+		 params.category = this.getCurrentState()["category"];
+		 
+		 UniqueURL.setUniqueURL(params);
+
 		this.manager.doRequest();
 	}
   },
@@ -172,15 +179,17 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		
 		this.manager.store.get('start').val(start);
 		
-		 var fqvalue = this.manager.store.extract_fq_from_manager();
+		 var fqvalue = this.manager.store.get('fq');
 		 var qvalue = this.manager.store.extract_q_from_manager();
-		 UniqueURL.setUniqueURL([
-		                     {'key': 'q', 'value': qvalue},
-		                     {'key': 'fq', 'value': fqvalue},
-		                   {'key': 'start', 'value': start}, 
-		                   {'key': 'view', 'value': this.getCurrentState()["view"]},
-		                   {'key': 'category', 'value': this.getCurrentState()["category"]}
-		                   ]);
+		 
+		 var params = {};
+		 params.q = qvalue;
+		 params.fq = fqvalue;
+		 params.start = start;
+		 params.view = this.getCurrentState()["view"];
+		 params.category = this.getCurrentState()["category"];
+		 
+		 UniqueURL.setUniqueURL(params);		 
 				
 		this.manager.doRequest();
   },
@@ -206,14 +215,19 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  	}    	
 	};
   	
-	 var fqvalue = this.manager.store.extract_fq_from_manager();
+	this.manager.store.get('start').val(0);
+	
+	 var fqvalue = this.manager.store.get('fq');
 	 var qvalue = this.manager.store.extract_q_from_manager();
-	 UniqueURL.setUniqueURL([
-	                     {'key': 'q', 'value': qvalue},
-	                     {'key': 'fq', 'value': fqvalue},
-	                   {'key': 'view', 'value': this.getCurrentState()["view"]},
-	                   {'key': 'category', 'value': this.getCurrentState()["category"]}
-	                   ]);
+	 
+	 var params = {};
+	 params.q = qvalue;
+	 params.fq = fqvalue;
+	 params.start = 0;
+	 params.view = this.getCurrentState()["view"];
+	 params.category = this.getCurrentState()["category"];
+	 
+	 UniqueURL.setUniqueURL(params);
   	
 	this.manager.doRequest();    	    	
   },  
@@ -277,15 +291,19 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  	}
 		  	
 		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
-		  	  	
-			 var fqvalue = this.manager.store.extract_fq_from_manager();
+		  	this.manager.store.get('start').val(0);
+		  	
+			 var fqvalue = this.manager.store.get('fq');
 			 var qvalue = this.manager.store.extract_q_from_manager();
-			 UniqueURL.setUniqueURL([
-			                     {'key': 'q', 'value': qvalue},
-			                     {'key': 'fq', 'value': fqvalue},
-			                   {'key': 'view', 'value': this.getCurrentState()["view"]},
-			                   {'key': 'category', 'value': this.getCurrentState()["category"]}
-			                   ]);
+			 
+			 var params = {};
+			 params.q = qvalue;
+			 params.fq = fqvalue;
+			 params.start = 0;
+			 params.view = this.getCurrentState()["view"];
+			 params.category = this.getCurrentState()["category"];
+			 
+			 UniqueURL.setUniqueURL(params);
 		  	
 		  	this.manager.doRequest(0);  	
 			
@@ -319,13 +337,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	this.manager.store.exposedReset();
 	  
 	var param = new AjaxSolr.Parameter({name: "q", value: 'id_s:"' + art_id +'"'}); 
-	this.manager.store.add(param.name, param);	     
-		
-	UniqueURL.setUniqueURL([
-	                   {'key': 'q', 'value': art_id},
-	                   {'key': 'view', 'value': this.getCurrentState()["view"]}
-	                   ]);
-  	
+	this.manager.store.add(param.name, param);	     	
+	
+	 var params = {};
+	 params.q = art_id;
+	 params.view = this.getCurrentState()["view"];
+	 
+	 UniqueURL.setUniqueURL(params);
+	  	
 	this.manager.doRequest();  
   },
   
@@ -347,14 +366,16 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  
 		  this.manager.widgets['currentsearch'].setRefresh(false);
 
-		  var fqvalue = this.manager.store.extract_fq_from_manager();
-		  var qvalue = this.manager.store.extract_q_from_manager(); //this.manager.store.exposedString();
-		  UniqueURL.setUniqueURL([
-		                     {'key': 'q', 'value': qvalue},
-		                     {'key': 'fq', 'value': fqvalue},
-			                 {'key': 'view', 'value': this.getCurrentState()["view"]},
-			                 {'key': 'category', 'value': this.getCurrentState()["category"]}
-			                 ]);
+		  var fqvalue = this.manager.store.get('fq');
+		  var qvalue = this.manager.store.extract_q_from_manager();
+		 
+		  var params = {};
+		 params.q = qvalue;
+		 params.fq = fqvalue;
+		 params.view = this.getCurrentState()["view"];
+		 params.category = this.getCurrentState()["category"];
+		 
+		 UniqueURL.setUniqueURL(params);
 		  	
 		  this.manager.doRequest();
 	  };	  

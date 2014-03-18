@@ -153,34 +153,11 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
 	  return res;
   },
   
-  
-  _q_separator: ',',
-  _fq_separator: ',',
-  _fq_locals_separator: ';',
-  
   extract_q_from_manager: function(){	  
 	  var res = '';
 	  var q_all = this.get('q').value == null ? [] : this.get('q').value.slice();
-	  var q_wout_q_def = smkCommon.removeA(q_all, this.q_default);
-	  
-	  for (var i = 0, l = q_wout_q_def.length; i < l; i++) {
-	   		res = res + this._q_separator + q_wout_q_def[i];
-	   };	
-	   	
-	  return res.replace(this._q_separator, ''); 		  
-  },
-  
-  extract_fq_from_manager: function(){	  
-	  var res = '';
-	  var fq = this.get('fq') == null ? [] : this.get('fq').slice();	  
-	  
-	  for (var i = 0, l = fq.length; i < l; i++) {
-		  if(fq[i].value != null && fq[i].value != '')
-	   		res = sprintf('%s%svalue=%s%s', res, this._fq_separator, fq[i].value, fq[i].locals.tag != null ? sprintf('%slocals=tag', this._fq_locals_separator) : '');
-	   };	
-	   	
-	  return res.replace(this._fq_separator, ''); 		  
-  }  
+	  return smkCommon.removeA(q_all, this.q_default);
+  }
   
 });
 
