@@ -58,12 +58,13 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
     $target.html(html);
     
     //* replace meta tag i header (for facebook)
-    $('head').find("meta[property='og:title']").remove();
-    $('head').append(sprintf('<meta property="og:title" content="%s" />', artwork_data.media.title ));
-    $('head').find("meta[property='og:description']").remove();
-    $('head').append(sprintf('<meta property="og:description" content="%s" />', artwork_data.media.alt ));
-    $('head').find("meta[property='og:image']").remove();
-    $('head').append(sprintf('<meta property="og:image" content="%s" />', artwork_data.media.image));
+//    $('head').find("meta[property='og:url']").remove();
+//    $('head').find("meta[property='og:title']").remove();
+//    $('head').append(sprintf('<meta property="og:title" content="%s" />', artwork_data.media.title ));
+//    $('head').find("meta[property='og:description']").remove();
+//    $('head').append(sprintf('<meta property="og:description" content="%s" />', artwork_data.media.alt ));
+//    $('head').find("meta[property='og:image']").remove();
+//    $('head').append(sprintf('<meta property="og:image" content="%s" />', artwork_data.media.image));
     
     
     //* add main image
@@ -129,7 +130,33 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		  		    	key: this.manager.translator.getLabel('detail_reference'),
 		  		    	value: doc.id
 		  		    },
-		  		    pageurl: $.address.value(),
+		  		    
+		  		    media: {
+			  		    fb: sprintf('%s%s?%s%s%s', 
+	  		    				smkCommon.getPluginURL(),
+	  		    				'pi1/media/fb.php',
+	  		    				'image=' + doc.medium_image_url,
+	  		    				'&title=' + this.get_OG_title(doc),
+	  		    				'&description=' + this.get_OG_description(doc)
+  		    				),
+			  		    google: sprintf('%s%s?%s%s%s', 
+				    				smkCommon.getPluginURL(),
+				    				'pi1/media/google.php',
+				    				'image=' + doc.medium_image_url,
+				    				'&title=' + this.get_OG_title(doc),
+				    				'&description=' + this.get_OG_description(doc)
+							),
+						twitter:{		  		    	
+			  		    	url: $(location).attr('href').substr(0,$(location).attr('href').indexOf('#')),
+			  		    	description: sprintf('%s   %s', this.get_OG_title(doc), this.get_OG_description(doc))
+			  		    },
+			  		    pinterest:{
+			  		    	image: doc.medium_image_url,
+			  		    	url: $(location).attr('href').substr(0,$(location).attr('href').indexOf('#')),
+			  		    	description: sprintf('StatensMuseumForKunst - %s   %s', this.get_OG_title(doc), this.get_OG_description(doc))
+			  		    }
+		  		    },	
+		  		    
 		  		    image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.default_picture_path,
 		  		    
 		  		    acq: false,
@@ -219,6 +246,21 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	  var copyright = smkCommon.computeCopyright(doc); 
 	  
 	  return  copyright == false ? sprintf('%s%s', artist, title) : sprintf('%s - %s', copyright, title); 	  
+  },
+  
+  get_OG_description: function (doc){	  
+	  var artist = this.getArtistName(doc) == '' ? '' : this.getArtistName(doc);	
+	  var copyright = smkCommon.computeCopyright(doc); 
+	  
+	  return  copyright == false ? sprintf('%s', artist) : sprintf('%s', copyright); 	  
+  },
+  
+  get_OG_title: function (doc){	  
+	  
+	  var title = this.getTitle(doc);
+	  var data = this.getObjectProdDate(doc) != '' ? sprintf(', %s', this.getObjectProdDate(doc)) : '';	   
+	  
+	  return  sprintf('%s%s', title, data ) 	  
   },
   
   

@@ -15,7 +15,7 @@ constructor: function (attributes) {
 	  var self = this;
 	  var $target = $(this.target);
 	  
-	  var json_data = {"options" : new Array({title:this.title, values:[{ "value": 'value', "text": ''}]})};	 
+	  var json_data = {"options" : new Array({title:this.title, search_lab:self.manager.translator.getLabel(sprintf('search_%s_lab', this.id)), values:[{ "value": 'value', "text": ''}]})};	 
 	  var html = self.template_integration_json(json_data, '#chosenTemplate'); 				  
 	  $target.html(html);	  
 	  
@@ -210,7 +210,7 @@ constructor: function (attributes) {
 
 	  // Multiple select
 	  $target.find('.chosen--multiple select').chosen({
-	    width: "100%"
+	    width: "198px"
 	  });
 
 	  this.open_multiple_select();
@@ -218,6 +218,7 @@ constructor: function (attributes) {
   },
   
   open_multiple_select: function(){
+	  
 	  var $target = $(this.target); 
 	  // Multiple select (always open).
 	  $target.find('.chosen--multiple.chosen--open').each( function() {

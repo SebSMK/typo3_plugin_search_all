@@ -35,12 +35,15 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    	self.viewChanged({'view': "teasers"});
 			    }
 			    
+			    if(params.view == 'detail'){
+			    	self.manager.widgets['details'].set_call_default_on_return(true);
+			    }
+			    
 			    //* process category
 			    if(params.category !== undefined){
 			    	if (params.view != 'detail'){			    		
 			    		self.categoryChanged({'category': params.category});
-			    	}else{
-			    		self.manager.widgets['details'].set_call_default_on_return(true);
+			    	}else{			    		
 			    		self.manager.widgets['thumbs'].setCurrent_selec(null);	
 			    	}
 			    }else if(params.category == undefined && params.view != 'detail'){
@@ -60,7 +63,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 						q = q.concat(params.q.split(self.manager.store._q_separator));
 			    }else{
 			    	if(params.q !== undefined)
-			    		q = sprintf('id:%s', params.q);			    	
+			    		q = sprintf('id_s:%s', params.q);			    	
 			    };
 			    
 				self.manager.store.addByValue('q', q);
@@ -315,7 +318,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	//* delete current (exposed) solr parameters
 	this.manager.store.exposedReset();
 	  
-	var param = new AjaxSolr.Parameter({name: "q", value: 'id:"' + art_id +'"'}); 
+	var param = new AjaxSolr.Parameter({name: "q", value: 'id_s:"' + art_id +'"'}); 
 	this.manager.store.add(param.name, param);	     
 		
 	UniqueURL.setUniqueURL([

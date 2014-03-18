@@ -118,6 +118,13 @@
 		return sprintf(picturePath, server, pluginPath);
 	};
 	
+	common.getPluginURL = function(){
+		var server = common.getCurrentServerName();
+		var pluginPath = common.getCurrentPluginDir();
+		
+		return sprintf('http://%s/%s', server, pluginPath);				
+	}
+	
 	
 //	common.getScaledPicture = function(fullsizePath, size){								 
 //		

@@ -88,11 +88,6 @@
     */
 }
 
-
-.sharing--iconified .print{
-	float: right;	
-}
-
 .search-choice span{	
 	color: #ffffff;
 }
@@ -112,8 +107,20 @@ a span{
 
 /* Jacques' Code  modif */
 
+.search-box {
+    margin-bottom: 7px;
+    margin-top: 0px;
+}
+
+
+.chosen-container .chosen-results li {
+    line-height: normal;
+    margin: 0;
+    padding: 0.2em 0.55em;
+}
+
 .chosen--multiple.chosen--open .chosen-drop .chosen-results {
-  height: 84px;
+  max-height: 92px;
 }
 
 .view #teaser-container-grid {

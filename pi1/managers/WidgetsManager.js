@@ -3,10 +3,7 @@ var Manager;
 (function ($) {
 
   $(function () {	  
-	var self = this;
-	
-	//* remove MOC's searchbox
-	$("#search").hide();
+	var self = this;	
 	  	
 	//******************************
 	//** load configuration

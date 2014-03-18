@@ -15,6 +15,8 @@ AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
 		  var $target = $(this.target);		  
 		  var json_data = {"default_text" : this.manager.translator.getLabel("search_box_default"), 'search': this.manager.translator.getLabel("search_box_button")};	 
 		  var html = self.template_integration_json(json_data, '#searchboxTemplate');		  
+		  //* remove MOC's searchbox
+		  $("#search").hide();
 		  $target.html(html);		
 	},	
 	
