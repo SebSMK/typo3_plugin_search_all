@@ -94,7 +94,7 @@ var	UniqueURL = {
 			  
 			  if(json.view == 'detail'){
 				  uniqueURL = sprintf('%s%s%s%s', this._cat_separator, json.view, this._cat_separator, json.q );				  				  
-			  }else if(json.view != undefined){
+			  }else{
 				  
 				  var cat = json.category != undefined && json.category != 'all' ? sprintf('%1$scategory%1$s%2$s%1$s', this._cat_separator,json.category) : '';
 				  var q =  json.q != undefined &&  this.encode_q(json.q) != '' ? sprintf('%sq=%s', this._separator, encodeURIComponent(this.encode_q(json.q))) : '';
@@ -142,13 +142,19 @@ var	UniqueURL = {
 			  return res.replace(this._fq_separator, ''); 		  			
 		},
 		
-		
+		/**
+		 * @params getq
+		 * */
 		encode_q: function(getq){	  
 			  var res = '';
 			  
-			  for (var i = 0, l = getq.length; i < l; i++) {
-			   		res = res + this._q_separator + getq[i];
-			   };	
+			  if (AjaxSolr.isArray(getq)){
+				  for (var i = 0, l = getq.length; i < l; i++) {
+				   		res = res + this._q_separator + getq[i];
+				   };  				  
+			  }else{
+				  res = getq;
+			  }			  	
 			   	
 			  return res.replace(this._q_separator, ''); 		  
 		}
