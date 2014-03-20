@@ -156,7 +156,6 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		 var params = {};
 		 params.q = qvalue;
 		 params.fq = fqvalue;
-		 params.start = 0;
 		 params.view = this.getCurrentState()["view"];
 		 params.category = this.getCurrentState()["category"];
 		 
@@ -223,7 +222,6 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	 var params = {};
 	 params.q = qvalue;
 	 params.fq = fqvalue;
-	 params.start = 0;
 	 params.view = this.getCurrentState()["view"];
 	 params.category = this.getCurrentState()["category"];
 	 
@@ -299,7 +297,6 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			 var params = {};
 			 params.q = qvalue;
 			 params.fq = fqvalue;
-			 params.start = 0;
 			 params.view = this.getCurrentState()["view"];
 			 params.category = this.getCurrentState()["category"];
 			 
@@ -366,12 +363,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  
 		  this.manager.widgets['currentsearch'].setRefresh(false);
 
+		  this.manager.store.get('start').val(0);
+		  
 		  var fqvalue = this.manager.store.get('fq');
 		  var qvalue = this.manager.store.extract_q_from_manager();
 		 
 		  var params = {};
 		 params.q = qvalue;
-		 params.fq = fqvalue;
+		 params.fq = fqvalue;		  
 		 params.view = this.getCurrentState()["view"];
 		 params.category = this.getCurrentState()["category"];
 		 

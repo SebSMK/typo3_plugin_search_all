@@ -99,8 +99,15 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 		$dir_base = dirname($_SERVER['PHP_SELF']) == '/' ? "" :  dirname($_SERVER['PHP_SELF']);
 		$dir_base .= t3lib_extMgm::siteRelPath('smk_search_all');				
 		
-		$sysconf = (array)unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
-		$solr_path = (string)$sysconf['SolrPath'];
+		$sysconf = (array)unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);				
+		
+		if ($GLOBALS['TSFE']->sys_language_uid == 1){
+			// Solr in english
+			$solr_path = (string)$sysconf['SolrPath_en'];
+		}else{
+			// Solr in danish
+			$solr_path = (string)$sysconf['SolrPath_dk'];
+		}
 		
 		$content=sprintf('	<script>
 				

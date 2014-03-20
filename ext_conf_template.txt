@@ -1,2 +1,5 @@
-# cat=basic/enable; type=string; label=Address of Solr server
-SolrPath = http://tomcat-01:8080/TelefonBogWebService/services/processTelList?wsdl 
+# cat=basic/enable; type=string; label=Address of Solr server DK
+SolrPath_dk = http://csdev-seb:8180/solr-example/preprod_all_dk/
+
+# cat=basic/enable; type=string; label=Address of Solr server EN
+SolrPath_en = http://csdev-seb:8180/solr-example/preprod_all_en/

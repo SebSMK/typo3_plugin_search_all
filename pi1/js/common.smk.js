@@ -127,7 +127,7 @@
 	
 	common.getScaledPicture = function(fullsizePath, size){								 
 		
-		var pictureScaleServerPath = 'cspic-01.smk.dk';		
+		var pictureScaleServerPath = 'cspic.smk.dk';		
 		var pictureAdresse = common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '');
 		var width = '';
 			
