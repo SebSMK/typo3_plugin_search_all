@@ -12,10 +12,11 @@
 	  "tagCloud_country": 		"nationality",
 	  "tagCloud_art_type": 		"technique",
 	  
-	  "search_artist_name_ss_lab": 		"Filter artist",
-	  "search_object_production_century_earliest_lab": 		"Filter period",
-	  "search_artist_natio_lab": 	"Filter nationality",
-	  "search_object_type_lab":	"Filter technique",
+	  "search_artist_name_ss_lab": 		"Select artist",
+	  "search_object_production_century_earliest_lab": 		"Select period",
+	  "search_artist_natio_lab": 	"Select nationality",
+	  "search_object_type_lab":	"Select technique",
+	  "search_filter":			"Filter your search",
 
       "category_artwork" : 		"artworks",
 	  "category_news" : 		"news",
@@ -240,10 +241,11 @@
       "tagCloud_country": 		"nationalitet",
       "tagCloud_art_type": 		"teknik",
           
-      "search_artist_name_ss_lab": 		"Filtrere kunstner",
-      "search_object_production_century_earliest_lab": 		"Filtrere periode",
-      "search_artist_natio_lab": 	"Filtrere kunstners nationalitet",
-      "search_object_type_lab":	"Filtrere teknik",
+      "search_artist_name_ss_lab": 		"V&aelig;lg kunstner",
+      "search_object_production_century_earliest_lab": 		"V&aelig;lg periode",
+      "search_artist_natio_lab": 	"V&aelig;lg kunstners nationalitet",
+      "search_object_type_lab":	"V&aelig;lg teknik",
+      "search_filter":			"Afgr&aelig;ns din s&oslash;gning",
       
       "category_artwork" : 		"v&aelig;rker",
 	  "category_news" : 		"nyheder",

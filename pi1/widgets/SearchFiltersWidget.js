@@ -17,7 +17,9 @@ constructor: function (attributes) {
 	  
 	  var json_data = {"options" : new Array({title:this.title, search_lab:self.manager.translator.getLabel(sprintf('search_%s_lab', this.id)), values:[{ "value": 'value', "text": ''}]})};	 
 	  var html = self.template_integration_json(json_data, '#chosenTemplate'); 				  
-	  $target.html(html);	  
+	  $target.html(html);	
+	  
+	  $('#search-filters h2.heading--widgets').html(self.manager.translator.getLabel('search_filter'));
 	  
 	  this.previous_values[this.field] = new Array(),
 	  
@@ -134,8 +136,7 @@ constructor: function (attributes) {
 			
 			// add previous selected values 
 			$(this.target).find('select').val(self.previous_values[self.field]); 	
-			
-			self.previous_values[self.field] = new Array();
+
 		}			
 		
 		//* add behaviour on select change
@@ -147,6 +148,16 @@ constructor: function (attributes) {
 		
 		//* show component
 		$target.show();
+		$target.find('chosen-choices').blur();
+		
+		//* .. but hide the list if a filter is already selected
+		if (self.previous_values[self.field].length > 0){
+			$(this.target).find('.chosen-drop').hide();
+		}else{
+			$(this.target).find('.chosen-drop').show();
+		}			
+		
+		self.previous_values[self.field] = new Array();		
 		
 		//* send "loaded" event
 		$(this).trigger({

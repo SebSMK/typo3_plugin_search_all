@@ -430,10 +430,18 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
 	  if (this.allWidgetProcessed){
 		  if ($(this.target).find('.modal_loading').length == 0){
-			// all widgets are loaded, we remove the general loading screen
+			  // all widgets are loaded, we remove the general loading screen
 			  this.stop_modal_loading();
+			  this.set_focus();			  			  
 		  }			  
 	  }
+  },
+  
+  set_focus: function(){
+	  var self = this;
+	  $(document).ready(function () {
+		  $(self.manager.widgets['searchbox'].target).find('#smk_search').focus();
+	  });	  	  
   },
   
   isThisWidgetActive: function(widget){
