@@ -27,59 +27,66 @@ var	UniqueURL = {
 						res.view = cats[0];
 						break;	
 					
-					case "category":						
+					case "category":												
+						res.category = cats[1];																		
+						this.extract_params(cats[2].split(this._separator), res);						
+						break;	
 						
-						res.category = cats[1];
-						
-						var params = cats[2].split(this._separator);
-						
-						for (var i = 0, l = params.length; i < l; i++) {
-							
-							var param = params[i].split('=');
-							var value = '';
-							
-							if(param !== undefined && param.length > 1){														
-								
-								switch(param[0]){
-									 
-								  case "q":
-								   	 value = params[i].replace('q=', '');
-								   	 res.q = decodeURIComponent(value);						   	 
-									 break;
-									 
-								  case "start":
-								   	 value = params[i].replace('start=', '');
-								   	 res.start = decodeURIComponent(value);						   	 
-									 break;						 					  
-								  
-								  case "fq":						  						  
-								   	value = params[i].replace('fq=', '');
-								   	 
-								   	var fq = decodeURIComponent(value).split(this._fq_separator);
-								   	
-									for (var j = 0, k = fq.length; j < k; j++) {
-									   	 var fqval= this.decode_fq(fq[j]);
-									   	 if (AjaxSolr.isArray(res.fq)){
-									   		res.fq = res.fq.concat(fqval);
-									   	 }else{
-									   		res.fq = [fqval]; 
-									   	 }
-									}					   	 
-								   	 					   	 
-									 break;	
-								}
-							}						
-						}
-						
-						break;				
+					default:
+						this.extract_params(cats[0].split(this._separator), res);
+						break;
 				}
 				
 			}
 			
 			return res;
 
-		}, 		
+		}, 				
 		
+		extract_params: function(params, res){			
+			
+			for (var i = 0, l = params.length; i < l; i++) {
+				
+				var param = params[i].split('=');
+				var value = '';
+				
+				if(param !== undefined && param.length > 1){														
+					
+					switch(param[0]){
+						 
+					  case "q":
+					   	 value = params[i].replace('q=', '');
+					   	 value = decodeURIComponent(value);
+					   	 res.q = value.split(this._q_separator);
+						 break;
+						 
+					  case "start":
+					   	 value = params[i].replace('start=', '');
+					   	 res.start = decodeURIComponent(value);						   	 
+						 break;						 					  
+					  
+					  case "fq":						  						  
+					   	value = params[i].replace('fq=', '');
+					   	 
+					   	var fq = decodeURIComponent(value).split(this._fq_separator);
+					   	
+						for (var j = 0, k = fq.length; j < k; j++) {
+						   	 var fqval= this.decode_fq(fq[j]);
+						   	 if (AjaxSolr.isArray(res.fq)){
+						   		res.fq = res.fq.concat(fqval);
+						   	 }else{
+						   		res.fq = [fqval]; 
+						   	 }
+						}					   	 
+					   	 					   	 
+						 break;	
+					}
+				}						
+			};
+			
+			return res;			
+			
+		},
 		
 		setUniqueURL: function(json){	    	  
 
@@ -103,6 +110,8 @@ var	UniqueURL = {
 		      $.address.value(uniqueURL.replace(this._separator, ''));		
 
 		 },
+		
+		
 		 
 		decode_fq: function(fq){
 			var res = {};

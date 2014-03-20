@@ -60,7 +60,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    if (params.view != 'detail'){
 			    	q = [self.manager.store.q_default];										
 					if(params.q !== undefined)
-						q = q.concat(params.q.split(self.manager.store._q_separator));
+						q = q.concat(params.q);
 			    }else{
 			    	if(params.q !== undefined)
 			    		q = sprintf('id_s:%s', params.q);			    	
