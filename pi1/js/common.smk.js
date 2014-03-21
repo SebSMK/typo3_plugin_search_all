@@ -10,7 +10,7 @@
       root.smkCommon = common; // <script>
     }
   }
-}(this, function (common) {
+}(this, function (common) {			
 	
 	common.firstCapital = function(string){				
 		return string === undefined ? '' : string.charAt(0).toUpperCase() + string.slice(1)		
@@ -125,10 +125,11 @@
 		return sprintf('http://%s/%s', server, pluginPath);				
 	};	
 	
-	common.getScaledPicture = function(fullsizePath, size){								 
+	common.getScaledPicture = function(fullsizePath, size, TYPO3_picture){								 
 		
-		var pictureScaleServerPath = 'cspic.smk.dk';		
-		var pictureAdresse = common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '');
+		var pictureScaleServerPath = 'cspic.smk.dk';
+		var TYPO3_server = 'http://www.smk.dk';
+		var pictureAdresse = TYPO3_picture == true ? sprintf('%s/%s', TYPO3_server, fullsizePath) : common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '');
 		var width = '';
 			
 		switch(size){

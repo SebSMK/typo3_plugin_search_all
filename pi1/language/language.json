@@ -28,9 +28,10 @@
 	  "label_cat_kks":			"the royal collection of graphic art",
 	  "label_cat_kms":			"the royal collection of paintings and sculptures",
 	  "label_cat_default":		"collections",
-	  "label_cat_nyheder":		"web - news", 
-	  "label_cat_kalender":		"web - calendar", 
-	  "label_cat_praktisk":		"web - visiting info",
+	  "label_cat_nyheder":		"website - news", 
+	  "label_cat_kalender":		"website - calendar", 
+	  "label_cat_praktisk":		"website - visiting info",
+	  "label_cat_artikler":		"website - article",
 	  
 	  "detail_technique":		"technique",
 	  "detail_acquisition":		"acquisition",
@@ -264,9 +265,10 @@
 	  "label_cat_kks":			"den kongelige kobberstiksamling",
 	  "label_cat_kms":			"den kongelige maleriesamling",
 	  "label_cat_default":		"samlinger",	 
-	  "label_cat_nyheder":		"web - nyheder", 
-	  "label_cat_kalender":		"web - kalender", 
-	  "label_cat_praktisk":		"web - praktisk info",
+	  "label_cat_nyheder":		"hjemmeside - nyheder", 
+	  "label_cat_kalender":		"hjemmeside - kalender", 
+	  "label_cat_praktisk":		"hjemmeside - praktisk info",
+	  "label_cat_artikler":		"hjemmeside - artikel",
 	   
 	  
 	  "detail_technique":		"teknik",
