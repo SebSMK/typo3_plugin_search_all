@@ -36,10 +36,12 @@
 
 .heading--widgets {  
   border: 0;
-  color: #A2A2A5;
   margin-bottom: 1.25em;
   padding-bottom: .45em;
-  border-bottom: 1px solid #ecedf2;
+  border-bottom: 1px solid #ecedf2;  
+  font-size: 1.1em;
+  font-weight: normal;
+  font-family: arial;
 }
 
 .highlight{

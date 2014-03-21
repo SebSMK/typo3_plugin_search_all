@@ -55,17 +55,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		
 	//* merge data and template
     var html = self.template_integration_json({"detail": artwork_data}, '#detailTemplate');    
-    $target.html(html);
-    
-    //* replace meta tag i header (for facebook)
-//    $('head').find("meta[property='og:url']").remove();
-//    $('head').find("meta[property='og:title']").remove();
-//    $('head').append(sprintf('<meta property="og:title" content="%s" />', artwork_data.media.title ));
-//    $('head').find("meta[property='og:description']").remove();
-//    $('head').append(sprintf('<meta property="og:description" content="%s" />', artwork_data.media.alt ));
-//    $('head').find("meta[property='og:image']").remove();
-//    $('head').append(sprintf('<meta property="og:image" content="%s" />', artwork_data.media.image));
-    
+    $target.html(html);    
     
     //* add main image
     $target.find('.gallery__main.image_loading').each(function() {    	    	
@@ -257,10 +247,10 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
   get_OG_title: function (doc){	  
 	  
-	  var title = this.getTitle(doc);
-	  var data = this.getObjectProdDate(doc) != '' ? sprintf(', %s', this.getObjectProdDate(doc)) : '';	   
+	  var title = this.getTitle(doc).replace(/"/g, '');
+	  var date = this.getObjectProdDate(doc) != '' ? sprintf(', %s', this.getObjectProdDate(doc)) : '';	   
 	  
-	  return  sprintf('%s%s', title, data ) 	  
+	  return  sprintf('%s%s', title, date ) 	  
   },
   
   

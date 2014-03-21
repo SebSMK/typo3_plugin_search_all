@@ -179,7 +179,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		 	data = {
 				 		id:doc.id,
 			 			title: doc.page_title,
-			 			thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : this.default_picture_path,
+			 			thumbnail: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ?  smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : this.default_picture_path,
 			 			description: sprintf("%s...", doc.page_description !== undefined ? doc.page_description.substring(0, 100) : (doc.page_content !== undefined ? doc.page_content.substring(0, 100) : '')),
 			 			url: doc.page_url,				 			
 			 			lastupdate: [{key: this.manager.translator.getLabel("teaser_last_update"), value: this.getLastUpdate(doc)}],
