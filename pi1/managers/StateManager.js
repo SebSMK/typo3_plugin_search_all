@@ -92,7 +92,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    for (var i = 0, l = self.manager.searchfilterList.length; i < l; i++) {			  		  
 			    	self.manager.widgets[self.manager.searchfilterList[i].field].removeAllSelectedFilters(false);
 			    };
-			    if (params.category == 'samlingercollectionspace' && params.fq !== undefined){
+			    if (params.category == 'collections' && params.fq !== undefined){
 	    			// add selected filters in searchFiltersWidget
 	    			for (var i = 0, l = params.fq.length; i < l; i++) {
 	    				var field = params.fq[i].value !== undefined ? params.fq[i].value.split(':')[0] : '';
@@ -500,7 +500,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 //		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
 		  switch(newstate["category"]){
-			  case "samlingercollectionspace":		 			  			  			  
+			  case "collections":		 			  			  			  
 				  self.showWidget($target.find("#search-filters"));
 				  //$target.find("#search-filters").show().children().show();					  			  			  
 				  break;	
@@ -552,7 +552,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    this.manager.widgets['teasers'].removeAllArticles();
 	    
 		switch(newstate["category"]){
-			  case "samlingercollectionspace":		 			  			  				  
+			  case "collections":		 			  			  				  
 				  this.showWidget($target.find("#search-filters"));
 				  //$target.find("#search-filters").show().children().show();		
 				  $(this.manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();

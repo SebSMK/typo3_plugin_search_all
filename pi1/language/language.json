@@ -25,6 +25,13 @@
 	  "category_info" : 		"visiting information",
 	  "category_all" :	 		"all results",
 	  
+	  "label_cat_kks":			"the royal collection of graphic art",
+	  "label_cat_kms":			"the royal collection of paintings and sculptures",
+	  "label_cat_default":		"collections",
+	  "label_cat_nyheder":		"web - news", 
+	  "label_cat_kalender":		"web - calendar", 
+	  "label_cat_praktisk":		"web - visiting info",
+	  
 	  "detail_technique":		"technique",
 	  "detail_acquisition":		"acquisition",
 	  "detail_reference":		"reference",
@@ -253,6 +260,14 @@
 	  "category_article" : 		"artikler",
 	  "category_info" : 		"praktisk information",
 	  "category_all" :	 		"alle resultater",
+	  
+	  "label_cat_kks":			"den kongelige kobberstiksamling",
+	  "label_cat_kms":			"den kongelige maleriesamling",
+	  "label_cat_default":		"samlinger",	 
+	  "label_cat_nyheder":		"web - nyheder", 
+	  "label_cat_kalender":		"web - kalender", 
+	  "label_cat_praktisk":		"web - praktisk info",
+	   
 	  
 	  "detail_technique":		"teknik",
 	  "detail_acquisition":		"erhvervelse",
@@ -541,10 +556,9 @@
 		"Sal 301D":	"Danish and International Art after 1900",
 		"Sal 302A":	"Danish and International Art after 1900",
 		"Sal 302B":	"Danish and International Art after 1900",
-		"Sal 302C":	"Danish and International Art after 1900",
-				
-		"default":	"collections"
-				
+		"Sal 302C":	"Danish and International Art after 1900",		
+		
+		"default": ""		
 
     },
     "dk": {
@@ -624,9 +638,9 @@
 		"Sal 302A":	"Dansk og International Kunst efter 1900",
 		"Sal 302B":	"Dansk og International Kunst efter 1900",
 		"Sal 302C":	"Dansk og International Kunst efter 1900",
-
-						
-		"default":	"samlinger"					        
+		
+		"default": ""
+				        
     }
   }
 }

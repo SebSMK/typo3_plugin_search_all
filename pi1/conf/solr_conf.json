@@ -1,6 +1,6 @@
 {
     "exposed": 							["fq", "q", "start", "limit", "sort", "qf"],
-    "q_default": 						"-(id_s:(*/*) AND category:samlingercollectionspace) -(id_s:(*verso) AND category:samlingercollectionspace)",
+    "q_default": 						"-(id_s:(*/*) AND category:collections) -(id_s:(*verso) AND category:collections)",
     
     "qf_default":{	
 		"dk":{

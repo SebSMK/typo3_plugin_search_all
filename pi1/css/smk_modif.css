@@ -115,6 +115,10 @@ a span{
 
 /* Jacques' Code  modif */
 
+.teaser__category{
+    font-size: 0.78em;
+}
+
 .search-box {
     margin-bottom: 7px;
     margin-top: 0px;

@@ -28,7 +28,10 @@ var	UniqueURL = {
 						break;	
 					
 					case "category":												
-						res.category = cats[1];																		
+						res.category = cats[1];	
+						res.fq = [{	'value': sprintf('%s:%s', cats[0], cats[1]),
+									'locals': {'tag': cats[0]}  
+								}];
 						this.extract_params(cats[2].split(this._separator), res);						
 						break;	
 						
