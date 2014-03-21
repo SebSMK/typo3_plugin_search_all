@@ -182,7 +182,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 			thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : this.default_picture_path,
 			 			description: sprintf("%s...", doc.page_description !== undefined ? doc.page_description.substring(0, 100) : (doc.page_content !== undefined ? doc.page_content.substring(0, 100) : '')),
 			 			url: doc.page_url,				 			
-			 			meta: [{key: this.manager.translator.getLabel("teaser_last_update"), value: sprintf("%s.%s.%s", (new Date()).getDay(), (new Date()).getMonth(), (new Date()).getFullYear() )}],
+			 			lastupdate: [{key: this.manager.translator.getLabel("teaser_last_update"), value: this.getLastUpdate(doc)}],
 			 			is_artwork: false,
 			 			not_is_artwork: true,
 			 			categories: {'name': this.manager.translator.getLabel('label_cat_' + doc.category[0].toLowerCase()), 'url':'#'}	
@@ -197,6 +197,11 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  
 	  return data;
   
+  },  
+    
+  getLastUpdate: function (doc){	  
+	  var date = doc.last_update != undefined ? new Date(doc.last_update) : new Date();		  	  
+	  return sprintf("%s/%s/%s", date.getDay(), date.getMonth(), date.getFullYear() );	  	  
   },  
   
   getArtworkCategory: function (doc){	  

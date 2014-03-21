@@ -54,7 +54,16 @@
 				  	{{/location}}
 				  {{/is_artwork}}
                 {{/meta}}
-              </ul>							
+              </ul>	
+
+			  <!-- last update -->
+              <ul class="teaser__meta">                 
+				  {{#not_is_artwork}}
+				  	{{#lastupdate}}
+						<li><span>{{{key}}}</span>{{{value}}}</li>
+				  	{{/lastupdate}}
+				  {{/not_is_artwork}}                
+              </ul>								
 			 
 
             </div><!-- teaser__content -->
