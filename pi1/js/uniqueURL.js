@@ -23,7 +23,7 @@ var	UniqueURL = {
 				
 				switch(cats[0]){
 					case "detail":
-						res.q = decodeURIComponent(cats[1]);
+						res.q = sprintf('"%s"', decodeURIComponent(cats[1]));
 						res.view = cats[0];
 						break;	
 					
@@ -96,7 +96,7 @@ var	UniqueURL = {
 			  var uniqueURL = "";		      
 			  
 			  if(json.view == 'detail'){
-				  uniqueURL = sprintf('%s%s%s%s', this._cat_separator, json.view, this._cat_separator, json.q );				  				  
+				  uniqueURL = sprintf('%s%s%s%s', this._cat_separator, json.view, this._cat_separator, encodeURIComponent(this.encode_q(json.q)) );				  				  
 			  }else{
 				  
 				  var cat = json.category != undefined && json.category != 'all' ? sprintf('%1$scategory%1$s%2$s%1$s', this._cat_separator,json.category) : '';
