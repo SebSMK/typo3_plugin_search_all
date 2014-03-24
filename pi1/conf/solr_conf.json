@@ -2,6 +2,8 @@
     "exposed": 							["fq", "q", "start", "limit", "sort", "qf"],
     "q_default": 						"-(id_s:(*/*) AND category:collections) -(id_s:(*verso) AND category:collections)",
     
+    "sort_default": 					"score desc",
+    
     "qf_default":{	
 		"dk":{
 				"id":					"20", 

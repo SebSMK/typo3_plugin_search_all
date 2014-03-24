@@ -17,7 +17,8 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
 		    AjaxSolr.smkParameterStore.__super__.constructor.apply(this, arguments);
 		    AjaxSolr.extend(this, {
 		    	q_default:null,
-		    	qf_default:null
+		    	qf_default:null,
+		    	sort_default:null
 		    }, attributes);
 	 },	 
 	  
@@ -138,8 +139,7 @@ AjaxSolr.smkParameterStore = AjaxSolr.ParameterStore.extend(
   set_qf: function(json){
 	  this.qf_default = json;	  
   },
-  
-  
+   
   get_qf_string: function(){
 	  
 	  var res = "";

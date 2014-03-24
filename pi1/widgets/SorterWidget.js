@@ -77,6 +77,11 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
   },
   
   
+  setOption: function(option) {
+	  $(this.target).find('select').val(option);
+	  $(this.target).find('select').trigger("chosen:updated");
+  },
+  
   init_chosen: function() {
 	  /*
 	   § Chosen

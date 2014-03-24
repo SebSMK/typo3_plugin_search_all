@@ -15,6 +15,7 @@ var Manager;
 	solr_conf.load_json("pi1/conf/solr_conf.json");
 	var exposed = solr_conf.get_exposed_params();
 	var q_default = solr_conf.get_q_default();
+	var sort_default = solr_conf.get_sort_default();
 	var qf_default = solr_conf.get_qf_default(current_language);
 	  
 	//** init multi language script 
@@ -43,7 +44,8 @@ var Manager;
     	store: new AjaxSolr.smkParameterStore({
     		exposed: exposed,    		
     		q_default: q_default,
-    		qf_default: qf_default
+    		qf_default: qf_default,
+    		sort_default: sort_default 
     	}),
     	searchfilterList: searchFieldsTypes,
     	allWidgetsProcessed: allWidgetsProcessedBound,
@@ -62,6 +64,7 @@ var Manager;
       'defType': 'edismax',      
       'qf': Manager.store.get_qf_string(),
       'start': 0, // Math.floor((Math.random()*2000)+1),
+      'sort': Manager.store.sort_default,
       'json.nl': 'map'
     };
     for (var name in params) {
@@ -185,8 +188,7 @@ var Manager;
     $(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
     	Manager.widgets['state_manager'].smk_search_category_changed(event);
     });     
-   
-    
+       
     //* searchfilters changed
     for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
     	$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_changed', {self: Manager.widgets[searchFieldsTypes[i].field]}, function(event){    		
@@ -201,13 +203,8 @@ var Manager;
     
     //* sorter changed
     $(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
-    	Manager.widgets['currentsearch'].setRefresh(false);
-		Manager.widgets['category'].setRefresh(false);
-		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-	    	Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
-	  	};	
-	  	Manager.doRequest(0);
-    }); 
+    	Manager.widgets['state_manager'].smk_search_sorter_changed(searchFieldsTypes);
+    });         
     
     //* new search term input in search box
     $(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){
@@ -242,12 +239,13 @@ var Manager;
     	    	
 		 var fqvalue = this.manager.store.get('fq');
 		 var qvalue = this.manager.store.extract_q_from_manager();
-		 var start = this.manager.store.get('start');
-		 
+		 var startvalue = this.manager.store.get('start').val();
+		 var sortvalue = this.manager.store.get('sort').val();
 		 var params = {};
 		 params.q = qvalue;
 		 params.fq = fqvalue;
-		 params.start = start.value;
+		 params.start = startvalue;
+		 params.sort = sortvalue;
 		 params.view = Manager.widgets['state_manager'].getCurrentState()["view"];
 		 params.category = Manager.widgets['state_manager'].getCurrentState()["category"];
 		 

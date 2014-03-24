@@ -66,7 +66,12 @@ var	UniqueURL = {
 					  case "start":
 					   	 value = params[i].replace('start=', '');
 					   	 res.start = decodeURIComponent(value);						   	 
-						 break;						 					  
+						 break;	
+						 
+					  case "sort":
+						   	 value = params[i].replace('sort=', '');
+						   	 res.sort = decodeURIComponent(value);						   	 
+							 break;	
 					  
 					  case "fq":						  						  
 					   	value = params[i].replace('fq=', '');
@@ -103,9 +108,10 @@ var	UniqueURL = {
 				  var q =  json.q != undefined &&  this.encode_q(json.q) != '' ? sprintf('%sq=%s', this._separator, encodeURIComponent(this.encode_q(json.q))) : '';
 				  var fq =  json.fq != undefined && this.encode_fq(json.fq) != '' ? sprintf('%sfq=%s', this._separator, encodeURIComponent(this.encode_fq(json.fq))) : '';
 				  var start =  json.start != undefined && json.start != 0 ? sprintf('%sstart=%s', this._separator, encodeURIComponent(json.start)) : '';
+				  var sort =  json.sort != undefined && json.sort != "score desc" ? sprintf('%ssort=%s', this._separator, encodeURIComponent(json.sort)) : '';
 				  
 				  
-				  uniqueURL = sprintf('%s%s%s%s', cat, q, fq, start);
+				  uniqueURL = sprintf('%s%s%s%s%s', cat, q, fq, start, sort);
 				  
 			  }; 	  
 		      

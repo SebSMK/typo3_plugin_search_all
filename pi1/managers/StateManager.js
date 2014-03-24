@@ -79,14 +79,20 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 				if(params.view != "detail")
 					self.manager.store.addByValue('qf', self.manager.store.get_qf_string());					    		
 												
+				// sort param
+				if(params.sort !== undefined){
+					self.manager.store.addByValue('sort', params.sort);
+				}else{
+					self.manager.store.addByValue('sort', self.manager.store.sort_default);
+				};
+								
 				// start param
 				if(params.start !== undefined){
 					self.manager.store.addByValue('start', params.start);
 				}else{
 					self.manager.store.addByValue('start', 0);
-				}
-								
-				
+				};
+												
 				//* process widgets
 				// remove all previous search filters
 			    for (var i = 0, l = self.manager.searchfilterList.length; i < l; i++) {			  		  
@@ -108,7 +114,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 				self.manager.widgets['currentsearch'].removeAllCurrentSearch();					
 				for (var i = 0, l = q_wout_q_def.length; i < l; i++) {
 			   		self.manager.widgets['currentsearch'].add_q(q_wout_q_def[i], q_wout_q_def[i] );
-			   	};				   					   	
+			   	};	
+			   	
+			   	// select "sort" option in sorterWidget
+			   	self.manager.widgets['sorter'].setOption(self.manager.store.get('sort').val());
 			   					   	
 			   	//**> start Solr request 
 			   	self.manager.doRequest();
@@ -128,6 +137,33 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
 	  this.viewChanged(this.currentState);
 	  this.categoryChanged(this.currentState);
+  },
+  
+  /**
+   * sorting changed
+   * */
+  
+  smk_search_sorter_changed: function(searchFieldsTypes){
+	this.manager.widgets['currentsearch'].setRefresh(false);
+	this.manager.widgets['category'].setRefresh(false);
+	for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
+		this.manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
+	};	
+	
+	this.manager.store.get('start').val(0);
+	var fqvalue = this.manager.store.get('fq');
+	var qvalue = this.manager.store.extract_q_from_manager();	
+	var sortvalue = this.manager.store.get('sort').val();
+	var params = {};
+	params.q = qvalue;
+	params.fq = fqvalue;	
+	params.sort = sortvalue;
+	params.view = this.getCurrentState()["view"];
+	params.category = this.getCurrentState()["category"];
+	 
+	UniqueURL.setUniqueURL(params);		 
+	
+	this.manager.doRequest(0);    	
   },
   
   /**
@@ -152,10 +188,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		
 		 var fqvalue = this.manager.store.get('fq');
 		 var qvalue = this.manager.store.extract_q_from_manager();
-		 
+		 var sortvalue = this.manager.store.get('sort').val();
 		 var params = {};
 		 params.q = qvalue;
 		 params.fq = fqvalue;
+		 params.sort = sortvalue;
 		 params.view = this.getCurrentState()["view"];
 		 params.category = this.getCurrentState()["category"];
 		 
@@ -179,12 +216,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		this.manager.store.get('start').val(start);
 		
 		 var fqvalue = this.manager.store.get('fq');
-		 var qvalue = this.manager.store.extract_q_from_manager();
-		 
+		 var qvalue = this.manager.store.extract_q_from_manager();	
+		 var sortvalue = this.manager.store.get('sort').val();
 		 var params = {};
 		 params.q = qvalue;
 		 params.fq = fqvalue;
 		 params.start = start;
+		 params.sort = sortvalue;
 		 params.view = this.getCurrentState()["view"];
 		 params.category = this.getCurrentState()["category"];
 		 
@@ -218,10 +256,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	
 	 var fqvalue = this.manager.store.get('fq');
 	 var qvalue = this.manager.store.extract_q_from_manager();
-	 
+	 var sortvalue = this.manager.store.get('sort').val();
 	 var params = {};
 	 params.q = qvalue;
 	 params.fq = fqvalue;
+	 params.sort = sortvalue;
 	 params.view = this.getCurrentState()["view"];
 	 params.category = this.getCurrentState()["category"];
 	 
@@ -293,10 +332,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  	
 			 var fqvalue = this.manager.store.get('fq');
 			 var qvalue = this.manager.store.extract_q_from_manager();
-			 
+			 var sortvalue = this.manager.store.get('sort').val();
 			 var params = {};
 			 params.q = qvalue;
 			 params.fq = fqvalue;
+			 params.sort = sortvalue;
 			 params.view = this.getCurrentState()["view"];
 			 params.category = this.getCurrentState()["category"];
 			 
@@ -367,14 +407,15 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  
 		  var fqvalue = this.manager.store.get('fq');
 		  var qvalue = this.manager.store.extract_q_from_manager();
-		 
+		  var sortvalue = this.manager.store.get('sort').val();
 		  var params = {};
-		 params.q = qvalue;
-		 params.fq = fqvalue;		  
-		 params.view = this.getCurrentState()["view"];
-		 params.category = this.getCurrentState()["category"];
+		  params.q = qvalue;
+		  params.fq = fqvalue;
+		  params.sort = sortvalue;
+		  params.view = this.getCurrentState()["view"];
+		  params.category = this.getCurrentState()["category"];
 		 
-		 UniqueURL.setUniqueURL(params);
+		  UniqueURL.setUniqueURL(params);
 		  	
 		  this.manager.doRequest();
 	  };	  

@@ -41,6 +41,10 @@
 									  this.q_default = item;			  			  			  
 									  break;
 									  
+								  case "sort_default":		 			  			  			  
+									  this.sort_default = item;			  			  			  
+									  break;
+									  
 								  case "exposed":		 			  			  			  									  				    		
 								    	this.exposed_params = item;				  			  			  
 									  break;		  
@@ -80,6 +84,13 @@
 		this.get_q_default = function(){
 			return this.q_default;
 		};
+		
+		/*
+		 *
+		 */
+		this.get_sort_default = function(){
+			return this.sort_default;
+		};
 	
 		/*
 		 * variables
@@ -87,6 +98,7 @@
 		this.default_lang = 'dk';
 		this.qf_default = {}; // qf default
 		this.q_default = null; // q default
+		this.sort_default = null; // sort default
 		this.exposed_params = null; // exposed parameters		
 	}
 	
