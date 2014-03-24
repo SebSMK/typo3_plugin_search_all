@@ -32,6 +32,7 @@
 	  "label_cat_kalender":		"calendar", 
 	  "label_cat_praktisk":		"visiting info",
 	  "label_cat_artikler":		"article",
+	  "label_cat_blog":			"blogs",
 	  
 	  "detail_technique":		"technique",
 	  "detail_acquisition":		"acquisition",
@@ -249,10 +250,10 @@
       "tagCloud_country": 		"nationalitet",
       "tagCloud_art_type": 		"teknik",
           
-      "search_artist_name_ss_lab": 		"V&aelig;lg kunstner",
-      "search_object_production_century_earliest_lab": 		"V&aelig;lg periode",
-      "search_artist_natio_lab": 	"V&aelig;lg kunstners nationalitet",
-      "search_object_type_lab":	"V&aelig;lg teknik",
+      "search_artist_name_ss_lab": 		"Indtast kunstner",
+      "search_object_production_century_earliest_lab": 		"Indtast periode",
+      "search_artist_natio_lab": 	"Indtast kunstners nationalitet",
+      "search_object_type_lab":	"Indtast teknik",
       "search_filter":			"Afgr&aelig;ns din s&oslash;gning",
       
       "category_artwork" : 		"v&aelig;rker",
@@ -269,6 +270,7 @@
 	  "label_cat_kalender":		"kalender", 
 	  "label_cat_praktisk":		"praktisk info",
 	  "label_cat_artikler":		"artikel",
+	  "label_cat_blog":			"blogs",
 	   	  
 	  "detail_technique":		"teknik",
 	  "detail_acquisition":		"erhvervelse",

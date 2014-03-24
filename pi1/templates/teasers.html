@@ -9,7 +9,8 @@
 		{{#artworks}}
         <article class="teaser--grid">
           <div class="teaser__wrapper">
-            <div class="teaser__thumbnail image_loading" src="{{thumbnail}}" alt="{{#copyright}}{{{copyright}}}{{/copyright}}" img_id="{{img_id}}">
+            {{#loading}}
+			<div class="teaser__thumbnail image_loading" src="{{thumbnail}}" alt="{{#copyright}}{{{copyright}}}{{/copyright}}" img_id="{{img_id}}">
               	{{#is_artwork}} 
 					<a href="{{url}}" alt="{{title}}" class="article_artwork"></a>
 				{{/is_artwork}}
@@ -17,6 +18,7 @@
 					<a href="{{url}}" alt="{{title}}" class="article_link"></a>
 				{{/not_is_artwork}} 
             </div>
+			{{/loading}}
             
             <div class="teaser__content">
               <ul class="teaser__category">
@@ -60,7 +62,7 @@
               <ul class="teaser__meta">                 
 				  {{#not_is_artwork}}
 				  	{{#lastupdate}}
-						<li><span>{{{key}}}</span>{{{value}}}</li>
+						<li><span>{{{key}}}</span>&nbsp;{{{value}}}</li>
 				  	{{/lastupdate}}
 				  {{/not_is_artwork}}                
               </ul>								

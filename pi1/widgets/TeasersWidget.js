@@ -152,6 +152,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		id:doc.id,
 				  		title:this.getTitle(doc),	 
 				  		thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture(doc.medium_image_url, 'medium') : this.default_picture_path,
+				  		loading: true,
 				  		categories: this.getArtworkCategory(doc),
 			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
 				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
@@ -179,8 +180,9 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		 	data = {
 				 		id:doc.id,
 			 			title: doc.page_title,
-			 			thumbnail: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ?  smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : this.default_picture_path,
-			 			description: sprintf("%s...", doc.page_description !== undefined ? doc.page_description.substring(0, 100) : (doc.page_content !== undefined ? doc.page_content.substring(0, 100) : '')),
+			 			thumbnail: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ?  smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : '',
+			 			loading: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ? true : false,
+			 			description: sprintf("%s...", doc.page_description !== undefined && doc.page_description !== '' ? doc.page_description.substring(0, 100) : (doc.page_content !== undefined ? doc.page_content.substring(0, 100) : '')),
 			 			url: doc.page_url,				 			
 			 			lastupdate: [{key: this.manager.translator.getLabel("teaser_last_update"), value: this.getLastUpdate(doc)}],
 			 			is_artwork: false,
@@ -201,7 +203,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
     
   getLastUpdate: function (doc){	  
 	  var date = doc.last_update != undefined ? new Date(doc.last_update) : new Date();		  	  
-	  return sprintf("%s/%s/%s", date.getDay(), date.getMonth(), date.getFullYear() );	  	  
+	  return sprintf("%s/%s/%s", date.getDate(), date.getMonth() + 1, date.getFullYear() );	  	  
   },  
   
   getArtworkCategory: function (doc){	  
