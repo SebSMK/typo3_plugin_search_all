@@ -532,14 +532,6 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  self.showWidget($target.find("#pager-header"));
 		  self.showWidget($(this.manager.widgets['teasers'].target));
 		  
-		  
-//		  $target.find("#currentsearch").show().children().show();//		  		  
-//		  $target.find("#category").show().children().show();	
-//		  $target.find("#viewpicker").show().children().show();
-//		  $target.find("#pager").show().children().show();
-//		  $target.find("#pager-header").show().children().show();			  
-//		  $(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
-		  
 		  switch(newstate["category"]){
 			  case "collections":		 			  			  			  
 				  self.showWidget($target.find("#search-filters"));
@@ -577,11 +569,6 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  self.showWidget($(this.manager.widgets['related'].target));
 		  $(this.manager.widgets['related'].target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
 		  
-		  
-//		  $target.find("#smk_detail").show().children().show();
-//		  $target.find("#thumbnails").show().children().show();
-//		  $target.find("#related-artworks").show().children().show();
-		  
 		  $target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
 		  
 		  break;		  
@@ -597,8 +584,6 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	    
 	    if (newstate["category"] === undefined )
 	    	return;
-  
-	    this.manager.widgets['teasers'].removeAllArticles();
 	    
 		switch(newstate["category"]){
 			  case "collections":		 			  			  				  
@@ -644,6 +629,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 					value:'list'
 				 });
 		}
+		
+	    this.manager.widgets['teasers'].removeAllArticles();
 		
 		$(this.manager.widgets['teasers'].target).show().children().not('.modal').show();
 		  
