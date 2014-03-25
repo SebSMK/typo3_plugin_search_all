@@ -69,8 +69,23 @@
 	  "teaser_appoint":			"view by appointement",
 	  "teaser_on_display": 		"on display",
 	  "teaser_last_update":		"last updated",
+	  "teaser_event_date":		"dato",
 	  
 	  "thumbs_label":	 		"associated works",
+	  
+		"month_0":				"jan.",
+		"month_1":				"feb.",
+		"month_2":				"mar.",
+		"month_3":				"apr.",
+		"month_4":				"may",
+		"month_5":				"jun.",
+		"month_6":				"jul.",
+		"month_7":				"aug.",
+		"month_8":				"sep.",
+		"month_9":				"oct.",
+		"month_10":				"nov.",
+		"month_11":				"dec.",
+	  
 	  		
 		"amerikansk":			"American",
 		"belgisk":				"Belgian",
@@ -309,8 +324,22 @@
 	  "teaser_appoint":			"kan ses efter aftale",
 	  "teaser_on_display": 		"kan ses p&aring; museet",
 	  "teaser_last_update":		"sidst opdateret",
+	  "teaser_event_date":		"dato",
 	  
 	  "thumbs_label":	 		"V&aelig;rkets dele",
+	  
+		"month_0":				"jan.",
+		"month_1":				"feb.",
+		"month_2":				"mar.",
+		"month_3":				"apr.",
+		"month_4":				"maj",
+		"month_5":				"jun.",
+		"month_6":				"jul.",
+		"month_7":				"aug.",
+		"month_8":				"sep.",
+		"month_9":				"oct.",
+		"month_10":				"nov.",
+		"month_11":				"dec.",	  
 	  
 	  "amerikansk":				"amerikansk",
 		"belgisk":				"belgisk",

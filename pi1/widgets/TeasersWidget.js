@@ -182,9 +182,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 			title: doc.page_title,
 			 			thumbnail: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ?  smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : '',
 			 			loading: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ? true : false,
-			 			description: this.getDescription(doc) ,
+			 			description: this.getDescription(doc),
 			 			url: doc.page_url,				 			
-			 			lastupdate: [{key: this.manager.translator.getLabel("teaser_last_update"), value: this.getLastUpdate(doc)}],
+			 			lastupdate: this.getLastUpdate(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
+			 			eventdato : this.getEventsDato(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
 			 			is_artwork: false,
 			 			not_is_artwork: true,
 			 			categories: {'name': this.manager.translator.getLabel('label_cat_' + doc.category[0].toLowerCase()), 'url':'#'}	
@@ -200,18 +201,40 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return data;
   
   },  
+
+  getLastUpdate: function(doc, category){	  
+	  var res;
+	  if (category != "kalender"){
+		  var date = doc.last_update != undefined ? new Date(doc.last_update) : new Date();		  	  
+		  var text = sprintf("%s. %s %s", date.getDate(), this.manager.translator.getLabel("month_" + date.getMonth()), date.getFullYear());	
+		  res = [{key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_last_update")), value: text}];		  
+	  }
+	  
+	  return res; 
+	  
+  },
   
+  getEventsDato: function(doc, category){
+	  var res;	  
+	  var start = doc.page_eventStartDate_dateS != undefined ? new Date(doc.page_eventStartDate_dateS) : doc.page_eventStartDate_dateS;
+	  var end =  doc.page_eventEndDate_dateS != undefined ? new Date(doc.page_eventEndDate_dateS) : doc.page_eventEndDate_dateS;
+
+	  if (category == "kalender"){
+		  if(start != undefined && end != undefined && (start.getDate() + start.getMonth() + start.getFullYear() != end.getDate() + end.getMonth() + end.getFullYear())){
+			  res = sprintf('%s. %s %s - %s. %s %s', start.getDate(), this.manager.translator.getLabel("month_" + start.getMonth()), start.getFullYear(), end.getDate(), this.manager.translator.getLabel("month_" + end.getMonth()), end.getFullYear());		  
+		  }else if(start != undefined){
+			  res = sprintf('%s. %s %s', start.getDate(), this.manager.translator.getLabel("month_" + start.getMonth()), start.getFullYear());		  
+		  };	  
+	  };
+	  	
+	  return res;
+	  
+  },
   
   getDescription: function(doc){
 	  var res = sprintf("%s...", doc.page_description !== undefined && doc.page_description !== '' ? doc.page_description.substring(0, 100) : (doc.page_content !== undefined ? doc.page_content.substring(0, 100) : ''))
 	  return res.replace(/(<([^>]+)>)/ig,""); // filter HTML tags	  
   },
-  
-  
-  getLastUpdate: function(doc){	  
-	  var date = doc.last_update != undefined ? new Date(doc.last_update) : new Date();		  	  
-	  return sprintf("%s/%s/%s", date.getDate(), date.getMonth() + 1, date.getFullYear() );	  	  
-  },  
   
   getArtworkCategory: function (doc){	  
 	  var name = this.manager.translator.getCollection(smkCommon.replace_dansk_char(doc.location_name));

@@ -550,6 +550,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  	  break;		  
 		  }
 		  
+		  
+		// If the teaser container is full width, than make a two column layout.
+	    if ( $target.find('#teaser-container-grid').hasClass('full-width') ) {
+	      $(this).addClass('teaser--two-columns');
+	    }else{
+	      $(this).removeClass('teaser--two-columns');	
+	    }
+		  
 		  break;
 		  
 	  case "detail":	
