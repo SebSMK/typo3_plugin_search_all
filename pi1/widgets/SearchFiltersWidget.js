@@ -195,6 +195,7 @@ constructor: function (attributes) {
     var self = this, meth = this.multivalue ? 'add' : 'set';
     return function (event, params) {
     	event.stopImmediatePropagation();     	    	
+    	$(self.target).find('.chosen-drop').hide();
     	
     	$(self).trigger({
 			type: "smk_search_filter_changed",
