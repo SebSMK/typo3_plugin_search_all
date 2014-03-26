@@ -143,7 +143,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
    * sorting changed
    * */
   
-  smk_search_sorter_changed: function(searchFieldsTypes){
+  smk_search_sorter_changed: function(params, searchFieldsTypes){
+	
+  	if (params.selected == undefined || !this.manager.store.addByValue('sort', params.selected))																					
+  		return;	  
+	  
 	this.manager.widgets['currentsearch'].setRefresh(false);
 	this.manager.widgets['category'].setRefresh(false);
 	for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
@@ -404,14 +408,15 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  this.manager.widgets['currentsearch'].setRefresh(false);
 
 		  this.manager.store.get('start').val(0);
+		  this.manager.store.get('sort').val(this.manager.store.sort_default);
 		  
 		  var fqvalue = this.manager.store.get('fq');
 		  var qvalue = this.manager.store.extract_q_from_manager();
-		  var sortvalue = this.manager.store.get('sort').val();
+		  //var sortvalue = this.manager.store.get('sort').val();
 		  var params = {};
 		  params.q = qvalue;
 		  params.fq = fqvalue;
-		  params.sort = sortvalue;
+		  //params.sort = sortvalue;
 		  params.view = this.getCurrentState()["view"];
 		  params.category = this.getCurrentState()["category"];
 		 

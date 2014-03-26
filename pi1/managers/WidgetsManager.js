@@ -118,6 +118,26 @@ var Manager;
 	Manager.addWidget(new AjaxSolr.SorterWidget({
 	    id: 'sorter',
 	    target: '#sorter',
+	    options: {
+		'all': [{"value": "score desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_relevans")), "selected": false},
+				{"value": "last_update desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_last_updated")), "selected": false}],
+					
+		'praktisk': [{"value": "score desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_relevans")), "selected": false},
+					{"value": "last_update desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_last_updated")), "selected": false}],
+		
+		'collections': [{"value": "score desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_relevans")), "selected": true},
+					{"value": "object_production_date_earliest asc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_dato_asc")), "selected": false},
+					{"value": "object_production_date_earliest desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_dato_desc")), "selected": false},
+					{"value": "last_update desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_last_updated")), "selected": false}],
+		   
+		'kalender': [{"value": "score desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_relevans")), "selected": false},
+					{"value": "page_eventStartDate_dateS asc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_dato_asc")), "selected": false},
+					{"value": "page_eventStartDate_dateS desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_dato_desc")), "selected": false}],
+		 
+		'nyheder': [{"value": "score desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_relevans")), "selected": false},
+					{"value": "created asc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_dato_asc")), "selected": false},
+					{"value": "created desc", "text" : smkCommon.firstCapital(Manager.translator.getLabel("sorter_dato_desc")), "selected": false}]
+			},	
 	    template: Mustache.getTemplate('pi1/templates/sorter.html')
 	  })); 
 	
@@ -203,7 +223,7 @@ var Manager;
     
     //* sorter changed
     $(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
-    	Manager.widgets['state_manager'].smk_search_sorter_changed(searchFieldsTypes);
+    	Manager.widgets['state_manager'].smk_search_sorter_changed(event.params, searchFieldsTypes);
     });         
     
     //* new search term input in search box
