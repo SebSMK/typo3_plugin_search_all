@@ -163,11 +163,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				  		not_is_artwork: false,
 				  		is_artwork: true,
 				  		location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
-				  		copyright: smkCommon.computeCopyright(doc),
-				  		
-		  				ref_number: doc.id,		  						  				
-		  				img_data_bool: doc.medium_image_data != null ? true :  false,
-		  				non_img_data_bool: doc.medium_image_data != null ? false : true,			  						  				  						  					  						  				
+				  		copyright: smkCommon.computeCopyright(doc),			  						  				  						  					  						  				
 					};
 			 
 			 
@@ -284,7 +280,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  	  break;		  
 	  }
 	  
-	  return date;
+	  return date != default_value ? sprintf(',&nbsp;%s', date) : date;
   
   },
   
