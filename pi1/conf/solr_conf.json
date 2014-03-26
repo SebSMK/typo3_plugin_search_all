@@ -1,6 +1,6 @@
 {
     "exposed": 							["fq", "q", "start", "limit", "sort", "qf"],
-    "q_default": 						"-(id_s:(*/*) AND category:collections) -(id_s:(*verso) AND category:collections) -(category:kalender AND page_eventEndDate_dateS:[* TO NOW-1DAY])",
+    "q_default": 						"-(id_s:(*/*) AND category:collections) -(id_s:(*verso) AND category:collections)",
     
     "sort_default": 					"score desc",
     

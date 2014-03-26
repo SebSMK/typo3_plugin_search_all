@@ -188,7 +188,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			 			eventdato : this.getEventsDato(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
 			 			is_artwork: false,
 			 			not_is_artwork: true,
-			 			categories: {'name': this.manager.translator.getLabel('label_cat_' + doc.category[0].toLowerCase()), 'url':'#'}	
+			 			categories: this.getWebCategory(doc)	
 
 					};
 		 	break;
@@ -201,7 +201,18 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return data;
   
   },  
-
+ 
+  getWebCategory: function(doc){
+	  
+	  var category = doc.category !== undefined && doc.category.length > 0 ? doc.category[0].toLowerCase() : '';
+	  var cat_lab = category != '' ? this.manager.translator.getLabel('label_cat_' + category) : '';
+	  var type = doc.page_eventType_stringS !== undefined ? doc.page_eventType_stringS.toLowerCase() : '';
+	  var type_lab = type != '' ? sprintf('%s', this.manager.translator.getLabel('label_type_' + type)) : '';
+	  var name = type_lab != ''? type_lab  : cat_lab;   
+			  			  
+	  return {'name': name, 'url':'#'};
+  },
+  
   getLastUpdate: function(doc, category){	  
 	  var res;
 	  if (category != "kalender"){
@@ -244,6 +255,10 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 			  name = this.manager.translator.getLabel("label_cat_kms");
 		  } else if (doc.id.indexOf('KKS') != -1){
 			  name = this.manager.translator.getLabel("label_cat_kks");
+		  } else if (doc.id.indexOf('KAS') != -1){
+			  name = this.manager.translator.getLabel("label_cat_kas");
+		  } else if (doc.id.indexOf('DEP') != -1){
+			  name = this.manager.translator.getLabel("label_cat_dep");
 		  } else{
 			  name = this.manager.translator.getLabel("label_cat_default");			  
 		  }

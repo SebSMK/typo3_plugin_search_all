@@ -29,14 +29,7 @@
                 {{/categories}}
               </ul>
               
-			 <!-- event date -->
-			{{#not_is_artwork}}
-				{{#eventdato}}
-		            <ul class="teaser__meta">                 				  
-						<li>{{{eventdato}}}</li>
-					</ul>
-	  			{{/eventdato}}
-			{{/not_is_artwork}}				
+				
 
               <h3 class="teaser__heading">
                	<!-- show an artwork -->
@@ -74,7 +67,16 @@
 						<li><span>{{{key}}}</span>&nbsp;{{{value}}}</li>			                
               		</ul>								
 	  			{{/lastupdate}}
-			{{/not_is_artwork}}			 
+			{{/not_is_artwork}}		
+
+ 			<!-- event date -->
+			{{#not_is_artwork}}
+				{{#eventdato}}
+		            <ul class="teaser__meta">                 				  
+						<li>{{{eventdato}}}</li>
+					</ul>
+	  			{{/eventdato}}
+			{{/not_is_artwork}}				 
 
             </div><!-- teaser__content -->
           </div><!-- teaser__wrapper -->
