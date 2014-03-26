@@ -267,7 +267,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	  return {'name': name, 'url':'#'};		  
 	  
   },
-  
+   
   getObjectProdDate: function (doc){
 	  var date;
 	  var default_value = "";
