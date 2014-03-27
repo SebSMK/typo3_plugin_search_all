@@ -62,11 +62,13 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	else{
 		//* load data
 		var artwork_data = null;		
+		var dataHandler = new getData_Teasers.constructor(this);
+		
 		for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 		      var doc = this.manager.response.response.docs[i];	      	      	      
 		      
-		      //* load data for this artwork
-		      artwork_data = self.getData(doc);	      	      
+		      //* load data for this artwork		      
+		      artwork_data = dataHandler.getData(doc);	      	      
 		      
 		      //* merge data and template
 		      var html = self.template_integration_json({"artworks": artwork_data}, '#teaserArticleTemplate');     
@@ -103,8 +105,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 	                    
 	                    return;
 		  	    });	
-		  	    		  	    
-		  	    
+		  	    		  	    		  	    
 		      
 		      //* append the current article to list
 		      $target.find('#teaser-container-grid').append($article);	      
@@ -115,7 +116,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		
 		  //* add image + link to detail on click on image to all articles
 		  $target.find('article').each(function() {    	    	
-			self.getImage($(this), $(this).find('.image_loading'));
+			  dataHandler.getImage($(this), $(this).find('.image_loading'));
 		  });
 	}	   
     
@@ -136,301 +137,7 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  this.teaser_article_class = $target.find('#teaser-container-grid article').attr('class');
 		  $target.find('#teaser-container-grid').masonry('remove', $all_articles);		
 	  };		  
-  },
-  
-  getData: function (doc){
-	  var data;
-	  
-	  var category = (doc.category.length > 0) && (doc.category[0] == "collections") ? doc.category[0] : "others"; 
-	  
-	  switch(category)
-	  {
-		  //** artwork
-		  case "collections":
-
-			 data = {
-				  		id:doc.id,
-				  		title:this.getTitle(doc),	 
-				  		thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture(doc.medium_image_url, 'medium') : this.default_picture_path,
-				  		loading: true,
-				  		categories: this.getArtworkCategory(doc),
-			  		    description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
-				  		meta: {key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
-				  		img_id: doc.id, // for verso and sub-artworks
-				  		artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
-				  		title_pad: doc.artist_name_ss === undefined ? false : true, 		
-				  		artwork_date: this.getObjectProdDate(doc),
-				  		not_is_artwork: false,
-				  		is_artwork: true,
-				  		location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
-				  		copyright: smkCommon.computeCopyright(doc),			  						  				  						  					  						  				
-					};
-			 
-			 
-			     	
-		    break;	  
-		    
-		 //** website
-		 case "others":
-		 	
-		 	data = {
-				 		id:doc.id,
-			 			title: doc.page_title,
-			 			thumbnail: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ?  smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : '',
-			 			loading: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ? true : false,
-			 			description: this.getDescription(doc),
-			 			url: doc.page_url,				 			
-			 			lastupdate: this.getLastUpdate(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
-			 			eventdato : this.getEventsDato(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
-			 			is_artwork: false,
-			 			not_is_artwork: true,
-			 			categories: this.getWebCategory(doc)	
-
-					};
-		 	break;
-	 
-		 default:
-			  	data = null;
-
-	  };
-	  
-	  return data;
-  
   },  
- 
-  getWebCategory: function(doc){
-	  
-	  var category = doc.category !== undefined && doc.category.length > 0 ? doc.category[0].toLowerCase() : '';
-	  var cat_lab = category != '' ? this.manager.translator.getLabel('label_cat_' + category) : '';
-	  var type = doc.page_eventType_stringS !== undefined ? doc.page_eventType_stringS.toLowerCase() : '';
-	  var type_lab = type != '' ? sprintf('%s', this.manager.translator.getLabel('label_type_' + type)) : '';
-	  var name = type_lab != ''? type_lab  : cat_lab;   
-			  			  
-	  return {'name': name, 'url':'#'};
-  },
-  
-  getLastUpdate: function(doc, category){	  
-	  var res;
-	  if (category != "kalender"){
-		  var date = doc.last_update != undefined ? new Date(doc.last_update) : new Date();		  	  
-		  var text = sprintf("%s. %s %s", date.getDate(), this.manager.translator.getLabel("month_" + date.getMonth()), date.getFullYear());	
-		  res = [{key: smkCommon.firstCapital(this.manager.translator.getLabel("teaser_last_update")), value: text}];		  
-	  }
-	  
-	  return res; 
-	  
-  },
-  
-  getEventsDato: function(doc, category){
-	  var res;	  
-	  var start = doc.page_eventStartDate_dateS != undefined ? new Date(doc.page_eventStartDate_dateS) : doc.page_eventStartDate_dateS;
-	  var end =  doc.page_eventEndDate_dateS != undefined ? new Date(doc.page_eventEndDate_dateS) : doc.page_eventEndDate_dateS;
-
-	  if (category == "kalender"){
-		  if(start != undefined && end != undefined && (start.getDate() + start.getMonth() + start.getFullYear() != end.getDate() + end.getMonth() + end.getFullYear())){
-			  res = sprintf('%s. %s %s - %s. %s %s', start.getDate(), this.manager.translator.getLabel("month_" + start.getMonth()), start.getFullYear(), end.getDate(), this.manager.translator.getLabel("month_" + end.getMonth()), end.getFullYear());		  
-		  }else if(start != undefined){
-			  res = sprintf('%s. %s %s', start.getDate(), this.manager.translator.getLabel("month_" + start.getMonth()), start.getFullYear());		  
-		  };	  
-	  };
-	  	
-	  return res;
-	  
-  },
-  
-  getDescription: function(doc){
-	  var res = sprintf("%s...", doc.page_description !== undefined && doc.page_description !== '' ? doc.page_description.substring(0, 100) : (doc.page_content !== undefined ? doc.page_content.substring(0, 100) : ''))
-	  return res.replace(/(<([^>]+)>)/ig,""); // filter HTML tags	  
-  },
-  
-  getArtworkCategory: function (doc){	  
-	  var name = this.manager.translator.getCollection(smkCommon.replace_dansk_char(doc.location_name));
-	  
-	  if (name == ""){
-		  if (doc.id.indexOf('KMS') != -1){
-			  name = this.manager.translator.getLabel("label_cat_kms");
-		  } else if (doc.id.indexOf('KKS') != -1){
-			  name = this.manager.translator.getLabel("label_cat_kks");
-		  } else if (doc.id.indexOf('KAS') != -1){
-			  name = this.manager.translator.getLabel("label_cat_kas");
-		  } else if (doc.id.indexOf('DEP') != -1){
-			  name = this.manager.translator.getLabel("label_cat_dep");
-		  } else{
-			  name = this.manager.translator.getLabel("label_cat_default");			  
-		  }
-	  }
-		  
-	  return {'name': name, 'url':'#'};		  
-	  
-  },
-   
-  getObjectProdDate: function (doc){
-	  var date;
-	  var default_value = "";
-	  
-	  switch(this.manager.translator.getLanguage()){
-		  case "dk":		 			  			  			  
-			  date = doc.object_production_date_text_dk !== undefined ? doc.object_production_date_text_dk : default_value;					  			  			  
-			  break;
-		  case "en":
-			  date = doc.object_production_date_text_en !== undefined ? doc.object_production_date_text_en : default_value;
-			  break;
-		  default:	
-			  date = default_value;
-		  	  break;		  
-	  }
-	  
-	  return date != default_value ? sprintf(',&nbsp;%s', date) : date;
-  
-  },
-  
-  getTechnique: function (doc){
-	  var technique;
-	  var default_value = false;
-	  
-	  switch(this.manager.translator.getLanguage()){
-		  case "dk":		 			  			  			  
-			  technique = doc.prod_technique_dk !== undefined ? doc.prod_technique_dk : default_value;					  			  			  
-			  break;
-		  case "en":
-			  technique = doc.prod_technique_en !== undefined ? doc.prod_technique_en : default_value;
-			  break;
-		  default:	
-			  technique = default_value;
-		  	  break;		  
-	  }
-	  
-	  return technique;
-  
-  },
-  
-  getArtist: function(doc){
-	  var artistLabel = new Array();
-	  
-	  if (doc.artist_name_ss !== undefined){
-		  if(doc.artist_name_ss.length != doc.artist_auth.length)
-			  return doc.artist_name_ss;
-		  
-		  for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
-			  var name = doc.artist_name_ss[i].trim();
-			  var role = doc.artist_auth[i] != 'original' ? sprintf('<span>(%s)</span>', doc.artist_auth[i].toLowerCase()) : "";
-			  var padding = i > 0 ? "<br>" : "";
-			  var label = role == "" ? sprintf('%s%s', padding, name) : sprintf('%s%s&nbsp;%s', padding, name, role);
-			  artistLabel.push(label);		  		  
-		  }
-	  }	  
-	  
-	  return artistLabel;
-  },
-  
-  getTitle: function(doc){
-	  
-	  var title;
-	  
-	  switch(this.manager.translator.getLanguage()){
-		  case "dk":		 			  			  			  
-			  title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
-			  break;
-		  case "en":
-			  title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
-			  break;
-		  default:		    			  			   							  
-		  	  title = doc.title_first		  	 		  	  
-		  	  break;		  
-	  }
-	  
-	  return title;
-  },
-  
-  getLocation: function (location){
-		  
-	if(location !== undefined)
-		return this.manager.translator.getLabel("teaser_on_display"); 
-		  
-	return this.manager.translator.getLabel("teaser_appoint");	  
-	  
-  },
-  
-  getImage: function ($container, $target){
-	  var img_id = $target.attr("img_id");
-	  var path = $target.attr("src");
-	  var alt = $target.attr("alt");
-	  var title = $target.attr("alt");
-	  var self = this;
-	  
-	  //
-	  var img = new Image();
-	  	   
-	  // wrap our new image in jQuery, then:
-	  $(img)
-	    // once the image has loaded, execute this code
-	    .load(function () {
-	      // set the image hidden by default    
-	      $(this).hide();
-	    
-	      // with the holding div #loader, apply:
-	      $target
-	        // remove the loading class (so no background spinner), 
-	        .removeClass('image_loading')
-	        // then insert our image
-	        .find('a')
-	        // call detailed view on click on image
-		    .click(function (event) {
-		    	event.preventDefault();	
-		    	// ... then ---> bubbles op to "click on title"	    		
-		     })	
-	        .append(this);
-	    
-	      // fade our image in to create a nice effect
-	      $(this).fadeIn();
-	      
-	      // trig "this image is loaded" event	      
-    	  $(self).trigger({
-  			type: "smk_teasers_this_img_loaded"
-  		  });  	    	  
-		 
-	    })
-	    
-	    // if there was an error loading the image, react accordingly
-	    .error(function () {
-	    	$target
-	        // remove the loading class (so no background spinner), 
-	        .removeClass('image_loading')
-	        .find('a')	    	
-	    	.append(sprintf('<img src="%s" />', self.default_picture_path));
-	    	// call detailed view on click on image
-		    $target.find('a').click(function (event) {
-		    	event.preventDefault();
-		    	// ... then ---> bubbles op to "click on title"		    	
-		     });
-	    	$target.fadeIn();
-	    	
-	    	// trig "this image is loaded" event	    	
-	    	$(self).trigger({
-	    		type: "smk_teasers_this_img_loaded"
-	  		});  	    	  	     
-	    })	    	
-
-	    .attr('alt', alt)
-	    .attr('title', title)
-	    
-	    // *finally*, set the src attribute of the new image to our image
-	    .attr('src', path); 
-  },
-
-  
-  img_id_generator: function(text){	  	  	
-	  	var hash = 0, i, char;
-		//if (text.length == 0) return hash;
-		for (i = 0, l = text.length; i < l; i++) {
-		    char  = text.charCodeAt(i);
-		    hash  = ((hash<<5)-hash)+char;
-		    hash |= 0; // Convert to 32bit integer
-		}		
-	  	  
-		return 'img_smk_' + hash;
-  },
-
   
   switch_list_grid: function (view) {
 	var self = this;  
