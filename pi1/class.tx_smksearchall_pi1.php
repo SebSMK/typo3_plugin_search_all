@@ -109,9 +109,13 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 			$solr_path = (string)$sysconf['SolrPath_dk'];
 		}
 		
-		$content=sprintf('	<script>
+		//* in first place, we create a dummy page (below in $content) that will be replaced by the Widgets on loading
+		//* this trick is implemented in order to avoid a glitch between the call from search form and widget's loading
+		$content=sprintf('	
 				
-						var smkSearchAllConf = {
+				<script>
+				
+					var smkSearchAllConf = {
 								solrPath: "%s",
 								pluginDir: "%s",
 								serverName: "%s",
@@ -119,15 +123,31 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 								searchStringPOST: "%s"		
 							}
 						
-					</script>
-					<div id="smk_search_wrapper"></div>',
-					$solr_path,
-					$dir_base,
-					$_SERVER['SERVER_NAME'],
-					$this->pi_getLL('language'),
-					$sword
+				</script>
 					
-					);
+				<div id="smk_search_wrapper" class="modal_loading">				
+					<div class="view">
+					    <div class="container">								
+					        <section class="section--main" role="main">    							    									
+					            <div id="category">	
+					                <ul class="tabs">	 	
+					                    <li name="all" class="tab--active"><a href="#">alle resultater <span>(0)</span></a></li><li class="" name="collections"><a href="#">v&aelig;rker <span>(0)</span></a></li><li name="nyheder"><a href="#">nyheder <span>(0)</span></a></li><li name="kalender"><a href="#">kalender <span>(0)</span></a></li><li name="praktisk"><a href="#">praktisk information <span>(0)</span></a></li>
+					                </ul>		 	
+					            </div>    								            			      			  		   		   	  
+					            <div class="" id="smk_teasers"></div>		
+					        </section>
+					    </div>
+					    <div class="modal"></div>
+					</div>										
+				</div>',
+					
+				$solr_path,
+				$dir_base,
+				$_SERVER['SERVER_NAME'],
+				$this->pi_getLL('language'),
+				$sword
+					
+		);
 	
 		return $this->pi_wrapInBaseClass($content);
 	}

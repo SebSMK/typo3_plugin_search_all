@@ -34,6 +34,9 @@
 */                
 }
 
+
+
+
 .heading--widgets {  
   border: 0;
   margin-bottom: 1.25em;
@@ -46,6 +49,10 @@
 
 .highlight{
 	background-color: #FFF8AC;
+}
+
+#smk_teasers{	
+	height:630px;	
 }
 
 /* When the body has the loading class, we turn
