@@ -93,15 +93,19 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 		  		    	return;
 		  	    })	
 		      
-		  	  //* ...else if the current article is a link, open a new window on click on title
+		  	  //* ...else if the current article is a link to a webpage
 		      $article.find('.article_link')
 		      .click({detail_id: artwork_data.img_id, caller:this}, 
 		      		function (event) {
-		  	    		event.preventDefault();		  	    		
-		  	    		
-		  	    		var url = $(this).attr("href");
-	                    var windowName = $(this).attr("alt");	                    
-	                    window.open(url, windowName);
+				    	//* the user leaves the current search page for a result page    
+				      	if (typeof _gaq !== undefined)
+				      		_gaq.push(['_trackEvent','Search', 'Paging result', $(this).attr("href"), 0, true]);
+
+//		  	    		event.preventDefault();		  	    		
+//		  	    		
+//		  	    		var url = $(this).attr("href");
+//	                    var windowName = $(this).attr("alt");	                    
+//	                    window.open(url, windowName);
 	                    
 	                    return;
 		  	    });	

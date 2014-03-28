@@ -292,7 +292,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		
 		this.manager.store.last = text;																																										
 		
-		var fq_value = text;
+		var q_value = text;
 		var teaser_view = false;
 		
 		//* check the current view...
@@ -324,10 +324,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		};
 		
 		//* send request
-		if (this.manager.store.addByValue('q', current_q_values.concat(fq_value))){																												
+		if (this.manager.store.addByValue('q', current_q_values.concat(q_value))){																												
 			
 			if (typeof _gaq !== undefined)
-	    		_gaq.push(['_trackEvent','Search', 'Regular search', fq_value, 0, true]);
+	    		_gaq.push(['_trackEvent','Search', 'Regular search', q_value, 0, true]);
 			
 			if (teaser_view){
 		  	    // call to teasers view from searchbox when in "detail" view    	         	
@@ -337,7 +337,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			    	this.manager.widgets['thumbs'].setCurrent_selec(null);	    	    		
 		  	}
 		  	
-		  	this.manager.widgets['currentsearch'].add_q(fq_value, text );  
+		  	this.manager.widgets['currentsearch'].add_q(q_value, text );  
 		  	this.manager.store.get('start').val(0);
 		  	
 			 var fqvalue = this.manager.store.get('fq');

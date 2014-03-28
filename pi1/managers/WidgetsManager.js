@@ -377,16 +377,17 @@ var Manager;
     //* if a request string has been posted, add it to the manager (the request will be handled on page load by $.address.externalChange
     var postedSearchString = smkCommon.getSearchPOST();         
     if(postedSearchString !== undefined && postedSearchString != ''){
+    	//* people coming from a request to SMK's search form    
     	if (typeof _gaq !== undefined)
     		_gaq.push(['_trackEvent','Search', 'Regular search', postedSearchString, 0, true]);
-    	
-//    	q = q.concat(postedSearchString);
-//    	Manager.store.addByValue('q', q);
-//    	var qvalue = Manager.store.extract_q_from_manager();
-    	
+    	    	
 		 var params = {};
 		 params.q = postedSearchString;		 		 
 		 UniqueURL.setUniqueURL(params);    	
+    }else{
+    	//* people coming through direct link to SMK's search               
+    	if (typeof _gaq !== undefined)
+    		_gaq.push(['_trackEvent','Search', 'Searching from ingoing link', sprintf('%s searched: %s', document.referrer,  $.address.value()), 0, true]);
     }
   });
 
