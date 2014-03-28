@@ -128,12 +128,7 @@ class tx_smksearchall_pi1 extends tslib_pibase {
 				<div id="smk_search_wrapper" class="modal_loading">				
 					<div class="view">
 					    <div class="container">								
-					        <section class="section--main" role="main">    							    									
-					            <div id="category">	
-					                <ul class="tabs">	 	
-					                    <li name="all" class="tab--active"><a href="#">alle resultater <span>(0)</span></a></li><li class="" name="collections"><a href="#">v&aelig;rker <span>(0)</span></a></li><li name="nyheder"><a href="#">nyheder <span>(0)</span></a></li><li name="kalender"><a href="#">kalender <span>(0)</span></a></li><li name="praktisk"><a href="#">praktisk information <span>(0)</span></a></li>
-					                </ul>		 	
-					            </div>    								            			      			  		   		   	  
+					        <section class="section--main" role="main">    							    														             								            			      			  		   		   	  
 					            <div class="" id="smk_teasers"></div>		
 					        </section>
 					    </div>

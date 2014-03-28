@@ -493,10 +493,12 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 			  
 			  // show info window
 			  this.show_info();
+			  
+			  this.show_footer();			  
 		  }			  
 	  }
   },  
-  
+    
   show_info: function(){	  
 	  $("body").find("#smk_search_info").css('opacity', '1');  	  
   },
@@ -596,6 +598,10 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  break;
 		  
 	  case "detail":	
+		  
+		  // We hide footer here, and show it back one images are loaded in detail
+		  this.hide_footer();		  
+		  
 		  $("body").find("#smk_search_info").hide();
 		  
 		  $target.find("#currentsearch").hide();
@@ -688,6 +694,14 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  
   showWidget: function($target){
 	  $target.show().children().not('.modal').show();	  	  
+  },
+  
+  show_footer: function(){	  	  
+	  $("#footer").show().children().show();	 	  
+  },
+  
+  hide_footer: function(){	  
+	  $("#footer").hide();	  
   },
   
   empty_detail_view: function(){		  
