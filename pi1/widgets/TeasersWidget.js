@@ -101,11 +101,11 @@ AjaxSolr.TeasersWidget = AjaxSolr.AbstractWidget.extend({
 				      	if (typeof _gaq !== undefined)
 				      		_gaq.push(['_trackEvent','Search', 'Paging result', $(this).attr("href"), 0, true]);
 
-//		  	    		event.preventDefault();		  	    		
-//		  	    		
-//		  	    		var url = $(this).attr("href");
-//	                    var windowName = $(this).attr("alt");	                    
-//	                    window.open(url, windowName);
+		  	    		event.preventDefault();		  	    		
+		  	    		
+		  	    		var url = $(this).attr("href");
+	                    var windowName = $(this).attr("alt");	                    
+	                    window.open(url, windowName);
 	                    
 	                    return;
 		  	    });	
