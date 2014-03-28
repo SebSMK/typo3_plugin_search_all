@@ -498,21 +498,21 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
   },  
   
   show_info: function(){	  
-	  $("body").find(".tooltipster-base").css('opacity', '1');  	  
+	  $("body").find("#smk_search_info").css('opacity', '1');  	  
   },
   
   append_info: function(){
 	  
-	  if($("body").find(".tooltipster-base").length == 0 && !UniqueURL.getIsCurrentViewDetail() && $.cookie("smk_search_info") != "false"){
+	  if($("body").find("#smk_search_info").length == 0 && !UniqueURL.getIsCurrentViewDetail() && $.cookie("smk_search_info") != "false"){
 		  //* append information window
 		  var html = this.template_integration_json({'info': decodeURIComponent(this.manager.translator.getLabel('general_tooltip'))}, '#infoTemplate');  
-		  $("body").append(html);	 
+		  $(this.target).find('section.section--main').append(html);	 
 		  
 		  $('a.tooltip__close').click(
 				  function (event) {
 					event.preventDefault();
 					$.cookie("smk_search_info", "false");
-					$("body").find(".tooltipster-base").remove();
+					$("body").find("#smk_search_info").remove();
 					return;  		    		            
 				  }
 		  );			  
