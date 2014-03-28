@@ -1,6 +1,7 @@
 {
   "config": {
-    "default": "dk"
+    "default": "dk",
+    "version": "0.002 beta"
   },
   "language": {
     "en": {
