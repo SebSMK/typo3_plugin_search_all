@@ -1,5 +1,5 @@
 var Manager;
- 
+
 (function ($) {
 
   $(function () {	  
@@ -30,7 +30,8 @@ var Manager;
 	var stateManager = new AjaxSolr.StateManager({
 	    id: 'state_manager',
 	    target: '#smk_search_wrapper',
-	    currentState: {view:'teasers', category:''}
+	    currentState: {view:'teasers', category:''},
+		template: Mustache.getTemplate('pi1/templates/general_template.html')
 	});
 	// those functions will be passed as parameter in the manager - we've got to bind it to an environment
 	var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);

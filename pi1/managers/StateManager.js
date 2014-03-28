@@ -14,14 +14,20 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
  init: function () {
 	  var self = this;
 	  var $target = $(this.target);	
+	  	  
+	  //* merge data and template
+	  var html = self.template_integration_json({}, '#generalTemplate');    	  	  
+	  $target.empty();	  
+	  $target.html(html);	
 	  
-	  var template = Mustache.getTemplate('pi1/templates/general_template.html');
+	  this.viewChanged(this.currentState);
+	  this.categoryChanged(this.currentState);	  
 	  	  	  
-	  $.address.strict(false);
 	  /*
 	   * Management of changes in address bar
 	   * n.b.: externalChange is triggered also on document load
 	   * */
+	  $.address.strict(false);
 	  $( document ).ready(function() {				  
 		  
 		  $.address.externalChange(function(e){	 
@@ -130,13 +136,13 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 //					});						
 //				};															   	 
 		  });
-	  });
-	  	  
-	  $target.empty();	  
-	  $target.append(template);	
-	  
-	  this.viewChanged(this.currentState);
-	  this.categoryChanged(this.currentState);
+	  });	  	  
+  },
+  
+  template_integration_json: function (json_data, templ_id){	  
+		var template = this.template; 	
+		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
+		return html;
   },
   
   /**
@@ -444,6 +450,11 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  this.add_modal_loading_to_widget(this.manager.widgets['related']);
   },  
   
+  
+  afterRequest: function(){	  
+	  this.append_info();  	  
+  },
+  
   /*
    * start general modal loading screen 
    */
@@ -478,9 +489,34 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  if ($(this.target).find('.modal_loading').length == 0){
 			  // all widgets are loaded, we remove the general loading screen
 			  this.stop_modal_loading();
-			  this.set_focus();			  			  
+			  this.set_focus();
+			  
+			  // show info window
+			  this.show_info();
 		  }			  
 	  }
+  },  
+  
+  show_info: function(){	  
+	  $("body").find(".tooltipster-base").css('opacity', '1');  	  
+  },
+  
+  append_info: function(){
+	  
+	  if($("body").find(".tooltipster-base").length == 0 && !UniqueURL.getIsCurrentViewDetail() && $.cookie("smk_search_info") != "false"){
+		  //* append information window
+		  var html = this.template_integration_json({'info': decodeURIComponent(this.manager.translator.getLabel('general_tooltip'))}, '#infoTemplate');  
+		  $("body").append(html);	 
+		  
+		  $('a.tooltip__close').click(
+				  function (event) {
+					event.preventDefault();
+					$.cookie("smk_search_info", "false");
+					$("body").find(".tooltipster-base").remove();
+					return;  		    		            
+				  }
+		  );			  
+	  };	
   },
   
   set_focus: function(){
@@ -488,7 +524,7 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 	  $(document).ready(function () {
 		  $(self.manager.widgets['searchbox'].target).find('#smk_search').focus();
 	  });	  	  
-  },
+  },  
   
   isThisWidgetActive: function(widget){
 	  return widget.getRefresh();
@@ -522,7 +558,9 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
     	return;
     
     switch(newstate["view"]){
-	  case "teasers":		  
+	  case "teasers":			  
+		  self.showWidget($("body").find("#smk_search_info"));
+		  
 		  $target.find("#thumbnails").empty().hide();
 		  $target.find("#smk_detail").empty().hide();		  		  		  		 
 		  
@@ -558,6 +596,8 @@ AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 		  break;
 		  
 	  case "detail":	
+		  $("body").find("#smk_search_info").hide();
+		  
 		  $target.find("#currentsearch").hide();
 		  $target.find("#category").hide();
 		  $target.find("#viewpicker").hide();

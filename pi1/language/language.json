@@ -6,7 +6,9 @@
     "en": {
       
       "no_results":				"No results were found. Please try a different search.",
-    
+
+      "general_tooltip":		"%3Cdiv%3E%0A%20%20%20%20%3Ca%20href%3D%27%23%27%20class%3D%27tooltip__close%27%3E%3C%2Fa%3E%20%0A%20%20%20%20%3Cbr%3E%20%20%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20%3Cb%3EWe%20have%20recently%20upgraded%20our%20search%20functionality.%20Did%20you%20find%20what%20you%20needed%3F%20We%20welcome%20feedback.%3C%2Fb%3E%20%0A%20%20%20%20%3C%2Fp%3E%0A%20%20%20%20%3Cbr%3E%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20We%E2%80%99re%20continually%20working%20to%20improve%20our%20search%20functionality%20and%20we%E2%80%99d%20appreciate%20any%20comments%20as%20well%20as%20your%20new%20ideas%20so%20we%20can%20make%20it%20even%20better.%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Send%20a%20mail%20to%20our%20Digital%20Project%20Leader%20Malene%20R%C3%B8rdam%20(%3Ca%20href%3D%27mailto%3Amalene.roerdam%40smk.dk%27%3Emalene.roerdam%40smk.dk%3C%2Fa%3E)%20%20%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Thanks%20for%20the%20help!%0A%20%20%20%20%3C%2Fp%3E%0A%3C%2Fdiv%3E",
+
 	  "tagCloud_artist": 		"artist",
 	  "tagCloud_period": 		"period",
 	  "tagCloud_country": 		"nationality",
@@ -264,6 +266,8 @@
     "dk": {
     
       "no_results":				"Desv&aelig;rre kan vi ikke finde nogle resultater til din s&oslash;gning.",	
+      
+      "general_tooltip":		"%3Cdiv%3E%0A%20%20%20%20%3Ca%20href%3D%27%23%27%20class%3D%27tooltip__close%27%3E%3C%2Fa%3E%20%0A%20%20%20%20%3Cbr%3E%20%20%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20%3Cb%3EVores%20website%20har%20f%C3%A5et%20en%20ny%20og%20bedre%20s%C3%B8gefunktion.%20Finder%20du%2C%20hvad%20du%20skal%20bruge%3F%20Vi%20vil%20gerne%20have%20din%20feedback.%3C%2Fb%3E%20%0A%20%20%20%20%3C%2Fp%3E%0A%20%20%20%20%3Cbr%3E%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20Vi%20arbejder%20l%C3%B8bende%20p%C3%A5%20at%20forbedre%20s%C3%B8gefunktionen.%20Derfor%20har%20vi%20brug%20for%20dine%20input%20til%20og%20gode%20ideer%20til%20hvordan%20vi%20kan%20g%C3%B8re%20den%20endnu%20bedre.%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Send%20en%20mail%20til%20digital%20projektleder%20Malene%20R%C3%B8rdam%20(%3Ca%20href%3D%27mailto%3Amalene.roerdam%40smk.dk%27%3Emalene.roerdam%40smk.dk%3C%2Fa%3E)%20%20%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20P%C3%A5%20forh%C3%A5nd%20tak%20for%20hj%C3%A6lpen.%0A%20%20%20%20%3C%2Fp%3E%0A%3C%2Fdiv%3E",
     
       "tagCloud_artist": 		"kunstner",
       "tagCloud_period": 		"periode",

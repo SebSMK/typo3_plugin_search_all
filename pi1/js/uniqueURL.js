@@ -189,6 +189,26 @@ var	UniqueURL = {
 		},
 		
 		
+		getIsCurrentViewDetail: function(){
+			
+			var res = false;
+			var url =  $.address.value();
+			var cats = url.replace(this._cat_separator, '').split(this._cat_separator);
+			
+			if(cats.length > 0){
+				
+				switch(cats[0]){										
+					case "detail":												
+						res = true;	
+						break;	
+				}
+				
+			}
+			
+			return res;
+		},
+		
+		
 		getCurrentSort: function(){
 			
 			var res = {};

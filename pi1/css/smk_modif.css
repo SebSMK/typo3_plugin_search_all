@@ -18,23 +18,49 @@
     width: 882px;
     z-index: 1000;
     display:    none;
-    
-    /*
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
-    background: rgba( 255, 255, 255, .8 ) 
-                url('../images/ajax_loader_gray_64.gif') 
-                50% 50% 
-                no-repeat;
-*/                
 }
 
 
+/* info window */
+.tooltipster-shadow {
+	border-radius: 5px;
+	background: #ededed;
+	box-shadow: 0px 0px 14px rgba(0,0,0,0.3);
+	color: #2c2c2c;
+}
+
+.tooltipster-info {
+	max-width: 300px !important; 
+	pointer-events: auto !important; 	
+	opacity: 0 !important;				
+	transition: opacity 3s ease 0.5s !important;  
+	width: 301px; padding-left: 0px !important; 
+	padding-right: 0px !important; 
+	top: 195px !important; 
+	left: 79px !important;
+}
+
+.tooltipster-shadow .tooltipster-content {
+	font-family: 'Arial', sans-serif;
+	font-size: 14px;
+	line-height: 16px;
+	padding: 8px 10px;
+}
+
+
+.tooltipster-shadow .tooltipster-content a.tooltip__close {
+    background-image: url("../images/sprite_2x.png");
+    background-position: 0 -36px;
+    background-size: 215px auto;
+    display: inline-block;
+    height: 9px;
+    opacity: 0.6;
+    position: absolute;
+    right: 0.4em;
+    text-indent: -9999em;
+    top: 0.45em;
+    width: 9px;
+}
 
 
 .heading--widgets {  

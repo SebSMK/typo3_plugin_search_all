@@ -1,31 +1,60 @@
-<div class="view">
+<div>
+	<script id="generalTemplate" type="text/template">
+	
+		<div class="view">
+		
+			<div class="container">
+				
+				<div id="searchbox"></div>		
+				<div id="currentsearch"></div>		
+				
+				<section class="section--main" role="main">
+					<div id="smk_detail"></div>
+					<div id="related-artworks"></div>
+						 
+					<div id="category"></div>
+					<div class="search-actions">
+						<div id="pager"></div>
+						<div id="pager-header"></div>  
+						<div id="sorter"></div>
+						<div id="viewpicker"></div>
+					</div>  
+					
+					<div id="search-filters">
+						<h2 class="heading--widgets"></h2>
+						<div id="artist_name_ss" class="search-filter"></div>								
+						<div id="artist_natio" class="search-filter"></div>
+						<div id="object_type" class="search-filter"></div>	
+						<div id="object_production_century_earliest" class="search-filter"></div>					
+					</div>		  					      			  		   		   	  
+					<div id="smk_teasers"></div>		
+			   </section>
+			</div>
+			<div class="modal"></div>
+		</div>
+	
+	</script>
+	
+	
+	<script id="infoTemplate" type="text/template">
+	
+		<div id="smk_search_info" style="max-width: 300px; 
+					pointer-events: auto; 	
+					opacity: 0;				
+					transition: opacity 1s ease 1s;  
+					width: 301px; padding-left: 0px; 
+					padding-right: 0px; 
+					top: 195px; 
+					left: 79px;" 
+					class="tooltipster-base tooltipster-shadow tooltipster-fade tooltipster-fade-show">
+		    <div class="tooltipster-content">
+		        {{{info}}}
+		    </div>    
+		    <div style="height: 15%" class="tooltipster-arrow-left tooltipster-arrow">
+				<span style="border-color:rgb(237, 237, 237);"></span>
+			</div>
+		</div>
+	
+	</script>
 
-	<div class="container">
-		
-		<div id="searchbox"></div>		
-		<div id="currentsearch"></div>		
-		
-		<section class="section--main" role="main">
-			<div id="smk_detail"></div>
-			<div id="related-artworks"></div>
-				 
-			<div id="category"></div>
-			<div class="search-actions">
-				<div id="pager"></div>
-				<div id="pager-header"></div>  
-				<div id="sorter"></div>
-				<div id="viewpicker"></div>
-			</div>  
-			
-			<div id="search-filters">
-				<h2 class="heading--widgets"></h2>
-				<div id="artist_name_ss" class="search-filter"></div>								
-				<div id="artist_natio" class="search-filter"></div>
-				<div id="object_type" class="search-filter"></div>	
-				<div id="object_production_century_earliest" class="search-filter"></div>					
-			</div>		  					      			  		   		   	  
-			<div id="smk_teasers"></div>		
-	   </section>
-	</div>
-	<div class="modal"></div>
-</div>	
+</div>
