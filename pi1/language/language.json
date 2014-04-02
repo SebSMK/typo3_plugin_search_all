@@ -1,14 +1,14 @@
 {
   "config": {
     "default": "dk",
-    "version": "0.004 beta"
+    "version": "0.005 beta"
   },
   "language": {
     "en": {
       
       "no_results":				"No results were found. Please try a different search.",
 
-      "general_tooltip":		"%3Cdiv%3E%0A%20%20%20%20%3Ca%20href%3D%27%23%27%20class%3D%27tooltip__close%27%3E%3C%2Fa%3E%20%0A%20%20%20%20%3Cbr%3E%20%20%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20%3Cb%3EWe%20have%20recently%20upgraded%20our%20search%20functionality.%20Did%20you%20find%20what%20you%20needed%3F%20We%20welcome%20feedback.%3C%2Fb%3E%20%0A%20%20%20%20%3C%2Fp%3E%0A%20%20%20%20%3Cbr%3E%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20We%E2%80%99re%20continually%20working%20to%20improve%20our%20search%20functionality%20and%20we%E2%80%99d%20appreciate%20any%20comments%20as%20well%20as%20your%20new%20ideas%20so%20we%20can%20make%20it%20even%20better.%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Send%20a%20mail%20to%20our%20Digital%20Project%20Leader%20Malene%20R%C3%B8rdam%20%3Ca%20href%3D%22javascript%3AlinkTo_UnCryptMailto(%27jxfiql7jxibkb%2BolboaxjXpjh%2Bah%27)%3B%22%3E(malene.roerdam%3Cspan%20class%3D%22hiddendata%22%3E_%3C%2Fspan%3E%40%3Cspan%20class%3D%22hiddendata%22%3E_%3C%2Fspan%3Esmk.dk)%3C%2Fa%3E%20%20%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Thanks%20for%20the%20help!%0A%20%20%20%20%3C%2Fp%3E%0A%3C%2Fdiv%3E",
+      "general_tooltip":		"%3Cdiv%3E%0A%20%20%20%20%3Ca%20href%3D%27%23%27%20class%3D%27tooltip__close%27%3E%3C%2Fa%3E%20%0A%20%20%20%20%3Cbr%3E%20%20%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20%3Cb%3EWe%20have%20recently%20upgraded%20our%20search%20functionality.%20Did%20you%20find%20what%20you%20needed%3F%20We%20welcome%20feedback.%3C%2Fb%3E%20%0A%20%20%20%20%3C%2Fp%3E%0A%20%20%20%20%3Cbr%3E%0A%20%20%20%20%3Cp%3E%0A%20%20%20%20%20%20%20%20We%E2%80%99re%20continually%20working%20to%20improve%20our%20search%20functionality%20and%20we%E2%80%99d%20appreciate%20any%20comments%20as%20well%20as%20your%20new%20ideas%20so%20we%20can%20make%20it%20even%20better.%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Send%20a%20mail%20to%20our%20Digital%20Project%20Manager%20Malene%20R%C3%B8rdam%20%3Ca%20href%3D%22javascript%3AlinkTo_UnCryptMailto(%27jxfiql7jxibkb%2BolboaxjXpjh%2Bah%27)%3B%22%3E(malene.roerdam%3Cspan%20class%3D%22hiddendata%22%3E_%3C%2Fspan%3E%40%3Cspan%20class%3D%22hiddendata%22%3E_%3C%2Fspan%3Esmk.dk)%3C%2Fa%3E%20%20%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20%3Cbr%3E%0A%20%20%20%20%20%20%20%20Thanks%20for%20the%20help!%0A%20%20%20%20%3C%2Fp%3E%0A%3C%2Fdiv%3E",
 
 	  "tagCloud_artist": 		"artist",
 	  "tagCloud_period": 		"period",
