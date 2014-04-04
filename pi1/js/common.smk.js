@@ -127,9 +127,10 @@
 	
 	common.getScaledPicture = function(fullsizePath, size, TYPO3_picture){								 
 		
-		var pictureScaleServerPath = 'cspic.smk.dk';
+		var pictureScaleServerPath = 'cspic.smk.dk:8080/SmkImageServer/rest/conversionservice/scaling'; //'cspic.smk.dk';
 		var TYPO3_server = 'http://www.smk.dk';
-		var pictureAdresse = TYPO3_picture == true ? sprintf('%s/%s', TYPO3_server, fullsizePath) : common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '');
+		var Picture_server = 'http://cspic.smk.dk';
+		var pictureAdresse = TYPO3_picture == true ? sprintf('%s/%s', TYPO3_server, fullsizePath) : sprintf('%s/%s', Picture_server, common.getLocation(fullsizePath).pathname.replace(/^\/|/g, '')); 
 		var width = '';
 			
 		switch(size){
@@ -147,7 +148,8 @@
 		  	  break;		  
 		};	
 		
-		return sprintf('http://%s/?pic=%s&mode=width&width=%s', pictureScaleServerPath, pictureAdresse, width);
+		//return sprintf('http://%s/?pic=%s&mode=width&width=%s', pictureScaleServerPath, pictureAdresse, width);
+		return (sprintf('http://%s?width=%s&image=%s', pictureScaleServerPath, width, pictureAdresse));
 	};
 	
 	common.getLocation = function(href) {
