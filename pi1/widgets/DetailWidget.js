@@ -15,8 +15,6 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
   
   default_picture_path: null, 
   
-  call_default_on_return: false,
-  
   init: function(){	  	    
 	 this.default_picture_path = smkCommon.getDefaultPicture('large');
 	 this.current_language = this.manager.translator.getLanguage();
@@ -69,21 +67,10 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 	$target.find('a.back-button').click(
 		  function (event) {
     		event.preventDefault();
-
-    		if (self.call_default_on_return){
-    			self.call_default_on_return =  false;
-    			// trigger the saved default request in default view
-    			$(self).trigger({
-    				type: "smk_search_call_default_view",
-					isDefault: true
-    			});	
-    		}else{ 
-        		// send call to teaser view restoring (but without sending a request to Solr)
-    	    	$(self).trigger({
-    				type: "smk_search_call_teasers"
-    			});  		    
-    		}    		
-    			
+    		// send call to teaser view restoring (but without sending a request to Solr)
+	    	$(self).trigger({
+				type: "smk_search_call_teasers"
+			});  		    		    		    			
 	    	return;  		    		            
 		  }
 	);
@@ -95,11 +82,7 @@ AjaxSolr.DetailWidget = AjaxSolr.AbstractWidget.extend({
 		var template = this.template; 	
 		var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 		return html;
-  },
-  
-  set_call_default_on_return: function (value) {	  	
-	  this.call_default_on_return = value == true ? true : false;	   
-  }
+  }  
   
 });
 

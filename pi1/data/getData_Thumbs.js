@@ -125,8 +125,7 @@
 							type: "smk_search_call_detail",
 							detail_id: event.data.detail_id,
 		  					detail_view_intern_call: false,
-		  					save_current_request: false,
-		  					call_default_on_return: false
+		  					save_current_request: false
 						  });
 				    	
 				    	return;
@@ -170,8 +169,7 @@
 									type: "smk_search_call_detail",
 									detail_id: event.data.detail_id,
 				  					detail_view_intern_call: false,
-				  					save_current_request: false,
-				  					call_default_on_return: false
+				  					save_current_request: false
 								  });
 						    	
 						    	return;
