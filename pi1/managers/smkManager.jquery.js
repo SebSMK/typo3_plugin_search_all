@@ -38,8 +38,8 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     };
     if (this.proxyUrl) {
       options.url = this.proxyUrl;
-      options.data = {query: string};
-      options.type = 'POST';
+      options.data = string + '&wt=json&json.wrf=?';
+      options.type = 'GET';
     }
     else {
       options.url = this.solrUrl + servlet + '?' + string + '&wt=json&json.wrf=?';
@@ -50,10 +50,10 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
      * */
     
     //* 1st method: direct -> JSON without error / timeout handling
-    //jQuery.ajax(options).done(handler).fail(errorHandler);
+    jQuery.ajax(options).done(handler).fail(errorHandler);
     
     //* 2nd method: indirect -> JSONP with error / timeout handling
-    this.getJSONP(options, handler);
+    //this.getJSONP(options, handler);
     
   },
   
@@ -134,7 +134,12 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     if(this.allWidgetsProcessed != null)
     	this.allWidgetsProcessed();
 
-   }  
+   } ,
+      
+   handleError: function(msg) {
+ 	  if(this.generalSolrError != null)
+ 	    	this.generalSolrError(msg);
+   }
 });
 
 }));
