@@ -96,9 +96,10 @@
 					};
 
 					//* process widgets
-					// remove all previous search filters
-					for (var i = 0, l = self.manager.searchfilterList.length; i < l; i++) {			  		  
-						self.manager.widgets[self.manager.searchfilterList[i].field].removeAllSelectedFilters(false);
+					// remove all previous search filters - only if search filters is set to "getRefresh"					
+					for (var i = 0, l = self.manager.searchfilterList.length; i < l; i++) {
+						if (self.manager.widgets[self.manager.searchfilterList[i].field].getRefresh())
+							self.manager.widgets[self.manager.searchfilterList[i].field].removeAllSelectedFilters(false);
 					};
 					if (params.category == 'collections' && params.fq !== undefined){
 						// add selected filters in searchFiltersWidget
@@ -438,7 +439,20 @@
 		 * image loading handlers
 		 * */
 
-		//* teasers
+		//* teaser		
+		smk_teasers_this_img_displayed: function(){
+			$(this.manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
+			
+			//* check if there are still images not displayed in "teaser"
+			if ($(this.manager.widgets['teasers'].target).find('.image_loading').length == 0 && 
+				$(this.manager.widgets['teasers'].target).find('.not_displayed').length == 0){				
+				// if all images in teaser are displayed, send event
+				$(this).trigger({
+					type: "smk_teasers_all_images_displayed"
+				});
+			}    		  
+		},
+		
 		smk_teasers_this_img_loaded: function(){
 			$(this.manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
 
@@ -503,9 +517,9 @@
 			// teasers
 			this.add_modal_loading_to_widget(this.manager.widgets['teasers']);
 			// searchfilters
-			for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
-				this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field]);
-			};
+//			for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
+//				this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field]);
+//			};
 			// details
 			this.add_modal_loading_to_widget(this.manager.widgets['details']);	 
 			// related
@@ -550,13 +564,13 @@
 			if (this.allWidgetProcessed){
 				if ($(this.target).find('.modal_loading').length == 0){
 					// all widgets are loaded, we remove the general loading screen
-					this.stop_modal_loading();
+					this.stop_modal_loading();					
 					this.set_focus();
 
 					// show info window
 					this.show_info();
+					this.show_footer();
 
-					this.show_footer();			  
 				}			  
 			}
 		},  
@@ -698,6 +712,11 @@
 			if (newstate["category"] === undefined )
 				return;
 
+			for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {				
+				if (this.manager.widgets[this.manager.searchfilterList[i].field].getRefresh())
+					this.manager.widgets[this.manager.searchfilterList[i].field].hide_drop();
+			};
+			
 			switch(newstate["category"]){
 			case "collections":		 			  			  				  
 				this.showWidget($target.find("#search-filters"));

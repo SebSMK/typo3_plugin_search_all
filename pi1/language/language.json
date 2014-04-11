@@ -19,7 +19,9 @@
 	  "search_object_production_century_earliest_lab": 		"Select period",
 	  "search_artist_natio_lab": 	"Select nationality",
 	  "search_object_type_lab":	"Select technique",
-	  "search_filter":			"Filter your search",
+	  "search_filter":			"Filter your search",	  	  
+	  "search_filter_cent":		" c.",
+	  "search_data_loading":	"loading data...",
 
       "category_artwork" : 		"artworks",
 	  "category_news" : 		"news",
@@ -64,8 +66,6 @@
 	  
 	  "search_box_default":		"Enter search phrase",
 	  "search_box_button":		"search",
-	  
-	  "search_filter_cent":		" c.",
 	  
 	  "sorter_sort":			"sort:",
 	  "sorter_relevans":		"relevance",
@@ -279,7 +279,9 @@
       "search_object_production_century_earliest_lab": 		"Indtast periode",
       "search_artist_natio_lab": 	"Indtast kunstners nationalitet",
       "search_object_type_lab":	"Indtast teknik",
-      "search_filter":			"Afgr&aelig;ns din s&oslash;gning",
+      "search_filter":			"Afgr&aelig;ns din s&oslash;gning",      	  
+	  "search_filter_cent":		"tallet",
+      "search_data_loading":	"loading data...",
       
       "category_artwork" : 		"v&aelig;rker",
 	  "category_news" : 		"nyheder",
@@ -324,8 +326,6 @@
 	  	  
 	  "search_box_default":		"Skriv s&oslash;geord her",
 	  "search_box_button":		"s&oslash;g",
-	  
-	  "search_filter_cent":		"tallet",
 	  
 	  "sorter_sort":			"sort&eacute;r:",
 	  "sorter_relevans":		"relevans",
