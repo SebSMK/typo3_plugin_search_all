@@ -42,7 +42,7 @@ var Manager;
 	//******************************    
     Manager = new AjaxSolr.smkManager({
     	//solrUrl: smkCommon.getSolrPath(),
-    	proxyUrl: 'http://csdev-seb:8180/solrproxy/solr/prod_all_dk/select',
+    	proxyUrl: 'http://pc-0076/proxySolrPHP/proxy.php',
     	store: new AjaxSolr.smkParameterStore({
     		exposed: exposed,    		
     		q_default: q_default,

@@ -28,7 +28,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
 	  
   executeRequest: function (servlet, string, handler, errorHandler) {
     var self = this,
-        options = {dataType: 'json'};
+        options = {dataType: 'html'};
     string = string || this.store.string();
     handler = handler || function (data) {
       self.handleResponse(data);
@@ -38,8 +38,8 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     };
     if (this.proxyUrl) {
       options.url = this.proxyUrl;
-      options.data = string + '&wt=json&json.wrf=?';
-      options.type = 'GET';
+      options.data = {query: string};
+      options.type = 'POST';
     }
     else {
       options.url = this.solrUrl + servlet + '?' + string + '&wt=json&json.wrf=?';
