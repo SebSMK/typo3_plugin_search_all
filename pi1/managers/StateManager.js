@@ -20,6 +20,9 @@
 			$target.empty();	  
 			$target.html(html);	
 
+			//* fix cufon problem in footer
+			this.fixCrappyfooter();
+			
 			this.viewChanged(this.currentState);
 			this.categoryChanged(this.currentState);	  
 
@@ -442,17 +445,17 @@
 		//* teaser		
 		smk_teasers_this_img_displayed: function(){
 			$(this.manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
-			
+
 			//* check if there are still images not displayed in "teaser"
 			if ($(this.manager.widgets['teasers'].target).find('.image_loading').length == 0 && 
-				$(this.manager.widgets['teasers'].target).find('.not_displayed').length == 0){				
+					$(this.manager.widgets['teasers'].target).find('.not_displayed').length == 0){				
 				// if all images in teaser are displayed, send event
 				$(this).trigger({
 					type: "smk_teasers_all_images_displayed"
 				});
 			}    		  
 		},
-		
+
 		smk_teasers_this_img_loaded: function(){
 			$(this.manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
 
@@ -518,7 +521,7 @@
 			this.add_modal_loading_to_widget(this.manager.widgets['teasers']);
 			// searchfilters
 //			for (var i = 0, l = this.manager.searchfilterList.length; i < l; i++) {		  	
-//				this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field]);
+//			this.add_modal_loading_to_widget(this.manager.widgets[this.manager.searchfilterList[i].field]);
 //			};
 			// details
 			this.add_modal_loading_to_widget(this.manager.widgets['details']);	 
@@ -716,7 +719,7 @@
 				if (this.manager.widgets[this.manager.searchfilterList[i].field].getRefresh())
 					this.manager.widgets[this.manager.searchfilterList[i].field].hide_drop();
 			};
-			
+
 			switch(newstate["category"]){
 			case "collections":		 			  			  				  
 				this.showWidget($target.find("#search-filters"));
@@ -811,6 +814,15 @@
 
 		generalSolrError: function(e){
 			$(this.target).empty().html(sprintf('%s &nbsp;&nbsp; returned:&nbsp;&nbsp; %s<br>Please contact website administrator.', this.manager.solrUrl, e)); 
+		},		
+		
+		fixCrappyfooter: function(){
+			$('.footer_content h2').each(function() {  
+				var text = this.textContent;
+				$(this).empty();
+				$(this).text(text);
+			});
+			
 		}
 
 	});
