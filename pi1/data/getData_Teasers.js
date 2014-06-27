@@ -28,18 +28,18 @@
 					id:doc.id,
 					title:this.getTitle(doc),	 
 					thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture(doc.medium_image_url, 'medium') : this.caller.default_picture_path,
-							loading: true,
-							categories: this.getArtworkCategory(doc),
-							description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
-							meta: {key: smkCommon.firstCapital(this.caller.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
-							img_id: doc.id, // for verso and sub-artworks
-							artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
-							title_pad: doc.artist_name_ss === undefined ? false : true, 		
-							artwork_date: this.getObjectProdDate(doc),
-							not_is_artwork: false,
-							is_artwork: true,
-							location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
-							copyright: smkCommon.computeCopyright(doc),			  						  				  						  					  						  				
+					loading: true,
+					categories: this.getArtworkCategory(doc),
+					description: this.getTechnique(doc) == false ? false : smkCommon.firstCapital(this.getTechnique(doc)), 
+					meta: {key: smkCommon.firstCapital(this.caller.manager.translator.getLabel("teaser_reference")), value: doc.id},				  		
+					img_id: doc.id, // for verso and sub-artworks
+					artist_data: doc.artist_name_ss === undefined ? '' : this.getArtist(doc),
+					title_pad: doc.artist_name_ss === undefined ? false : true, 		
+					artwork_date: this.getObjectProdDate(doc),
+					not_is_artwork: false,
+					is_artwork: true,
+					location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
+					copyright: smkCommon.computeCopyright(doc),			  						  				  						  					  						  				
 			};
 
 
@@ -53,14 +53,14 @@
 					id:doc.id,
 					title: doc.page_title,
 					thumbnail: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ?  smkCommon.getScaledPicture(doc.medium_image_url, 'medium', true) : '',
-							loading: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ? true : false,
-							description: this.getDescription(doc),
-							url: doc.page_url,				 			
-							lastupdate: this.getLastUpdate(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
-							eventdato : this.getEventsDato(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
-							is_artwork: false,
-							not_is_artwork: true,
-							categories: this.getWebCategory(doc)	
+					loading: doc.medium_image_url !== undefined && doc.medium_image_url !== '' ? true : false,
+					description: this.getDescription(doc),
+					url: doc.page_url,				 			
+					lastupdate: this.getLastUpdate(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
+					eventdato : this.getEventsDato(doc, (doc.category.length > 0) ? doc.category[0].toLowerCase() : ''),
+					is_artwork: false,
+					not_is_artwork: true,
+					categories: this.getWebCategory(doc)	
 
 			};
 				break;
@@ -228,11 +228,20 @@
 		};
 
 		this.getImage = function ($container, $target){
+
+			var self = this.caller;
+
+			if ($target === undefined || $target.length == 0){
+				$(self).trigger({
+					type: "smk_teasers_this_img_loaded"
+				});  	
+				return;
+			}
+
 			var img_id = $target.attr("img_id");
 			var path = $target.attr("src");
 			var alt = $target.attr("alt");
 			var title = $target.attr("alt");
-			var self = this.caller;
 
 			//
 			var img = new Image();
@@ -306,8 +315,6 @@
 			// *finally*, set the src attribute of the new image to our image
 			.attr('src', path); 
 		};
-
-
 
 		/*
 		 * variables

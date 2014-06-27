@@ -571,7 +571,8 @@
 					this.set_focus();
 
 					// show info window
-					this.show_info();
+					//this.show_info();
+					
 					this.show_footer();
 
 				}			  
