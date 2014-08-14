@@ -97,6 +97,7 @@
 	  		
 		"amerikansk":			"American",
 		"belgisk":				"Belgian",
+		"britisk":				"British",
 		"dansk":				"Danish",
 		"engelsk":				"English",
 		"finsk":				"Finnish",
@@ -356,8 +357,9 @@
 		"month_10":				"nov.",
 		"month_11":				"dec.",	  
 	  
-	  "amerikansk":				"amerikansk",
+	  	"amerikansk":			"amerikansk",
 		"belgisk":				"belgisk",
+		"britisk":				"britisk",
 		"dansk":				"dansk",
 		"engelsk":				"engelsk",
 		"finsk":				"finsk",
