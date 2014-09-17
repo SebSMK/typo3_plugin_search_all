@@ -82,7 +82,7 @@ FROM public.collectionobjects_common collectionobjects_common
             LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'dansk'
             RIGHT JOIN public.faproductiontechniquegroup faproductiontechniquegroup_tmp ON faproductiontechniquegroup_tmp.id = hierarchy_obj_fab.id AND faproductiontechniquegroup_tmp.faproductiontechniquelanguage = vocabularyitems_common_dk.refname
 
-  /*     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+       /*WHERE hierarchy0.name = $P{csid}*/
       
         GROUP BY
             collectionobjects_common.id
@@ -104,7 +104,7 @@ FROM public.collectionobjects_common collectionobjects_common
             LEFT JOIN public.vocabularyitems_common vocabularyitems_common_dk ON vocabularyitems_common_dk.displayname = 'engelsk'
             RIGHT JOIN public.faproductiontechniquegroup faproductiontechniquegroup_tmp ON faproductiontechniquegroup_tmp.id = hierarchy_obj_fab.id AND faproductiontechniquegroup_tmp.faproductiontechniquelanguage = vocabularyitems_common_dk.refname
 
-   /*     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+        /*WHERE hierarchy0.name = $P{csid}*/
       
         GROUP BY
             collectionobjects_common.id
@@ -155,7 +155,7 @@ FROM public.collectionobjects_common collectionobjects_common
                 LEFT JOIN public.hierarchy hierarchy_object_history ON collectionobjects_common.id = hierarchy_object_history.parentid AND hierarchy_object_history.primarytype = 'smkObjectHistoryGroup'
                 LEFT JOIN public.smkobjecthistorygroup smkobjecthistorygroup ON smkobjecthistorygroup.id = hierarchy_object_history.id
 
-  /*       WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+         /*WHERE hierarchy0.name = $P{csid}*/
 
                 GROUP BY objectid
 
@@ -190,8 +190,13 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             collectionobjects_common.id AS objectid,
                                             hierarchy_prodgroup.pos,
                                                 
+                                                CASE /*if role is artist then build text*/
+                                                WHEN (vocabularyitems_common_art_artist.displayname IS NULL OR
+                                                 (vocabularyitems_common_art_artist.displayname != 'trykker' AND
+                                                  vocabularyitems_common_art_artist.displayname != 'udgiver' AND
+                                                  vocabularyitems_common_art_artist.displayname NOT LIKE('forfatter/redakt%'))) THEN
                                                 
-                                                format ('%s;%s;%s;%s;%s;%s;%s;%s;%s' ,
+                                                        format ('%s;%s;%s;%s;%s;%s;%s;%s;%s' ,
                                                         (persontermgroup_artist.termdisplayname),                                                        
 
                                                         CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear) IS NULL
@@ -229,11 +234,12 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                         ELSE initcap(vocabularyitems_common_artist.displayname)
                                                         END,
                                                         
-                                                        CASE WHEN (vocabularyitems_common_auth_artist.displayname) IS NULL
+                                                        CASE WHEN (vocabularyitems_common_art_artist.displayname) IS NULL
                                                         THEN 'original'
-                                                        ELSE initcap(vocabularyitems_common_auth_artist.displayname)
-                                                        END
+                                                        ELSE initcap(vocabularyitems_common_art_artist.displayname)
+                                                        END                                                
                                                         )
+                                               END
                                            AS artists_data
                             
                                             FROM public.collectionobjects_common collectionobjects_common
@@ -241,8 +247,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
                             
                                             LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
-                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
-                                            LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
+                                            LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id
                             
                                             /* artist nationality */
                                             LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
@@ -259,17 +264,17 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             LEFT JOIN public.hierarchy hierarchy_artist_3 ON persons_common_artist.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'persons_smk:smkBirthDate'
                                             LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_birth ON smkstructureddatesmkgroup_artist_birth.id = hierarchy_artist_3.id
                             
-                                            /*  authenticity */
-                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+                                            /*  role */
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
                               
                         
-   /*          WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+             /*WHERE hierarchy0.name = $P{csid}*/
                          
                            
                                             GROUP BY
                                                     objectid,
                                                     persontermgroup_artist.id,
-                                                    vocabularyitems_common_auth_artist.displayname,
+                                                    vocabularyitems_common_art_artist.displayname,
                                                     persontermgroup_artist.forename,
                                                     persontermgroup_artist.surname,
                                                     vocabularyitems_common_artist.displayname,
@@ -291,7 +296,14 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                         
                                         collectionobjects_common.id AS objectid,
                                         hierarchy_prodgroup.pos,                                                
-                                        format ('%s;%s;%s;%s;%s;%s;%s;;original' ,
+                                        
+                                        CASE /*if role is artist then build text*/
+                                        WHEN (vocabularyitems_common_art_artist.displayname IS NULL OR
+                                         (vocabularyitems_common_art_artist.displayname != 'trykker' AND
+                                          vocabularyitems_common_art_artist.displayname != 'udgiver' AND
+                                          vocabularyitems_common_art_artist.displayname NOT LIKE ('forfatter/redakt%'))) THEN
+                                          
+                                                format ('%s;%s;%s;%s;%s;%s;%s;;original' ,
                                                 org_name.termdisplayname,
                                                 
                                                 CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear) IS NULL
@@ -323,41 +335,41 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                 THEN '(?)'
                                                 ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext
                                                 END )
-                        
+                                           END
                                         AS artists_data
                         
                                         FROM public.collectionobjects_common collectionobjects_common
-                        
+
                                         INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
-                        
+
                                         LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
-                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
-                                        LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
-                        
+                                        LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id
+
                                         LEFT JOIN public.organizations_common org_common ON org_common.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
                                         LEFT JOIN public.hierarchy hierarchy_org_name ON org_common.id = hierarchy_org_name.parentid AND hierarchy_org_name.primarytype = 'orgTermGroup'
                                         LEFT JOIN public.orgtermgroup org_name ON hierarchy_org_name.id = org_name.id
-                        
+
                                         /* artist name - organization */
                                         RIGHT JOIN public.hierarchy hierarchy_artist_1 ON org_common.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'orgTermGroup' AND hierarchy_artist_1.pos = 0
                                         LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
-                        
+
                                         /* artist organization - creation and dissolution date */
                                         LEFT JOIN public.hierarchy hierarchy_artist_2 ON org_common.id = hierarchy_artist_2.parentid AND hierarchy_artist_2.name = 'organizations_smk:smkFoundingDateGroup'
                                         LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_dissolution ON smkstructureddatesmkgroup_artist_org_dissolution.id = hierarchy_artist_2.id
                                         LEFT JOIN public.hierarchy hierarchy_artist_3 ON org_common.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'organizations_smk:smkDissolutionDateGroup'
                                         LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_creation ON smkstructureddatesmkgroup_artist_org_creation.id = hierarchy_artist_3.id
+
+                                        /* role - organization */
+                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
                         
-                                        /* authenticity - organization */
-                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
-                        
-   /*                     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                        /*WHERE hierarchy0.name = $P{csid}*/
                         
                                         GROUP BY
                                                 objectid,
                                                 org_name.termdisplayname,
                                                 org_common.foundingplace,
                                                 hierarchy_prodgroup.pos,
+                                                vocabularyitems_common_art_artist.displayname,
                                                 smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext,
                                                 smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext,
                                                 smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext,
@@ -395,7 +407,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
             LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'dansk'
             LEFT JOIN public.smktitlegroup smktitlegroup ON smktitlegroup.id = hierarchy_title.id AND smktitlegroup.smktitlelanguage = vocabularyitems_title_dk.refname
  
-   /*     WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+        /*WHERE hierarchy0.name = $P{csid}*/
          
             GROUP BY
             collectionobjects_common.id
@@ -420,7 +432,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
             LEFT JOIN public.vocabularyitems_common vocabularyitems_common_eng ON vocabularyitems_common_eng.displayname = 'engelsk'
             LEFT JOIN public.smktitletranslationsubgroup smktitletranslationsubgroup ON smktitletranslationsubgroup.id = hierarchy_title_eng.id AND smktitletranslationsubgroup.smktitletranslationlanguage = vocabularyitems_common_eng.refname
           
- /*WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+ /*WHERE hierarchy0.name = $P{csid}*/
 
             GROUP BY
             collectionobjects_common.id
@@ -445,7 +457,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
             LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'dansk'
             LEFT JOIN public.farelatedworklabelgroup faRelatedWorkLabelGroup ON hierarchy_descr_note.id = faRelatedWorkLabelGroup.id AND faRelatedWorkLabelGroup.farelatedworklabellanguage = vocabularyitems_title_dk.refname
            
-    /*    WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+        /*WHERE hierarchy0.name = $P{csid}*/
 
             GROUP BY
             collectionobjects_common.id
@@ -469,7 +481,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
             LEFT JOIN public.vocabularyitems_common vocabularyitems_title_dk ON vocabularyitems_title_dk.displayname = 'engelsk'
             LEFT JOIN public.farelatedworklabelgroup faRelatedWorkLabelGroup ON hierarchy_descr_note.id = faRelatedWorkLabelGroup.id AND faRelatedWorkLabelGroup.farelatedworklabellanguage = vocabularyitems_title_dk.refname
            
-   /*    WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+       /*WHERE hierarchy0.name = $P{csid}*/
 
             GROUP BY
             collectionobjects_common.id
@@ -505,7 +517,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                 LEFT JOIN public.dimensionsubgroup dimensionsubgroup_dybde ON hierarchy_meas.id = dimensionsubgroup_dybde.id AND dimensionsubgroup_dybde.dimension = 'dybde'
 
         
-    /*    WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+        /*WHERE hierarchy0.name = $P{csid}*/
  
                 GROUP BY objectid
 
@@ -543,7 +555,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                         RIGHT JOIN public.smkreferencetextgroup smkreferencetextgroup ON hierarchy_ref_text.id = smkreferencetextgroup.id
                         LEFT JOIN public.vocabularyitems_common vocabularyitems_common_ref_text ON vocabularyitems_common_ref_text.refname = smkreferencetextgroup.smkreferencetexttype
  
-    /*   WHERE hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+       /*WHERE hierarchy0.name = $P{csid}*/
  
                         GROUP BY objectid, vocabularyitems_common_ref_text.displayname, smkreferencetext
                   )
@@ -580,9 +592,8 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                 LEFT JOIN public.smktitlegroup smktitlegroup_first ON smktitlegroup_first.id = hierarchy_title.id
                 
                 /* related object - artist name */
-                LEFT JOIN public.hierarchy hierarchy_prodgroup ON related_object.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup' AND hierarchy_prodgroup.pos = 0
-                LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
-                LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname                     
+                LEFT JOIN public.hierarchy hierarchy_prodgroup ON related_object.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup' AND hierarchy_prodgroup.pos = 0                
+                LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = NULL                     
                 LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
                  
                 RIGHT JOIN public.hierarchy hierarchy_artist_1 ON persons_common_artist.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'personTermGroup' AND hierarchy_artist_1.pos = 0
@@ -596,7 +607,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                         relations_common_related.subjectdocumenttype='CollectionObject'
                         AND relations_common_related.relationshiptype='affects'
  
-    /*    AND relations_common_related.objectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+       /*AND relations_common_related.objectcsid = $P{csid}*/
         
                 GROUP BY relations_common_related.objectcsid
 
@@ -641,7 +652,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                 AND parents.subjectcsid IS NOT NULL
                                         
                                        
-      /*          AND parents.subjectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                /*AND parents.subjectcsid = $P{csid}*/
                                 
                                 UNION
                                 
@@ -661,7 +672,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                 AND children.objectcsid IS NOT NULL
                                 
                                 
-        /*               AND children.objectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                      /*AND children.objectcsid = $P{csid}*/
                                 
                                 UNION
                                 
@@ -697,7 +708,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                 AND parents.subjectcsid IS NOT NULL
                                         
                                         
-        /*        AND parents.subjectcsid = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+                /*AND parents.subjectcsid = $P{csid}*/
                         
                         ) 
                         
@@ -712,7 +723,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                         /* related object - picture */                        
                         LEFT JOIN artworks_and_associated_pictures AS media ON related_object.id = media.objcsid
    
-    /*   WHERE relations_common_related.reference_point = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+       /*WHERE relations_common_related.reference_point = $P{csid}*/
 
                        GROUP BY
                                 relations_common_related.reference_point,
@@ -739,7 +750,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
 WHERE core.tenantid = 5 AND misc.lifecyclestate != 'deleted' 
 AND lower(collectionobjects_common.objectnumber) NOT LIKE 'eks%'
 AND lower(collectionobjects_common.objectnumber) NOT LIKE 'orig%'
-/*AND hierarchy0.name = '030c3e65-ec9e-4bf3-a31e-61152480798c'*/
+/*AND hierarchy0.name = $P{csid}*/
  
 GROUP BY
 
@@ -790,15 +801,16 @@ GROUP BY
 
     title_dk.title_dk,
     title_eng.title_eng,
-    vocabularyitems_common_acq.displayname                                                               
-                                                        
+    vocabularyitems_common_acq.displayname   
+ 
+                                                      
 
 "
 
 
 		deltaImportQuery="
 
-    
+
 
 SELECT
 
@@ -981,8 +993,13 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             collectionobjects_common.id AS objectid,
                                             hierarchy_prodgroup.pos,
                                                 
+                                                CASE /*if role is artist then build text*/
+                                                WHEN (vocabularyitems_common_art_artist.displayname IS NULL OR
+                                                 (vocabularyitems_common_art_artist.displayname != 'trykker' AND
+                                                  vocabularyitems_common_art_artist.displayname != 'udgiver' AND
+                                                  vocabularyitems_common_art_artist.displayname NOT LIKE ('forfatter/redakt%'))) THEN
                                                 
-                                                format ('%s;%s;%s;%s;%s;%s;%s;%s;%s' ,
+                                                        format ('%s;%s;%s;%s;%s;%s;%s;%s;%s' ,
                                                         (persontermgroup_artist.termdisplayname),                                                        
 
                                                         CASE WHEN (smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear) IS NULL
@@ -1020,11 +1037,12 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                         ELSE initcap(vocabularyitems_common_artist.displayname)
                                                         END,
                                                         
-                                                        CASE WHEN (vocabularyitems_common_auth_artist.displayname) IS NULL
+                                                        CASE WHEN (vocabularyitems_common_art_artist.displayname) IS NULL
                                                         THEN 'original'
-                                                        ELSE initcap(vocabularyitems_common_auth_artist.displayname)
-                                                        END
+                                                        ELSE initcap(vocabularyitems_common_art_artist.displayname)
+                                                        END                                                
                                                         )
+                                               END
                                            AS artists_data
                             
                                             FROM public.collectionobjects_common collectionobjects_common
@@ -1032,8 +1050,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
                             
                                             LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
-                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
-                                            LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
+                                            LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id
                             
                                             /* artist nationality */
                                             LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
@@ -1050,8 +1067,8 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             LEFT JOIN public.hierarchy hierarchy_artist_3 ON persons_common_artist.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'persons_smk:smkBirthDate'
                                             LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_birth ON smkstructureddatesmkgroup_artist_birth.id = hierarchy_artist_3.id
                             
-                                            /*  authenticity */
-                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+                                            /*  role */
+                                            LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
                               
                         
              WHERE hierarchy0.name = '${dih.delta.csid}'
@@ -1060,7 +1077,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                             GROUP BY
                                                     objectid,
                                                     persontermgroup_artist.id,
-                                                    vocabularyitems_common_auth_artist.displayname,
+                                                    vocabularyitems_common_art_artist.displayname,
                                                     persontermgroup_artist.forename,
                                                     persontermgroup_artist.surname,
                                                     vocabularyitems_common_artist.displayname,
@@ -1070,7 +1087,7 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                     smkstructureddatesmkgroup_artist_death.datesmkdisplayengtext,
                                                     smkstructureddatesmkgroup_artist_birth.datesmkthirddateyear,
                                                     smkstructureddatesmkgroup_artist_death.datesmkthirddateyear,
-                                                    hierarchy_prodgroup.pos                                                                
+                                                    hierarchy_prodgroup.pos                                                             
                                         
                                         
                                         
@@ -1082,7 +1099,14 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                         
                                         collectionobjects_common.id AS objectid,
                                         hierarchy_prodgroup.pos,                                                
-                                        format ('%s;%s;%s;%s;%s;%s;%s;;original' ,
+                                        
+                                        CASE /*if role is artist then build text*/
+                                        WHEN (vocabularyitems_common_art_artist.displayname IS NULL OR
+                                         (vocabularyitems_common_art_artist.displayname != 'trykker' AND
+                                          vocabularyitems_common_art_artist.displayname != 'udgiver' AND
+                                          vocabularyitems_common_art_artist.displayname NOT LIKE ('forfatter/redakt%'))) THEN
+                                          
+                                                format ('%s;%s;%s;%s;%s;%s;%s;;original' ,
                                                 org_name.termdisplayname,
                                                 
                                                 CASE WHEN (smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear) IS NULL
@@ -1114,33 +1138,32 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                 THEN '(?)'
                                                 ELSE smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext
                                                 END )
-                        
+                                           END
                                         AS artists_data
                         
                                         FROM public.collectionobjects_common collectionobjects_common
-                        
+
                                         INNER JOIN public.hierarchy hierarchy0 ON (collectionobjects_common.id = hierarchy0.id)
-                        
+
                                         LEFT JOIN public.hierarchy hierarchy_prodgroup ON collectionobjects_common.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup'
-                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
-                                        LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
-                        
+                                        LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id
+
                                         LEFT JOIN public.organizations_common org_common ON org_common.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
                                         LEFT JOIN public.hierarchy hierarchy_org_name ON org_common.id = hierarchy_org_name.parentid AND hierarchy_org_name.primarytype = 'orgTermGroup'
                                         LEFT JOIN public.orgtermgroup org_name ON hierarchy_org_name.id = org_name.id
-                        
+
                                         /* artist name - organization */
                                         RIGHT JOIN public.hierarchy hierarchy_artist_1 ON org_common.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'orgTermGroup' AND hierarchy_artist_1.pos = 0
                                         LEFT JOIN public.persontermgroup persontermgroup_artist ON persontermgroup_artist.id = hierarchy_artist_1.id
-                        
+
                                         /* artist organization - creation and dissolution date */
                                         LEFT JOIN public.hierarchy hierarchy_artist_2 ON org_common.id = hierarchy_artist_2.parentid AND hierarchy_artist_2.name = 'organizations_smk:smkFoundingDateGroup'
                                         LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_dissolution ON smkstructureddatesmkgroup_artist_org_dissolution.id = hierarchy_artist_2.id
                                         LEFT JOIN public.hierarchy hierarchy_artist_3 ON org_common.id  = hierarchy_artist_3.parentid AND hierarchy_artist_3.name = 'organizations_smk:smkDissolutionDateGroup'
                                         LEFT JOIN public.smkstructureddatesmkgroup smkstructureddatesmkgroup_artist_org_creation ON smkstructureddatesmkgroup_artist_org_creation.id = hierarchy_artist_3.id
-                        
-                                        /* authenticity - organization */
-                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_auth_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonqualifier = vocabularyitems_common_auth_artist.refname
+
+                                        /* role - organization */
+                                        LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname
                         
                         WHERE hierarchy0.name = '${dih.delta.csid}'
                         
@@ -1149,13 +1172,13 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                                                 org_name.termdisplayname,
                                                 org_common.foundingplace,
                                                 hierarchy_prodgroup.pos,
+                                                vocabularyitems_common_art_artist.displayname,
                                                 smkstructureddatesmkgroup_artist_org_creation.datesmkdisplaytext,
                                                 smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplaytext,
                                                 smkstructureddatesmkgroup_artist_org_creation.datesmkdisplayengtext,
                                                 smkstructureddatesmkgroup_artist_org_dissolution.datesmkdisplayengtext,
                                                 smkstructureddatesmkgroup_artist_org_creation.datesmkthirddateyear,
                                                 smkstructureddatesmkgroup_artist_org_dissolution.datesmkthirddateyear
-
                     
                         ) AS sub_sub_artist
                         
@@ -1372,9 +1395,8 @@ LEFT JOIN public.loctermgroup loc_name ON hierarchy_loc_name.id = loc_name.id
                 LEFT JOIN public.smktitlegroup smktitlegroup_first ON smktitlegroup_first.id = hierarchy_title.id
                 
                 /* related object - artist name */
-                LEFT JOIN public.hierarchy hierarchy_prodgroup ON related_object.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup' AND hierarchy_prodgroup.pos = 0
-                LEFT JOIN public.vocabularyitems_common vocabularyitems_common_art_artist ON vocabularyitems_common_art_artist.displayname = 'kunstner'
-                LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = vocabularyitems_common_art_artist.refname                     
+                LEFT JOIN public.hierarchy hierarchy_prodgroup ON related_object.id = hierarchy_prodgroup.parentid AND hierarchy_prodgroup.primarytype = 'faObjectProductionPersonGroup' AND hierarchy_prodgroup.pos = 0                
+                LEFT JOIN public.faobjectproductionpersongroup faobjectproductionpersongroup_artist ON faobjectproductionpersongroup_artist.id = hierarchy_prodgroup.id AND faobjectproductionpersongroup_artist.faobjectproductionpersonrole = NULL                     
                 LEFT JOIN public.persons_common persons_common_artist ON persons_common_artist.refname = faobjectproductionpersongroup_artist.faobjectproductionperson
                  
                 RIGHT JOIN public.hierarchy hierarchy_artist_1 ON persons_common_artist.id = hierarchy_artist_1.parentid AND hierarchy_artist_1.primarytype = 'personTermGroup' AND hierarchy_artist_1.pos = 0
@@ -1583,7 +1605,8 @@ GROUP BY
     title_dk.title_dk,
     title_eng.title_eng,
     vocabularyitems_common_acq.displayname   
-
+ 
+ 
 
 "
 
@@ -1635,6 +1658,7 @@ GROUP BY collectionobjects_common.objectnumber, hierarchy0.name
 
 
 "
+
 
 	transformer="RegexTransformer"
 	> 

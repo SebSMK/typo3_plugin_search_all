@@ -1,11 +1,11 @@
 <div>
-    <script id="teaserInitTemplate" type="text/template">	
+	<script id="teaserInitTemplate" type="text/template">	
 		<div id="teaser-container-grid" class="full-width">	
         	<article class="teaser--grid"></article>			
 		</div>
 	 </script>
-	 	
-	 <script id="teaserArticleTemplate" type="text/template">	
+
+	<script id="teaserArticleTemplate" type="text/template">	
 		{{#artworks}}
         <article class="teaser--grid">
           <div class="teaser__wrapper">
@@ -24,17 +24,15 @@
               <ul class="teaser__category">
                 {{#categories}}
                   <li>
-                    <a href="{{url}}">{{{name}}}</a>
+                    <a>{{{name}}}</a>
                   </li>
                 {{/categories}}
-              </ul>
-              
-				
+              </ul>              				
 
               <h3 class="teaser__heading">
                	<!-- show an artwork -->
 				{{#is_artwork}} 
-					<a href="#" alt="{{title}}" class="article_artwork">{{{artist_data}}}{{#title_pad}}<br>{{/title_pad}}{{title}}<span>{{{artwork_date}}}</span></a> 
+					<a href="" alt="{{title}}" class="article_artwork">{{{artist_data}}}{{#title_pad}}<br>{{/title_pad}}{{title}}<span>{{{artwork_date}}}</span></a> 
 				{{/is_artwork}}
 				
 				<!-- not showing an artwork -->
@@ -82,5 +80,5 @@
           </div><!-- teaser__wrapper -->
         </article><!-- teaser -->      
       {{/artworks}}	 
-	</script>	
+	</script>
 </div>

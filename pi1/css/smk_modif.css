@@ -1,42 +1,40 @@
 @CHARSET "ISO-8859-1";
 
-
-
 /* Start by setting display:none to make this hidden.
    Then we position it in relation to the viewport window
    with position:fixed. Width, height, top and left speak
    speak for themselves. Background we set to 80% white with
    our animation centered, and no-repeating */
 .modal {
-	
-    background: url("../images/ajax_loader_gray_64.gif") no-repeat fixed 50% 50% rgba(255, 255, 255, 0.8);
-    height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    position: fixed;
-    top: 0;
-    width: 882px;
-    z-index: 1000;
-    display:    none;
+	background: url("../images/ajax_loader_gray_64.gif") no-repeat fixed 50%
+		50% rgba(255, 255, 255, 0.8);
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	position: fixed;
+	top: 0;
+	width: 882px;
+	z-index: 1000;
+	display: none;
 }
-
 
 /* info window */
 .tooltipster-shadow {
 	border-radius: 5px;
 	background: #ededed;
-	box-shadow: 0px 0px 14px rgba(0,0,0,0.3);
+	box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.3);
 	color: #2c2c2c;
 }
 
 .tooltipster-info {
-	max-width: 300px !important; 
-	pointer-events: auto !important; 	
-	opacity: 0 !important;				
-	transition: opacity 3s ease 0.5s !important;  
-	width: 301px; padding-left: 0px !important; 
-	padding-right: 0px !important; 
-	top: 195px !important; 
+	max-width: 300px !important;
+	pointer-events: auto !important;
+	opacity: 0 !important;
+	transition: opacity 3s ease 0.5s !important;
+	width: 301px;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	top: 195px !important;
 	left: 79px !important;
 }
 
@@ -47,78 +45,73 @@
 	padding: 8px 10px;
 }
 
-
 .tooltipster-shadow .tooltipster-content a.tooltip__close {
-    background-image: url("../images/sprite_2x.png");
-    background-position: 0 -36px;
-    background-size: 215px auto;
-    display: inline-block;
-    height: 9px;
-    opacity: 0.6;
-    position: absolute;
-    right: 0.4em;
-    text-indent: -9999em;
-    top: 0.45em;
-    width: 9px;
+	background-image: url("../images/sprite_2x.png");
+	background-position: 0 -36px;
+	background-size: 215px auto;
+	display: inline-block;
+	height: 9px;
+	opacity: 0.6;
+	position: absolute;
+	right: 0.4em;
+	text-indent: -9999em;
+	top: 0.45em;
+	width: 9px;
 }
 
-
-.heading--widgets {  
-  border: 0;
-  margin-bottom: 1.25em;
-  padding-bottom: .45em;
-  border-bottom: 1px solid #ecedf2;  
-  font-size: 1.1em;
-  font-weight: normal;
-  font-family: arial;
+.heading--widgets {
+	border: 0;
+	margin-bottom: 1.25em;
+	padding-bottom: .45em;
+	border-bottom: 1px solid #ecedf2;
+	font-size: 1.1em;
+	font-weight: normal;
+	font-family: arial;
 }
 
-.highlight{
+.highlight {
 	background-color: #FFF8AC;
 }
 
-#smk_teasers{	
-	height:630px;	
+#smk_teasers {
+	height: 630px;
 }
 
 /* When the body has the loading class, we turn
    the scrollbar off with overflow:hidden */
-#smk_search_wrapper.modal_loading
-{
-    overflow: hidden;   
+#smk_search_wrapper.modal_loading {
+	overflow: hidden;
 }
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
-#smk_search_wrapper.modal_loading .modal
-{
-    display: block;
+#smk_search_wrapper.modal_loading .modal {
+	display: block;
 }
 
 .heading--m span {
-    font-size: 0.8em;
+	font-size: 0.8em;
 }
 
 .article_artwork span {
-    font-size: 0.8em;
+	font-size: 0.8em;
 }
 
-#pager-header {    
-    float: left;
-    margin-top: -0.1em;
-    
+#pager-header {
+	float: left;
+	margin-top: -0.1em;
 }
 
 #pager-header li {
-    display: inline-block;
-    margin-bottom: 0;
-    padding: 0.25em 0.2em;    
-    color: #111111;
-    font-family: "hill bold",sans-serif;
-    font-weight: normal;    
-    line-height: 1.16;
-    color: #A2A2A5;
- }
+	display: inline-block;
+	margin-bottom: 0;
+	padding: 0.25em 0.2em;
+	color: #111111;
+	font-family: "hill bold", sans-serif;
+	font-weight: normal;
+	line-height: 1.16;
+	color: #A2A2A5;
+}
 
 #pager-header span {
 	color: inherit;
@@ -131,65 +124,74 @@
     */
 }
 
-.search-choice span{	
+.search-choice span {
 	color: #ffffff;
 }
 
-a i{
-  color: inherit;
+a i {
+	color: inherit;
 }
 
-a span{
-  font-size: 0.8em;
-  color: inherit;
+a span {
+	font-size: 0.8em;
+	color: inherit;
 }
-
-
-
-
 
 /* Jacques' Code  modif */
+#header_logo {
+	vertical-align: baseline !important;
+}
 
-.teaser__category{
-    font-size: 0.78em;
+.footer_content h2 {
+	font-family: 'Hill bold', Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	text-transform: uppercase;
+	margin-bottom: 18px;
+	line-height: 1;
+}
+
+.teaser__category a:hover,.teaser__category a:focus {
+	color: #A2A2A5;
+	text-decoration: none;
+	cursor: default;
+}
+
+.teaser__category {
+	font-size: 0.78em;
 }
 
 .search-box {
-    margin-bottom: 7px;
-    margin-top: 0px;
+	margin-bottom: 7px;
+	margin-top: 0px;
 }
 
-
 .chosen-container .chosen-results li {
-    line-height: normal;
-    margin: 0;
-    padding: 0.2em 0.55em;
+	line-height: normal;
+	margin: 0;
+	padding: 0.2em 0.55em;
 }
 
 .chosen--multiple.chosen--open .chosen-drop .chosen-results {
-  max-height: 99px;
+	max-height: 99px;
 }
 
 .view #teaser-container-grid {
-    
-    margin-left: -11px;
-    margin-right: -11px;
-    margin-top: 27px;
-    
+	margin-left: -11px;
+	margin-right: -11px;
+	margin-top: 27px;
 }
 
 .view #teaser-container-grid .teaser--grid {
-    margin-left: 11px;
-    margin-right: 11px;
-    
+	margin-left: 11px;
+	margin-right: 11px;
 }
 
 .tabs li {
-    float: left;
-    font-family: "hill regular",sans-serif;
-    font-size: 1.3em;
-    letter-spacing: 0;
-    text-transform: uppercase;
+	float: left;
+	font-family: "hill regular", sans-serif;
+	font-size: 1.3em;
+	letter-spacing: 0;
+	text-transform: uppercase;
 }
 
 /* added */
@@ -202,99 +204,100 @@ a span{
 \*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* line 10, ../../src/scss/components/_related.scss */
 #related-container-grid {
-  margin-right: -1.6%;
-  margin-left: -1.6%;
+	margin-right: -1.6%;
+	margin-left: -1.6%;
 }
 
 /* line 17, ../../src/scss/components/_related.scss */
-.related, .related--list,
-.related--grid {
-  width: 30.12%;
-  border-bottom: 2px solid #111111;
-  padding-bottom: 1.35em;
-  margin-right: 1.6%;
-  margin-left: 1.6%;
-  margin-bottom: 1.35em;
-  position: relative;
+.related,.related--list,.related--grid {
+	width: 30.12%;
+	border-bottom: 2px solid #111111;
+	padding-bottom: 1.35em;
+	margin-right: 1.6%;
+	margin-left: 1.6%;
+	margin-bottom: 1.35em;
+	position: relative;
 }
 
 /* line 43, ../../src/scss/components/_related.scss */
 .related__wrapper {
-  *zoom: 1;
-  -webkit-transition: all 200ms ease-in-out;
-  -moz-transition: all 200ms ease-in-out;
-  transition: all 200ms ease-in-out;
+	*zoom: 1;
+	-webkit-transition: all 200ms ease-in-out;
+	-moz-transition: all 200ms ease-in-out;
+	transition: all 200ms ease-in-out;
 }
 /* line 18, ../../src/bower_components/bourbon/app/assets/stylesheets/addons/_clearfix.scss */
-.related__wrapper:before, .related__wrapper:after {
-  content: " ";
-  display: table;
+.related__wrapper:before,.related__wrapper:after {
+	content: " ";
+	display: table;
 }
 /* line 23, ../../src/bower_components/bourbon/app/assets/stylesheets/addons/_clearfix.scss */
 .related__wrapper:after {
-  clear: both;
+	clear: both;
 }
 
 /* line 49, ../../src/scss/components/_related.scss */
 .related__thumbnail {
-  margin-bottom: 1.5em;
-  -webkit-transition: opacity 200ms ease-in-out;
-  -moz-transition: opacity 200ms ease-in-out;
-  transition: opacity 200ms ease-in-out;
+	margin-bottom: 1.5em;
+	-webkit-transition: opacity 200ms ease-in-out;
+	-moz-transition: opacity 200ms ease-in-out;
+	transition: opacity 200ms ease-in-out;
 }
 /* line 54, ../../src/scss/components/_related.scss */
-.related__thumbnail:hover, .related__thumbnail:focus {
-  opacity: .85;
+.related__thumbnail:hover,.related__thumbnail:focus {
+	opacity: .85;
 }
 
 /* line 60, ../../src/scss/components/_related.scss */
-.related__category, .related--list .related__meta {
-  color: #a2a2a5;
-  text-transform: uppercase;
-  margin-bottom: .5em;
+.related__category,.related--list .related__meta {
+	color: #a2a2a5;
+	text-transform: uppercase;
+	margin-bottom: .5em;
 }
 /* line 66, ../../src/scss/components/_related.scss */
-.related__category li, .related--list .related__meta li {
-  display: inline-block;
-  border-right: 1px solid #a2a2a5;
-  margin-right: 0.375em;
-  padding-right: 0.55em;
-  line-height: normal;
+.related__category li,.related--list .related__meta li {
+	display: inline-block;
+	border-right: 1px solid #a2a2a5;
+	margin-right: 0.375em;
+	padding-right: 0.55em;
+	line-height: normal;
 }
 /* line 75, ../../src/scss/components/_related.scss */
-.related__category li:last-child, .related--list .related__meta li:last-child {
-  border: 0;
+.related__category li:last-child,.related--list .related__meta li:last-child
+	{
+	border: 0;
 }
 /* line 77, ../../src/scss/components/_related.scss */
-.related__category a, .related--list .related__meta a {
-  color: #a2a2a5;
-  display: inline-block;
+.related__category a,.related--list .related__meta a {
+	color: #a2a2a5;
+	display: inline-block;
 }
 /* line 82, ../../src/scss/components/_related.scss */
-.related__category a:hover, .related--list .related__meta a:hover, .related__category a:focus, .related--list .related__meta a:focus {
-  color: #5f66f2;
-  text-decoration: none;
+.related__category a:hover,.related--list .related__meta a:hover,.related__category a:focus,.related--list .related__meta a:focus
+	{
+	color: #5f66f2;
+	text-decoration: none;
 }
 
 /* line 90, ../../src/scss/components/_related.scss */
 .related__heading {
-  margin-bottom: .5em;
+	margin-bottom: .5em;
 }
 
 /* line 96, ../../src/scss/components/_related.scss */
 .related__description {
-  margin-bottom: 1em;
+	margin-bottom: 1em;
 }
 
 /* line 101, ../../src/scss/components/_related.scss */
 .related__meta {
-  margin-top: .5em;
+	margin-top: .5em;
 }
 /* line 107, ../../src/scss/components/_related.scss */
 .related__meta span {
-  text-transform: uppercase;
+	text-transform: uppercase;
 }
 /* line 109, ../../src/scss/components/_related.scss */
 .related__meta span:after {
-  content: ":";
+	content: ":";
 }

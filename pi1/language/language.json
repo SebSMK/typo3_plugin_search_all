@@ -1,7 +1,7 @@
 {
   "config": {
     "default": "dk",
-    "version": "0.007.000.000 beta"
+    "version": "0.009.003.001 proxy beta"
   },
   "language": {
     "en": {
@@ -19,7 +19,9 @@
 	  "search_object_production_century_earliest_lab": 		"Select period",
 	  "search_artist_natio_lab": 	"Select nationality",
 	  "search_object_type_lab":	"Select technique",
-	  "search_filter":			"Filter your search",
+	  "search_filter":			"Filter your search",	  	  
+	  "search_filter_cent":		" c.",
+	  "search_data_loading":	"loading data...",
 
       "category_artwork" : 		"artworks",
 	  "category_news" : 		"news",
@@ -65,8 +67,6 @@
 	  "search_box_default":		"Enter search phrase",
 	  "search_box_button":		"search",
 	  
-	  "search_filter_cent":		" c.",
-	  
 	  "sorter_sort":			"sort:",
 	  "sorter_relevans":		"relevance",
 	  "sorter_dato_desc":		"date (most recent first)",
@@ -97,6 +97,7 @@
 	  		
 		"amerikansk":			"American",
 		"belgisk":				"Belgian",
+		"britisk":				"British",
 		"dansk":				"Danish",
 		"engelsk":				"English",
 		"finsk":				"Finnish",
@@ -279,7 +280,9 @@
       "search_object_production_century_earliest_lab": 		"Indtast periode",
       "search_artist_natio_lab": 	"Indtast kunstners nationalitet",
       "search_object_type_lab":	"Indtast teknik",
-      "search_filter":			"Afgr&aelig;ns din s&oslash;gning",
+      "search_filter":			"Afgr&aelig;ns din s&oslash;gning",      	  
+	  "search_filter_cent":		"tallet",
+      "search_data_loading":	"loading data...",
       
       "category_artwork" : 		"v&aelig;rker",
 	  "category_news" : 		"nyheder",
@@ -325,8 +328,6 @@
 	  "search_box_default":		"Skriv s&oslash;geord her",
 	  "search_box_button":		"s&oslash;g",
 	  
-	  "search_filter_cent":		"tallet",
-	  
 	  "sorter_sort":			"sort&eacute;r:",
 	  "sorter_relevans":		"relevans",
 	  "sorter_dato_desc":		"dato (nyest f&oslash;rst)",
@@ -356,8 +357,9 @@
 		"month_10":				"nov.",
 		"month_11":				"dec.",	  
 	  
-	  "amerikansk":				"amerikansk",
+	  	"amerikansk":			"amerikansk",
 		"belgisk":				"belgisk",
+		"britisk":				"britisk",
 		"dansk":				"dansk",
 		"engelsk":				"engelsk",
 		"finsk":				"finsk",

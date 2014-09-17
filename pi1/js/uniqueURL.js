@@ -104,7 +104,7 @@ var	UniqueURL = {
 				  uniqueURL = sprintf('%s%s%s%s', this._cat_separator, json.view, this._cat_separator, encodeURIComponent(this.encode_q(json.q)) );				  				  
 			  }else{
 				  
-				  var cat = json.category != undefined && json.category != 'all' ? sprintf('%1$scategory%1$s%2$s%1$s', this._cat_separator,json.category) : '';
+				  var cat = json.category != undefined && json.category != '' && json.category != 'all' ? sprintf('%1$scategory%1$s%2$s%1$s', this._cat_separator,json.category) : '';
 				  var q =  json.q != undefined &&  this.encode_q(json.q) != '' ? sprintf('%sq=%s', this._separator, encodeURIComponent(this.encode_q(json.q))) : '';
 				  var fq =  json.fq != undefined && this.encode_fq(json.fq) != '' ? sprintf('%sfq=%s', this._separator, encodeURIComponent(this.encode_fq(json.fq))) : '';
 				  var start =  json.start != undefined && json.start != 0 ? sprintf('%sstart=%s', this._separator, encodeURIComponent(json.start)) : '';
@@ -116,7 +116,9 @@ var	UniqueURL = {
 			  }; 	  
 		      
 			  //* set unique url	
-		      $.address.value(uniqueURL.replace(this._separator, ''));		
+		      //$.address.value(uniqueURL.replace(this._separator, ''));
+			  
+			  window.location.href = sprintf('%s#%s', window.location.href.split('#')[0], uniqueURL.replace(this._separator, ''));
 
 		 },
 		
