@@ -40,7 +40,12 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     };
     if (this.proxyUrl) {
       options.url = this.proxyUrl + '?wt=json';
-      options.data = {query: string, prev_query: prev_string, solrUrl:this.solrUrl};
+      options.data = {	
+    		  			query: 		string, 
+    		  			prev_query: prev_string, 
+    		  			solrUrl:	this.solrUrl,
+    		  			language:	smkCommon.getCurrentLanguage()
+    		  		};
       options.type = 'POST';
     }
     else {
