@@ -28,7 +28,9 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
 	  
   executeRequest: function (servlet, string, handler, errorHandler) {
     var self = this,
-        options = {dataType: 'json'};
+        options = {dataType: 'jsonp'};
+    //options = {dataType: 'html'};
+    prev_string = this.store.storedString();
     string = string || this.store.string();
     handler = handler || function (data) {
       self.handleResponse(data);
@@ -37,8 +39,13 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
       self.handleError(textStatus + ', ' + errorThrown);
     };
     if (this.proxyUrl) {
-      options.url = this.proxyUrl;
-      options.data = {query: string};
+      options.url = this.proxyUrl + '?wt=json';
+      options.data = {	
+    		  			query: 		string, 
+    		  			prev_query: prev_string, 
+    		  			solrUrl:	this.solrUrl,
+    		  			language:	smkCommon.getCurrentLanguage()
+    		  		};
       options.type = 'POST';
     }
     else {
@@ -51,6 +58,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     
     //* 1st method: direct -> JSON without error / timeout handling
     //jQuery.ajax(options).done(handler).fail(errorHandler);
+    //jQuery.ajax('http://pc-0076/proxySolrPHP/proxy.php').done(handler).fail(errorHandler);
     
     //* 2nd method: indirect -> JSONP with error / timeout handling
     this.getJSONP(options, handler);
@@ -63,7 +71,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
 	  var self = this;
 	  //s.url = "http://csdev-seb:8180/solr-example/SMK_All_v/select?q=*%3A*&wt=json&json.wrf=?";
 	  
-	  s.url = s.url + '&callback=' + function(data){};      
+	  s.url = s.url + '&callback=' + function(data){};       
       
 //	  s.data = {'q': "*:*", 'wt':'json'};
 //	  s.dataType = 'jsonp';
