@@ -58,8 +58,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 	for (var i = 0, l = this.manager.response.response.docs.length; i < l; i++) {
 		//* load data
 		var artwork_data = null;			
-		var doc = this.manager.response.response.docs[i];	
-		var copyright = smkCommon.computeCopyright(doc) != false; // compute copyright for the artwork in the current detail view and apply it to all related artworks  
+		var doc = this.manager.response.response.docs[i];			  
 		
 		//* in case there are no related works, remove all ".image_loading" class in the widget and send "widget loaded" event
 		if (doc.related_id === undefined){
@@ -73,7 +72,7 @@ AjaxSolr.RelatedWidget = AjaxSolr.AbstractWidget.extend({
 			
 		doc.related_id.split(';-;').forEach( function(entry){
 			  //* load data for this artwork
-		      artwork_data = dataHandler.getData(entry, copyright);	      	      
+		      artwork_data = dataHandler.getData(entry);	      	      
 		      
 		      //* merge data and template
 		      var html = self.template_integration_json({"artworks": artwork_data}, '#relatedArticleTemplate');     

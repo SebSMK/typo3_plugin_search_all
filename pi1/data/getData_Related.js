@@ -15,7 +15,7 @@
 	getdatarelated.constructor = function(caller){
 
 
-		this.getData = function (entry, copyright){
+		this.getData = function (entry){
 
 			var title_first = entry.split(';--;')[2];
 			var medium_image_data = entry.split(';--;')[3] != "" ? smkCommon.getScaledPicture (entry.split(';--;')[3], 'medium') : this.caller.default_picture_path;
@@ -29,7 +29,7 @@
 				meta: [{key: smkCommon.firstCapital(this.caller.manager.translator.getLabel('related_reference')), value: id}],				  		
 				img_id: id,
 				artist_name: artist_name,
-				copyright: copyright ? sprintf('&copy; %s', artist_name) : false  
+				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def') 
 			};
 
 		};  

@@ -55,44 +55,8 @@
 	 */
 	common.computeCopyright = function(doc) {
 		
-		//*** //-->debug mode : no copyright
-		//return false; 
-		//***
-		
-		if (doc === undefined || doc.artist_name_ss === undefined || doc.artist_birth_first === undefined || doc.artist_death_first === undefined)
-			return false;
-		
-		var res = true;
-		var now = new Date();
-		var copyright_owner = "";
-		
-		// check artist dates
-		for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
-			  var birth = doc.artist_birth_first[i] === undefined ?'-' : doc.artist_birth_first[i];
-			  var death = doc.artist_death_first[i] === undefined ?'-' : doc.artist_death_first[i];
-			  
-			  if (i == 0)
-				  copyright_owner = doc.artist_name_ss[0]; // if multiple artists, copyright owner is the first in the list	
-			  
-			  // if the artist died less than 70 years ago,
-			  // or, if we don't have death date, if the artist is born more less 200 years ago - under cc
-			  if(
-				  (!isNaN(death) && (now.getFullYear() - parseInt(death) < 70))
-				  || 
-				  (isNaN(death) && !isNaN(birth) && (now.getFullYear() - parseInt(birth) < 200))){
-				  	res = true;
-				  	break;
-			  };				
-							  
-			  // in all other cases, no cc
-			  res = false;			  			  
-		};
-		  
-		// if under cc, search for copyright text, otherwise default copyright text
-		if(res)
-			res = doc.copyright !== undefined ? doc.copyright : sprintf('&copy; %s', copyright_owner);				
-		
-		return res;
+		return doc.copyright !== undefined ? doc.copyright : false;
+				
 	};
 	
 	common.getDefaultPicture = function(size){		

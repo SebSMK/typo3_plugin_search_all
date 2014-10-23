@@ -20,8 +20,14 @@
 						title: this.getTitle(doc),	
 						alt: this.getAlt(doc),		  						
 						image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.caller.default_picture_path,
-								copyright: doc.medium_image_url !== undefined ? smkCommon.computeCopyright(doc) : this.caller.manager.translator.getLabel("detail_no_photo"),
-										img_id:doc.id
+						copyright: doc.medium_image_url !== undefined ? 
+										smkCommon.computeCopyright(doc) != false ?
+											smkCommon.computeCopyright(doc)
+										:
+											this.caller.manager.translator.getLabel('copyright_def')
+									: 
+										this.caller.manager.translator.getLabel("detail_no_photo"),
+						img_id:doc.id
 					},
 
 					info:{

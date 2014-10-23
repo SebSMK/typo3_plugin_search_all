@@ -18,7 +18,7 @@
 		this.get_data = function (doc){
 			var data = null;	  		  	  
 			var thumbnails = new Array();
-			var copyright = smkCommon.computeCopyright(doc) != false; // compute copyright for the artwork in the current detail view and apply it to all artwork's parts  
+			var copyright = smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :  this.caller.manager.translator.getLabel('copyright_def');  
 
 			var multi_works = doc.multi_work_ref.split(';-;');
 			var work_parent = new Array();
@@ -52,21 +52,21 @@
 					title : doc.title_first,
 					image : doc.medium_image_url !== undefined ? doc.medium_image_url : this.caller.default_picture_path,
 							current: this.caller.getCurrent_selec() == doc.id,
-							copyright: copyright ? sprintf('&copy; %s', doc.artist_name) : false 
+							copyright: copyright 
 				}); 		
 			}
 			else{
 				for (var i = 0; i < work_parent.length; i++) {		  
-					this.push_work_til_thumb(work_parent[i], thumbnails, copyright ? sprintf('&copy; %s', doc.artist_name) : false);
+					this.push_work_til_thumb(work_parent[i], thumbnails, copyright);
 				}
 			};
 
 			for (var i = 0; i < work_siblings.length; i++) {		  
-				this.push_work_til_thumb(work_siblings[i], thumbnails, copyright ? sprintf('&copy; %s', doc.artist_name) : false);
+				this.push_work_til_thumb(work_siblings[i], thumbnails, copyright);
 			}		
 
 			for (var i = 0; i < work_children.length; i++) {		  
-				this.push_work_til_thumb(work_children[i], thumbnails, copyright ? sprintf('&copy; %s', doc.artist_name) : false);
+				this.push_work_til_thumb(work_children[i], thumbnails, copyright);
 			}
 
 			data = {"label": this.caller.manager.translator.getLabel("thumbs_label"), "thumb" : thumbnails};  	  

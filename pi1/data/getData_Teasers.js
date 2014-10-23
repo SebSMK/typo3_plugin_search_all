@@ -39,7 +39,7 @@
 					not_is_artwork: false,
 					is_artwork: true,
 					location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
-					copyright: smkCommon.computeCopyright(doc),			  						  				  						  					  						  				
+					copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def')			  						  				  						  					  						  				
 			};
 
 
