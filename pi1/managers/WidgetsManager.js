@@ -41,7 +41,7 @@ var Manager;
 		//** init widgetManager
 		//******************************    
 		Manager = new AjaxSolr.smkManager({
-			solrUrl: smkCommon.getSolrPath(),      
+			solrUrl: smkCommon.getSolrPath(),
       proxyUrl: 'http://solr.smk.dk:8080/proxySolrPHP/proxy.php',    	    	
 			store: new AjaxSolr.smkParameterStore({
 				exposed: exposed,    		
