@@ -49,7 +49,7 @@
 						if (params.view != 'detail'){			    		
 							self.categoryChanged({'category': params.category});
 						}else{			    		
-							self.manager.widgets['thumbs'].setCurrent_selec(null);	
+/*רררר							self.manager.widgets['thumbs'].setCurrent_selec(null);*/	
 						}
 					}else if(params.category == undefined && params.view != 'detail'){
 						self.categoryChanged({'category': "all"});
@@ -317,7 +317,7 @@
 						this.viewChanged({view:"teasers"});
 						this.categoryChanged({category:"all"}); 	
 						this.manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-						this.manager.widgets['thumbs'].setCurrent_selec(null);	    	    		
+						/*רררר						this.manager.widgets['thumbs'].setCurrent_selec(null);*/	    	    		
 					}
 
 					this.manager.widgets['currentsearch'].add_q(q_value, text );  
@@ -396,7 +396,7 @@
 
 			UniqueURL.setUniqueURL(params);
 
-			this.manager.widgets['thumbs'].setCurrent_selec(null); 
+			/*רררר			this.manager.widgets['thumbs'].setCurrent_selec(null); */
 		},	
 
 

@@ -75,7 +75,12 @@
 								dim: false,
 								location:false,
 								proveniens:false
-					}	  
+					},
+					
+					subwidget:{
+						req_multiwork: this.getReq_multiwork(doc)
+						
+					}
 			};	
 
 			//* add acquisition data
@@ -123,6 +128,22 @@
 
 		};   
 
+		this.getReq_multiwork = function(doc){
+			if(doc.multi_work_ref === undefined )
+				return null;
+				
+			var multi_works = doc.multi_work_ref.split(';-;');						
+			var allKeywordsRequest = [];
+			
+			for ( var i = 0, l = multi_works.length; i<l; ++i ) {
+				var work = multi_works[i].split(';--;');
+				if(work.length > 2 && work[1] != doc.id)
+					allKeywordsRequest.push(sprintf('id_s:"%s"', work[1]));	
+			}
+
+			return allKeywordsRequest.length == 0 ? null : allKeywordsRequest.join(' OR ');
+		};
+		
 		this.getObjectProdDate = function (doc){
 			var date;
 			var default_value = "";
