@@ -692,6 +692,7 @@
 				self.showWidget($target.find("#thumbnails"));
 
 				self.showWidget($(this.manager.widgets['details'].related_subWidget.target));
+				this.manager.widgets['details'].related_subWidget.removeAllArticles();	
 				$(this.manager.widgets['details'].related_subWidget.target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
 
 				$target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
@@ -781,14 +782,6 @@
 
 		hide_footer: function(){	  
 			$("#footer").hide();	  
-		},
-
-		empty_detail_view: function(){		  
-			//empty related widget
-			$(this.manager.widgets['details'].related_subWidget.target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")	  
-			this.manager.widgets['details'].related_subWidget.removeAllArticles();	  
-			//empty detail widget
-			$(this.manager.widgets['detail']).empty();	  	  
 		},
 
 		getNewState: function(stateChange) {

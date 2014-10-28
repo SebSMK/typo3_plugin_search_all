@@ -228,12 +228,6 @@ var Manager;
 			related_subWidget: sub_relatedWidget
 		}));		
 
-//		Manager.addWidget(new AjaxSolr.RelatedWidget({
-//			id: 'related',
-//			target: '#related-artworks',
-//			template: Mustache.getTemplate('pi1/templates/related.html')
-//		}));
-
 		//******************************
 		//** add event listeners
 		//******************************
@@ -290,16 +284,11 @@ var Manager;
 		 * */    
 
 		//* calls to detail view
-		$(Manager.widgets['state_manager'])
-		.add(Manager.widgets['related'])		
-		.add(Manager.widgets['teasers'])		
-		.on('smk_search_call_detail', function(event){     	
+		$(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
 			Manager.widgets['state_manager'].smk_search_call_detail(event);
 		});
 		
-		$(Manager.widgets['state_manager'])		
-		.add(Manager.widgets['details'])
-		.on('smk_search_call_detail', function(event){     	
+		$(Manager.widgets['details']).on('smk_search_call_detail', function(event){     	
 			Manager.widgets['state_manager'].smk_search_call_detail(event.event_caller);
 		});
 
