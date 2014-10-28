@@ -26,26 +26,21 @@
 
 			$target.empty();
 
-			var artwork_data = null;
+			var thumbnails = [];
 			var dataHandler = new getData_Thumbs.constructor(this);
 			for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
 				var doc = this.manager.response.response.docs[i];  
-
-				if(doc.multi_work_ref !== undefined){
-					artwork_data = dataHandler.get_data(doc);
-				}else{
-					// this piece of code below does basically nothing - but it's the only way we found so that to have 
-					// the delay-function to work properly on "back button: opacity:1" in "Detail" (see WidgetManager: "$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');" )
-					// If you find a more rational method to achieve that, feel free to implement it.
-					var html = self.template_integration_json({"thumbnails":artwork_data}, '#thumbTemplate'); 	        
-					$target.html(html);
-					return;
-				}
+				//thumbnails.push(dataHandler.get_data(doc));
+				
+				var rank = new String(doc.id.split('/').length < 2 ? 0 : doc.id.split('/')[1]);
+				rank = parseInt(/\d+/.exec(rank));
+				thumbnails[rank] = dataHandler.get_data(doc);
 
 			}
 
 			//* merge data and template
-			var html = self.template_integration_json({"thumbnails":artwork_data}, '#thumbTemplate');        
+			var data = {"label": self.manager.translator.getLabel("thumbs_label"), "thumb" : thumbnails};
+			var html = self.template_integration_json({"thumbnails":data}, '#thumbTemplate');        
 			$target.html(html);
 
 			//* add image + link to detail on click on images

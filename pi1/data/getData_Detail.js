@@ -133,15 +133,16 @@
 				return null;
 				
 			var multi_works = doc.multi_work_ref.split(';-;');						
-			var allKeywordsRequest = [];
+			var allKeywordsRequest = null;
 			
-			for ( var i = 0, l = multi_works.length; i<l; ++i ) {
-				var work = multi_works[i].split(';--;');
-				if(work.length > 2 && work[1] != doc.id)
-					allKeywordsRequest.push(sprintf('id_s:"%s"', work[1]));	
+			if(multi_works.length > 0){
+				var work = multi_works[0].split(';--;');
+				if(work.length > 2){
+					allKeywordsRequest = sprintf('id:"%s"', work[1].split('/')[0]);	
+				}					
 			}
 
-			return allKeywordsRequest.length == 0 ? null : allKeywordsRequest.join(' OR ');
+			return allKeywordsRequest;
 		};
 		
 		this.getObjectProdDate = function (doc){

@@ -201,15 +201,7 @@ var Manager;
 			template: Mustache.getTemplate('pi1/templates/detail.html'),
 			thumbnailsManager: multiworkManager,
 			thumbnails_subWidget: sub_Thumbs_widget
-		}));
-
-		/*רררר
-		Manager.addWidget(new AjaxSolr.ThumbsWidget({
-			id: 'thumbs',
-			target: '#thumbnails',
-			template: Mustache.getTemplate('pi1/templates/thumb.html')
-		}));	
-		*/
+		}));		
 
 		Manager.addWidget(new AjaxSolr.RelatedWidget({
 			id: 'related',
@@ -273,17 +265,17 @@ var Manager;
 		 * */    
 
 		//* calls to detail view
-		/*רררר		
 		$(Manager.widgets['state_manager'])
-		.add(Manager.widgets['related'])
-		.add(Manager.widgets['thumbs'])
-		.add(Manager.widgets['teasers'])
-		*/ $(Manager.widgets['state_manager'])
 		.add(Manager.widgets['related'])		
-		.add(Manager.widgets['teasers'])
-
+		.add(Manager.widgets['teasers'])		
 		.on('smk_search_call_detail', function(event){     	
 			Manager.widgets['state_manager'].smk_search_call_detail(event);
+		});
+		
+		$(Manager.widgets['state_manager'])		
+		.add(Manager.widgets['details'])
+		.on('smk_search_call_detail', function(event){     	
+			Manager.widgets['state_manager'].smk_search_call_detail(event.event_caller);
 		});
 
 		//* calls to teasers view
@@ -324,13 +316,10 @@ var Manager;
 		$(Manager.widgets['related']).on('smk_related_this_img_loaded', function(event){   
 			Manager.widgets['state_manager'].smk_related_this_img_loaded();
 		}); 
-
-		/*רררר
-		//* a new image has finished loading in "thumbnails"
-		$(Manager.widgets['thumbs']).on('smk_thumbs_img_loaded', function(event){
+		
+		$(Manager.widgets['details']).on('smk_thumbs_img_loaded', function(event){
 			Manager.widgets['state_manager'].smk_thumbs_img_loaded();  		  	    
 		});
-		*/
 
 		//* image has finished loading in "detail"
 		$(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){ 

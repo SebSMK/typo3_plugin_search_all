@@ -29,7 +29,7 @@
 				meta: [{key: smkCommon.firstCapital(this.caller.manager.translator.getLabel('related_reference')), value: id}],				  		
 				img_id: id,
 				artist_name: artist_name,
-				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def') 
+				copyright: 'nullll'//øøøøøøsmkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def') 
 			};
 
 		};  
@@ -91,7 +91,6 @@
 					$(event.data.caller).trigger({
 						type: "smk_search_call_detail",
 						detail_id: event.data.detail_id,
-						detail_view_intern_call: false,
 						save_current_request: false
 					});
 
@@ -114,7 +113,6 @@
 				$(event.data.caller).trigger({
 					type: "smk_search_call_detail",
 					detail_id: event.data.detail_id,
-					detail_view_intern_call: false,
 					save_current_request: false
 				});
 

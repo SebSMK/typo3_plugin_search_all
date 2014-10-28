@@ -29,10 +29,20 @@
 			//* a new image has been displayed in "scroll teaser"
 			$(self.thumbnails_subWidget).on('smk_thumbs_img_loaded', function(event){     	            								
 				$(self).trigger({
-					type: "smk_thumbs_img_loaded",
+					type: "smk_thumbs_img_loaded"
+				});
+			});	
+			
+			//* click on a thumb
+			$(self.thumbnails_subWidget).on('smk_search_call_detail', function(event){ 
+				
+				self.setCurrentThumb_selec(event.detail_id);  
+				
+				$(self).trigger({
+					type: "smk_search_call_detail",
 					event_caller: event
 				});
-			});	 
+			});
 
 			self.thumbnailsManager.init();
 		}, 
@@ -65,10 +75,14 @@
 			var artwork_data = null;
 			var dataHandler = new getData_Detail.constructor(this);
 			var multi_work_ref = null;
+
 			for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
 				var doc = this.manager.response.response.docs[i];      
 				artwork_data = dataHandler.get_data(doc);  
 				multi_work_ref = artwork_data.subwidget.req_multiwork;
+				
+				if (self.getCurrentThumb_selec() == null)
+					self.setCurrentThumb_selec(doc.id);
 			}
 			
 			//* merge data and template
@@ -93,7 +107,7 @@
 					}
 			);
 			
-			if(multi_work_ref != null){
+			if(multi_work_ref != null){				
 				//* start sub request
 				var param = new AjaxSolr.Parameter({name: "q", value: multi_work_ref });					  					
 				this.thumbnailsManager.store.add(param.name, param);	 			
@@ -106,7 +120,15 @@
 			var template = this.template; 	
 			var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 			return html;
-		}  
+		},
+		
+		setCurrentThumb_selec: function(selec){
+			this.thumbnails_subWidget.setCurrent_selec(selec);
+		},
+		
+		getCurrentThumb_selec: function(){
+			return this.thumbnails_subWidget.getCurrent_selec();
+		}
 
 	});
 

@@ -49,7 +49,7 @@
 						if (params.view != 'detail'){			    		
 							self.categoryChanged({'category': params.category});
 						}else{			    		
-/*רררר							self.manager.widgets['thumbs'].setCurrent_selec(null);*/	
+							self.manager.widgets['details'].setCurrentThumb_selec(null);	
 						}
 					}else if(params.category == undefined && params.view != 'detail'){
 						self.categoryChanged({'category': "all"});
@@ -317,7 +317,7 @@
 						this.viewChanged({view:"teasers"});
 						this.categoryChanged({category:"all"}); 	
 						this.manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-						/*רררר						this.manager.widgets['thumbs'].setCurrent_selec(null);*/	    	    		
+						this.manager.widgets['details'].setCurrentThumb_selec(null);	    	    		
 					}
 
 					this.manager.widgets['currentsearch'].add_q(q_value, text );  
@@ -346,15 +346,11 @@
 		 * call to detail view
 		 * */  
 
-		smk_search_call_detail: function(event){
-			var detail_view_intern_call = event.detail_view_intern_call;
+		smk_search_call_detail: function(event){			
 			var save_current_request = event.save_current_request;    		  
 			var art_id = event.detail_id;		  
-
-			if (!detail_view_intern_call)
-				this.manager.widgets['state_manager'].viewChanged({view:"detail"});
-			else
-				this.manager.widgets['state_manager'].empty_detail_view();			   	    	
+			
+			this.manager.widgets['state_manager'].viewChanged({view:"detail"});
 
 			if(save_current_request) //* save current solr parameters		  
 				this.manager.store.save();      		  	
@@ -396,7 +392,7 @@
 
 			UniqueURL.setUniqueURL(params);
 
-			/*רררר			this.manager.widgets['thumbs'].setCurrent_selec(null); */
+			this.manager.widgets['details'].setCurrentThumb_selec(null);
 		},	
 
 
@@ -498,17 +494,15 @@
 		//* thumbs
 		smk_thumbs_img_loaded: function(){
 			//* check if there are still images loading in "teaser"
-			if ($(this.manager.widgets['thumbs'].target).find('.image_loading').length == 0){
-				this.manager.widgets['thumbs'].verticalAlign();       	  	
+			if ($(this.manager.widgets['details'].thumbnails_subWidget.target).find('.image_loading').length == 0){
+				this.manager.widgets['details'].thumbnails_subWidget.verticalAlign();       	  	
 			}  	  
 		},
 
 		//* detail
 		smk_detail_this_img_loaded: function(){
 			this.remove_modal_loading_from_widget(this.manager.widgets['details'].target);   
-			// show "back-button" in Detail view - in order to have the delay (specified in app.css) on showing to work properly, 
-			// we had to implement a tricky little piece of code, see ThumbnailsWidget-> after "doc.multi_work_ref !== undefined"
-			// If you find a more rational method to achieve that, feel free to implement it.
+			// show "back-button" in Detail view
 			$(this.manager.widgets['details'].target).find('a.back-button').css('opacity', '1');			
 		},	
 
