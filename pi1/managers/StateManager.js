@@ -482,12 +482,12 @@
 
 		//* related
 		smk_related_this_img_loaded: function(){
-			$(this.manager.widgets['related'].target).find('#teaser-container-grid').masonry('layout');  
+			$(this.manager.widgets['details'].related_subWidget.target).find('#teaser-container-grid').masonry('layout');  
 
 			//* check if there are still images loading in "related"
-			if ($(this.manager.widgets['related'].target).find('.image_loading').length == 0){    		
+			if ($(this.manager.widgets['details'].related_subWidget.target).find('.image_loading').length == 0){    		
 				// if all images are loaded, we stop the modal "waiting image" for this widget
-				this.remove_modal_loading_from_widget(this.manager.widgets['related'].target);   	   	 	       	  	
+				this.remove_modal_loading_from_widget(this.manager.widgets['details'].related_subWidget.target);   	   	 	       	  	
 			} 	
 		},
 
@@ -520,7 +520,7 @@
 			// details
 			this.add_modal_loading_to_widget(this.manager.widgets['details']);	 
 			// related
-			this.add_modal_loading_to_widget(this.manager.widgets['related']);
+//			this.add_modal_loading_to_widget(this.manager.widgets['details'].related_subWidget);*/
 		},  
 
 
@@ -640,7 +640,7 @@
 				$target.find("#thumbnails").empty().hide();
 				$target.find("#smk_detail").empty().hide();		  		  		  		 
 
-				this.manager.widgets['related'].removeAllArticles();
+				this.manager.widgets['details'].related_subWidget.removeAllArticles();
 				$target.find("#related-artworks").hide();		  
 
 				self.showWidget($target.find("#currentsearch"));
@@ -691,8 +691,8 @@
 				self.showWidget($target.find("#smk_detail"));
 				self.showWidget($target.find("#thumbnails"));
 
-				self.showWidget($(this.manager.widgets['related'].target));
-				$(this.manager.widgets['related'].target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
+				self.showWidget($(this.manager.widgets['details'].related_subWidget.target));
+				$(this.manager.widgets['details'].related_subWidget.target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
 
 				$target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
 
@@ -785,8 +785,8 @@
 
 		empty_detail_view: function(){		  
 			//empty related widget
-			$(this.manager.widgets['related'].target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")	  
-			this.manager.widgets['related'].removeAllArticles();	  
+			$(this.manager.widgets['details'].related_subWidget.target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")	  
+			this.manager.widgets['details'].related_subWidget.removeAllArticles();	  
 			//empty detail widget
 			$(this.manager.widgets['detail']).empty();	  	  
 		},

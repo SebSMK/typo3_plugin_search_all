@@ -23,7 +23,7 @@
 				title : doc.title_first,
 				image : doc.medium_image_url !== undefined ? doc.medium_image_url : this.caller.default_picture_path,
 				current: this.caller.getCurrent_selec() == doc.id,
-				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :  this.caller.manager.translator.getLabel('copyright_def') 
+				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :  '' 
 			}; 		
 		}; 						
 
@@ -99,8 +99,7 @@
 				));
 				// call detailed view on click on image
 				$target.find('a')
-				.click({detail_id: img_id, caller:self}, 
-						function (event) {
+				.click({detail_id: img_id, caller:self}, function (event) {
 					event.preventDefault();
 
 					// if this view is the current view, do nothing 

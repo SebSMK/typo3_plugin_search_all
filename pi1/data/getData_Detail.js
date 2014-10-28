@@ -78,7 +78,8 @@
 					},
 					
 					subwidget:{
-						req_multiwork: this.getReq_multiwork(doc)
+						req_multiwork: this.getReq_multiwork(doc),
+						req_relatedid: this.getReq_relatedid(doc)
 						
 					}
 			};	
@@ -133,16 +134,32 @@
 				return null;
 				
 			var multi_works = doc.multi_work_ref.split(';-;');						
-			var allKeywordsRequest = null;
+			var allworksRequest = null;
 			
 			if(multi_works.length > 0){
 				var work = multi_works[0].split(';--;');
 				if(work.length > 2){
-					allKeywordsRequest = sprintf('id:"%s"', work[1].split('/')[0]);	
+					allworksRequest = sprintf('id:"%s"', work[1].split('/')[0]);	
 				}					
 			}
 
-			return allKeywordsRequest;
+			return allworksRequest;
+		};
+		
+		this.getReq_relatedid = function(doc){
+			if(doc.related_id === undefined )
+				return null;
+				
+			var related_works = doc.related_id.split(';-;');						
+			var allrelatedRequest = [];
+			
+			for ( var i = 0, l = related_works.length; i<l; ++i ) {
+				var work = related_works[i].split(';--;');
+				if(work.length > 0)
+					allrelatedRequest.push(sprintf('id_s:"%s"', work[1]));	
+			}
+
+			return allrelatedRequest.length == 0 ? null : allrelatedRequest.join(' OR ');
 		};
 		
 		this.getObjectProdDate = function (doc){

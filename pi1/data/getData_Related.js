@@ -15,24 +15,47 @@
 	getdatarelated.constructor = function(caller){
 
 
-		this.getData = function (entry){
-
-			var title_first = entry.split(';--;')[2];
-			var medium_image_data = entry.split(';--;')[3] != "" ? smkCommon.getScaledPicture (entry.split(';--;')[3], 'medium') : this.caller.default_picture_path;
-			var id = entry.split(';--;')[0];
-			var artist_name = entry.split(';--;')[1];
+		this.getData = function (doc){
 
 			return {
-				id: id,
-				title: title_first,	 
-				thumbnail: medium_image_data,				  						  		
-				meta: [{key: smkCommon.firstCapital(this.caller.manager.translator.getLabel('related_reference')), value: id}],				  		
-				img_id: id,
-				artist_name: artist_name,
-				copyright: 'nullll'//øøøøøøsmkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def') 
+				id:doc.id,
+				title:this.getTitle(doc),	 
+				thumbnail: doc.medium_image_url !== undefined ? smkCommon.getScaledPicture(doc.medium_image_url, 'medium') : this.caller.default_picture_path,			
+				meta: {key: smkCommon.firstCapital(this.caller.manager.translator.getLabel("related_reference")), value: doc.id},				  		
+				img_id: doc.id, // for verso and sub-artworks
+				artist_name: this.getArtistName(doc),			
+				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	''
 			};
-
 		};  
+		
+		this.getArtistName = function(doc){	  	  	  
+			// we take only the first name
+			if (doc.artist_name_ss === undefined)
+				return '';
+
+			for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
+				return doc.artist_name_ss[i];		  		  		  
+			}
+		};
+
+		this.getTitle = function(doc){
+
+			var title;
+
+			switch(this.caller.manager.translator.getLanguage()){
+			case "dk":		 			  			  			  
+				title = doc.title_dk !== undefined ? doc.title_dk : doc.title_first;					  			  			  
+				break;
+			case "en":
+				title = doc.title_eng !== undefined ? doc.title_eng : (doc.title_dk !== undefined ? doc.title_dk : doc.title_first);
+				break;
+			default:		    			  			   							  
+				title = doc.title_first		  	 		  	  
+				break;		  
+			}
+
+			return title;
+		};
 
 		this.getImage = function ($container, $target){
 
@@ -85,8 +108,7 @@
 				.find('a')
 				.append(sprintf('<img src="%s" />', self.default_picture_path));
 				// call detailed view on click on image
-				$target.find('a').click({detail_id: img_id, caller:self}, 
-						function (event) {
+				$target.find('a').click({detail_id: img_id, caller:self}, function (event) {
 					event.preventDefault();
 					$(event.data.caller).trigger({
 						type: "smk_search_call_detail",
@@ -107,8 +129,7 @@
 			})
 
 			// call detailed view on click on image
-			.click({detail_id: img_id, caller:self}, 
-					function (event) {
+			.click({detail_id: img_id, caller:self}, function (event) {
 				event.preventDefault();
 				$(event.data.caller).trigger({
 					type: "smk_search_call_detail",

@@ -80,9 +80,9 @@ var Manager;
 
 		
 		//******************************
-		//** init multiworkManager
+		//** init thumbnailsManager
 		//******************************    
-		var multiworkManager = new AjaxSolr.smkManager({
+		var thumbnailsManager = new AjaxSolr.smkManager({
 			solrUrl: smkCommon.getSolrPath(), 
 			proxyUrl: 'http://solr.smk.dk:8080/proxySolrPHP/proxy.php',			
 			store: new AjaxSolr.smkParameterStore({
@@ -94,8 +94,24 @@ var Manager;
 			allWidgetsProcessed: allWidgetsProcessedBound,
 			generalSolrError: generalSolrErrorProcessedBound,
 			translator: translator
-		});						
-
+		});	
+		
+		//******************************
+		//** init relatedManager
+		//******************************    
+		var relatedManager = new AjaxSolr.smkManager({
+			solrUrl: smkCommon.getSolrPath(), 
+			proxyUrl: 'http://solr.smk.dk:8080/proxySolrPHP/proxy.php',			
+			store: new AjaxSolr.smkParameterStore({
+				exposed: exposed,    		
+				q_default: q_default,
+				qf_default: qf_default,
+				sort_default: sort_default 
+			}),
+			allWidgetsProcessed: allWidgetsProcessedBound,
+			generalSolrError: generalSolrErrorProcessedBound,
+			translator: translator
+		});	
 		
 		//******************************
 		//** load widgets
@@ -188,26 +204,35 @@ var Manager;
 			}));
 		};				
 
-		//* Detail and Thumbs widgets 
-		var sub_Thumbs_widget = new AjaxSolr.ThumbsWidget({
+		//* Detail / Thumbs / Related widgets 
+		var sub_thumbsWidget = new AjaxSolr.ThumbsWidget({
 			id: 'thumbs',
 			target: '#thumbnails',
 			template: Mustache.getTemplate('pi1/templates/thumb.html')
 		});
+		
+		var sub_relatedWidget = new AjaxSolr.RelatedWidget({
+			id: 'related',
+			target: '#related-artworks',
+			template: Mustache.getTemplate('pi1/templates/related.html')
+		});
+		
 		Manager.addWidget(new AjaxSolr.DetailWidget({
 			id: 'details',
 			target: '#smk_detail',
 			thumbnails_target:'#thumbnails',
 			template: Mustache.getTemplate('pi1/templates/detail.html'),
-			thumbnailsManager: multiworkManager,
-			thumbnails_subWidget: sub_Thumbs_widget
+			thumbnailsManager: thumbnailsManager,
+			thumbnails_subWidget: sub_thumbsWidget,
+			reltatedManager: relatedManager,
+			related_subWidget: sub_relatedWidget
 		}));		
 
-		Manager.addWidget(new AjaxSolr.RelatedWidget({
-			id: 'related',
-			target: '#related-artworks',
-			template: Mustache.getTemplate('pi1/templates/related.html')
-		}));
+//		Manager.addWidget(new AjaxSolr.RelatedWidget({
+//			id: 'related',
+//			target: '#related-artworks',
+//			template: Mustache.getTemplate('pi1/templates/related.html')
+//		}));
 
 		//******************************
 		//** add event listeners
@@ -313,10 +338,11 @@ var Manager;
 		});	
 		
 		//* a new image has finished loading in "related"
-		$(Manager.widgets['related']).on('smk_related_this_img_loaded', function(event){   
+		$(Manager.widgets['details']).on('smk_related_this_img_loaded', function(event){   
 			Manager.widgets['state_manager'].smk_related_this_img_loaded();
 		}); 
 		
+		//* a new image has finished loading in "thumbs"
 		$(Manager.widgets['details']).on('smk_thumbs_img_loaded', function(event){
 			Manager.widgets['state_manager'].smk_thumbs_img_loaded();  		  	    
 		});

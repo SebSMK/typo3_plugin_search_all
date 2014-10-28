@@ -7,7 +7,9 @@
 			AjaxSolr.extend(this, {
 				thumbnails_target: null,
 				thumbnailsManager:null,
-				thumbnails_subWidget:null
+				thumbnails_subWidget:null,
+				reltatedManager: null,
+				related_subWidget: null
 			}, attributes);
 		},	
 
@@ -23,17 +25,42 @@
 			self.default_picture_path = smkCommon.getDefaultPicture('large');
 			self.current_language = self.manager.translator.getLanguage();
 			
-			//* add thumbnail sub widget
-			self.thumbnailsManager.addWidget(self.thumbnails_subWidget); 		
+			
+			//***
+			//* related sub widget
+			//***
+			//* sub widget coupling
+			self.reltatedManager.addWidget(self.related_subWidget); 				
 
 			//* a new image has been displayed in "scroll teaser"
+			$(self.related_subWidget).on('smk_related_this_img_loaded', function(event){     	            								
+				$(self).trigger({
+					type: "smk_related_this_img_loaded"
+				});
+			});	
+			
+			// click on a related artwork
+			$(self.related_subWidget).on('smk_search_call_detail', function(event){ 								
+				$(self).trigger({
+					type: "smk_search_call_detail",
+					event_caller: event
+				});
+			});
+
+			//***
+			//* thumbnail sub widget
+			//***
+			//* sub widget coupling
+			self.thumbnailsManager.addWidget(self.thumbnails_subWidget); 				
+
+			// a new image has been displayed in "scroll teaser"
 			$(self.thumbnails_subWidget).on('smk_thumbs_img_loaded', function(event){     	            								
 				$(self).trigger({
 					type: "smk_thumbs_img_loaded"
 				});
 			});	
 			
-			//* click on a thumb
+			// click on a thumb
 			$(self.thumbnails_subWidget).on('smk_search_call_detail', function(event){ 
 				
 				self.setCurrentThumb_selec(event.detail_id);  
@@ -74,15 +101,18 @@
 
 			var artwork_data = null;
 			var dataHandler = new getData_Detail.constructor(this);
-			var multi_work_ref = null;
+			var multi_work_ref_req = null;
+			var related_id_req = null;			
 
 			for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
 				var doc = this.manager.response.response.docs[i];      
 				artwork_data = dataHandler.get_data(doc);  
-				multi_work_ref = artwork_data.subwidget.req_multiwork;
-				
+				//* process thumbnails
+				multi_work_ref_req = artwork_data.subwidget.req_multiwork;
 				if (self.getCurrentThumb_selec() == null)
 					self.setCurrentThumb_selec(doc.id);
+				//* process related
+				related_id_req = artwork_data.subwidget.req_relatedid;								
 			}
 			
 			//* merge data and template
@@ -107,12 +137,19 @@
 					}
 			);
 			
-			if(multi_work_ref != null){				
-				//* start sub request
-				var param = new AjaxSolr.Parameter({name: "q", value: multi_work_ref });					  					
+			if(multi_work_ref_req != null){				
+				//* start thumbnail sub request
+				var param = new AjaxSolr.Parameter({name: "q", value: multi_work_ref_req });					  					
 				this.thumbnailsManager.store.add(param.name, param);	 			
 				this.thumbnailsManager.doRequest();				
-			}			
+			}	
+			
+			if(related_id_req != null){				
+				//* start thumbnail sub request
+				var param = new AjaxSolr.Parameter({name: "q", value: related_id_req });					  					
+				this.reltatedManager.store.add(param.name, param);	 			
+				this.reltatedManager.doRequest();				
+			}
 
 		},  
 
