@@ -1,0 +1,1049 @@
+<dataConfig>
+
+  <script>  
+    <![CDATA[ 
+        function extractPraktiskURL(row) { 
+          var section = row.get("page_pageSection_stringS");           
+
+          if(section != null && section.equals('Praktisk information')){
+            row.put("category", "praktisk");
+          } 
+          return row; 
+        };
+        
+         /*var row =  {};
+      row['producents_data'] = "person;--;;--;Cornelis Cornelisz. van Haarlem;--;1562;--;1562;--;1562;--;1638;--;1638;--;1638;--;Hollandsk;-;person;--;skole;--;Francis Picabia;--;1879;--;1879;--;1879;--;1953;--;1953;--;1953;--;Fransk;-;person;--;trykker;--;Charles Alexandre Picart le Doux;--;1881;--;1881;--;1881;--;1959;--;1959;--;1959;--;Fransk;-;person;--;efter forl_g af;--;Pablo Picasso;--;1881;--;1881;--;1881;--;1973;--;1973;--;1973;--;Spansk;-;person;--;skole;--;Benedetto Carpaccio;--;1501;--;Ca. 1500;--;About 1500;--;1572;--;1572;--;1572;--;Italiensk;-;person;--;forfatter/redakt_r;--;Hendri Ambrosius Pacx;--;1605;--;Ca. 1603;--;About 1603;--;1678;--;Efter 1658;--;After 1658;--;Hollandsk;-;person;--;udgiver;--;Antonio Circignano;--;1571;--;Ca. 1570;--;About 1570;--;1631;--;Ca. 1630;--;About 1630;--;Italiensk;-;person;--;stil;--;Vittore Carpaccio;--;1461;--;Ca. 1460;--;About 1460;--;1527;--;Ca. 1526;--;About 1526;--;Italiensk;-;orga;--;;--;Ara Pacis;--;(?);--;(?);--;(?);--;(?);--;(?);--;;--;(?);-;orga;--;trykker;--;Edition Copenhagen;--;(?);--;(?);--;(?);--;(?);--;(?);--;;--;(?);-;orga;--;;--;Galerie Edition Copenhagen;--;(?);--;(?);--;(?);--;(?);--;(?);--;;--;(?);-;orga;--;udgiver;--;Centre Culturel du Marais, Paris;--;(?);--;(?);--;(?);--;(?);--;(?);--;;--;(?)";      
+      
+      var fdas = process_producents(row);*/
+      
+      var split_1_niv = new String(';-;');
+      var split_2_niv = new String(';--;');
+      var split_3_niv = new String(';---;');
+      var split_4_niv = new String(';-v;');
+      
+      function codepoints(str) {
+        if (str === undefined)
+          return '';
+          
+        var res = [];
+      	for(var i = 0; i < str.length; i++) {
+          var chr =  str.substr(i, 1);
+          var codepoint = str.charCodeAt(i);
+          res.push((codepoint >= 33 && codepoint <= 126) ?
+            chr :
+            "U+" + codepoint.toString(16).toUpperCase());      		
+      	};
+      	return res.join('').replace(/"/g, '');
+      };
+
+      
+      if (!String.format) {
+      	String.format = function(format) {
+      		var args = Array.prototype.slice.call(arguments, 1);
+      		return format.replace(/{(\d+)}/g, function(match, number) { 
+      			return typeof args[number] != 'undefined'
+      				? args[number] 
+      			: match
+      			;
+      		});
+      	};
+      };
+      
+      if (!String.capitalize) {
+      	String.capitalize = function(capitalize ) {
+      		var args = Array.prototype.slice.call(arguments, 0);      		
+      		return (isValidDataText(args.toString())) ? args.toString().charAt(0).toUpperCase() + args.toString().slice(1) : '';      		
+      	};
+      };			 
+      
+      function isValidDataText(text, field){
+        if (text === undefined || text == null)
+          return false;
+        
+        var field_expr = field === undefined ? 'defaut' : field;
+        text = text.toLowerCase();
+        
+        switch(field_expr) {
+          case 'role':
+              if(text == 'undefined'
+                || text == 'null' 
+                || text == ''
+                || text == 'original')
+                return false
+              break;              
+          case 'agent':
+              if(text == 'undefined'
+                || text == 'null' 
+                || text == ''
+                || text == 'unknown')
+                return false
+              break;
+          case 'date':
+              if(text == 'undefined'
+                || text == 'null' 
+                || text == ''
+                || text == '(?)')
+                return false
+              break;
+          case 'orga_place':
+              if(text == 'undefined'
+                || text == 'null' 
+                || text == ''
+                || text == '(?)')
+                return false
+              break;
+          default:
+              if(text == 'undefined' 
+                || text == 'null'
+                || text == '')
+                return false;
+        } 
+  
+        return true;
+      
+      };       
+            
+      /**
+       * Return true if $data matches a person, not an organisation  
+       **/
+      function isPersonData(personArray, type){          
+          switch(type) {
+	          case 'producent':
+	              if (personArray !== undefined 
+	                && personArray.length > 0
+	                && new String(personArray[0]) == 'person')
+	                  return true; 
+	              break;       
+	          default:
+	              return false;
+          }
+          
+          return false;
+      };                 
+      
+      /**
+       * Process fields that must be capitalized
+       **/       
+       function process_capitalize(row) {
+        var acq_method = row.get("acq_method");
+        var acq_source = row.get("acq_source");                  
+        
+        if (isValidDataText(acq_method))
+        	row.put("acq_method", String.capitalize(acq_method));
+        
+        if (isValidDataText(acq_source))
+        	row.put("acq_source", String.capitalize(acq_source));
+                        
+        return row;
+       
+       };
+      
+      
+      /**
+       * Extract century from date       
+       **/
+       
+       function extract_century(row){
+        var prod_earlier_date = new String(row.get("object_production_date_earliest"));
+        
+        if(isValidDataText(prod_earlier_date)){
+          prod_earlier_date = prod_earlier_date.replace('CET', 'EDT');
+          prod_earlier_date = prod_earlier_date.replace('CEST', 'EDT');
+          var date = new Date(prod_earlier_date); 
+          var raw_cent = (date.getFullYear() / 100)^0;        
+          var century = raw_cent > 0 ?  raw_cent + 1 : raw_cent;          
+          
+          row.put("object_production_century_earliest", century);
+        }        
+        
+        return row;
+       };
+      
+      /**
+       * Process Acquisitions
+       **/       
+       function process_acquisition(row) {
+        var acq_method = (row.get("acq_method"));
+        var acq_source = (row.get("acq_source"));        
+        var acq_date = (row.get("acq_date")); 
+        var acq_date_eng = (row.get("acq_date_eng"));         
+        
+        var acq_for_skilt = isValidDataText(acq_source) || isValidDataText(acq_source) || isValidDataText(acq_date) ?
+	        	String.format(';<1-;{0}{1}{2};-1>;{3}',
+		        	isValidDataText(acq_method) ? String.format('{0}', acq_method) : '',
+		        	isValidDataText(acq_source) ? String.format(' {0}', acq_source) : '',
+		        	isValidDataText(acq_date) ? String.format(' {0}', acq_date) : '',
+		        	isValidDataText(acq_date_eng) ? String.format(' / Acquired {0}', acq_date_eng) : ''
+		         )
+		     :
+		     	'';  
+		     	
+		var acq_for_ext = isValidDataText(acq_source) || isValidDataText(acq_source) || isValidDataText(acq_date) ?
+	        	String.format('{0}{1}{2}',
+		        	isValidDataText(acq_method) ? String.format('{0}', acq_method) : '',
+		        	isValidDataText(acq_date) ? String.format(' ({0})', acq_date) : '',
+		        	isValidDataText(acq_source) ? String.format(', {0}', acq_source) : ''
+		         )
+		     :
+		     	'';  	        
+        
+        if (isValidDataText(acq_for_skilt))
+        	row.put("acq_for_skilt", acq_for_skilt);
+        	
+       	if (isValidDataText(acq_for_ext))
+        	row.put("acq_for_ext", acq_for_ext);
+                        
+        return row;
+       
+       };
+       
+       
+      /**
+       * Process Mutliple Works
+       * result: sort sub_artworks after their number       
+       **/       
+       function process_multi_works(row) {
+        var multi_works_split = new String(row.get("multi_work_ref")).split(split_1_niv); 
+        var multi_works_data = [];    				
+      	var arrayLength = multi_works_split.length;
+        var current_obj_number_java = new java.lang.String(row.get("id"));
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = multi_works_split[i].split(split_2_niv);
+      		var title = new String(values[0]);          
+      		var ref = new String(values[1]);
+          var ref_java = new java.lang.String(values[1]);
+          var type = new String(values[2]); 
+          var rank = new String(ref.split('/').length < 2 ? 0 : ref.split('/')[1]);  
+          rank = parseInt(/\d+/.exec(rank));      
+          
+          var res = multi_works_split[i];                        
+          if (isValidDataText(title))            
+            multi_works_data[rank] = res;
+            
+        }            
+        
+        row.remove("multi_work_ref");        
+        
+        if (multi_works_data.length > 0)          
+          row.put("multi_work_ref", new String(multi_works_data.join(split_1_niv)));
+                        
+        return row;
+       
+       };
+       
+      /**
+       * Process Related Works
+       **/       
+       function process_related_works(row) {
+        var related_works_split = new String(row.get("related_works_title_dk")).split(split_1_niv); 
+        var related_works_data_titles = [];  
+        var related_works_orig_number;    				
+      	var arrayLength = related_works_split.length;
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = related_works_split[i].split(split_2_niv);
+      		var title = new String(values[0]);          
+      		var objectnumber = new String(values[1]);                  
+          
+          if(isValidDataText(title))
+            related_works_data_titles.push(String.format('{0}, {1}', title, objectnumber));
+          
+          if(objectnumber.indexOf("ORIG") > -1)
+            related_works_orig_number =  objectnumber; 
+          
+        }               
+        
+        row.remove("related_works_title_dk");        
+        
+        if (related_works_data_titles.length > 0)          
+          row.put("related_works_title_dk", new String(related_works_data_titles.join(split_1_niv)));
+        
+        if(isValidDataText(related_works_orig_number))
+          row.put("related_works_orig_number", related_works_orig_number);
+                          
+        return row;
+       
+       }; 
+       
+      /**
+       * Process Techniques
+       **/       
+       function process_techniques(row) {
+        var techniques_split = new String(row.get("prod_technique_all")).split(split_1_niv); 
+        var techniques_data = [];
+        var techniques_data_eng = [];    				
+      	var arrayLength = techniques_split.length;
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = techniques_split[i].split(split_2_niv);
+      		var technique = new String(values[0]);          
+      		var lang = new String(values[1]);        
+          
+          if(lang.indexOf('dansk') > -1)
+            techniques_data.push(technique);
+          
+          if(lang.indexOf('engelsk') > -1)
+            techniques_data_eng.push(technique);
+        }                               
+        
+        row.remove("prod_technique_all");
+        
+        if (techniques_data.length > 0)
+          row.put("prod_technique", String.capitalize(new String(techniques_data.join(split_1_niv))));
+        
+        if (techniques_data_eng.length > 0)
+          row.put("prod_technique_eng",  String.capitalize(new String(techniques_data_eng.join(split_1_niv))));
+        
+        return row;
+       
+       };
+      
+      /**
+       * Process Titles
+       *             */       
+       function process_titles(row) {
+        
+        //* process original titles
+        var titles_split = new String(row.get("title_all")).split(split_1_niv);         
+        var titles_data_all_lang_with_notes = [];  	// list of all titles (whatever language is) with associated notes and translations        
+        var title_data_first = new String();      	// first title in the list (whatever language is)   	
+		    var title_dk_with_notes = new String(); 	// first danish title with notes and translations
+		    var titles_data_en = [];					// first english translation for the first title			
+      	var arrayLength = titles_split.length;
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = titles_split[i].split(split_2_niv);
+          var title = new String(values[0]);
+          var note = new String(values[1]);
+          var lang = new String(values[2]);
+          var translated = new String(values[3]); 
+          
+          //* process translated titles for all titles
+          var translations_all_lang = [];
+          if(isValidDataText(translated)){
+	           var split_trans = translated.split(split_3_niv); 	           
+	           for (var j = 0; j < split_trans.length; j++) {	
+	           		var lang_trans = split_trans[j].split(split_4_niv)[0];            	
+	           		translations_all_lang.push(lang_trans);          	            
+	           }            
+          }          
+          
+          var title_orig_with_notes = String.format('{0}{1}{2}{1}{3}', title, split_2_niv, note, translations_all_lang.join(split_3_niv));
+          var title_orig = title;
+          
+          if(i == 0){
+          	title_data_first = title_orig_with_notes;
+          	
+  	       //* process translated titles FOR THE FIRST TITLE ONLY
+  	       var titles_en_split = translated.split(split_3_niv);
+  	       	       
+  	       for (var j = 0; j < titles_en_split.length; j++) {
+  		       	var trans_values = titles_en_split[j].split(split_4_niv);
+      				var trans_title = new String(trans_values[0]);
+      				var trans_lang = new String(trans_values[1]);
+      				
+      				if(trans_lang.indexOf('engelsk') > -1)
+      					titles_data_en.push(trans_title);          				       
+      			}
+          }                                
+        } 
+                
+        //* copy data back into solr's fields
+        row.put("title_first", title_data_first.split(split_2_niv)[0]);             // first title in the list (whatever language is)         
+        
+        if (isValidDataText(title_dk_with_notes)){
+          row.put("title_dk", title_dk_with_notes.split(split_2_niv)[0]);  			// first danish title                   
+        }         
+        
+        if (titles_data_en.length > 0) 
+          row.put("title_eng", titles_data_en[0]);                                  // first english title for the first title
+        
+        row.remove("title_all");
+        row.remove("title_translate");
+        
+        return row;
+       
+       };
+
+      /**
+       * Process Producents
+       **/       
+       function process_producents(row) {
+        var producents_split = new String(row.get("producents_data")).split(split_1_niv);         
+        
+        var producents_data = [];      				
+      	var arrayLength = producents_split.length;        
+        
+        var artist_name = new java.util.ArrayList();
+        var artist_birth_en = new java.util.ArrayList();
+        var artist_birth_dk = new java.util.ArrayList();
+        var artist_death_en = new java.util.ArrayList();
+        var artist_death_dk = new java.util.ArrayList();
+        var artist_natio = new java.util.ArrayList();
+        var artist_natio_en = new java.util.ArrayList();
+        var artist_auth = new java.util.ArrayList();                
+        
+        var artists_data = {
+                  artist_name: artist_name,
+        					artist_birth_en: artist_birth_en,
+                  artist_birth_dk: artist_birth_dk,
+                  artist_death_en: artist_death_en,
+                  artist_death_dk: artist_death_dk,
+                  artist_natio: artist_natio,
+                  artist_natio_en: artist_natio_en,
+                  artist_auth: artist_auth
+                };
+                                          
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = producents_split[i].split(split_2_niv);
+      		var producent_type = values[1];          
+          
+          switch(codepoints(producent_type)) {
+            case 'trykker':                               
+            case 'udgiver':                
+            case 'forfatter/redaktU+F8r':                                                
+                break;
+            
+            default:                
+                concat_artists_data(values, artists_data);                                 
+          } 
+        }                                                                                                        
+                
+                  
+        if (artists_data.artist_name.size() > 0)        
+          row.put("artist_name", artists_data.artist_name);
+          
+        if (artists_data.artist_birth_en.size() > 0)        
+          row.put("artist_birth_en", artists_data.artist_birth_en);
+          
+        if (artists_data.artist_birth_dk.size() > 0)        
+          row.put("artist_birth_dk", artists_data.artist_birth_dk);
+          
+        if (artists_data.artist_death_en.size() > 0)        
+          row.put("artist_death_en", artists_data.artist_death_en);
+        
+        if (artists_data.artist_death_dk.size() > 0)        
+          row.put("artist_death_dk", artists_data.artist_death_dk);
+          
+        if (artists_data.artist_natio.size() > 0)        
+          row.put("artist_natio", artists_data.artist_natio);
+          
+        if (artists_data.artist_natio_en.size() > 0)        
+          row.put("artist_natio_en", artists_data.artist_natio_en);
+          
+        if (artists_data.artist_name.size() > 0)        
+          row.put("artist_auth", artists_data.artist_auth);
+                         	                    
+        row.remove("producents_data")  	
+      	return row; 
+       
+       };
+
+       /**
+       * Process Dimensions
+       **/       
+       function process_dimensions(row) {
+        var dimensions_split = new String(row.get("meas_all")).split(split_1_niv);                     				
+      	var arrayLength = dimensions_split.length;                                 
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = dimensions_split[i].split(split_2_niv);
+          var dimension_type = values[0];                          
+          var dimension_datas = concat_dimension_datas(values);
+          var dimension_weight_datas = concat_weight_datas(values);
+          var dimension_diameter_datas = concat_diameter_datas(values);
+          
+          //* there should be only one dimension of each type - if there are more than that, only the last one is taken into account 
+          if (isValidDataText(dimension_datas))
+            row.put("dimension_" + dimension_type, dimension_datas);
+          
+          if (isValidDataText(dimension_weight_datas))
+            row.put("dimension_weight", dimension_weight_datas);
+
+          if (isValidDataText(dimension_diameter_datas))
+            row.put("dimension_diameter", dimension_diameter_datas);             
+        };                                                                                                        
+      
+        //row.remove("meas_all");  	
+      	return row; 
+       
+       };
+
+      /**
+       * Process Materiale
+       **/       
+       function process_materiale(row) {
+        var materiales_split = new String(row.get("materiale")).split(split_1_niv);         
+        
+        var materiales_data = [];      				
+      	var arrayLength = materiales_split.length;               
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = materiales_split[i].split(split_2_niv);
+      	  
+      	  /*
+      	  var materiale_type = values[1];
+                    
+          switch(materiale_type) {
+            case 'Materiale':                                
+                if(isValidDataText(values[0]))
+                  materiales_data.push(values[0]);
+                break;
+            }
+           */
+           
+			if(isValidDataText(values[0]))
+                  materiales_data.push(values[0]);                                                                  
+           
+        };                                                                                                        
+        
+        row.remove("materiale"); 
+                
+        if(materiales_data.length > 0)                                                                                                     
+          row.put("materiale", new String(materiales_data.join(split_1_niv)));                                      	
+      	
+        return row; 
+       
+       }; 
+      
+      /**
+       * Process Production places
+       **/       
+       function process_production_place(row) {
+        var places_split = new String(row.get("object_production_place")).split(split_1_niv);         
+        
+        var places_data = [];      				
+      	var arrayLength = places_split.length;               
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = places_split[i].split(split_2_niv);
+      		var place_type = values[1];
+                    
+          switch(codepoints(place_type)) {
+            case 'udgivelsessted':              	                                
+                if(isValidDataText(values[0]))
+                  places_data.push(values[0]);
+                break;                                                  
+          } 
+        };                                                                                                        
+        
+        row.remove("object_production_place"); 
+                
+        if(places_data.length > 0)                                                                                                     
+          row.put("object_production_place_udgivet", new String(places_data.join(split_1_niv)));                                      	
+      	
+        return row; 
+       
+       };           
+      
+      /**
+       * Process Production dates
+       **/       
+       function process_production_date(row) {
+        var dates_split = new String(row.get("object_all_production_dates")).split(split_1_niv);         
+        
+        var datering;
+        var datering_eng;
+        var datering_earliest;
+        var datering_latest;
+        var datering_udfoert;
+        var datering_udgivet;
+              				
+      	var arrayLength = dates_split.length;               
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = dates_split[i].split(split_2_niv);
+          var date_type = values[0];
+          var date = values[1];
+          var date_early = values[2];
+          var date_late = values[3];
+          var date_eng = values[4];
+                    
+          switch(codepoints(date_type)) {
+            case 'udfU+F8rt':                                
+                if(isValidDataText(date))
+                  datering_udfoert = date;
+                break;
+             
+            case 'udgivet':
+            	if(isValidDataText(date))
+                  datering_udgivet = date;
+            	break;                                
+            
+            default:
+                if(isValidDataText(date))
+                  datering = date;
+                if(isValidDataText(date_eng))
+                  datering_eng = date_eng;
+                if(isValidDataText(date_early))
+                  datering_earliest = date_early;
+                if(isValidDataText(date_late))
+                  datering_latest = date_late;                                                              
+          } 
+        };                                                                                                        
+        
+        row.remove("object_all_production_dates"); 
+                
+        if(isValidDataText(datering))                                                                                                     
+          row.put("object_production_date", datering);
+          
+        if(isValidDataText(datering_eng))                                                                                                     
+          row.put("object_production_date_eng", datering_eng);
+        
+        /*
+        if(isValidDataText(datering_earliest))                                                                                                     
+          row.put("object_production_date_earliest", datering_earliest);
+        
+        if(isValidDataText(datering_latest))                                                                                                     
+          row.put("object_production_date_latest", datering_latest);
+        */
+        
+        if(isValidDataText(datering_udfoert))                                                                                                     
+          row.put("object_production_date_udfoert", datering_udfoert); 
+          
+        if(isValidDataText(datering_udgivet))                                                                                                     
+          row.put("object_production_date_udgivet", datering_udgivet);                                      	
+      	
+        return row; 
+       
+       };      
+       
+      /**
+       * Process Inscriptions
+       **/       
+       function process_inscriptions(row) {
+        var inscriptions_split = new String(row.get("inscription_data")).split(split_1_niv);         
+        
+        var inscriptions_data = [];      				
+      	var arrayLength = inscriptions_split.length;
+        
+        var signatur = [];
+        var stoebemaerke = [];
+        var tryktsignatur = [];
+        var paaskrift = [];
+        var stoebenummer = [];
+        var trykttekst = [];  
+        var samlermaerke = [];        
+        
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = inscriptions_split[i].split(split_2_niv);
+      		var inscription_type = values[0];
+                    
+          switch(codepoints(inscription_type)) {
+            case 'signatur':
+                var sign = concat_inscription_data(values);                
+                if(isValidDataText(sign))
+                  signatur.push(sign);
+                break;
+            case 'pU+E5skrift':
+                var sign = concat_inscription_data(values);                
+                if(isValidDataText(sign))
+                  paaskrift.push(sign);
+                break;             
+            case 'tryktU+20signatur':
+                var sign = concat_inscription_data(values);                
+                if(isValidDataText(sign))
+                  tryktsignatur.push(sign);
+                break;
+            case 'tryktU+20tekst':
+                var sign = concat_inscription_data(values);                
+                if(isValidDataText(sign))
+                  trykttekst.push(sign);
+                break;  
+            case 'stU+F8benummer':
+                var sign = concat_inscription_data_inhold(values);                
+                if(isValidDataText(sign))
+                  stoebenummer.push(sign);
+                break;  
+            case 'stU+F8bemU+E6rke':
+                var sign = concat_inscription_data_inhold(values);                
+                if(isValidDataText(sign))
+                  stoebemaerke.push(sign);
+                break;              
+            case 'samlermU+E6rke':
+                var sign = concat_inscription_data_inhold(values);                
+                if(isValidDataText(sign))
+                  samlermaerke.push(sign);
+                break;                                                   
+          } 
+        };                                                                                                        
+        
+        if(isValidDataText(signatur.join(split_1_niv)))                                                                                                     
+          row.put("inscription_signatur", new String(signatur.join(split_1_niv)));
+        
+        if(isValidDataText(stoebemaerke.join(split_1_niv)))                                                                                                     
+          row.put("inscription_stoebemaerke", new String(stoebemaerke.join(split_1_niv))); 
+
+        if(isValidDataText(tryktsignatur.join(split_1_niv)))                                                                                                     
+          row.put("inscription_tryktsignatur", new String(tryktsignatur.join(split_1_niv)));           
+
+        if(isValidDataText(paaskrift.join(split_1_niv)))                                                                                                     
+          row.put("inscription_paaskrift", new String(paaskrift.join(split_1_niv)));
+        
+        if(isValidDataText(stoebenummer.join(split_1_niv)))                                                                                                     
+          row.put("inscription_stoebenummer", new String(stoebenummer.join(split_1_niv))); 
+
+        if(isValidDataText(trykttekst.join(split_1_niv)))                                                                                                     
+          row.put("inscription_trykttekst", new String(trykttekst.join(split_1_niv))); 
+          
+        if(isValidDataText(samlermaerke.join(split_1_niv)))                                                                                                     
+          row.put("inscription_samlermaerke", new String(samlermaerke.join(split_1_niv)));                    
+                    
+        row.remove("inscription_data");  	
+      	return row; 
+       
+       };
+       
+       /**
+       * Process Other Numbers
+       **/       
+       function process_other_numbers(row) {
+        var other_num_split = new String(row.get("other_numbers")).split(split_1_niv);         
+      	var arrayLength = other_num_split.length;        
+        
+        var andet_inventar = [];          
+        var beckett = [];
+        var gernsheim = [];
+        var vaerkfortegn = [];
+        var tidligere = [];
+        var bladnummer = [];
+        var sidetal = [];
+        var foto = [];
+
+      	for (var i = 0; i < arrayLength; i++) {
+          var values = other_num_split[i].split(split_2_niv);
+      		var other_num_type = values[0];
+          
+          var num = values.length > 0 ? values[1] : null;                
+          
+          if(isValidDataText(num)){
+          
+            switch(codepoints(other_num_type).toLowerCase()) {
+              case 'andetu+20inv.u+20nr.':                  
+                  andet_inventar.push(num);
+                  break;
+              case 'beckettnr':                 
+                  beckett.push(num);
+                  break;
+              case 'gernsheimu+201':
+                  gernsheim.push(num);
+                  break;
+              case 'vu+e6rkfortegnelsesnr.':
+                  vaerkfortegn.push(num);
+                  break;
+              case 'tidligereu+20placering':
+                  tidligere.push(num);
+                  break;
+              case 'bladnummer':
+                  bladnummer.push(num);
+                  break;
+              case 'sidetal':
+                  sidetal.push(num);
+                  break;
+              case 'fotonummer':
+                  foto.push(num);
+                  break;
+                                                                             
+            }           
+          }
+        };                                                                                                        
+        
+        if(isValidDataText(andet_inventar.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_andet_inventar", new String(andet_inventar.join(split_1_niv)));
+          
+        if(isValidDataText(beckett.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_beckett", new String(beckett.join(split_1_niv)));
+          
+        if(isValidDataText(gernsheim.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_gernsheim", new String(gernsheim.join(split_1_niv)));
+          
+        if(isValidDataText(vaerkfortegn.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_vaerkfortegn", new String(vaerkfortegn.join(split_1_niv)));
+
+        if(isValidDataText(tidligere.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_tidligere", new String(tidligere.join(split_1_niv)));
+          
+        if(isValidDataText(bladnummer.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_bladnummer", new String(bladnummer.join(split_1_niv)));
+        
+        if(isValidDataText(sidetal.join(split_1_niv)))                                                                                                     
+          row.put("other_numbers_sidetal", new String(sidetal.join(split_1_niv)));
+
+		if(isValidDataText(foto.join(split_1_niv)))                                                                                                     
+          row.put("foto_nr", new String(foto.join(split_1_niv)));
+                                
+        row.remove("other_numbers");  	
+      	return row; 
+       
+       };
+       
+       /**
+       * Concat inscriptions data
+       * */
+       function concat_inscription_data(values){    		          
+          var verso = values.length > 1 && isValidDataText(values[1]) && values[1] == 't' ? String.format('{0}: ', 'verso') : '';
+          var placering = values.length > 2 && isValidDataText(values[2]) ? String.format('{0}', values[2]) : '';
+          var maade = values.length > 3 && isValidDataText(values[3]) ? String.format(': {0}', values[3]) : '';
+          var datering = values.length > 7 && isValidDataText(values[7]) ? String.format(': {0}', values[7]) : '';
+          var indhold = values.length > 4 && isValidDataText(values[4]) ? String.format(': {0}', values[4]) : '';
+          var dansk = values.length > 5 && isValidDataText(values[5]) ? String.format(': {0}', values[5]) : '';
+          var note = values.length > 6 && isValidDataText(values[6]) ? String.format(': {0}', values[6]) : '';
+          
+          return  isValidDataText(verso) || 
+                  isValidDataText(placering) ||
+                  isValidDataText(maade) ||
+                  isValidDataText(datering) ||
+                  isValidDataText(indhold) ||
+                  isValidDataText(dansk) ||
+                  isValidDataText(note) ?
+                                                              
+                      String.format('{0}{1}{2}{3}{4}{5}{6}',
+                                verso,
+                                placering,                         
+                                maade,
+                                datering,                             
+                                indhold,                           
+                                dansk,                             
+                                note )
+                    :
+                      '';                                       
+       };
+
+       /**
+       * Concat inscriptions data - just inhold
+       * */
+       function concat_inscription_data_inhold(values){
+          return  values.length > 4 && isValidDataText(values[4]) ? 
+                  String.format('{0}', values[4]) : '';                                
+       };
+             
+
+       /**
+       * Concat weight data
+       * */
+       function concat_weight_datas(values){
+    		var weight = values[9];
+        	var weight_unit = values[10];        
+        	return isValidDataText(weight) ? String.format('{0} {1}', weight, weight_unit): '';        
+       };
+       
+       /**
+       * Concat diameter data
+       * */
+       function concat_diameter_datas(values){
+    		var diameter = values[7];
+        var diameter_unit = values[8];        
+        return isValidDataText(diameter) && isValidDataText(diameter_unit) ? String.format('{0} {1}', diameter, diameter_unit): '';        
+       };
+
+       /**
+       * Concat dimensions data
+       * */
+       function concat_dimension_datas(values){
+    		var hoj = values[1];
+        var hoj_unit_value = isValidDataText(values[2]) ? values[2] : '(?)';
+        var hoj_value = isValidDataText(hoj) ? String.format('{0}', hoj): '';
+        var bred = values[3];        
+        var bred_value = isValidDataText(bred) ? String.format(' x {0}', bred) : '';
+        var dyb = values[5];  
+        var dyb_value = isValidDataText(dyb) ? String.format(' x {0}', dyb) : '';
+        
+        return isValidDataText(hoj_value) || isValidDataText(bred_value) || isValidDataText(dyb_value) ? String.format('{0}{1}{2} {3}', hoj_value, bred_value, dyb_value, hoj_unit_value) : '';
+       };
+       
+      /**
+       * Concat artist data 
+       *        
+       * @datas                   artist data  
+       * @all_artists_data        object of arrays (passed by reference)
+       *                          !! arrays must be of new java.util.ArrayList() type    
+       * 
+       * Return: copy concatened artist data in @all_artists_data (passed by reference)                           
+       **/
+      function concat_artists_data(values, artists_data) {
+       		var role = values[1]; 
+          var name = values[2];
+       		var birth = values[4];
+          var birth_en = values[5];
+       		var death = values[7];
+          var death_en = values[8];
+       		var natio = values[9];
+       		var natio_eng = values[10];
+       		  
+       		var tmp = new String();
+          
+          artists_data.artist_auth.add(isValidDataText(role)? role : 'original');
+          artists_data.artist_name.add(isValidDataText(name)? name : '');
+             
+          artists_data.artist_birth_dk.add(isValidDataText(birth)? birth : '');
+          artists_data.artist_birth_en.add(isValidDataText(birth_en)? birth_en : '');
+          
+          artists_data.artist_death_dk.add(isValidDataText(death)? death : '');
+          artists_data.artist_death_en.add(isValidDataText(death_en)? death_en : '');
+          
+          artists_data.artist_natio.add(isValidDataText(natio)? natio : '');
+          artists_data.artist_natio_en.add(isValidDataText(natio_eng)? natio_eng : '');
+	        
+      };  
+            
+      
+      /**
+       * Citations 
+       **/			 		
+      function concat_citation(row) { 
+      
+      	var citations_split = new String(row.get("citations")).split(split_1_niv);
+      	var citations_data = [];			
+      	var arrayLength = citations_split.length;
+      
+      	for (var i = 0; i < arrayLength; i++) {
+      		var values = citations_split[i].split(split_2_niv);
+      		var agent = new String(values[0]);
+      		var title = new String(values[1]);
+      		var place = new String(values[2]);
+      		var date = new String(values[3]);
+      		var refnote = new String(values[4]);   
+      		var tmp;
+      
+      		tmp = String.format('{0};<1-;{1};-1>;{2}{3}{4}' , 
+		          isValidDataText(agent, 'agent') ? String.format('{0}, ', agent ) : '',
+		          title,
+		          isValidDataText(place) ? String.format(', {0}', place ) : '',
+		          isValidDataText(date) ? String.format(', {0}', date ) : '',
+		          isValidDataText(refnote) ? String.format(', {0}', refnote ) : '');
+      
+      		if (isValidDataText(title))
+            	citations_data.push(tmp);
+      
+      	};
+      
+      	if (citations_data.length > 0)
+          row.put("citation_data_collectionspace_catalog_ext_litt", citations_data.join(split_1_niv));  
+      
+      	return row; 
+      };   
+      
+      /**
+       * Exhibition 
+       **/
+      function concat_exhibition(row) { 
+      
+      	var exhibitionvenues_split = new String(row.get("exhibitionvenues")).split(split_1_niv);
+      	var exhibitions_data = [];			
+      	var arrayLength = exhibitionvenues_split.length;
+      
+      	for (var i = 0; i < arrayLength; i++) {
+      		var values = exhibitionvenues_split[i].split(split_2_niv);
+      		var title = new String(values[0]);
+      		var place = new String(values[1]);
+      		var date_start = new String(values[2]);
+      		var date_end = new String(values[3]);   
+      		var tmp;
+      
+      		tmp = String.format(';<1-;{0};-1>;, {1}, {2} {3}' , 							
+      		title, 
+      		place, 
+      		date_start, 
+      		date_end);
+      
+      		if (isValidDataText(title))
+            exhibitions_data.push(tmp);
+      
+      	};
+      
+      	if (exhibitions_data.length > 0)
+          row.put("exhibition_data_collectionspace_catalog_ext_litt", exhibitions_data.join(split_1_niv));  
+      
+      	return row; 
+      };   
+      
+      /**
+       * Reference texts 
+       *             */
+      function concat_reference(row) {         
+      	var refs_texts = new String(row.get("reference_texts")).split(split_1_niv);
+      	var refs_textsLength = refs_texts.length;
+      	var references_data = [];
+      	for (var k = 0; k < refs_textsLength; k++) {
+      		var refs = refs_texts[k].split(split_2_niv);
+      
+      		var source = refs[0];
+      		var text = refs[1];    				    			
+      		var tmp;
+      
+      		tmp = String.format(';<1-;{0};-1>;: {1}' , 							
+      		(source), 
+      		(text));
+      
+      		if (isValidDataText(source))
+            references_data.push(tmp);
+      	};
+      
+        if (references_data.length > 0)
+      	 row.put("reference_texts_data_collectionspace_catalog_ext_litt", references_data.join(split_1_niv));        
+      
+      	return row; 
+      };  
+    ]]>  
+  </script> 
+   
+  <document>
+    <entity 	
+      name="Collection"
+      processor="SolrEntityProcessor" 
+  		url="http://172.20.1.73:8080/solr/prod_SQL_full_export"  
+  		query="-id:eks* AND -id:orig*" 
+  		fl="  *, 
+          old_version:_version_,
+          description_note_dk: description_note,
+          object_production_date_text_dk: object_production_date,
+          object_production_date_text_en: object_production_date_eng,
+          prod_technique_dk: prod_technique,
+          prod_technique_en: prod_technique_eng,
+          medium_image_url:externalurl,
+          related_id:related_works_title_dk"               
+      
+      transformer="TemplateTransformer,
+              RegexTransformer,                                                                                                 
+              script:concat_citation, 
+              script:concat_exhibition, 
+              script:concat_reference,
+              script:process_titles,
+              script:process_producents,
+              script:extract_century
+              "
+      >  
+      
+    	<field column="category" template="collections" />
+    
+    </entity>
+
+    <entity 
+      name="Site" 
+      processor="SolrEntityProcessor"     
+      url="http://192.168.10.34:8080/solr/prod-smk-da_DK" 
+      query="*:*" 
+      transformer="script:extractPraktiskURL"
+      fl="
+      	*,
+      	old_version:_version_, 
+      	csid:id, 
+      	id:id, 
+      	last_update:changed,
+      	category:contentType_stringS,
+      	medium_image_url:image_stringS,
+      	page_content:content, 
+      	page_title:title, 
+      	page_url:url,
+      	page_description:description,
+      	page_keywords:keywords,
+      	page_eventStartDate_dateS:eventStartDate_dateS,
+      	page_eventEndDate_dateS:eventEndDate_dateS,
+      	page_pageSection_stringS:pageSection_stringS,
+        page_eventType_stringS:eventType_stringS,
+        page_eventPrice_stringS:eventPrice_stringS
+    "/>    
+
+  </document>
+</dataConfig>
