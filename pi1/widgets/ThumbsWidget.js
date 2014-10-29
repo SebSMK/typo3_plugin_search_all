@@ -29,12 +29,13 @@
 			var thumbnails = [];
 			var dataHandler = new getData_Thumbs.constructor(this);
 			for (var i = 0, l = this.manager.response.response.docs.length; i < l ; i++) {
-				var doc = this.manager.response.response.docs[i];  
-				//thumbnails.push(dataHandler.get_data(doc));
-				
-				var rank = new String(doc.id.split('/').length < 2 ? 0 : doc.id.split('/')[1]);
-				rank = parseInt(/\d+/.exec(rank));
-				thumbnails[rank] = dataHandler.get_data(doc);
+				var doc = this.manager.response.response.docs[i];  				
+				var rank = new String(doc.id.split('/').length < 2 ? 0 : doc.id.split('/')[1]);								
+				if(rank.indexOf('verso') == -1){
+					// we don't show versos (they are shown in related works)
+					rank = parseInt(/\d+/.exec(rank));
+					thumbnails[rank] = dataHandler.get_data(doc);
+				} 
 
 			}
 
