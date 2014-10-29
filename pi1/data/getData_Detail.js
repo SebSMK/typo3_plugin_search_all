@@ -71,10 +71,10 @@
 						},	
 
 						image: doc.medium_image_url !== undefined ? doc.medium_image_url : this.caller.default_picture_path,
-								acq: false,
-								dim: false,
-								location:false,
-								proveniens:false
+						acq: false,
+						dim: false,
+						location:false,
+						proveniens:false
 					},
 					
 					subwidget:{
@@ -97,14 +97,16 @@
 
 
 			//* add dimension data
-			if (doc.heigth !== undefined || doc.width !== undefined || doc.depth !== undefined ){
+			if (doc.dimension_brutto !== undefined || 
+				doc.dimension_netto !== undefined || 
+				doc.dimension_billedmaal !== undefined || 
+				doc.dimension_bladmaal !== undefined){
 
 				data.info.dim = {
 						key: this.caller.manager.translator.getLabel('detail_dimension'),			    	
-						heigth : doc.heigth !== undefined ? doc.heigth : "-",
-								width : doc.width !== undefined ? sprintf(' x %s', doc.width) : " x -",
-										depth : doc.depth !== undefined ? sprintf(' x %s', doc.depth) : "",
-												unit : doc.heigthunit
+						dim : doc.dimension_brutto !== undefined? doc.dimension_brutto : 
+								doc.dimension_netto !== undefined? doc.dimension_netto :
+									doc.dimension_billedmaal !== undefined? doc.dimension_billedmaal : doc.dimension_bladmaal  
 				};
 
 			};
@@ -276,12 +278,12 @@
 
 				for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 					var name = doc.artist_name_ss[i];
-					var role = doc.artist_auth[i] != 'original' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
+					var role = doc.artist_auth[i] != 'original' && doc.artist_auth[i] != '' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
 					var birth = docBirth[i];
 					var death = docDeath[i] != '(?)' ? docDeath[i] : (docDeath[i] < 1800) ? docDeath[i] : "";
 					var dates = sprintf('%s - %s', birth, death);
 					var nationality = doc.artist_natio[i] != '(?)' ? sprintf('%s, ', doc.artist_natio[i]) : ""
-						var padding = "";
+					var padding = "";
 
 					var label = sprintf('%s%s&nbsp;<span>%s</span> <br><span>%s%s</span>', padding, name, role, nationality, dates);
 					artistLabel.push({'artist_data' : label});		  		  

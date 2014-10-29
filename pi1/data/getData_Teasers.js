@@ -189,7 +189,7 @@
 
 				for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 					var name = doc.artist_name_ss[i].trim();
-					var role = doc.artist_auth[i] != 'original' ? sprintf('<span>(%s)</span>', doc.artist_auth[i].toLowerCase()) : "";
+					var role = doc.artist_auth[i] != 'original' && doc.artist_auth[i] != '' ? sprintf('<span>(%s)</span>', doc.artist_auth[i].toLowerCase()) : "";
 					var padding = i > 0 ? "<br>" : "";
 					var label = role == "" ? sprintf('%s%s', padding, name) : sprintf('%s%s&nbsp;%s', padding, name, role);
 					artistLabel.push(label);		  		  
