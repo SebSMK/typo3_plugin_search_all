@@ -27,6 +27,8 @@
 											this.caller.manager.translator.getLabel('copyright_def')
 									: 
 										this.caller.manager.translator.getLabel("detail_no_photo"),
+						copyright_default: !smkCommon.computeCopyright(doc),
+						copyright_valid: smkCommon.computeCopyright(doc),
 						img_id:doc.id
 					},
 

@@ -12,9 +12,12 @@
 		</div>
 	
 	    <!-- Copyright notice -->
-		{{#copyright}}
-	    <div class="gallery__copyright">{{{copyright}}}</div>
-		{{/copyright}}
+		{{#copyright_default}}
+	    	<div class="gallery__copyright"><a target="_blank" class="cursor_on" onclick="window.open('http://creativecommons.org/publicdomain/zero/1.0/')">{{{copyright}}}</a></div>
+		{{/copyright_default}}
+		{{#copyright_valid}}
+	    	<div class="gallery__copyright">{{{copyright}}}</div>
+		{{/copyright_valid}}
 	
 		<!-- thumbnails -->
 		<div id="thumbnails"></div>  	  
