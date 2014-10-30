@@ -86,10 +86,7 @@ var Manager;
 			solrUrl: smkCommon.getSolrPath(), 
 			proxyUrl: 'http://solr.smk.dk:8080/proxySolrPHP/proxy.php',			
 			store: new AjaxSolr.smkParameterStore({
-				exposed: exposed,    		
-				q_default: q_default,
-				qf_default: qf_default,
-				sort_default: sort_default 
+				exposed: exposed
 			}),
 			allWidgetsProcessed: allWidgetsProcessedBound,
 			generalSolrError: generalSolrErrorProcessedBound,
@@ -103,10 +100,7 @@ var Manager;
 			solrUrl: smkCommon.getSolrPath(), 
 			proxyUrl: 'http://solr.smk.dk:8080/proxySolrPHP/proxy.php',			
 			store: new AjaxSolr.smkParameterStore({
-				exposed: exposed,    		
-				q_default: q_default,
-				qf_default: qf_default,
-				sort_default: sort_default 
+				exposed: exposed 
 			}),
 			allWidgetsProcessed: allWidgetsProcessedBound,
 			generalSolrError: generalSolrErrorProcessedBound,

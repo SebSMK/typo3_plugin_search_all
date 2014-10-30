@@ -25,6 +25,21 @@
 			self.default_picture_path = smkCommon.getDefaultPicture('large');
 			self.current_language = self.manager.translator.getLanguage();
 			
+			//* set and save default request parameters for both sub_managers                
+			var params = {					
+					'rows':500,					
+					'start': 0,
+					'json.nl': 'map'
+			};
+			
+			for (var name in params) {
+				self.thumbnailsManager.store.addByValue(name, params[name]);
+				self.reltatedManager.store.addByValue(name, params[name]);
+			}    
+
+			// save 'default request' parameters
+			self.thumbnailsManager.store.save(true);
+			self.reltatedManager.store.save(true);			
 			
 			//***
 			//* related sub widget
