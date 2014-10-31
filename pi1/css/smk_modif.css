@@ -77,8 +77,14 @@
 	height: 630px;
 }
 
-.cursor_on{
-	cursor: default;	
+.cc0{
+	cursor: pointer;
+	background-image: url("../images/cc0.png");		
+	display: block;
+    height: 31px;
+    text-indent: -9999em;
+    width: 88px;
+    opacity: 0.2;
 }
 
 /* When the body has the loading class, we turn
