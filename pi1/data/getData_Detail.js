@@ -260,15 +260,18 @@
 			var artistLabel = new Array();
 			var docBirth;
 			var docDeath;
+			var docNatio;
 
 			switch(this.caller.manager.translator.getLanguage()){
 			case "dk":		 			  			  			  
 				docBirth = doc.artist_birth_dk;
-				docDeath = doc.artist_death_dk;					  			  			  
+				docDeath = doc.artist_death_dk;	
+				docNatio = doc.artist_natio;
 				break;
 			case "en":
 				docBirth = doc.artist_birth_en;
 				docDeath = doc.artist_death_en;
+				docNatio = doc.artist_natio_en;
 				break;
 			}
 
@@ -283,8 +286,8 @@
 					var role = doc.artist_auth[i] != 'original' && doc.artist_auth[i] != '' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
 					var birth = docBirth[i];
 					var death = docDeath[i] != '(?)' ? docDeath[i] : (docDeath[i] < 1800) ? docDeath[i] : "";
-					var dates = sprintf('%s - %s', birth, death);
-					var nationality = doc.artist_natio[i] != '(?)' ? sprintf('%s, ', doc.artist_natio[i]) : ""
+					var dates = docBirth[i] != '' && docDeath[i] != '' ? sprintf('%s - %s', birth, death) : '';
+					var nationality = docNatio[i] != '(?)' && docNatio[i] != '' ? sprintf('%s, ', docNatio[i]) : '';
 					var padding = "";
 
 					var label = sprintf('%s%s&nbsp;<span>%s</span> <br><span>%s%s</span>', padding, name, role, nationality, dates);
