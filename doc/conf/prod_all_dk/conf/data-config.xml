@@ -411,29 +411,31 @@
         }                                                                                                        
                 
                   
-        if (artists_data.artist_name.size() > 0)        
-          row.put("artist_name", artists_data.artist_name);
+        if (artists_data.artist_name.size() > 0){
+            row.put("artist_name", artists_data.artist_name);
           
-        if (artists_data.artist_birth_en.size() > 0)        
-          row.put("artist_birth_en", artists_data.artist_birth_en);
-          
-        if (artists_data.artist_birth_dk.size() > 0)        
-          row.put("artist_birth_dk", artists_data.artist_birth_dk);
-          
-        if (artists_data.artist_death_en.size() > 0)        
-          row.put("artist_death_en", artists_data.artist_death_en);
+            if (artists_data.artist_birth_en.size() > 0)        
+              row.put("artist_birth_en", artists_data.artist_birth_en);
+              
+            if (artists_data.artist_birth_dk.size() > 0)        
+              row.put("artist_birth_dk", artists_data.artist_birth_dk);
+              
+            if (artists_data.artist_death_en.size() > 0)        
+              row.put("artist_death_en", artists_data.artist_death_en);
+            
+            if (artists_data.artist_death_dk.size() > 0)        
+              row.put("artist_death_dk", artists_data.artist_death_dk);
+              
+            if (artists_data.artist_natio.size() > 0)        
+              row.put("artist_natio", artists_data.artist_natio);
+              
+            if (artists_data.artist_natio_en.size() > 0)        
+              row.put("artist_natio_en", artists_data.artist_natio_en);
+              
+            if (artists_data.artist_name.size() > 0)        
+              row.put("artist_auth", artists_data.artist_auth);
+        }        
         
-        if (artists_data.artist_death_dk.size() > 0)        
-          row.put("artist_death_dk", artists_data.artist_death_dk);
-          
-        if (artists_data.artist_natio.size() > 0)        
-          row.put("artist_natio", artists_data.artist_natio);
-          
-        if (artists_data.artist_natio_en.size() > 0)        
-          row.put("artist_natio_en", artists_data.artist_natio_en);
-          
-        if (artists_data.artist_name.size() > 0)        
-          row.put("artist_auth", artists_data.artist_auth);
                          	                    
         row.remove("producents_data")  	
       	return row; 
@@ -873,17 +875,18 @@
        		  
        		var tmp = new String();
           
-          artists_data.artist_auth.add(isValidDataText(role)? role : 'original');
-          artists_data.artist_name.add(isValidDataText(name)? name : '');
-             
-          artists_data.artist_birth_dk.add(isValidDataText(birth)? birth : '');
-          artists_data.artist_birth_en.add(isValidDataText(birth_en)? birth_en : '');
+          if(isValidDataText(name)){
+              artists_data.artist_name.add(name);          
+              
+              artists_data.artist_auth.add(isValidDataText(role)? role : 'original');                         
+              artists_data.artist_birth_dk.add(isValidDataText(birth)? birth : '');
+              artists_data.artist_birth_en.add(isValidDataText(birth_en)? birth_en : '');              
+              artists_data.artist_death_dk.add(isValidDataText(death)? death : '');
+              artists_data.artist_death_en.add(isValidDataText(death_en)? death_en : '');              
+              artists_data.artist_natio.add(isValidDataText(natio)? natio : '');
+              artists_data.artist_natio_en.add(isValidDataText(natio_eng)? natio_eng : '');
+          }
           
-          artists_data.artist_death_dk.add(isValidDataText(death)? death : '');
-          artists_data.artist_death_en.add(isValidDataText(death_en)? death_en : '');
-          
-          artists_data.artist_natio.add(isValidDataText(natio)? natio : '');
-          artists_data.artist_natio_en.add(isValidDataText(natio_eng)? natio_eng : '');
 	        
       };  
             
@@ -1046,4 +1049,4 @@
     "/>    
 
   </document>
-</dataConfig>
+</dataConfig> 
