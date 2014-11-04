@@ -39,7 +39,8 @@
 					not_is_artwork: false,
 					is_artwork: true,
 					location: {label: smkCommon.firstCapital(this.getLocation(doc.location_name))},
-					copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def')			  						  				  						  					  						  				
+					copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :	this.caller.manager.translator.getLabel('copyright_def'),
+					url: this.getDetailUrl(doc.id)
 			};
 
 
@@ -74,6 +75,15 @@
 
 		};  
 
+		
+		this.getDetailUrl = function(id){						
+			var params = {};
+			params.q = id;
+			params.view = 'detail';
+
+			return UniqueURL.getUniqueURL(params);  
+		};
+		
 		this.getWebCategory = function(doc){
 
 			var category = doc.category !== undefined && doc.category.length > 0 ? doc.category[0].toLowerCase() : '';

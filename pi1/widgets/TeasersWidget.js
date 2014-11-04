@@ -60,8 +60,6 @@
 					type: "smk_teasers_this_img_displayed"
 				});
 
-
-
 				return;		
 			}
 			else{

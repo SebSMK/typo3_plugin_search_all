@@ -23,10 +23,19 @@
 				title : doc.title_first,
 				image : doc.medium_image_url !== undefined ? doc.medium_image_url : this.caller.default_picture_path,
 				current: this.caller.getCurrent_selec() == doc.id,
-				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :  '' 
+				copyright: smkCommon.computeCopyright(doc) != false ? smkCommon.computeCopyright(doc) :  '',
+				url: this.getDetailUrl(doc.id)
 			}; 		
 		}; 						
 
+		this.getDetailUrl = function(id){						
+			var params = {};
+			params.q = id;
+			params.view = 'detail';
+
+			return UniqueURL.getUniqueURL(params);  
+		};
+		
 		this.getImage = function ($target){
 
 			var self = this.caller;
