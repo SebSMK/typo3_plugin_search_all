@@ -35,11 +35,7 @@
 			for (var name in params) {
 				self.thumbnailsManager.store.addByValue(name, params[name]);
 				self.reltatedManager.store.addByValue(name, params[name]);
-			}    
-
-			// save 'default request' parameters
-			self.thumbnailsManager.store.save(true);
-			self.reltatedManager.store.save(true);			
+			}    		
 			
 			//***
 			//* related sub widget

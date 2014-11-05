@@ -74,10 +74,6 @@ var Manager;
 		}    
 		// add facet category with locals params
 		Manager.store.add('facet.field', new AjaxSolr.Parameter({ name:'facet.field', value: 'category', locals: { ex:'category' } }));
-
-		// save 'default request' parameters
-		Manager.store.save(true);
-
 		
 		//******************************
 		//** init thumbnailsManager

@@ -289,8 +289,9 @@
 				var teaser_view = false;
 
 				// if in "detail" view restore the default solr request
-				if (UniqueURL.getIsCurrentViewDetail()){				
-					this.manager.store.load(true, true); 
+				if (UniqueURL.getIsCurrentViewDetail()){
+					//* delete current (exposed) solr parameters
+					this.manager.store.exposedReset()
 					teaser_view = true;
 				}
 
@@ -326,16 +327,16 @@
 					var fqvalue = this.manager.store.get('fq');
 					var qvalue = this.manager.store.extract_q_from_manager();
 					var sortvalue = this.manager.store.get('sort').val();
-					var params = {};
-					params.q = qvalue;
-					params.fq = fqvalue;
+					var params = {};										
+					params.q = qvalue;					
 					params.sort = sortvalue;
 					params.view = this.getCurrentState()["view"];
 					params.category = this.getCurrentState()["category"];
+					
+					if (!teaser_view)
+						params.fq = fqvalue;
 
 					UniqueURL.setUniqueURL(params);
-
-					//this.manager.doRequest(0);  	
 
 				};
 			};
