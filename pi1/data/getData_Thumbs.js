@@ -29,11 +29,11 @@
 		}; 						
 
 		this.getDetailUrl = function(id){						
-			var params = {};
-			params.q = id;
-			params.view = 'detail';
+			var model = {};
+			model.q = id;
+			model.view = 'detail';
 
-			return UniqueURL.getUniqueURL(params);  
+			return ModelManager.buildURLFromModel(model); 
 		};
 		
 		this.getImage = function ($target){

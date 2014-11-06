@@ -76,12 +76,12 @@
 		};  
 
 		
-		this.getDetailUrl = function(id){						
-			var params = {};
-			params.q = id;
-			params.view = 'detail';
+		this.getDetailUrl = function(id){									
+			var model = {};
+			model.q = id;
+			model.view = 'detail';
 
-			return UniqueURL.getUniqueURL(params);  
+			return ModelManager.buildURLFromModel(model); 
 		};
 		
 		this.getWebCategory = function(doc){

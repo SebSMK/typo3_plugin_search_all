@@ -1,4 +1,5 @@
 var Manager;
+var StateManager;
 
 (function ($) {
 
@@ -27,15 +28,15 @@ var Manager;
 		var searchFieldsTypes = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
 
 		//** init state manager widget (has to be initialized before the widgetManager)
-		var stateManager = new AjaxSolr.StateManager({
+		StateManager = new AjaxSolr.StateManager({
 			id: 'state_manager',
 			target: '#smk_search_wrapper',
 			currentState: {view:'teasers', category:''},
 			template: Mustache.getTemplate('pi1/templates/general_template.html')
 		});
 		// those functions will be passed as parameter in the manager - we've got to bind it to an environment
-		var allWidgetsProcessedBound = $.proxy(stateManager.allWidgetsProcessed, stateManager);
-		var generalSolrErrorProcessedBound = $.proxy(stateManager.generalSolrError, stateManager);
+		var allWidgetsProcessedBound = $.proxy(StateManager.allWidgetsProcessed, StateManager);
+		var generalSolrErrorProcessedBound = $.proxy(StateManager.generalSolrError, StateManager);
 
 		//******************************
 		//** init widgetManager
@@ -108,10 +109,10 @@ var Manager;
 		//******************************
 
 		//* stateManagerWidget must be registred in first place
-		Manager.addWidget(stateManager);
+		//Manager.addWidget(stateManager);
 
 		// this function will be passed as parameter in the searchbox - we've got to bind it to an environment
-		var getCurrentStateBound = $.proxy(stateManager.getCurrentState, stateManager);
+		var getCurrentStateBound = $.proxy(StateManager.getCurrentState, StateManager);
 		Manager.addWidget(new AjaxSolr.SearchBoxWidget({
 			id: 'searchbox',
 			target: '#searchbox',
@@ -232,40 +233,40 @@ var Manager;
 			Manager.widgets['teasers'].switch_list_grid(event.value);
 		}); 
 
-		$(Manager.widgets['state_manager']).on('current_view_mode', function(event){ 
+		$(StateManager).on('current_view_mode', function(event){ 
 			Manager.widgets['teasers'].switch_list_grid(event.value);
 		});
 
 		//* selected category changed
 		$(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
-			Manager.widgets['state_manager'].smk_search_category_changed(event);
+			StateManager.smk_search_category_changed(event);
 		});     
 
 		//* searchfilters changed
 		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 			$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_changed', {self: Manager.widgets[searchFieldsTypes[i].field]}, function(event){    		
-				Manager.widgets['state_manager'].smk_search_filter_changed(event.data.self, event.params);    		    		    		    		
+				StateManager.smk_search_filter_changed(event.data.self, event.params);    		    		    		    		
 			});
 		};
 
 		//* pager changed
 		$(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){  
-			Manager.widgets['state_manager'].smk_search_pager_changed(event.start, searchFieldsTypes);
+			StateManager.smk_search_pager_changed(event.start, searchFieldsTypes);
 		}); 
 
 		//* sorter changed
 		$(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
-			Manager.widgets['state_manager'].smk_search_sorter_changed(event.params, searchFieldsTypes);
+			StateManager.smk_search_sorter_changed(event.params, searchFieldsTypes);
 		});         
 
 		//* new search term input in search box
 		$(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){
-			Manager.widgets['state_manager'].smk_search_q_added(event);	    	
+			StateManager.smk_search_q_added(event);	    	
 		});	
 
 		//* a search string has been removed in current search
 		$(Manager.widgets['currentsearch']).on('smk_search_remove_one_search_string', function(event){     	
-			Manager.widgets['state_manager'].smk_search_remove_one_search_string(event);
+			StateManager.smk_search_remove_one_search_string(event);
 		});	
 
 		/*
@@ -275,16 +276,16 @@ var Manager;
 
 		//* calls to detail view
 		$(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
-			Manager.widgets['state_manager'].smk_search_call_detail(event);
+			StateManager.smk_search_call_detail(event);
 		});
 		
 		$(Manager.widgets['details']).on('smk_search_call_detail', function(event){     	
-			Manager.widgets['state_manager'].smk_search_call_detail(event.event_caller);
+			StateManager.smk_search_call_detail(event.event_caller);
 		});
 
 		//* calls to teasers view
 		$(Manager.widgets['details']).on('smk_search_call_teasers', function(event){  
-			Manager.widgets['state_manager'].smk_search_call_teasers();
+			StateManager.smk_search_call_teasers();
 		});	    
 
 		/*
@@ -295,22 +296,22 @@ var Manager;
 		//* searchfilters has finished loading
 		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 			$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_loaded', function(event){
-				Manager.widgets['state_manager'].remove_modal_loading_from_widget(event.currentTarget.target);
+				StateManager.remove_modal_loading_from_widget(event.currentTarget.target);
 			});
 		};	
 		
 		//* a new image has been displayed in "teaser"
 		$(Manager.widgets['teasers']).on('smk_teasers_this_img_displayed', function(event){     	            	
-			Manager.widgets['state_manager'].smk_teasers_this_img_displayed();
+			StateManager.smk_teasers_this_img_displayed();
 		});	
 		
 		//* a new image has finished loading in "teaser"
 		$(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	            	
-			Manager.widgets['state_manager'].smk_teasers_this_img_loaded();
+			StateManager.smk_teasers_this_img_loaded();
 		});				
 
 		//* all images displayed in "teaser"
-		$(Manager.widgets['state_manager']).on('smk_teasers_all_images_displayed', function(event){ 			
+		$(StateManager).on('smk_teasers_all_images_displayed', function(event){ 			
 			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 				Manager.widgets[searchFieldsTypes[i].field].after_afterRequest();				
 			};				
@@ -318,23 +319,24 @@ var Manager;
 		
 		//* a new image has finished loading in "related"
 		$(Manager.widgets['details']).on('smk_related_this_img_loaded', function(event){   
-			Manager.widgets['state_manager'].smk_related_this_img_loaded();
+			StateManager.smk_related_this_img_loaded();
 		}); 
 		
 		//* a new image has finished loading in "thumbs"
 		$(Manager.widgets['details']).on('smk_thumbs_img_loaded', function(event){
-			Manager.widgets['state_manager'].smk_thumbs_img_loaded();  		  	    
+			StateManager.smk_thumbs_img_loaded();  		  	    
 		});
 
 		//* image has finished loading in "detail"
 		$(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){ 
-			Manager.widgets['state_manager'].smk_detail_this_img_loaded();
+			StateManager.smk_detail_this_img_loaded();
 		});           
 
 		//******************************
 		//** init all widgets
 		//****************************** 
-		Manager.init();   
+		StateManager.init(); 
+		Manager.init();  		
 
 		//******************************
 		//** if POSTed, add request string 
@@ -346,9 +348,10 @@ var Manager;
 			if (typeof _gaq !== undefined)
 				_gaq.push(['_trackEvent','Search', 'Regular search', postedSearchString, 0, true]);
 
-			var params = {};
-			params.q = postedSearchString;		 		 
-			UniqueURL.setUniqueURL(params);    	
+			var model = {};
+			model.q = postedSearchString;		 		 
+			ModelManager.setModel(model);
+			ModelManager.updateView();    	
 		}else{
 			//* people coming through direct link to SMK's search               
 			if (typeof _gaq !== undefined)

@@ -27,7 +27,7 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
     			'#sorterItemsTemplate');
       $target.html(html);
       
-      $target.find('select').val(UniqueURL.getCurrentSort()); 
+      $target.find('select').val(ModelManager.getModel().sort); 
       
       //* add behaviour on select change
       $target.find('select').change(self.clickHandler());
@@ -47,8 +47,8 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
 		return;
 	  }
 	  
-	  var currentCategory = UniqueURL.getCurrentCategory();	  
-	  var options = this.options[currentCategory != undefined ? currentCategory : "all"];	  	  	  
+	  var currentCategory = ModelManager.getModel().category;	  
+	  var options = this.options[currentCategory !== undefined ? currentCategory : "all"];	  	  	  
 	  var objectedItems = new Array(); 
 	  
 	  $target.hide();	  
@@ -67,7 +67,7 @@ AjaxSolr.SorterWidget = AjaxSolr.AbstractFacetWidget.extend({
 	  //*... and copy the new option list
 	  $target.find('select').append($(html).find('option'));	  	      
       
-      $target.find('select').val(UniqueURL.getCurrentSort()); 	
+      $target.find('select').val(ModelManager.getModel().sort); 	
             
       $target.find('select').trigger("chosen:updated");
       
