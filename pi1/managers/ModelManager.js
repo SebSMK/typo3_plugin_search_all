@@ -21,11 +21,11 @@ var	ModelManager = {
 			case 'url':
 				this.setModelFromURL(values);
 				break;	
-				
+
 			default:this.setModelFromJson(values);
 			}			
 		},
-		
+
 		/**
 		 * Get model
 		 * @returns {Json} model.
@@ -57,9 +57,24 @@ var	ModelManager = {
 
 			return model;
 		},	
-
+		
+		
 		/**
-		 * 
+		 * Save solr params
+		 * @param {String} [params] 		
+		 * */
+		saveSolrParams: function(params){
+			if(params !== undefined && params != null)
+				this._saved_params = params;						
+		},
+		
+		loadSolrParams: function(){			
+			return this._saved_params;
+		},
+		
+		/**
+		 * @param {Json} [model] params to sorl request
+		 * @returns {String} params in solr-url format 
 		 * **/
 		buildURLFromModel: function(model){	    	  
 
@@ -87,7 +102,7 @@ var	ModelManager = {
 		updateView: function(){	    	  
 			window.location.href = this.buildURLFromModel(this.getModel());
 		},
-		
+
 		/******************************
 		 * PRIVATE FUNCTIONS
 		 * * ****************************/				
@@ -142,7 +157,7 @@ var	ModelManager = {
 
 		},
 
-		
+
 		/**
 		 * check if a value is valid
 		 * @param {String} [value] The value to check.
@@ -276,6 +291,7 @@ var	ModelManager = {
 		_fq_locals_separator: ';',
 		_fq_separator: ',',		
 		_default_category: 'all',		
-		_default_view: 'teasers'
+		_default_view: 'teasers',
+		_saved_params: null
 
 };

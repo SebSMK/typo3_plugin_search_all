@@ -211,9 +211,7 @@
 			Manager.widgets['category'].setRefresh(false);
 			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 				Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
-			};
-
-			Manager.store.get('start').val(start);
+			};			
 
 			var fqvalue = Manager.store.get('fq');
 			var qvalue = Manager.store.extract_q_from_manager();	

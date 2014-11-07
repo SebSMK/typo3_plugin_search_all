@@ -28,7 +28,7 @@
 			 * method should usually be called before each Solr request.</p>
 			 */
 			save: function () {	  
-				$.cookie("smk_previous_solr_request", this.exposedString());
+				ModelManager.saveSolrParams(this.exposedString());
 			},
 
 			/**
@@ -54,9 +54,9 @@
 			 *
 			 * @returns {String} The string from persistent storage.
 			 */
-			storedString: function () {				
-				var res = $.cookie("smk_previous_solr_request");
-				return res != null ? res : '';				
+			storedString: function () {								
+				var res = ModelManager.loadSolrParams();
+				return res != null && res !== undefined ? res : '';				
 			},
 
 			/**
