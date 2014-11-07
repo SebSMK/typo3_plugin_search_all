@@ -36,25 +36,23 @@
 				$.address.externalChange(function(e){	 
 
 					ModelManager.setModel(e.value, "url");
-					var model = ModelManager.getModel();
-					
-					var params = UniqueURL.getParams(e.value);			    			    
+					var model = ModelManager.getModel();		    			    
 
 					//* process view
-					if(params.view !== undefined){
-						self.viewChanged({'view': params.view});				    				    				    					    					    	
+					if(model.view !== undefined){
+						self.viewChanged({'view': model.view});				    				    				    					    					    	
 					}else{
 						self.viewChanged({'view': "teasers"});
 					}			    
 
 					//* process category
-					if(params.category !== undefined){
-						if (params.view != 'detail'){			    		
-							self.categoryChanged({'category': params.category});
+					if(model.category !== undefined){
+						if (model.view != 'detail'){			    		
+							self.categoryChanged({'category': model.category});
 						}else{			    		
 							Manager.widgets['details'].setCurrentThumb_selec(null);	
 						}
-					}else if(params.category == undefined && params.view != 'detail'){
+					}else if(model.category == undefined && model.view != 'detail'){
 						self.categoryChanged({'category': "all"});
 					}
 
@@ -65,38 +63,38 @@
 
 					// q param
 					var q = [];
-					if (params.view != 'detail'){
+					if (model.view != 'detail'){
 						q = [Manager.store.q_default];										
-						if(params.q !== undefined)
-							q = q.concat(params.q);
+						if(model.q !== undefined)
+							q = q.concat(model.q);
 					}else{
-						if(params.q !== undefined)
-							q = sprintf('id_s:%s', params.q);			    	
+						if(model.q !== undefined)
+							q = sprintf('id_s:%s', model.q);			    	
 					};
 
 					Manager.store.addByValue('q', q);
 
 					// fq param
-					if(params.fq !== undefined && AjaxSolr.isArray(params.fq)){
-						for (var i = 0, l = params.fq.length; i < l; i++) {						
-							Manager.store.addByValue('fq', params.fq[i].value, params.fq[i].locals);
+					if(model.fq !== undefined && AjaxSolr.isArray(model.fq)){
+						for (var i = 0, l = model.fq.length; i < l; i++) {						
+							Manager.store.addByValue('fq', model.fq[i].value, model.fq[i].locals);
 						};											
 					};												
 
 					// qf param
-					if(params.view != "detail")
+					if(model.view != "detail")
 						Manager.store.addByValue('qf', Manager.store.get_qf_string());					    		
 
 					// sort param
-					if(params.sort !== undefined){
-						Manager.store.addByValue('sort', params.sort);
+					if(model.sort !== undefined){
+						Manager.store.addByValue('sort', model.sort);
 					}else{
 						Manager.store.addByValue('sort', Manager.store.sort_default);
 					};
 
 					// start param
-					if(params.start !== undefined){
-						Manager.store.addByValue('start', params.start);
+					if(model.start !== undefined){
+						Manager.store.addByValue('start', model.start);
 					}else{
 						Manager.store.addByValue('start', 0);
 					};
@@ -107,13 +105,13 @@
 						if (Manager.widgets[Manager.searchfilterList[i].field].getRefresh())
 							Manager.widgets[Manager.searchfilterList[i].field].removeAllSelectedFilters(false);
 					};
-					if (params.category == 'collections' && params.fq !== undefined){
+					if (model.category == 'collections' && model.fq !== undefined){
 						// add selected filters in searchFiltersWidget
-						for (var i = 0, l = params.fq.length; i < l; i++) {
-							var field = params.fq[i].value !== undefined ? params.fq[i].value.split(':')[0] : '';
+						for (var i = 0, l = model.fq.length; i < l; i++) {
+							var field = model.fq[i].value !== undefined ? model.fq[i].value.split(':')[0] : '';
 
 							if (Manager.widgets[field] !== undefined && Manager.widgets[field].addSelectedFilter !== undefined)
-								Manager.widgets[field].addSelectedFilter(params.fq[i].value.split(':')[1]);			    				
+								Manager.widgets[field].addSelectedFilter(model.fq[i].value.split(':')[1]);			    				
 						}			    			
 					}
 
