@@ -112,14 +112,19 @@ var	ModelManager = {
 		 * @param {Json} [model] The model to set.		 
 		 * */
 		setModelFromJson: function(model){
-			this.view = this.isValid(model.view) ? model.view : null;
-			this.category = this.isValid(model.category) ? model.category : null;
-			this.q = this.isValid(model.q) ? model.q : null;
-			this.fq = this.isValid(model.fq) ? model.fq : null;
-			this.qf = this.isValid(model.qf) ? model.qf : null;
-			this.start = this.isValid(model.start) ? model.start : null;
-			this.sort = this.isValid(model.sort) ? model.sort : null;									
+			this.view = this.getModelValue(model, "view");
+			this.category = this.getModelValue(model, "category");
+			this.q = this.getModelValue(model, "q");
+			this.fq = this.getModelValue(model, "fq");
+			this.qf = this.getModelValue(model, "qf");
+			this.start = this.getModelValue(model, "start");
+			this.sort = this.getModelValue(model, "sort");								
 		},
+    
+    getModelValue: function(model, type){
+      var value = eval("model." + type);
+      return this.isValid(value) ? (value == this.current_value_joker ? eval("this." + type) : value) : null;
+    },
 
 		/**
 		 * Set model
@@ -284,6 +289,8 @@ var	ModelManager = {
 		qf: null,
 		start: null,
 		sort: null,
+    
+    current_value_joker: '*',
 
 		_separator: '&',		
 		_cat_separator: '/',		

@@ -1,5 +1,6 @@
 var Manager;
 var StateManager;
+var EventsManager;
 
 (function ($) {
 
@@ -19,21 +20,25 @@ var StateManager;
 		var sort_default = solr_conf.get_sort_default();
 		var qf_default = solr_conf.get_qf_default(current_language);
 
-		//** init multi language script 
+		//** load multi language script 
 		var translator = new Language.constructor();	
 		translator.load_json("pi1/language/language.json");	
 		translator.setLanguage(current_language);	
 
-		//** init searchFields
+		//** load searchFields
 		var searchFieldsTypes = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
 
-		//** init state manager widget (has to be initialized before the widgetManager)
+		//** create state manager
 		StateManager = new AjaxSolr.StateManager({
 			id: 'state_manager',
 			target: '#smk_search_wrapper',
 			currentState: {view:'teasers', category:''},
 			template: Mustache.getTemplate('pi1/templates/general_template.html')
 		});
+    
+    //** create events manager
+    EventsManager = new EventsManager.constructor();
+    
 		// those functions will be passed as parameter in the manager - we've got to bind it to an environment
 		var allWidgetsProcessedBound = $.proxy(StateManager.allWidgetsProcessed, StateManager);
 		var generalSolrErrorProcessedBound = $.proxy(StateManager.generalSolrError, StateManager);
@@ -251,7 +256,7 @@ var StateManager;
 
 		//* pager changed
 		$(Manager.widgets['pager']).on('smk_search_pager_changed', function(event){  
-			StateManager.smk_search_pager_changed(event.start, searchFieldsTypes);
+			EventsManager.smk_search_pager_changed(event.start, searchFieldsTypes);
 		}); 
 
 		//* sorter changed
@@ -336,7 +341,8 @@ var StateManager;
 		//** init all widgets
 		//****************************** 
 		StateManager.init(); 
-		Manager.init();  		
+		Manager.init();  
+    EventsManager.init();		
 
 		//******************************
 		//** if POSTed, add request string 
