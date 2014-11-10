@@ -57,21 +57,22 @@ var	ModelManager = {
 
 			return model;
 		},	
-		
-		
+
+
 		/**
-		 * Save solr params
-		 * @param {String} [params] 		
+		 * Save current model 		
 		 * */
-		saveSolrParams: function(params){
-			if(params !== undefined && params != null)
-				this._saved_params = params;						
+		storeCurrentModel: function(){			
+			this._stored_model = this.getModel();						
 		},
-		
-		loadSolrParams: function(){			
-			return this._saved_params;
+
+		/**
+		 * Get stored model 		
+		 * */
+		loadStoredModel: function(){			
+			return this._stored_model;
 		},
-		
+
 		/**
 		 * @param {Json} [model] params to sorl request
 		 * @returns {String} params in solr-url format 
@@ -99,7 +100,8 @@ var	ModelManager = {
 
 		},
 
-		updateView: function(){	    	  
+		updateView: function(model){
+			this.setModel(model);
 			window.location.href = this.buildURLFromModel(this.getModel());
 		},
 
@@ -120,11 +122,11 @@ var	ModelManager = {
 			this.start = this.getModelValue(model, "start");
 			this.sort = this.getModelValue(model, "sort");								
 		},
-    
-    getModelValue: function(model, type){
-      var value = eval("model." + type);
-      return this.isValid(value) ? (value == this.current_value_joker ? eval("this." + type) : value) : null;
-    },
+
+		getModelValue: function(model, type){
+			var value = model !== undefined && model != null ? eval("model." + type) : null;
+			return this.isValid(value) ? (value == this.current_value_joker ? eval("this." + type) : value) : null;
+		},
 
 		/**
 		 * Set model
@@ -289,8 +291,8 @@ var	ModelManager = {
 		qf: null,
 		start: null,
 		sort: null,
-    
-    current_value_joker: '*',
+
+		current_value_joker: '*',
 
 		_separator: '&',		
 		_cat_separator: '/',		
@@ -299,6 +301,6 @@ var	ModelManager = {
 		_fq_separator: ',',		
 		_default_category: 'all',		
 		_default_view: 'teasers',
-		_saved_params: null
+		_stored_model: null
 
 };

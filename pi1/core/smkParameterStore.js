@@ -20,44 +20,7 @@
 					qf_default:null,
 					sort_default:null
 				}, attributes);
-			},	 
-
-			/**
-			 *
-			 * <p>Stores the values of the exposed parameters in persistent storage. This
-			 * method should usually be called before each Solr request.</p>
-			 */
-			save: function () {	  
-				ModelManager.saveSolrParams(this.exposedString());
-			},
-
-			/**
-			 * Loads the values of exposed parameters from persistent storage. It is
-			 * necessary, in most cases, to reset the values of exposed parameters before
-			 * setting the parameters to the values in storage. This is to ensure that a
-			 * parameter whose name is not present in storage is properly reset.
-			 *
-			 * @param {Boolean} [reset=true] Whether to reset the exposed parameters.
-			 *   before loading new values from persistent storage. Default: true.
-			 */
-			load: function (reset) {				  
-				if (reset === undefined)
-					reset = true;				
-				if (reset)
-					this.exposedReset();				
-				this.parseString(this.storedString());
-			},  
-
-			/**
-			 *
-			 * <p>Returns the string to parse from persistent storage.</p>
-			 *
-			 * @returns {String} The string from persistent storage.
-			 */
-			storedString: function () {								
-				var res = ModelManager.loadSolrParams();
-				return res != null && res !== undefined ? res : '';				
-			},
+			},	 			
 
 			/**
 			 * see removeByvalue function in ParameterStore

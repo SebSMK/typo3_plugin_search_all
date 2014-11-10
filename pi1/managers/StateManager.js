@@ -27,261 +27,29 @@
 			this.categoryChanged(this.currentState);	  
 
 		},
+		
+		beforeRequest: function(){	 
+
+			this.start_modal_loading(this.target);
+
+			//* start loading mode for some choosen widgets  
+			// teasers
+			this.add_modal_loading_to_widget(Manager.widgets['teasers']);
+			// searchfilters
+//			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {		  	
+//			this.add_modal_loading_to_widget(Manager.widgets[Manager.searchfilterList[i].field]);
+//			};
+			// details
+			this.add_modal_loading_to_widget(Manager.widgets['details']);	 
+			// related
+//			this.add_modal_loading_to_widget(Manager.widgets['details'].related_subWidget);*/
+		},  
 
 		template_integration_json: function (json_data, templ_id){	  
 			var template = this.template; 	
 			var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 			return html;
-		},
-
-
-		/**
-		 * sorting changed
-		 * */
-
-		smk_search_sorter_changed: function(params, searchFieldsTypes){
-
-			if (params.selected == undefined || !Manager.store.addByValue('sort', params.selected))																					
-				return;	  
-
-			Manager.widgets['currentsearch'].setRefresh(false);
-			Manager.widgets['category'].setRefresh(false);
-			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-				Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
-			};	
-
-			var fqvalue = Manager.store.get('fq');
-			var qvalue = Manager.store.extract_q_from_manager();	
-			var sortvalue = Manager.store.get('sort').val();
-			var model = {};
-			model.q = qvalue;
-			model.fq = fqvalue;	
-			model.sort = sortvalue;
-			model.view = this.getCurrentState()["view"];
-			model.category = this.getCurrentState()["category"];
-
-			ModelManager.setModel(model);
-			ModelManager.updateView();
-			
-		},
-
-		/**
-		 * search filter added / removed (only in "search in collection" view)
-		 * */
-		smk_search_filter_changed: function (caller, params){
-
-			var trigg_req = false;
-
-			if (params.selected !== undefined){
-				if (caller.add(params.selected))
-					trigg_req = true;
-			}else if (params.deselected !== undefined){    		
-				if (caller.remove(params.deselected)) 
-					trigg_req = true;
-			};    	    	
-
-			if (trigg_req){
-				Manager.widgets['currentsearch'].setRefresh(false);				
-
-				var fqvalue = Manager.store.get('fq');
-				var qvalue = Manager.store.extract_q_from_manager();
-				var sortvalue = Manager.store.get('sort').val();
-				var model = {};
-				model.q = qvalue;
-				model.fq = fqvalue;
-				model.sort = sortvalue;
-				model.view = this.getCurrentState()["view"];
-				model.category = this.getCurrentState()["category"];
-
-				ModelManager.setModel(model);
-				ModelManager.updateView();
-			}
-		},
-
-		/**
-		 * search string removed in Currentsearch
-		 * */
-		smk_search_remove_one_search_string: function(event){
-
-			var facet = event.facet;
-			var current_q = event.current_q;	  	  
-
-			if (Manager.store.removeElementFrom_q(facet)) {   
-				$(Manager.widgets['currentsearch'].target).empty();
-
-				for (var i = 0, l = current_q.length; i < l; i++) {	 
-					if (current_q[i].value == facet){
-						current_q.splice(i, 1);
-						Manager.widgets['currentsearch'].set_q(current_q);
-						break;
-					}    	    	
-				}    	
-			};
-
-			var fqvalue = Manager.store.get('fq');
-			var qvalue = Manager.store.extract_q_from_manager();
-			var sortvalue = Manager.store.get('sort').val();
-			var model = {};
-			model.q = qvalue;
-			model.fq = fqvalue;
-			model.sort = sortvalue;
-			model.view = this.getCurrentState()["view"];
-			model.category = this.getCurrentState()["category"];
-
-			ModelManager.setModel(model);
-			ModelManager.updateView();   	    	
-		},  
-
-
-		/**
-		 * a search string has been added in SearchBox
-		 * */
-		smk_search_q_added: function(event){
-
-			var val = event.val;
-
-			if (val != '') {
-				var text = jQuery.trim(val);
-
-				Manager.store.last = text;																																										
-
-				var q_value = text;
-				var teaser_view = false;
-
-				// if in "detail" view, restore the default solr request
-				if (ModelManager.getModel().view == 'detail'){
-					//* delete current (exposed) solr parameters
-					Manager.store.exposedReset()
-					teaser_view = true;
-				}
-
-				//* concat the new search term to the previous term(s)
-				var current_q = Manager.store.get('q');
-				var current_q_values = new Array();							
-
-				if (AjaxSolr.isArray(current_q.value)){
-					for (var i = 0, l = current_q.value.length; i < l; i++) {
-						current_q_values.push(current_q.value[i]);								 
-					}
-				}else if(typeof current_q.value === 'string'){
-					current_q_values.push(current_q.value);
-				};
-
-				//* send request
-				if (Manager.store.addByValue('q', current_q_values.concat(q_value))){																												
-
-					if (typeof _gaq !== undefined)
-						_gaq.push(['_trackEvent','Search', 'Regular search', q_value, 0, true]);
-
-					if (teaser_view){
-						// call to teasers view from searchbox when in "detail" view    	         	
-						this.viewChanged({view:"teasers"});
-						this.categoryChanged({category:"all"}); 	
-						Manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-						Manager.widgets['details'].setCurrentThumb_selec(null);	    	    		
-					}
-
-					Manager.widgets['currentsearch'].add_q(q_value, text );  					
-
-					var fqvalue = Manager.store.get('fq');
-					var qvalue = Manager.store.extract_q_from_manager();
-					var sortvalue = Manager.store.get('sort').val();
-					var model = {};										
-					model.q = qvalue;					
-					model.sort = sortvalue;
-					model.view = this.getCurrentState()["view"];
-					model.category = this.getCurrentState()["category"];
-					
-					if (!teaser_view)
-						model.fq = fqvalue;
-
-					ModelManager.setModel(model);
-					ModelManager.updateView();					
-
-				};
-			};
-		},
-
-
-		/**
-		 * call to detail view
-		 * */  
-
-		smk_search_call_detail: function(event){			
-			var save_current_request = event.save_current_request;    		  
-			var art_id = event.detail_id;		  
-			
-			this.viewChanged({view:"detail"});
-
-			if(save_current_request) //* save current solr parameters		  
-				Manager.store.save();      		  				
-
-			var model = {};
-			model.q = art_id;
-			model.view = this.getCurrentState()["view"];
-
-			ModelManager.setModel(model);
-			ModelManager.updateView(); 
-		},
-
-		/**
-		 * call to teaser view
-		 * */
-		smk_search_call_teasers: function(){
-			//restore previous search request in the manager
-			Manager.store.load(true); 
-			this.viewChanged({view:"teasers"}); 
-
-			Manager.widgets['details'].setCurrentThumb_selec(null);
-			
-			var fqvalue = Manager.store.get('fq');
-			var qvalue = Manager.store.extract_q_from_manager();
-			var startvalue = Manager.store.get('start').val();
-			var sortvalue = Manager.store.get('sort').val();
-			var model = {};
-			model.q = qvalue;
-			model.fq = fqvalue;
-			model.start = startvalue;
-			model.sort = sortvalue;
-			model.view = this.getCurrentState()["view"];
-			model.category = this.getCurrentState()["category"];
-						
-			ModelManager.setModel(model);
-			ModelManager.updateView(); 			
-		},	
-
-
-		/**
-		 * Category changed
-		 * */
-		smk_search_category_changed: function(event){
-
-			var category = event.category;
-			var view = event.view;
-			var caller = Manager.widgets['category'];	  	  	  
-
-			if (caller.set(category)){   
-				caller.setActiveTab(category);
-				this.categoryChanged({'category': category});
-
-				if (view !== undefined)
-					this.viewChanged({'view': 'teasers'});
-
-				Manager.widgets['currentsearch'].setRefresh(false);
-				
-				var fqvalue = Manager.store.get('fq');
-				var qvalue = Manager.store.extract_q_from_manager();
-				var model = {};
-				model.q = qvalue;
-				model.fq = fqvalue;
-				model.view = this.getCurrentState()["view"];
-				model.category = this.getCurrentState()["category"];
-				
-				ModelManager.setModel(model);
-				ModelManager.updateView(); 
-			};	  
-		},
-
+		},		
 
 		/**
 		 * image loading handlers
@@ -353,29 +121,7 @@
 			this.remove_modal_loading_from_widget(Manager.widgets['details'].target);   
 			// show "back-button" in Detail view
 			$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');			
-		},	
-
-		beforeRequest: function(){	 
-
-			this.start_modal_loading(this.target);
-
-			//* start loading mode for some choosen widgets  
-			// teasers
-			this.add_modal_loading_to_widget(Manager.widgets['teasers']);
-			// searchfilters
-//			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {		  	
-//			this.add_modal_loading_to_widget(Manager.widgets[Manager.searchfilterList[i].field]);
-//			};
-			// details
-			this.add_modal_loading_to_widget(Manager.widgets['details']);	 
-			// related
-//			this.add_modal_loading_to_widget(Manager.widgets['details'].related_subWidget);*/
-		},  
-
-
-		afterRequest: function(){	  
-			this.append_info();  	  
-		},
+		},			
 
 		/*
 		 * start general modal loading screen 
@@ -424,24 +170,6 @@
 
 		show_info: function(){	  
 			$("body").find("#smk_search_info").css('opacity', '1');  	  
-		},
-
-		append_info: function(){
-
-			if($("body").find("#smk_search_info").length == 0 && ModelManager.getModel().view != 'detail' && $.cookie("smk_search_info") != "false"){
-				//* append information window
-				var html = this.template_integration_json({'info': decodeURIComponent(Manager.translator.getLabel('general_tooltip'))}, '#infoTemplate');  
-				$(this.target).find('section.section--main').append(html);	 
-
-				$('a.tooltip__close').click(
-						function (event) {
-							event.preventDefault();
-							$.cookie("smk_search_info", "false");
-							$("body").find("#smk_search_info").remove();
-							return;  		    		            
-						}
-				);			  
-			};	
 		},
 
 		set_focus: function(){

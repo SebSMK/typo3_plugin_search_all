@@ -235,22 +235,22 @@ var EventsManager;
 
 		///* switch grid/list in teasers view
 		$(Manager.widgets['viewpicker']).on('view_picker', function(event){ 
-			Manager.widgets['teasers'].switch_list_grid(event.value);
+			EventsManager.switch_list_grid(event.value);
 		}); 
 
 		$(StateManager).on('current_view_mode', function(event){ 
-			Manager.widgets['teasers'].switch_list_grid(event.value);
+			EventsManager.switch_list_grid(event.value);
 		});
 
 		//* selected category changed
 		$(Manager.widgets['category']).on('smk_search_category_changed', function(event){     	
-			StateManager.smk_search_category_changed(event);
+			EventsManager.smk_search_category_changed(event);
 		});     
 
 		//* searchfilters changed
 		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 			$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_changed', {self: Manager.widgets[searchFieldsTypes[i].field]}, function(event){    		
-				StateManager.smk_search_filter_changed(event.data.self, event.params);    		    		    		    		
+				EventsManager.smk_search_filter_changed(event.data.self, event.params);    		    		    		    		
 			});
 		};
 
@@ -261,17 +261,17 @@ var EventsManager;
 
 		//* sorter changed
 		$(Manager.widgets['sorter']).on('smk_search_sorter_changed', function(event){     	
-			StateManager.smk_search_sorter_changed(event.params, searchFieldsTypes);
+			EventsManager.smk_search_sorter_changed(event.params, searchFieldsTypes);
 		});         
 
 		//* new search term input in search box
 		$(Manager.widgets['searchbox']).on('smk_search_q_added', function(event){
-			StateManager.smk_search_q_added(event);	    	
+			EventsManager.smk_search_q_added(event);	    	
 		});	
 
 		//* a search string has been removed in current search
 		$(Manager.widgets['currentsearch']).on('smk_search_remove_one_search_string', function(event){     	
-			StateManager.smk_search_remove_one_search_string(event);
+			EventsManager.smk_search_remove_one_search_string(event);
 		});	
 
 		/*
@@ -281,16 +281,16 @@ var EventsManager;
 
 		//* calls to detail view
 		$(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
-			StateManager.smk_search_call_detail(event);
+			EventsManager.smk_search_call_detail(event);
 		});
 		
 		$(Manager.widgets['details']).on('smk_search_call_detail', function(event){     	
-			StateManager.smk_search_call_detail(event.event_caller);
+			EventsManager.smk_search_call_detail(event.event_caller);
 		});
 
 		//* calls to teasers view
 		$(Manager.widgets['details']).on('smk_search_call_teasers', function(event){  
-			StateManager.smk_search_call_teasers();
+			EventsManager.smk_search_call_teasers();
 		});	    
 
 		/*
@@ -338,11 +338,11 @@ var EventsManager;
 		});           
 
 		//******************************
-		//** init all widgets
+		//** init all widgets / Managers
 		//****************************** 
 		StateManager.init(); 
 		Manager.init();  
-    EventsManager.init();		
+		EventsManager.init();		
 
 		//******************************
 		//** if POSTed, add request string 
