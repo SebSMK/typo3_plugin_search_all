@@ -4,6 +4,10 @@
 
 		allWidgetProcessed : false, 
 
+		/*********
+		 * PUBLIC FUNCTIONS
+		 ********** */
+				
 		init: function () {
 			var self = this;
 			var $target = $(this.target);	
@@ -44,6 +48,21 @@
 			return html;
 		},		
 
+		
+		/**
+		 * Call a function in a given widget of the manager
+	     * @param {String} [widget] Widget name
+	     * @param {String} [fn] function name
+	     * @param {String[]} [params] optional - array of function's parameters
+	     */
+		callWidgetFn: function(widget, fn, params){												
+			if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
+				console.log(sprintf("%s - %s not defined", widget, fn));
+				return;
+			}						
+			return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);
+		},
+		
 		/**
 		 * image loading handlers
 		 * */
@@ -116,67 +135,7 @@
 			$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');			
 		},			
 
-		/*
-		 * start general modal loading screen 
-		 */
-		start_modal_loading: function(){
-			$(this.target).addClass("modal_loading"); 	  
-		},
-
-		/*
-		 * stop general modal loading screen 
-		 */
-		stop_modal_loading: function(){	  
-			$(this.target).removeClass("modal_loading"); 
-			this.allWidgetProcessed = false;	  
-		},
-
-		/*
-		 * start loading mode for a given widget.
-		 * - only if widget's state is "active"
-		 */
-		add_modal_loading_to_widget: function(widget){
-			if(this.isThisWidgetActive(widget))
-				$(widget.target).addClass("modal_loading");
-		},
-
-		/*
-		 * stop loading mode for a given widget.
-		 */
-		remove_modal_loading_from_widget: function(target){
-			$(target).removeClass("modal_loading");
-
-			if (this.allWidgetProcessed){
-				if ($(this.target).find('.modal_loading').length == 0){
-					// all widgets are loaded, we remove the general loading screen
-					this.stop_modal_loading();					
-					this.set_focus();					
-					this.show_footer();
-				}			  
-			}
-		},  	
-
-		set_focus: function(){
-			var self = this;
-			$(document).ready(function () {
-				$(Manager.widgets['searchbox'].target).find('#smk_search').focus();
-			});	  	  
-		},  
-
-		isThisWidgetActive: function(widget){
-			return widget.getRefresh();
-		},
-
-		allWidgetsProcessed: function(){
-			if ($(this.target).find('.modal_loading').length != 0){
-				// there are still some widgets loading
-				this.allWidgetProcessed = true;	
-			}	else{
-				// all widgets are loaded, we remove the general loading screen
-				this.stop_modal_loading();
-			}	  	  
-		},
-
+		
 		viewChanged: function (stateChange) {        	    
 			var $target = $(this.target);
 			var self = this;
@@ -319,7 +278,71 @@
 
 			return;
 		},
+		
+		/*********
+		 * PRIVATE FUNCTIONS
+		 ********** */
+		
+		/*
+		 * start general modal loading screen 
+		 */
+		start_modal_loading: function(){
+			$(this.target).addClass("modal_loading"); 	  
+		},
 
+		/*
+		 * stop general modal loading screen 
+		 */
+		stop_modal_loading: function(){	  
+			$(this.target).removeClass("modal_loading"); 
+			this.allWidgetProcessed = false;	  
+		},
+
+		/*
+		 * start loading mode for a given widget.
+		 * - only if widget's state is "active"
+		 */
+		add_modal_loading_to_widget: function(widget){
+			if(this.isThisWidgetActive(widget))
+				$(widget.target).addClass("modal_loading");
+		},
+
+		/*
+		 * stop loading mode for a given widget.
+		 */
+		remove_modal_loading_from_widget: function(target){
+			$(target).removeClass("modal_loading");
+
+			if (this.allWidgetProcessed){
+				if ($(this.target).find('.modal_loading').length == 0){
+					// all widgets are loaded, we remove the general loading screen
+					this.stop_modal_loading();					
+					this.set_focus();					
+					this.show_footer();
+				}			  
+			}
+		},  	
+
+		set_focus: function(){
+			var self = this;
+			$(document).ready(function () {
+				$(Manager.widgets['searchbox'].target).find('#smk_search').focus();
+			});	  	  
+		},  
+
+		isThisWidgetActive: function(widget){
+			return widget.getRefresh();
+		},
+
+		allWidgetsProcessed: function(){
+			if ($(this.target).find('.modal_loading').length != 0){
+				// there are still some widgets loading
+				this.allWidgetProcessed = true;	
+			}	else{
+				// all widgets are loaded, we remove the general loading screen
+				this.stop_modal_loading();
+			}	  	  
+		},		
 
 		showWidget: function($target){
 			$target.show().children().not('.modal').show();	  	  

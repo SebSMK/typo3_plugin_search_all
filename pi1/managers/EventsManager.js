@@ -48,8 +48,8 @@
 			if(model.category !== undefined){
 				if (model.view != 'detail'){			    		
 					StateManager.categoryChanged({'category': model.category});
-				}else{			    		
-					Manager.widgets['details'].setCurrentThumb_selec(null);	
+				}else{
+					StateManager.callWidgetFn('details', 'setCurrentThumb_selec', [null]);						
 				}
 			}else if(model.category == undefined && model.view != 'detail'){
 				StateManager.categoryChanged({'category': "all"});
@@ -100,59 +100,56 @@
 
 			//* process widgets
 			// remove all previous search filters - only if search filters is set to "getRefresh"					
-			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {
-				if (Manager.widgets[Manager.searchfilterList[i].field].getRefresh())
-					Manager.widgets[Manager.searchfilterList[i].field].removeAllSelectedFilters(false);
+			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
+				if(StateManager.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))
+					StateManager.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', [false]);	
+
 			};
 			if (model.category == 'collections' && model.fq !== undefined){
 				// add selected filters in searchFiltersWidget
 				for (var i = 0, l = model.fq.length; i < l; i++) {
-					var field = model.fq[i].value !== undefined ? model.fq[i].value.split(':')[0] : '';
-
-					if (Manager.widgets[field] !== undefined && Manager.widgets[field].addSelectedFilter !== undefined)
-						Manager.widgets[field].addSelectedFilter(model.fq[i].value.split(':')[1]);			    				
+					var field = model.fq[i].value !== undefined ? model.fq[i].value.split(':')[0] : '';					
+					StateManager.callWidgetFn(field, 'addSelectedFilter', [model.fq[i].value.split(':')[1]]);					
 				}			    			
 			}
 
 			// copy "q" values in Currentsearch widget	
 			var q_wout_q_def = Manager.store.extract_q_from_manager();
 
-			Manager.widgets['currentsearch'].removeAllCurrentSearch();					
-			for (var i = 0, l = q_wout_q_def.length; i < l; i++) {
-				Manager.widgets['currentsearch'].add_q(q_wout_q_def[i], q_wout_q_def[i] );
+			StateManager.callWidgetFn('currentsearch', 'removeAllCurrentSearch');						
+
+			for (var i = 0, l = q_wout_q_def.length; i < l; i++) {				
+				StateManager.callWidgetFn('currentsearch', 'add_q', [q_wout_q_def[i], q_wout_q_def[i]]);
 			};	
 
 			// select "sort" option in sorterWidget
-			Manager.widgets['sorter'].setOption(Manager.store.get('sort').val());
+			StateManager.callWidgetFn('sorter', 'setOption', [Manager.store.get('sort').val()]);
 
 			//**> start Solr request 
 			Manager.doRequest();				   																   	 
 		};
 
-		
+
 		/*
 		 * UI events
 		 * 
 		 * */
-		
+
 		/**
 		 * current page changed
 		 * */
-		this.smk_search_pager_changed = function(start, searchFieldsTypes){
-			Manager.widgets['currentsearch'].setRefresh(false);
-			Manager.widgets['category'].setRefresh(false);
-			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-				Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
+		this.smk_search_pager_changed = function(start, searchFieldsTypes){			
+			StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
+			StateManager.callWidgetFn('category', 'setRefresh', [false]);
+			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {				
+				StateManager.callWidgetFn(searchFieldsTypes[i].field, 'setRefresh', [false]);
 			};			
 
-			var fqvalue = Manager.store.get('fq');
-			var qvalue = Manager.store.extract_q_from_manager();	
-			var sortvalue = Manager.store.get('sort').val();
 			var model = {};
-			model.q = qvalue;
-			model.fq = fqvalue;
+			model.q = ModelManager.current_value_joker;
+			model.fq = ModelManager.current_value_joker;
 			model.start = start;
-			model.sort = sortvalue;
+			model.sort = ModelManager.current_value_joker;
 			model.category = ModelManager.current_value_joker;
 
 			ModelManager.updateView(model);
@@ -164,30 +161,26 @@
 		this.smk_search_category_changed = function(event){
 
 			var category = event.category;
-			var view = event.view;
-			var caller = Manager.widgets['category'];	  	  	  
+			var view = event.view;  	  	  
 
-			if (caller.set(category)){   
-				caller.setActiveTab(category);
+			if (StateManager.callWidgetFn('category', 'set', [category])){   				
+				StateManager.callWidgetFn('category', 'setActiveTab', [category]);
 
-				Manager.widgets['currentsearch'].setRefresh(false);
+				StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
 
-				var qvalue = Manager.store.extract_q_from_manager();
 				var model = {};
-				model.q = qvalue;
+				model.q = ModelManager.current_value_joker;
 				model.category = category;
 
 				ModelManager.updateView(model); 
-			};	  
+			};
 		};
 
 		/**
 		 * call to teaser view
 		 * */
 		this.smk_search_call_teasers = function(){
-
-			Manager.widgets['details'].setCurrentThumb_selec(null);
-
+			
 			//restore previous search params
 			var model = ModelManager.loadStoredModel();
 
@@ -202,8 +195,7 @@
 			var art_id = event.detail_id;		  
 
 			if(save_current_request){
-				ModelManager.storeCurrentModel();  
-				Manager.store.exposedReset();
+				ModelManager.storeCurrentModel();
 			}		
 
 			var model = {};			 				    		  							
@@ -248,34 +240,21 @@
 				};
 
 				//* send request
-				if (Manager.store.addByValue('q', current_q_values.concat(q_value))){																												
+				if (typeof _gaq !== undefined)
+					_gaq.push(['_trackEvent','Search', 'Regular search', q_value, 0, true]);
 
-					if (typeof _gaq !== undefined)
-						_gaq.push(['_trackEvent','Search', 'Regular search', q_value, 0, true]);
+				var model = {};										
+				model.q = current_q_values.concat(q_value);					
+				model.sort = ModelManager.current_value_joker;
+				model.view = teaser_view ? "teasers" : ModelManager.current_value_joker;
+				model.category = teaser_view ? "all" : ModelManager.current_value_joker;
 
-					if (teaser_view){
-						Manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
-						Manager.widgets['details'].setCurrentThumb_selec(null);	    	    		
-					}
+				if (!teaser_view)
+					model.fq = ModelManager.current_value_joker;
 
-					Manager.widgets['currentsearch'].add_q(q_value, text );  					
+				ModelManager.updateView(model);					
 
-					var fqvalue = Manager.store.get('fq');
-					var qvalue = Manager.store.extract_q_from_manager();
-					var sortvalue = Manager.store.get('sort').val();
 
-					var model = {};										
-					model.q = qvalue;					
-					model.sort = sortvalue;
-					model.view = teaser_view ? "teasers" : ModelManager.current_value_joker;
-					model.category = teaser_view ? "all" : ModelManager.current_value_joker;
-
-					if (!teaser_view)
-						model.fq = fqvalue;
-
-					ModelManager.updateView(model);					
-
-				};
 			};
 		};
 
@@ -284,28 +263,15 @@
 		 * */
 		this.smk_search_remove_one_search_string = function(event){
 
-			var facet = event.facet;
-			var current_q = event.current_q;	  	  
+			var facet = event.facet;			
 
-			if (Manager.store.removeElementFrom_q(facet)) {   
-				$(Manager.widgets['currentsearch'].target).empty();
+			Manager.store.removeElementFrom_q(facet);   			
 
-				for (var i = 0, l = current_q.length; i < l; i++) {	 
-					if (current_q[i].value == facet){
-						current_q.splice(i, 1);
-						Manager.widgets['currentsearch'].set_q(current_q);
-						break;
-					}    	    	
-				}    	
-			};
-
-			var fqvalue = Manager.store.get('fq');
 			var qvalue = Manager.store.extract_q_from_manager();
-			var sortvalue = Manager.store.get('sort').val();
 			var model = {};
 			model.q = qvalue;
-			model.fq = fqvalue;
-			model.sort = sortvalue;
+			model.fq = ModelManager.current_value_joker;;
+			model.sort = ModelManager.current_value_joker;;
 			model.view = ModelManager.current_value_joker;
 			model.category = ModelManager.current_value_joker;
 
@@ -313,30 +279,28 @@
 		};  
 
 		/**
-		 * search filter added / removed (only in "search in collection" view)
+		 * search filter added / removed (only in "collection" tab/category)
 		 * */
 		this.smk_search_filter_changed = function (caller, params){
 
 			var trigg_req = false;
 
 			if (params.selected !== undefined){
-				if (caller.add(params.selected))
+				if (caller.add(params.selected)) //!! -> change fq param in Manager.store
 					trigg_req = true;
 			}else if (params.deselected !== undefined){    		
-				if (caller.remove(params.deselected)) 
+				if (caller.remove(params.deselected)) //!! -> change fq param in Manager.store
 					trigg_req = true;
 			};    	    	
 
-			if (trigg_req){
-				Manager.widgets['currentsearch'].setRefresh(false);				
+			if (trigg_req){				
+				StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
 
-				var fqvalue = Manager.store.get('fq');
-				var qvalue = Manager.store.extract_q_from_manager();
-				var sortvalue = Manager.store.get('sort').val();
-				var model = {};
-				model.q = qvalue;
+				var fqvalue = Manager.store.get('fq');				
+				var model = {};				
 				model.fq = fqvalue;
-				model.sort = sortvalue;
+				model.q = ModelManager.current_value_joker;
+				model.sort = ModelManager.current_value_joker;
 				model.view = ModelManager.current_value_joker;
 				model.category = ModelManager.current_value_joker;
 
@@ -349,22 +313,20 @@
 		 * */
 		this.smk_search_sorter_changed = function(params, searchFieldsTypes){
 
-			if (params.selected == undefined || !Manager.store.addByValue('sort', params.selected))																					
+			if (params.selected == undefined)																					
 				return;	  
-
-			Manager.widgets['currentsearch'].setRefresh(false);
-			Manager.widgets['category'].setRefresh(false);
-			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-				Manager.widgets[searchFieldsTypes[i].field].setRefresh(false);
+			
+			StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
+			StateManager.callWidgetFn('category', 'setRefresh', [false]);			
+			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {				
+				StateManager.callWidgetFn(searchFieldsTypes[i].field, 'setRefresh', [false]);
 			};	
 
-			var fqvalue = Manager.store.get('fq');
-			var qvalue = Manager.store.extract_q_from_manager();	
-			var sortvalue = Manager.store.get('sort').val();
+			var sortvalue = params.selected;
 			var model = {};
-			model.q = qvalue;
-			model.fq = fqvalue;	
 			model.sort = sortvalue;
+			model.q = ModelManager.current_value_joker;
+			model.fq = ModelManager.current_value_joker;	
 			model.view = ModelManager.current_value_joker;
 			model.category = ModelManager.current_value_joker;
 
@@ -374,11 +336,11 @@
 		/** 
 		 * switch grid/list in teasers view		 
 		 */
-		this.switch_list_grid = function(value){ 
-			Manager.widgets['teasers'].switch_list_grid(value);
+		this.switch_list_grid = function(value){ 			
+			StateManager.callWidgetFn('teasers', 'switch_list_grid', [value]);
 		};	
-		
-		
+
+
 		/*
 		 * Finish loading events
 		 * 
@@ -388,27 +350,27 @@
 		this.remove_modal_loading_from_widget = function(value){
 			StateManager.remove_modal_loading_from_widget(value);
 		};
-		
+
 		//* a new image has been displayed in "teaser"
 		this.smk_teasers_this_img_displayed = function(){
 			StateManager.smk_teasers_this_img_displayed();
 		};		
-		
+
 		//* a new image has finished loading in "teaser"
 		this.smk_teasers_this_img_loaded = function(){
 			StateManager.smk_teasers_this_img_loaded();
 		};			
 
 		//* all images displayed in "teaser"
-		this.after_afterRequest = function(field){
-			Manager.widgets[field].after_afterRequest();
+		this.after_afterRequest = function(field){			
+			StateManager.callWidgetFn(field, 'after_afterRequest');
 		};
-		
+
 		//* a new image has finished loading in "related"
 		this.smk_related_this_img_loaded = function(){
 			StateManager.smk_related_this_img_loaded();
 		};
-		
+
 		//* a new image has finished loading in "thumbs"
 		this.smk_thumbs_img_loaded = function(){
 			StateManager.smk_thumbs_img_loaded();
