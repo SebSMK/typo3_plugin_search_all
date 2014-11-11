@@ -1,12 +1,5 @@
 (function ($) {
 AjaxSolr.SearchBoxWidget = AjaxSolr.AbstractTextWidget.extend({
-
-	 constructor: function (attributes) {
-	    AjaxSolr.AbstractTextWidget.__super__.constructor.apply(this, arguments);
-	    AjaxSolr.extend(this, {
-	      getCurrentState:null
-	    }, attributes);
-	  },		  	
 	
 	hightlight : true,
 	

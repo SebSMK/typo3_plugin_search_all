@@ -157,20 +157,11 @@
 				if ($(this.target).find('.modal_loading').length == 0){
 					// all widgets are loaded, we remove the general loading screen
 					this.stop_modal_loading();					
-					this.set_focus();
-
-					// show info window
-					//this.show_info();
-					
+					this.set_focus();					
 					this.show_footer();
-
 				}			  
 			}
-		},  
-
-		show_info: function(){	  
-			$("body").find("#smk_search_info").css('opacity', '1');  	  
-		},
+		},  	
 
 		set_focus: function(){
 			var self = this;
@@ -192,15 +183,6 @@
 				this.stop_modal_loading();
 			}	  	  
 		},
-
-
-//		search_filter_start_loading: function(target){
-//		$(target).addClass('filter_loading');	  
-//		},
-
-//		search_filter_stop_loading: function(target){
-//		$(target).removeClass('filter_loading');	  
-//		},
 
 		viewChanged: function (stateChange) {        	    
 			var $target = $(this.target);
@@ -370,10 +352,6 @@
 				this.currentState["category"] = stateChange["category"];
 			}
 
-			return this.currentState;
-		},
-
-		getCurrentState: function(){
 			return this.currentState;
 		},
 

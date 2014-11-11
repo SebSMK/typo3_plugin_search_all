@@ -36,8 +36,8 @@ var EventsManager;
 			template: Mustache.getTemplate('pi1/templates/general_template.html')
 		});
     
-    //** create events manager
-    EventsManager = new EventsManager.constructor();
+	    //** create events manager
+	    EventsManager = new EventsManager.constructor();
     
 		// those functions will be passed as parameter in the manager - we've got to bind it to an environment
 		var allWidgetsProcessedBound = $.proxy(StateManager.allWidgetsProcessed, StateManager);
@@ -113,15 +113,9 @@ var EventsManager;
 		//** load widgets
 		//******************************
 
-		//* stateManagerWidget must be registred in first place
-		//Manager.addWidget(stateManager);
-
-		// this function will be passed as parameter in the searchbox - we've got to bind it to an environment
-		var getCurrentStateBound = $.proxy(StateManager.getCurrentState, StateManager);
 		Manager.addWidget(new AjaxSolr.SearchBoxWidget({
 			id: 'searchbox',
-			target: '#searchbox',
-			getCurrentState: getCurrentStateBound,
+			target: '#searchbox',			
 			template: Mustache.getTemplate('pi1/templates/search_box.html')
 		}));
 
@@ -229,7 +223,7 @@ var EventsManager;
 		//******************************
 
 		/*
-		 * Widgets state changed
+		 * UI events
 		 * 
 		 * */
 
@@ -273,11 +267,7 @@ var EventsManager;
 		$(Manager.widgets['currentsearch']).on('smk_search_remove_one_search_string', function(event){     	
 			EventsManager.smk_search_remove_one_search_string(event);
 		});	
-
-		/*
-		 * Calls to view changes
-		 * 
-		 * */    
+ 
 
 		//* calls to detail view
 		$(Manager.widgets['teasers']).on('smk_search_call_detail', function(event){     	
@@ -301,40 +291,40 @@ var EventsManager;
 		//* searchfilters has finished loading
 		for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 			$(Manager.widgets[searchFieldsTypes[i].field]).on('smk_search_filter_loaded', function(event){
-				StateManager.remove_modal_loading_from_widget(event.currentTarget.target);
+				EventsManager.remove_modal_loading_from_widget(event.currentTarget.target);
 			});
 		};	
 		
 		//* a new image has been displayed in "teaser"
 		$(Manager.widgets['teasers']).on('smk_teasers_this_img_displayed', function(event){     	            	
-			StateManager.smk_teasers_this_img_displayed();
+			EventsManager.smk_teasers_this_img_displayed();
 		});	
 		
 		//* a new image has finished loading in "teaser"
 		$(Manager.widgets['teasers']).on('smk_teasers_this_img_loaded', function(event){     	            	
-			StateManager.smk_teasers_this_img_loaded();
+			EventsManager.smk_teasers_this_img_loaded();
 		});				
 
 		//* all images displayed in "teaser"
 		$(StateManager).on('smk_teasers_all_images_displayed', function(event){ 			
 			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
-				Manager.widgets[searchFieldsTypes[i].field].after_afterRequest();				
+				EventsManager.after_afterRequest(searchFieldsTypes[i].field);				
 			};				
 		});	
 		
 		//* a new image has finished loading in "related"
 		$(Manager.widgets['details']).on('smk_related_this_img_loaded', function(event){   
-			StateManager.smk_related_this_img_loaded();
+			EventsManager.smk_related_this_img_loaded();
 		}); 
 		
 		//* a new image has finished loading in "thumbs"
 		$(Manager.widgets['details']).on('smk_thumbs_img_loaded', function(event){
-			StateManager.smk_thumbs_img_loaded();  		  	    
+			EventsManager.smk_thumbs_img_loaded();  		  	    
 		});
 
 		//* image has finished loading in "detail"
 		$(Manager.widgets['details']).on('smk_detail_this_img_loaded', function(event){ 
-			StateManager.smk_detail_this_img_loaded();
+			EventsManager.smk_detail_this_img_loaded();
 		});           
 
 		//******************************

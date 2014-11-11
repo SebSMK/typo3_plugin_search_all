@@ -129,6 +129,12 @@
 			Manager.doRequest();				   																   	 
 		};
 
+		
+		/*
+		 * UI events
+		 * 
+		 * */
+		
 		/**
 		 * current page changed
 		 * */
@@ -383,6 +389,47 @@
 		 */
 		this.switch_list_grid = function(value){ 
 			Manager.widgets['teasers'].switch_list_grid(value);
+		};	
+		
+		
+		/*
+		 * Finish loading events
+		 * 
+		 * */
+
+		//* searchfilters has finished loading
+		this.remove_modal_loading_from_widget = function(value){
+			StateManager.remove_modal_loading_from_widget(value);
+		};
+		
+		//* a new image has been displayed in "teaser"
+		this.smk_teasers_this_img_displayed = function(){
+			StateManager.smk_teasers_this_img_displayed();
 		};		
+		
+		//* a new image has finished loading in "teaser"
+		this.smk_teasers_this_img_loaded = function(){
+			StateManager.smk_teasers_this_img_loaded();
+		};			
+
+		//* all images displayed in "teaser"
+		this.after_afterRequest = function(field){
+			Manager.widgets[field].after_afterRequest();
+		};
+		
+		//* a new image has finished loading in "related"
+		this.smk_related_this_img_loaded = function(){
+			StateManager.smk_related_this_img_loaded();
+		};
+		
+		//* a new image has finished loading in "thumbs"
+		this.smk_thumbs_img_loaded = function(){
+			StateManager.smk_thumbs_img_loaded();
+		};
+
+		//* image has finished loading in "detail"
+		this.smk_detail_this_img_loaded = function(){
+			StateManager.smk_detail_this_img_loaded();
+		};          
 	}
 }));
