@@ -169,18 +169,12 @@
 
 			if (caller.set(category)){   
 				caller.setActiveTab(category);
-				StateManager.categoryChanged({'category': category});
-
-				if (view !== undefined)
-					StateManager.viewChanged({'view': 'teasers'});
 
 				Manager.widgets['currentsearch'].setRefresh(false);
 
-				var fqvalue = Manager.store.get('fq');
 				var qvalue = Manager.store.extract_q_from_manager();
 				var model = {};
 				model.q = qvalue;
-				model.fq = fqvalue;
 				model.category = category;
 
 				ModelManager.updateView(model); 
@@ -191,8 +185,6 @@
 		 * call to teaser view
 		 * */
 		this.smk_search_call_teasers = function(){
-
-			StateManager.viewChanged({view:"teasers"}); 
 
 			Manager.widgets['details'].setCurrentThumb_selec(null);
 
@@ -208,8 +200,6 @@
 		this.smk_search_call_detail = function(event){			
 			var save_current_request = event.save_current_request;    		  
 			var art_id = event.detail_id;		  
-
-			StateManager.viewChanged({view:"detail"});
 
 			if(save_current_request){
 				ModelManager.storeCurrentModel();  
@@ -264,9 +254,6 @@
 						_gaq.push(['_trackEvent','Search', 'Regular search', q_value, 0, true]);
 
 					if (teaser_view){
-						// call to teasers view from searchbox when in "detail" view    	         	
-						StateManager.viewChanged({view:"teasers"});
-						StateManager.categoryChanged({category:"all"}); 	
 						Manager.widgets['currentsearch'].removeAllCurrentSearch();    	    	
 						Manager.widgets['details'].setCurrentThumb_selec(null);	    	    		
 					}

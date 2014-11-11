@@ -31,8 +31,7 @@ var EventsManager;
 		//** create state manager
 		StateManager = new AjaxSolr.StateManager({
 			id: 'state_manager',
-			target: '#smk_search_wrapper',
-			currentState: {view:'teasers', category:''},
+			target: '#smk_search_wrapper',			
 			template: Mustache.getTemplate('pi1/templates/general_template.html')
 		});
     

@@ -2,13 +2,6 @@
 
 	AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
 
-		constructor: function (attributes) {
-			AjaxSolr.AbstractWidget.__super__.constructor.apply(this, arguments);
-			AjaxSolr.extend(this, {
-				currentState:{}
-			}, attributes);
-		},		  
-
 		allWidgetProcessed : false, 
 
 		init: function () {
@@ -22,12 +15,12 @@
 
 			//* fix cufon problem in footer
 			this.fixCrappyfooter();
-			
-			this.viewChanged(this.currentState);
-			this.categoryChanged(this.currentState);	  
+
+			this.viewChanged({view:'teasers'});
+			this.categoryChanged({category:''});	  
 
 		},
-		
+
 		beforeRequest: function(){	 
 
 			this.start_modal_loading(this.target);
@@ -187,12 +180,11 @@
 		viewChanged: function (stateChange) {        	    
 			var $target = $(this.target);
 			var self = this;
-			var newstate = this.getNewState(stateChange);
 
-			if (newstate["view"] === undefined)
+			if (stateChange["view"] === undefined)
 				return;
 
-			switch(newstate["view"]){
+			switch(stateChange["view"]){
 			case "teasers":			  
 				self.showWidget($("body").find("#smk_search_info"));
 
@@ -210,7 +202,7 @@
 				self.showWidget($target.find("#pager-header"));
 				self.showWidget($(Manager.widgets['teasers'].target));
 
-				switch(newstate["category"]){
+				switch(stateChange["category"]){
 				case "collections":		 			  			  			  
 					self.showWidget($target.find("#search-filters"));
 					//$target.find("#search-filters").show().children().show();					  			  			  
@@ -265,9 +257,7 @@
 		categoryChanged: function (stateChange) {        	    
 			var $target = $(this.target);
 
-			var newstate = this.getNewState(stateChange);
-
-			if (newstate["category"] === undefined )
+			if (stateChange["category"] === undefined )
 				return;
 
 			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
@@ -275,12 +265,12 @@
 					Manager.widgets[Manager.searchfilterList[i].field].hide_drop();
 			};
 
-			switch(newstate["category"]){
+			switch(stateChange["category"]){
 			case "collections":		 			  			  				  
 				this.showWidget($target.find("#search-filters"));
 				//$target.find("#search-filters").show().children().show();		
 				$(Manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();
-				Manager.widgets['category'].setActiveTab(newstate["category"]);
+				Manager.widgets['category'].setActiveTab(stateChange["category"]);
 
 				break;
 			case "nyheder":
@@ -290,7 +280,7 @@
 			case "all":
 				$target.find("#search-filters").hide();
 				$(Manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
-				Manager.widgets['category'].setActiveTab(newstate["category"]);
+				Manager.widgets['category'].setActiveTab(stateChange["category"]);
 
 				// remove all search filters
 				for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  
@@ -343,29 +333,17 @@
 			$("#footer").hide();	  
 		},
 
-		getNewState: function(stateChange) {
-
-			if (stateChange["view"] !== undefined){
-				this.currentState["view"] = stateChange["view"];			 
-			} 
-			else if (stateChange["category"] !== undefined){
-				this.currentState["category"] = stateChange["category"];
-			}
-
-			return this.currentState;
-		},
-
 		generalSolrError: function(e){
 			$(this.target).empty().html(sprintf('%s &nbsp;&nbsp; returned:&nbsp;&nbsp; %s<br>Please contact website administrator.', Manager.solrUrl, e)); 
 		},		
-		
+
 		fixCrappyfooter: function(){
 			$('.footer_content h2').each(function() {  
 				var text = this.textContent;
 				$(this).empty();
 				$(this).text(text);
 			});
-			
+
 		}
 
 	});
