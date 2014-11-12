@@ -7,7 +7,7 @@
 		/*********
 		 * PUBLIC FUNCTIONS
 		 ********** */
-				
+
 		init: function () {
 			var self = this;
 			var $target = $(this.target);	
@@ -44,32 +44,69 @@
 			return html;
 		},		
 
-		
+
 		/**
-		 * Call a function in a given widget of the manager
-	     * @param {String} [widget] Widget name
-	     * @param {String} [fn] function name
-	     * @param {String[]} [params] optional - array of function's parameters
-	     */
-		callWidgetFn: function(widget, fn, params){												
-			if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
-				console.log(sprintf("%s - %s not defined", widget, fn));
-				return;
-			}						
-			return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);
+		 * Call function in a given widget / subwidget of the manager
+		 * @param {String} [widget] Widget name
+		 * @param {String} [fn] function name
+		 * @params {Json} [options]		 
+		 * * * @param {String} [subwidget] name of the subwidget
+		 * * * @param {String[]} [params] array of function's parameters
+		 */
+		callWidgetFn: function(widget, fn, options){	
+			var options = options || {};
+			var params = options.params;
+			var subwidget = options.subwidget;
+
+			if(subwidget === undefined){
+				if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
+					console.log(sprintf("%s - %s not defined", widget, fn));
+					return;
+				}						
+				return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);		    	
+			}else{		    	
+				if(Manager.widgets[widget] === undefined || 
+						Manager.widgets[widget][subwidget] === undefined || 
+						typeof(Manager.widgets[widget][subwidget][fn]) !== "function"){
+
+					console.log(sprintf("%s - %s - %s not defined", widget, subwidget, fn));
+					return;
+				}						
+				return Manager.widgets[widget][subwidget][fn].apply(Manager.widgets[widget][subwidget], params);
+			}		    			
 		},
-		
+
+		/**
+		 * Call target of a given widget / subwidget of the manager
+		 * @param {String} [widget] Widget name
+		 * @param {String} [subwidget] subWidget name - optional
+		 */
+		callWidgetTarget: function(widget, subwidget){												
+			if(Manager.widgets[widget] === undefined ||
+					(subwidget !== undefined && Manager.widgets[widget].subwidget)
+			){
+				console.log(sprintf("target %s/%s not defined", widget, subwidget));
+				return [];
+			}						
+			//return subwidget === undefined ? Manager.widgets[widget].target : Manager.widgets[widget].subwidget.target;
+			if( subwidget === undefined) {
+				return Manager.widgets[widget].target
+			}else {
+				return Manager.widgets[widget][subwidget].target;
+			}
+		},
+
 		/**
 		 * image loading handlers
 		 * */
 
 		//* teaser		
 		smk_teasers_this_img_displayed: function(){
-			$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
+			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
 
 			//* check if there are still images not displayed in "teaser"
-			if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0 && 
-					$(Manager.widgets['teasers'].target).find('.not_displayed').length == 0){				
+			if ($(this.callWidgetTarget('teasers')).find('.image_loading').length == 0 && 
+					$(this.callWidgetTarget('teasers')).find('.not_displayed').length == 0){				
 				// if all images in teaser are displayed, send event
 				$(this).trigger({
 					type: "smk_teasers_all_images_displayed"
@@ -78,10 +115,10 @@
 		},
 
 		smk_teasers_this_img_loaded: function(){
-			$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
+			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
 
 			//* check if there are still images loading in "teaser"
-			if ($(Manager.widgets['teasers'].target).find('.image_loading').length == 0){
+			if ($(this.callWidgetTarget('teasers')).find('.image_loading').length == 0){
 
 				// highlight search string in teasers
 				var vArray = [].concat(Manager.store.get('q').value);
@@ -92,46 +129,46 @@
 						words = words.concat(vArray[i].trim().split(" "));    				
 					};
 
-					$(Manager.widgets['teasers'].target).highlight(words);
+					$(this.callWidgetTarget('teasers')).highlight(words);
 				}    			
 
 				// if all images are loaded, we stop the modal "waiting image" for this widget
-				this.remove_modal_loading_from_widget(Manager.widgets['teasers'].target);
+				this.remove_modal_loading_from_widget(this.callWidgetTarget('teasers'));
 
 				// if in list view mode, align images
-				if ($(Manager.widgets['teasers'].target).find('.teaser--list').length > 0)
-					Manager.widgets['teasers'].verticalAlign(); 
+				if ($(this.callWidgetTarget('teasers')).find('.teaser--list').length > 0)
+					this.callWidgetFn('teasers', 'verticalAlign'); 
 			}    		  
 
 		},
 
 		//* related
 		smk_related_this_img_loaded: function(){
-			$(Manager.widgets['details'].related_subWidget.target).find('#teaser-container-grid').masonry('layout');  
+			$(this.callWidgetTarget('details', 'related_subWidget')).find('#teaser-container-grid').masonry('layout');  
 
 			//* check if there are still images loading in "related"
-			if ($(Manager.widgets['details'].related_subWidget.target).find('.image_loading').length == 0){    		
+			if ($(this.callWidgetTarget('details', 'related_subWidget')).find('.image_loading').length == 0){    		
 				// if all images are loaded, we stop the modal "waiting image" for this widget
-				this.remove_modal_loading_from_widget(Manager.widgets['details'].related_subWidget.target);   	   	 	       	  	
+				this.remove_modal_loading_from_widget(this.callWidgetTarget('details', 'related_subWidget'));   	   	 	       	  	
 			} 	
 		},
 
 		//* thumbs
 		smk_thumbs_img_loaded: function(){
 			//* check if there are still images loading in "teaser"
-			if ($(Manager.widgets['details'].thumbnails_subWidget.target).find('.image_loading').length == 0){
-				Manager.widgets['details'].thumbnails_subWidget.verticalAlign();       	  	
+			if ($(this.callWidgetTarget('details', 'thumbnails_subWidget')).find('.image_loading').length == 0){				 
+				this.callWidgetFn('details', 'verticalAlign', {subwidget: 'thumbnails_subWidget'});
 			}  	  
 		},
 
 		//* detail
 		smk_detail_this_img_loaded: function(){
-			this.remove_modal_loading_from_widget(Manager.widgets['details'].target);   
+			this.remove_modal_loading_from_widget(this.callWidgetTarget('details'));   
 			// show "back-button" in Detail view
-			$(Manager.widgets['details'].target).find('a.back-button').css('opacity', '1');			
+			$(this.callWidgetTarget('details')).find('a.back-button').css('opacity', '1');			
 		},			
 
-		
+
 		viewChanged: function (stateChange) {        	    
 			var $target = $(this.target);
 			var self = this;
@@ -145,17 +182,17 @@
 
 				$target.find("#thumbnails").empty().hide();
 				$target.find("#smk_detail").empty().hide();		  		  		  		 
-
-				Manager.widgets['details'].related_subWidget.removeAllArticles();
+				
+				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});
 				$target.find("#related-artworks").hide();		  
 
 				self.showWidget($target.find("#currentsearch"));
 				self.showWidget($target.find("#category"));
 				self.showWidget($target.find("#viewpicker"));
-				self.showWidget($(Manager.widgets['sorter'].target));
+				self.showWidget($(self.callWidgetTarget('sorter')));
 				self.showWidget($target.find("#pager"));
 				self.showWidget($target.find("#pager-header"));
-				self.showWidget($(Manager.widgets['teasers'].target));
+				self.showWidget($(self.callWidgetTarget('teasers')));
 
 				switch(stateChange["category"]){
 				case "collections":		 			  			  			  
@@ -187,19 +224,19 @@
 				$target.find("#currentsearch").hide();
 				$target.find("#category").hide();
 				$target.find("#viewpicker").hide();
-				$(Manager.widgets['sorter'].target).hide();	
+				$(self.callWidgetTarget('sorter')).hide();
 				$target.find("#pager").hide();
 				$target.find("#pager-header").hide();
 
-				$target.find("#search-filters").hide();
-				$(Manager.widgets['teasers'].target).hide();		
+				$target.find("#search-filters").hide();				
+				$(self.callWidgetTarget('teasers')).hide();
 
 				self.showWidget($target.find("#smk_detail"));
 				self.showWidget($target.find("#thumbnails"));
 
-				self.showWidget($(Manager.widgets['details'].related_subWidget.target));
-				Manager.widgets['details'].related_subWidget.removeAllArticles();	
-				$(Manager.widgets['details'].related_subWidget.target).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
+				self.showWidget($(self.callWidgetTarget('details', 'related_subWidget')));				
+				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});
+				$(self.callWidgetTarget('details', 'related_subWidget')).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
 
 				$target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
 
@@ -216,16 +253,17 @@
 				return;
 
 			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
-				if (Manager.widgets[Manager.searchfilterList[i].field].getRefresh())
-					Manager.widgets[Manager.searchfilterList[i].field].hide_drop();
+				if (this.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))					
+					this.callWidgetFn(Manager.searchfilterList[i].field, 'hide_drop')
 			};
 
 			switch(stateChange["category"]){
 			case "collections":		 			  			  				  
 				this.showWidget($target.find("#search-filters"));
 				//$target.find("#search-filters").show().children().show();		
-				$(Manager.widgets['teasers'].target).find('#teaser-container-grid').removeClass('full-width').hide();
-				Manager.widgets['category'].setActiveTab(stateChange["category"]);
+				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
+				this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});
+
 
 				break;
 			case "nyheder":
@@ -234,23 +272,23 @@
 			case "praktisk":
 			case "all":
 				$target.find("#search-filters").hide();
-				$(Manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
-				Manager.widgets['category'].setActiveTab(stateChange["category"]);
+				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
+				this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
 
 				// remove all search filters
-				for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  
-					Manager.widgets[Manager.searchfilterList[i].field].removeAllSelectedFilters(true);
+				for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
+					this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
 				};
 
 				break;
 			default:		    			  			   							  
 				$target.find("#search-filters").hide();
-			$(Manager.widgets['teasers'].target).find('#teaser-container-grid').addClass('full-width').hide();
-			Manager.widgets['category'].setActiveTab("all");
+			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
+			this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
 			break;		  
 			}
 
-			if($(Manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0){
+			if($(this.callWidgetTarget('teasers')).find('#teaser-container-grid .teaser--grid').length > 0){
 				//* grid view mode
 				$(this).trigger({
 					type: "current_view_mode",
@@ -265,20 +303,20 @@
 				});
 			}
 
-			Manager.widgets['teasers'].removeAllArticles();
+			this.callWidgetFn('teasers', 'removeAllArticles');
 
-			$(Manager.widgets['teasers'].target).show().children().not('.modal').show();
+			$(this.callWidgetTarget('teasers')).show().children().not('.modal').show();
 
-			if($(Manager.widgets['teasers'].target).find('#teaser-container-grid .teaser--grid').length > 0)
-				$(Manager.widgets['teasers'].target).find('#teaser-container-grid').masonry('layout');
+			if($(this.callWidgetTarget('teasers')).find('#teaser-container-grid .teaser--grid').length > 0)
+				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
 
 			return;
 		},
-		
+
 		/*********
 		 * PRIVATE FUNCTIONS
 		 ********** */
-		
+
 		/*
 		 * start general modal loading screen 
 		 */
@@ -322,7 +360,7 @@
 		set_focus: function(){
 			var self = this;
 			$(document).ready(function () {
-				$(Manager.widgets['searchbox'].target).find('#smk_search').focus();
+				$(self.callWidgetTarget('searchbox')).find('#smk_search').focus();
 			});	  	  
 		},  
 

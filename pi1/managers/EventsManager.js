@@ -49,7 +49,7 @@
 				if (model.view != 'detail'){			    		
 					StateManager.categoryChanged({'category': model.category});
 				}else{
-					StateManager.callWidgetFn('details', 'setCurrentThumb_selec', [null]);						
+					StateManager.callWidgetFn('details', 'setCurrentThumb_selec', {params:[null]});						
 				}
 			}else if(model.category == undefined && model.view != 'detail'){
 				StateManager.categoryChanged({'category': "all"});
@@ -102,14 +102,14 @@
 			// remove all previous search filters - only if search filters is set to "getRefresh"					
 			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
 				if(StateManager.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))
-					StateManager.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', [false]);	
+					StateManager.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params:[false]});	
 
 			};
 			if (model.category == 'collections' && model.fq !== undefined){
 				// add selected filters in searchFiltersWidget
 				for (var i = 0, l = model.fq.length; i < l; i++) {
 					var field = model.fq[i].value !== undefined ? model.fq[i].value.split(':')[0] : '';					
-					StateManager.callWidgetFn(field, 'addSelectedFilter', [model.fq[i].value.split(':')[1]]);					
+					StateManager.callWidgetFn(field, 'addSelectedFilter', {params: [model.fq[i].value.split(':')[1]]} );					
 				}			    			
 			}
 
@@ -119,11 +119,11 @@
 			StateManager.callWidgetFn('currentsearch', 'removeAllCurrentSearch');						
 
 			for (var i = 0, l = q_wout_q_def.length; i < l; i++) {				
-				StateManager.callWidgetFn('currentsearch', 'add_q', [q_wout_q_def[i], q_wout_q_def[i]]);
+				StateManager.callWidgetFn('currentsearch', 'add_q', {params: [q_wout_q_def[i], q_wout_q_def[i]]} );
 			};	
 
 			// select "sort" option in sorterWidget
-			StateManager.callWidgetFn('sorter', 'setOption', [Manager.store.get('sort').val()]);
+			StateManager.callWidgetFn('sorter', 'setOption', {params: [Manager.store.get('sort').val()]});
 
 			//**> start Solr request 
 			Manager.doRequest();				   																   	 
@@ -139,10 +139,10 @@
 		 * current page changed
 		 * */
 		this.smk_search_pager_changed = function(start, searchFieldsTypes){			
-			StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
-			StateManager.callWidgetFn('category', 'setRefresh', [false]);
+			StateManager.callWidgetFn('currentsearch', 'setRefresh', {params: [false]});
+			StateManager.callWidgetFn('category', 'setRefresh', {params: [false]});
 			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {				
-				StateManager.callWidgetFn(searchFieldsTypes[i].field, 'setRefresh', [false]);
+				StateManager.callWidgetFn(searchFieldsTypes[i].field, 'setRefresh', {params: [false]});
 			};			
 
 			var model = {};
@@ -163,10 +163,10 @@
 			var category = event.category;
 			var view = event.view;  	  	  
 
-			if (StateManager.callWidgetFn('category', 'set', [category])){   				
-				StateManager.callWidgetFn('category', 'setActiveTab', [category]);
+			if (StateManager.callWidgetFn('category', 'set', {params: [category]})){   				
+				StateManager.callWidgetFn('category', 'setActiveTab', {params: [category]});
 
-				StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
+				StateManager.callWidgetFn('currentsearch', 'setRefresh', {params: [false]});
 
 				var model = {};
 				model.q = ModelManager.current_value_joker;
@@ -209,11 +209,16 @@
 		 * a search string has been added in SearchBox
 		 * */
 		this.smk_search_q_added = function(event){
-			var search_string = jQuery.trim(event.val);
-			var q = ModelManager.getModel().q !== undefined ?  ModelManager.getModel().q : new Array();
-			
+			var search_string = jQuery.trim(event.val);			
+			var q = new Array()
 			if (search_string != '') {																																									
-				var default_teaser_view = ModelManager.getModel().view == 'detail';							
+				var default_teaser_view = ModelManager.getModel().view == 'detail';
+				
+				if (!default_teaser_view)
+					q = AjaxSolr.isArray(ModelManager.getModel().q) ?  
+							ModelManager.getModel().q 
+						: 
+							ModelManager.getModel().q === undefined ? new Array() : new Array(ModelManager.getModel().q);				
 				
 				q.push(search_string); 			
 				
@@ -269,7 +274,7 @@
 			};    	    	
 
 			if (trigg_req){				
-				StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
+				StateManager.callWidgetFn('currentsearch', 'setRefresh', {params: [false]});
 
 				var fqvalue = Manager.store.get('fq');				
 				var model = {};				
@@ -291,10 +296,10 @@
 			if (params.selected == undefined)																					
 				return;	  
 			
-			StateManager.callWidgetFn('currentsearch', 'setRefresh', [false]);
-			StateManager.callWidgetFn('category', 'setRefresh', [false]);			
+			StateManager.callWidgetFn('currentsearch', 'setRefresh', {params: [false]});
+			StateManager.callWidgetFn('category', 'setRefresh', {params: [false]});			
 			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {				
-				StateManager.callWidgetFn(searchFieldsTypes[i].field, 'setRefresh', [false]);
+				StateManager.callWidgetFn(searchFieldsTypes[i].field, 'setRefresh', {params: [false]});
 			};	
 
 			var sortvalue = params.selected;
@@ -312,7 +317,7 @@
 		 * switch grid/list in teasers view		 
 		 */
 		this.switch_list_grid = function(value){ 			
-			StateManager.callWidgetFn('teasers', 'switch_list_grid', [value]);
+			StateManager.callWidgetFn('teasers', 'switch_list_grid', {params: [value]});
 		};	
 
 
