@@ -210,46 +210,26 @@
 		 * */
 		this.smk_search_q_added = function(event){
 
-			var val = event.val;
-
-			if (val != '') {
-				var text = jQuery.trim(val);
-
-				Manager.store.last = text;																																										
-
-				var q_value = text;
-				var teaser_view = false;
-
-				// if in "detail" view, restore the default solr request
-				if (ModelManager.getModel().view == 'detail'){
-					//* delete current (exposed) solr parameters
-					Manager.store.exposedReset();
-					teaser_view = true;
-				}
-
-				//* concat the new search term to the previous term(s)
-				var current_q = Manager.store.get('q');
-				var current_q_values = new Array();							
-
-				if (AjaxSolr.isArray(current_q.value)){
-					for (var i = 0, l = current_q.value.length; i < l; i++) {
-						current_q_values.push(current_q.value[i]);								 
-					}
-				}else if(typeof current_q.value === 'string'){
-					current_q_values.push(current_q.value);
-				};
+			var search_string = jQuery.trim(event.val);
+			var q = ModelManager.getModel().q !== undefined ?  ModelManager.getModel().q : new Array();
+			
+			if (search_string != '') {
+																																									
+				var default_teaser_view = ModelManager.getModel().view != 'detail';							
+				
+				q.push(search_string); // add new search word if not in current search string				
 
 				//* send request
 				if (typeof _gaq !== undefined)
-					_gaq.push(['_trackEvent','Search', 'Regular search', q_value, 0, true]);
+					_gaq.push(['_trackEvent','Search', 'Regular search', search_string, 0, true]);
 
 				var model = {};										
-				model.q = current_q_values.concat(q_value);					
+				model.q = q;					
 				model.sort = ModelManager.current_value_joker;
-				model.view = teaser_view ? "teasers" : ModelManager.current_value_joker;
-				model.category = teaser_view ? "all" : ModelManager.current_value_joker;
+				model.view = default_teaser_view ? "teasers" : ModelManager.current_value_joker;
+				model.category = default_teaser_view ? "all" : ModelManager.current_value_joker;
 
-				if (!teaser_view)
+				if (!default_teaser_view)
 					model.fq = ModelManager.current_value_joker;
 
 				ModelManager.updateView(model);					
