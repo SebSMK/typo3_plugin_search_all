@@ -19,10 +19,6 @@
 
 			//* fix cufon problem in footer
 			this.fixCrappyfooter();
-
-			this.viewChanged({view:'teasers'});
-			this.categoryChanged({category:''});	  
-
 		},
 
 		beforeRequest: function(){	 

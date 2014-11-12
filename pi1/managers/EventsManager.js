@@ -209,17 +209,14 @@
 		 * a search string has been added in SearchBox
 		 * */
 		this.smk_search_q_added = function(event){
-
 			var search_string = jQuery.trim(event.val);
 			var q = ModelManager.getModel().q !== undefined ?  ModelManager.getModel().q : new Array();
 			
-			if (search_string != '') {
-																																									
-				var default_teaser_view = ModelManager.getModel().view != 'detail';							
+			if (search_string != '') {																																									
+				var default_teaser_view = ModelManager.getModel().view == 'detail';							
 				
-				q.push(search_string); // add new search word if not in current search string				
-
-				//* send request
+				q.push(search_string); 			
+				
 				if (typeof _gaq !== undefined)
 					_gaq.push(['_trackEvent','Search', 'Regular search', search_string, 0, true]);
 
@@ -233,8 +230,6 @@
 					model.fq = ModelManager.current_value_joker;
 
 				ModelManager.updateView(model);					
-
-
 			};
 		};
 
