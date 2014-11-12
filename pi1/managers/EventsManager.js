@@ -108,8 +108,10 @@
 			if (model.category == 'collections' && model.fq !== undefined){
 				// add selected filters in searchFiltersWidget
 				for (var i = 0, l = model.fq.length; i < l; i++) {
-					var field = model.fq[i].value !== undefined ? model.fq[i].value.split(':')[0] : '';					
-					StateManager.callWidgetFn(field, 'addSelectedFilter', {params: [model.fq[i].value.split(':')[1]]} );					
+					if(model.fq[i].value !== undefined){
+						var field = model.fq[i].value.split(':')[0]; 
+						StateManager.callWidgetFn(field, 'addSelectedFilter', {params: [model.fq[i].value.split(':')[1]]});
+					}															
 				}			    			
 			}
 

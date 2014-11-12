@@ -83,17 +83,14 @@
 		 */
 		callWidgetTarget: function(widget, subwidget){												
 			if(Manager.widgets[widget] === undefined ||
-					(subwidget !== undefined && Manager.widgets[widget].subwidget)
+					(subwidget !== undefined && Manager.widgets[widget][subwidget] === undefined)
 			){
 				console.log(sprintf("target %s/%s not defined", widget, subwidget));
 				return [];
 			}						
-			//return subwidget === undefined ? Manager.widgets[widget].target : Manager.widgets[widget].subwidget.target;
-			if( subwidget === undefined) {
-				return Manager.widgets[widget].target
-			}else {
-				return Manager.widgets[widget][subwidget].target;
-			}
+			
+			return subwidget === undefined ? Manager.widgets[widget].target : Manager.widgets[widget][subwidget].target;
+						
 		},
 
 		/**
@@ -178,34 +175,31 @@
 
 			switch(stateChange["view"]){
 			case "teasers":			  
-				self.showWidget($("body").find("#smk_search_info"));
-
-				$target.find("#thumbnails").empty().hide();
-				$target.find("#smk_detail").empty().hide();		  		  		  		 
+					
+				$(self.callWidgetTarget('details', 'thumbnails_subWidget')).empty().hide();
+				$(self.callWidgetTarget('details')).empty().hide();
+				$(self.callWidgetTarget('details', 'related_subWidget')).empty().hide();
 				
-				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});
-				$target.find("#related-artworks").hide();		  
+				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});				
 
-				self.showWidget($target.find("#currentsearch"));
-				self.showWidget($target.find("#category"));
-				self.showWidget($target.find("#viewpicker"));
-				self.showWidget($(self.callWidgetTarget('sorter')));
-				self.showWidget($target.find("#pager"));
 				self.showWidget($target.find("#pager-header"));
+				self.showWidget($(self.callWidgetTarget('currentsearch')));
+				self.showWidget($(self.callWidgetTarget('category')));
+				self.showWidget($(self.callWidgetTarget('viewpicker')));
+				self.showWidget($(self.callWidgetTarget('sorter')));
+				self.showWidget($(self.callWidgetTarget('pager')));				
 				self.showWidget($(self.callWidgetTarget('teasers')));
 
 				switch(stateChange["category"]){
-				case "collections":		 			  			  			  
-					self.showWidget($target.find("#search-filters"));
-					//$target.find("#search-filters").show().children().show();					  			  			  
-					break;	
-				default:		    			  			   							  
-					$target.find("#search-filters").hide();		  	 		  	  
-				break;		  
+					case "collections":		 			  			  			  
+						self.showWidget($target.find("#search-filters"));				  			  			  
+						break;	
+					default:		    			  			   							  
+						$target.find("#search-filters").hide();		  	 		  	  
+					break;		  
 				}
 
-
-				// If the teaser container is full width, than make a two column layout.
+				// If the teaser container is full width, then make a two column layout.
 				if ( $target.find('#teaser-container-grid').hasClass('full-width') ) {
 					$(this).addClass('teaser--two-columns');
 				}else{
@@ -218,28 +212,26 @@
 
 				// We hide footer here, and show it back one images are loaded in detail
 				this.hide_footer();		  
-
-				$("body").find("#smk_search_info").hide();
-
-				$target.find("#currentsearch").hide();
-				$target.find("#category").hide();
-				$target.find("#viewpicker").hide();
-				$(self.callWidgetTarget('sorter')).hide();
-				$target.find("#pager").hide();
+				
+				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});
+				
 				$target.find("#pager-header").hide();
-
-				$target.find("#search-filters").hide();				
+				$target.find("#search-filters").hide();
+				
+				$(self.callWidgetTarget('currentsearch')).hide();
+				$(self.callWidgetTarget('category')).hide();
+				$(self.callWidgetTarget('viewpicker')).hide();
+				$(self.callWidgetTarget('sorter')).hide();
+				$(self.callWidgetTarget('pager')).hide();												
 				$(self.callWidgetTarget('teasers')).hide();
 
-				self.showWidget($target.find("#smk_detail"));
-				self.showWidget($target.find("#thumbnails"));
-
+				self.showWidget($(self.callWidgetTarget('details')));
+				self.showWidget($(self.callWidgetTarget('details', 'thumbnails_subWidget')));
 				self.showWidget($(self.callWidgetTarget('details', 'related_subWidget')));				
-				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});
+
 				$(self.callWidgetTarget('details', 'related_subWidget')).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
-
 				$target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
-
+																
 				break;		  
 			} 	
 
@@ -252,40 +244,41 @@
 			if (stateChange["category"] === undefined )
 				return;
 
+			this.callWidgetFn('teasers', 'removeAllArticles');
+			this.showWidget($(this.callWidgetTarget('teasers')));
+			
 			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
 				if (this.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))					
 					this.callWidgetFn(Manager.searchfilterList[i].field, 'hide_drop')
 			};
 
 			switch(stateChange["category"]){
-			case "collections":		 			  			  				  
-				this.showWidget($target.find("#search-filters"));
-				//$target.find("#search-filters").show().children().show();		
-				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
-				this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});
-
-
-				break;
-			case "nyheder":
-			case "kalender":
-			case "artikel":
-			case "praktisk":
-			case "all":
-				$target.find("#search-filters").hide();
-				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
-				this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
-
-				// remove all search filters
-				for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
-					this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
-				};
-
-				break;
-			default:		    			  			   							  
-				$target.find("#search-filters").hide();
-			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
-			this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
-			break;		  
+				case "collections":		 			  			  				  
+					this.showWidget($target.find("#search-filters"));					
+					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
+					this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});
+	
+					break;
+				case "nyheder":
+				case "kalender":
+				case "artikel":
+				case "praktisk":
+				case "all":
+					$target.find("#search-filters").hide();
+					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
+					this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
+	
+					// remove all search filters
+					for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
+						this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
+					};
+	
+					break;
+				default:		    			  			   							  
+					$target.find("#search-filters").hide();
+					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
+					this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
+				break;		  
 			}
 
 			if($(this.callWidgetTarget('teasers')).find('#teaser-container-grid .teaser--grid').length > 0){
@@ -301,11 +294,7 @@
 					type: "current_view_mode",
 					value:'list'
 				});
-			}
-
-			this.callWidgetFn('teasers', 'removeAllArticles');
-
-			$(this.callWidgetTarget('teasers')).show().children().not('.modal').show();
+			}										 
 
 			if($(this.callWidgetTarget('teasers')).find('#teaser-container-grid .teaser--grid').length > 0)
 				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
