@@ -230,7 +230,7 @@
 
 		this.getLocation = function (location){
 
-			if(location !== undefined)
+			if(location !== undefined && this.caller.manager.translator.getCollection(smkCommon.replace_dansk_char(location)) != '')
 				return this.caller.manager.translator.getLabel("teaser_on_display"); 
 
 			return this.caller.manager.translator.getLabel("teaser_appoint");	  

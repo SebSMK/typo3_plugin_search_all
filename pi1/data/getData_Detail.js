@@ -330,7 +330,7 @@
 
 		this.getlocation = function (location){
 
-			if(location !== undefined)
+			if(location !== undefined && this.caller.manager.translator.getCollection(smkCommon.replace_dansk_char(location)) != '')
 				return true;
 
 			return false;	  				  
