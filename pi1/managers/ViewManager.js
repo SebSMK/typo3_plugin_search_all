@@ -1,14 +1,29 @@
-(function ($) {
+(function (root, factory) {
+	if (typeof exports === "object" && exports) {
+		factory(exports); // CommonJS
+	} else {
+		var viewManager = {};
+		factory(viewManager);
+		if (typeof define === "function" && define.amd) {
+			define(viewManager); // AMD
+		} else {
+			root.ViewManager = viewManager; // <script>
+		}
+	}
+}(this, function (viewManager) {
 
-	AjaxSolr.StateManager = AjaxSolr.AbstractWidget.extend({
+	viewManager.constructor = function(options){
 
-		allWidgetProcessed : false, 
-
+		this.options = options || {};
+		this.template = options.template;
+		this.target = options.target;
+		this.allWidgetProcessed = false; 
+		
 		/*********
 		 * PUBLIC FUNCTIONS
 		 ********** */
 
-		init: function () {
+		this.init = function () {
 			var self = this;
 			var $target = $(this.target);	
 
@@ -19,9 +34,9 @@
 
 			//* fix cufon problem in footer
 			this.fixCrappyfooter();
-		},
+		};
 
-		beforeRequest: function(){	 
+		this.beforeRequest = function(){	 
 
 			this.start_modal_loading(this.target);
 
@@ -36,13 +51,13 @@
 			this.add_modal_loading_to_widget(Manager.widgets['details']);	 
 			// related
 //			this.add_modal_loading_to_widget(Manager.widgets['details'].related_subWidget);*/
-		},  
+		};  
 
-		template_integration_json: function (json_data, templ_id){	  
+		this.template_integration_json = function (json_data, templ_id){	  
 			var template = this.template; 	
 			var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 			return html;
-		},		
+		};		
 
 
 		/**
@@ -52,42 +67,42 @@
 		 * @params {Json} [options]		 
 		 * * * @param {String[]} [params] array of function's parameters
 		 */
-		callWidgetFn: function(widget, fn, options){	
+		this.callWidgetFn = function(widget, fn, options){	
 			var options = options || {};
 			var params = options.params;			
-		
+
 			if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
 				console.log(sprintf("%s - %s not defined", widget, fn));
 				return;
 			}	
-			
+
 			return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);		    	
-		
-		},
+
+		};
 
 		/**
 		 * Call target of a given widget / subwidget of the manager
 		 * @param {String} [widget] Widget name
 		 * @param {String} [subwidget] subWidget name - optional
 		 */
-		callWidgetTarget: function(widget, subwidget){												
+		this.callWidgetTarget = function(widget, subwidget){												
 			if(Manager.widgets[widget] === undefined ||
 					(subwidget !== undefined && Manager.widgets[widget][subwidget] === undefined)
 			){
 				console.log(sprintf("target %s/%s not defined", widget, subwidget));
 				return [];
 			}						
-			
+
 			return subwidget === undefined ? Manager.widgets[widget].target : Manager.widgets[widget][subwidget].target;
-						
-		},
+
+		};
 
 		/**
 		 * image loading handlers
 		 * */
 
 		//* teaser		
-		smk_teasers_this_img_displayed: function(){
+		this.smk_teasers_this_img_displayed = function(){
 			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
 
 			//* check if there are still images not displayed in "teaser"
@@ -98,9 +113,9 @@
 					type: "smk_teasers_all_images_displayed"
 				});
 			}    		  
-		},
+		};
 
-		smk_teasers_this_img_loaded: function(){
+		this.smk_teasers_this_img_loaded = function(){
 			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
 
 			//* check if there are still images loading in "teaser"
@@ -126,10 +141,10 @@
 					this.callWidgetFn('teasers', 'verticalAlign'); 
 			}    		  
 
-		},
+		};
 
 		//* related
-		smk_related_this_img_loaded: function(){
+		this.smk_related_this_img_loaded = function(){
 			$(this.callWidgetTarget('details', 'related_subWidget')).find('#teaser-container-grid').masonry('layout');  
 
 			//* check if there are still images loading in "related"
@@ -137,25 +152,25 @@
 				// if all images are loaded, we stop the modal "waiting image" for this widget
 				this.remove_modal_loading_from_widget(this.callWidgetTarget('details', 'related_subWidget'));   	   	 	       	  	
 			} 	
-		},
+		};
 
 		//* thumbs
-		smk_thumbs_img_loaded: function(){
+		this.smk_thumbs_img_loaded = function(){
 			//* check if there are still images loading in "teaser"
 			if ($(this.callWidgetTarget('details', 'thumbnails_subWidget')).find('.image_loading').length == 0){				 
 				this.callWidgetFn('details', 'verticalAlignThumbs');
 			}  	  
-		},
+		};
 
 		//* detail
-		smk_detail_this_img_loaded: function(){
+		this.smk_detail_this_img_loaded = function(){
 			this.remove_modal_loading_from_widget(this.callWidgetTarget('details'));   
 			// show "back-button" in Detail view
 			$(this.callWidgetTarget('details')).find('a.back-button').css('opacity', '1');			
-		},			
+		};			
 
 
-		viewChanged: function (stateChange) {        	    
+		this.viewChanged = function (stateChange) {        	    
 			var $target = $(this.target);
 			var self = this;
 
@@ -164,11 +179,11 @@
 
 			switch(stateChange["view"]){
 			case "teasers":			  
-					
+
 				$(self.callWidgetTarget('details', 'thumbnails_subWidget')).empty().hide();
 				$(self.callWidgetTarget('details')).empty().hide();
 				$(self.callWidgetTarget('details', 'related_subWidget')).empty().hide();
-				
+
 				self.callWidgetFn('details', 'removeAllRelated');				
 
 				self.showWidget($target.find("#pager-header"));
@@ -180,12 +195,12 @@
 				self.showWidget($(self.callWidgetTarget('teasers')));
 
 				switch(stateChange["category"]){
-					case "collections":		 			  			  			  
-						self.showWidget($target.find("#search-filters"));				  			  			  
-						break;	
-					default:		    			  			   							  
-						$target.find("#search-filters").hide();		  	 		  	  
-					break;		  
+				case "collections":		 			  			  			  
+					self.showWidget($target.find("#search-filters"));				  			  			  
+					break;	
+				default:		    			  			   							  
+					$target.find("#search-filters").hide();		  	 		  	  
+				break;		  
 				}
 
 				// If the teaser container is full width, then make a two column layout.
@@ -201,12 +216,12 @@
 
 				// We hide footer here, and show it back one images are loaded in detail
 				this.hide_footer();		  
-				
+
 				self.callWidgetFn('details', 'removeAllRelated');
-				
+
 				$target.find("#pager-header").hide();
 				$target.find("#search-filters").hide();
-				
+
 				$(self.callWidgetTarget('currentsearch')).hide();
 				$(self.callWidgetTarget('category')).hide();
 				$(self.callWidgetTarget('viewpicker')).hide();
@@ -220,14 +235,14 @@
 
 				$(self.callWidgetTarget('details', 'related_subWidget')).find('h3.heading--l').hide(); // we don't want to see the title of "relatedwidget" now (only after "afterrequest")
 				$target.find('.view  #related-artworks #teaser-container-grid').masonry('layout');
-																
+
 				break;		  
 			} 	
 
 			return;
-		},
+		};
 
-		categoryChanged: function (stateChange) {        	    
+		this.categoryChanged = function (stateChange) {        	    
 			var $target = $(this.target);
 
 			if (stateChange["category"] === undefined )
@@ -235,39 +250,39 @@
 
 			this.callWidgetFn('teasers', 'removeAllArticles');
 			this.showWidget($(this.callWidgetTarget('teasers')));
-			
+
 			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
 				if (this.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))					
 					this.callWidgetFn(Manager.searchfilterList[i].field, 'hide_drop')
 			};
 
 			switch(stateChange["category"]){
-				case "collections":		 			  			  				  
-					this.showWidget($target.find("#search-filters"));					
-					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
-					this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});
-	
-					break;
-				case "nyheder":
-				case "kalender":
-				case "artikel":
-				case "praktisk":
-				case "all":
-					$target.find("#search-filters").hide();
-					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
-					this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
-	
-					// remove all search filters
-					for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
-						this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
-					};
-	
-					break;
-				default:		    			  			   							  
-					$target.find("#search-filters").hide();
-					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
-					this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
-				break;		  
+			case "collections":		 			  			  				  
+				this.showWidget($target.find("#search-filters"));					
+				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
+				this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});
+
+				break;
+			case "nyheder":
+			case "kalender":
+			case "artikel":
+			case "praktisk":
+			case "all":
+				$target.find("#search-filters").hide();
+				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
+				this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
+
+				// remove all search filters
+				for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
+					this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
+				};
+
+				break;
+			default:		    			  			   							  
+				$target.find("#search-filters").hide();
+			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
+			this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
+			break;		  
 			}
 
 			if($(this.callWidgetTarget('teasers')).find('#teaser-container-grid .teaser--grid').length > 0){
@@ -289,7 +304,7 @@
 				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').masonry('layout');
 
 			return;
-		},
+		};
 
 		/*********
 		 * PRIVATE FUNCTIONS
@@ -298,31 +313,31 @@
 		/*
 		 * start general modal loading screen 
 		 */
-		start_modal_loading: function(){
+		this.start_modal_loading = function(){
 			$(this.target).addClass("modal_loading"); 	  
-		},
+		};
 
 		/*
 		 * stop general modal loading screen 
 		 */
-		stop_modal_loading: function(){	  
+		this.stop_modal_loading = function(){	  
 			$(this.target).removeClass("modal_loading"); 
 			this.allWidgetProcessed = false;	  
-		},
+		};
 
 		/*
 		 * start loading mode for a given widget.
 		 * - only if widget's state is "active"
 		 */
-		add_modal_loading_to_widget: function(widget){
+		this.add_modal_loading_to_widget = function(widget){
 			if(this.isThisWidgetActive(widget))
 				$(widget.target).addClass("modal_loading");
-		},
+		};
 
 		/*
 		 * stop loading mode for a given widget.
 		 */
-		remove_modal_loading_from_widget: function(target){
+		this.remove_modal_loading_from_widget = function(target){
 			$(target).removeClass("modal_loading");
 
 			if (this.allWidgetProcessed){
@@ -333,20 +348,20 @@
 					this.show_footer();
 				}			  
 			}
-		},  	
+		};  	
 
-		set_focus: function(){
+		this.set_focus = function(){
 			var self = this;
 			$(document).ready(function () {
 				$(self.callWidgetTarget('searchbox')).find('#smk_search').focus();
 			});	  	  
-		},  
+		};
 
-		isThisWidgetActive: function(widget){
+		this.isThisWidgetActive = function(widget){
 			return widget.getRefresh();
-		},
+		};
 
-		allWidgetsProcessed: function(){
+		this.allWidgetsProcessed = function(){
 			if ($(this.target).find('.modal_loading').length != 0){
 				// there are still some widgets loading
 				this.allWidgetProcessed = true;	
@@ -354,33 +369,32 @@
 				// all widgets are loaded, we remove the general loading screen
 				this.stop_modal_loading();
 			}	  	  
-		},		
+		};
 
-		showWidget: function($target){
+		this.showWidget = function($target){
 			$target.show().children().not('.modal').show();	  	  
-		},
+		};
 
-		show_footer: function(){	  	  
+		this.show_footer = function(){	  	  
 			$("#footer").show().children().show();	 	  
-		},
+		};
 
-		hide_footer: function(){	  
+		this.hide_footer = function(){	  
 			$("#footer").hide();	  
-		},
+		};
 
-		generalSolrError: function(e){
+		this.generalSolrError = function(e){
 			$(this.target).empty().html(sprintf('%s &nbsp;&nbsp; returned:&nbsp;&nbsp; %s<br>Please contact website administrator.', Manager.solrUrl, e)); 
-		},		
+		};
 
-		fixCrappyfooter: function(){
+		this.fixCrappyfooter = function(){
 			$('.footer_content h2').each(function() {  
 				var text = this.textContent;
 				$(this).empty();
 				$(this).text(text);
 			});
 
-		}
+		};
 
-	});
-
-})(jQuery);
+	}
+}));

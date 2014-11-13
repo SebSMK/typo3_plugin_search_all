@@ -138,7 +138,7 @@ AjaxSolr.smkManager = AjaxSolr.AbstractManager.extend(
     }; 
     
     //* Uses a function passed as an argument.
-    //* The whole idea is that this function should refer to a function in StateManager
+    //* The whole idea is that this function should refer to a function in ViewManager
     if(this.allWidgetsProcessed != null)
     	this.allWidgetsProcessed();
 

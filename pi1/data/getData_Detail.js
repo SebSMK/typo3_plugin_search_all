@@ -364,7 +364,7 @@
 				if ($(this).attr("src") != self.default_picture_path){
 					// with the holding div #loader, apply:
 					$target
-					// remove the loading class (so the StateManager can remove background spinner), 
+					// remove the loading class (so the ViewManager can remove background spinner), 
 					.removeClass('image_loading')
 					.find('a')
 					// then insert our image
@@ -382,7 +382,7 @@
 				else{
 
 					$target
-					// remove the loading class (so the StateManager can remove background spinner), 
+					// remove the loading class (so the ViewManager can remove background spinner), 
 					.removeClass('image_loading')
 					// remove link
 					.remove('a')

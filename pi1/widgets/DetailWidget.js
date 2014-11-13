@@ -100,7 +100,7 @@
 			// in case there are no results
 			if (this.manager.response.response.docs.length == 0){
 				$target
-				// remove the loading class (so the StateManager can remove background spinner), 
+				// remove the loading class (so the ViewManager can remove background spinner), 
 				.removeClass('image_loading')
 				.html(this.manager.translator.getLabel("no_results"))	
 				// trig "this image is loaded" event	      

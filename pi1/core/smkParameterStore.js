@@ -59,6 +59,12 @@
 					return res;
 				},
 				
+				extract_q_from_manager: function(){	  
+					var res = '';
+					var q_all = this.get('q').value == null ? [] : this.get('q').value.slice();
+					return smkCommon.removeA(q_all, this.q_default);
+				},
+				
 				/******************************
 				 * PRIVATE FUNCTIONS
 				 * * ****************************/	

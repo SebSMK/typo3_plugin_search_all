@@ -1,5 +1,5 @@
 var Manager;
-var StateManager;
+var ViewManager;
 var EventsManager;
 
 (function ($) {
@@ -29,18 +29,17 @@ var EventsManager;
 		var searchFieldsTypes = [ {field:'artist_name_ss', title:translator.getLabel('tagCloud_artist')}, {field:'artist_natio', title:translator.getLabel('tagCloud_country')}, {field:'object_production_century_earliest', title:translator.getLabel('tagCloud_period')}, {field:'object_type', title:translator.getLabel('tagCloud_art_type')} ];
 
 		//** create state manager
-		StateManager = new AjaxSolr.StateManager({
-			id: 'state_manager',
-			target: '#smk_search_wrapper',			
-			template: Mustache.getTemplate('pi1/templates/general_template.html')
+		ViewManager = new ViewManager.constructor({				
+			template: Mustache.getTemplate('pi1/templates/general_template.html'),
+			target:'#smk_search_wrapper'
 		});
     
 	    //** create events manager
 	    EventsManager = new EventsManager.constructor();
     
 		// those functions will be passed as parameter in the manager - we've got to bind it to an environment
-		var allWidgetsProcessedBound = $.proxy(StateManager.allWidgetsProcessed, StateManager);
-		var generalSolrErrorProcessedBound = $.proxy(StateManager.generalSolrError, StateManager);
+		var allWidgetsProcessedBound = $.proxy(ViewManager.allWidgetsProcessed, ViewManager);
+		var generalSolrErrorProcessedBound = $.proxy(ViewManager.generalSolrError, ViewManager);
 
 		//******************************
 		//** init widgetManager
@@ -231,7 +230,7 @@ var EventsManager;
 			EventsManager.switch_list_grid(event.value);
 		}); 
 
-		$(StateManager).on('current_view_mode', function(event){ 
+		$(ViewManager).on('current_view_mode', function(event){ 
 			EventsManager.switch_list_grid(event.value);
 		});
 
@@ -305,7 +304,7 @@ var EventsManager;
 		});				
 
 		//* all images displayed in "teaser"
-		$(StateManager).on('smk_teasers_all_images_displayed', function(event){ 			
+		$(ViewManager).on('smk_teasers_all_images_displayed', function(event){ 			
 			for (var i = 0, l = searchFieldsTypes.length; i < l; i++) {
 				EventsManager.after_afterRequest(searchFieldsTypes[i].field);				
 			};				
@@ -329,7 +328,7 @@ var EventsManager;
 		//******************************
 		//** init all widgets / Managers
 		//****************************** 
-		StateManager.init(); 
+		ViewManager.init(); 
 		Manager.init();  
 		EventsManager.init();		
 
