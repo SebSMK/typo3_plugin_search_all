@@ -42,13 +42,13 @@
 
 			//* start loading mode for some choosen widgets  
 			// teasers
-			this.add_modal_loading_to_widget(Manager.widgets['teasers']);
+			this.add_modal_loading_to_widget('teasers');
 			// searchfilters
 //			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {		  	
 //			this.add_modal_loading_to_widget(Manager.widgets[Manager.searchfilterList[i].field]);
 //			};
 			// details
-			this.add_modal_loading_to_widget(Manager.widgets['details']);	 
+			this.add_modal_loading_to_widget('details');	 
 			// related
 //			this.add_modal_loading_to_widget(Manager.widgets['details'].related_subWidget);*/
 		};  
@@ -58,7 +58,6 @@
 			var html = Mustache.to_html($(template).find(templ_id).html(), json_data);
 			return html;
 		};		
-
 
 		/**
 		 * Call function in a given widget / subwidget of the manager
@@ -73,7 +72,7 @@
 
 			if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
 				console.log(sprintf("%s - %s not defined", widget, fn));
-				return;
+				return false;
 			}	
 
 			return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);		    	
@@ -331,7 +330,11 @@
 		 */
 		this.add_modal_loading_to_widget = function(widget){
 			if(this.isThisWidgetActive(widget))
-				$(widget.target).addClass("modal_loading");
+				this.callWidgetFn(widget, 'addClass', {params: 'modal_loading'});
+		};
+		
+		this.isThisWidgetActive = function(widget){
+			return this.callWidgetFn(widget, 'getRefresh');
 		};
 
 		/*
@@ -355,11 +358,7 @@
 			$(document).ready(function () {
 				$(self.callWidgetTarget('searchbox')).find('#smk_search').focus();
 			});	  	  
-		};
-
-		this.isThisWidgetActive = function(widget){
-			return widget.getRefresh();
-		};
+		};		
 
 		this.allWidgetsProcessed = function(){
 			if ($(this.target).find('.modal_loading').length != 0){

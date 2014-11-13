@@ -34,6 +34,8 @@
 		 * */
 		this.addressChange = function(e){	 
 
+			ViewManager.beforeRequest();
+			
 			ModelManager.setModel(e.value, "url");
 			var model = ModelManager.getModel();		    			    
 
