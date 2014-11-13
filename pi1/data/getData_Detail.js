@@ -284,10 +284,11 @@
 				for (var i = 0, l = doc.artist_name_ss.length; i < l; i++) {
 					var name = doc.artist_name_ss[i];
 					var role = doc.artist_auth[i] != 'original' && doc.artist_auth[i] != '' ? sprintf('(%s)', doc.artist_auth[i].toLowerCase()) : "";
+					var nationality = docNatio[i] != '(?)' && docNatio[i].trim() != '' ? sprintf('%s', docNatio[i]) : '';
 					var birth = docBirth[i];
 					var death = docDeath[i] != '(?)' ? docDeath[i] : (docDeath[i] < 1800) ? docDeath[i] : "";
-					var dates = docBirth[i] != '' && docDeath[i] != '' ? sprintf('%s - %s', birth, death) : '';
-					var nationality = docNatio[i] != '(?)' && docNatio[i] != '' ? sprintf('%s, ', docNatio[i]) : '';
+					var dates = docBirth[i].trim() != '' || docDeath[i].trim() != '' ? sprintf(', %s - %s', birth, death) : '';
+					
 					var padding = "";
 
 					var label = sprintf('%s%s&nbsp;<span>%s</span> <br><span>%s%s</span>', padding, name, role, nationality, dates);
