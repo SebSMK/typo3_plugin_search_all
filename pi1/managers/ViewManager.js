@@ -249,41 +249,39 @@
 
 			this.callWidgetFn('teasers', 'removeAllArticles');
 			this.showWidget($(this.callWidgetTarget('teasers')));
-
-			for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
-				if (this.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))					
-					this.callWidgetFn(Manager.searchfilterList[i].field, 'hide_drop')
-			};
-
+			
 			switch(stateChange["category"]){
-			case "collections":		 			  			  				  
-				this.showWidget($target.find("#search-filters"));					
-				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
-				this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});
-
-				break;
-			case "nyheder":
-			case "kalender":
-			case "artikel":
-			case "praktisk":
-			case "all":
-				$target.find("#search-filters").hide();
-				$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
-				this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
-
-				// remove all search filters
-				for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
-					this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
-				};
-
-				break;
-			default:		    			  			   							  
-				$target.find("#search-filters").hide();
-			$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
-			this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
-			break;		  
-			}
-
+				case "collections":		 			  			  				  
+					this.showWidget($target.find("#search-filters"));
+					for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {				
+						if (this.callWidgetFn(Manager.searchfilterList[i].field, 'getRefresh'))					
+							this.callWidgetFn(Manager.searchfilterList[i].field, 'hide_drop')
+					};
+					
+					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').removeClass('full-width').hide();				
+					this.callWidgetFn('category', 'setActiveTab', {params: [stateChange["category"]]});	
+					break;
+				case "nyheder":
+				case "kalender":
+				case "artikel":
+				case "praktisk":
+				case "all":
+					$target.find("#search-filters").hide();
+					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();			
+					this.callWidgetFn('category', 'setActiveTab',  {params: [stateChange["category"]]});
+	
+					// remove all search filters
+					for (var i = 0, l = Manager.searchfilterList.length; i < l; i++) {			  		  					
+						this.callWidgetFn(Manager.searchfilterList[i].field, 'removeAllSelectedFilters', {params: [true]});
+					};
+					break;
+				default:		    			  			   							  
+					$target.find("#search-filters").hide();
+					$(this.callWidgetTarget('teasers')).find('#teaser-container-grid').addClass('full-width').hide();				
+					this.callWidgetFn('category', 'setActiveTab', {params: ['all']});
+					break;		  
+			}			
+			
 			if($(this.callWidgetTarget('teasers')).find('#teaser-container-grid .teaser--grid').length > 0){
 				//* grid view mode
 				$(this).trigger({
