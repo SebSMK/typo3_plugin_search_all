@@ -100,9 +100,14 @@ var	ModelManager = {
 
 		},
 
-		updateView: function(model){
+		update: function(model){
 			this.setModel(model);
 			window.location.href = this.buildURLFromModel(this.getModel());
+		},
+		
+		
+		get_q: function(){
+			return this.isValid(this.q) ? this.q : [];			
 		},
 
 		/******************************

@@ -29,7 +29,7 @@
 		/********
 		 * EVENTS
 		 * *******/
-		/**
+		/*
 		 * change in address bar
 		 * */
 		this.addressChange = function(e){	 
@@ -115,11 +115,12 @@
 				}			    			
 			}
 
-			// copy "q" values in Currentsearch widget	
-			var q_wout_q_def = Manager.store.extract_q_from_manager();
-
-			StateManager.callWidgetFn('currentsearch', 'removeAllCurrentSearch');						
-
+			// reinit thumbs current selected
+			StateManager.callWidgetFn('details', 'setCurrentThumb_selec');	
+			
+			// copy "q" values in Currentsearch widget (without q default)	
+			StateManager.callWidgetFn('currentsearch', 'removeAllCurrentSearch');			
+			var q_wout_q_def = ModelManager.get_q();									
 			for (var i = 0, l = q_wout_q_def.length; i < l; i++) {				
 				StateManager.callWidgetFn('currentsearch', 'add_q', {params: [q_wout_q_def[i], q_wout_q_def[i]]} );
 			};	
@@ -132,13 +133,14 @@
 		};
 
 
-		/*
+		/**
 		 * UI events
 		 * 
 		 * */
 
-		/**
+		/*
 		 * current page changed
+		 * @result:  model update
 		 * */
 		this.smk_search_pager_changed = function(start, searchFieldsTypes){			
 			StateManager.callWidgetFn('currentsearch', 'setRefresh', {params: [false]});
@@ -154,11 +156,12 @@
 			model.sort = ModelManager.current_value_joker;
 			model.category = ModelManager.current_value_joker;
 
-			ModelManager.updateView(model);
+			ModelManager.update(model);
 		};
 
-		/**
+		/*
 		 * Category changed
+		 * @result:  model update 
 		 * */
 		this.smk_search_category_changed = function(event){
 
@@ -174,23 +177,25 @@
 				model.q = ModelManager.current_value_joker;
 				model.category = category;
 
-				ModelManager.updateView(model); 
+				ModelManager.update(model); 
 			};
 		};
 
-		/**
+		/*
 		 * call to teaser view
+		 * @result:  model update 
 		 * */
 		this.smk_search_call_teasers = function(){
 			
 			//restore previous search params
 			var model = ModelManager.loadStoredModel();
 
-			ModelManager.updateView(model); 			
+			ModelManager.update(model); 			
 		};	
 
-		/**
+		/*
 		 * call to detail view
+		 * @result:  model update 
 		 * */  
 		this.smk_search_call_detail = function(event){			
 			var save_current_request = event.save_current_request;    		  
@@ -204,11 +209,12 @@
 			model.q = art_id;
 			model.view = "detail";
 
-			ModelManager.updateView(model); 
+			ModelManager.update(model); 
 		};	
 
-		/**
+		/*
 		 * a search string has been added in SearchBox
+		 * @result:  model update 
 		 * */
 		this.smk_search_q_added = function(event){
 			var search_string = jQuery.trim(event.val);			
@@ -217,10 +223,10 @@
 				var default_teaser_view = ModelManager.getModel().view == 'detail';
 				
 				if (!default_teaser_view)
-					q = AjaxSolr.isArray(ModelManager.getModel().q) ?  
-							ModelManager.getModel().q 
+					q = AjaxSolr.isArray(ModelManager.get_q()) ?  
+							ModelManager.get_q() 
 						: 
-							ModelManager.getModel().q === undefined ? new Array() : new Array(ModelManager.getModel().q);				
+							ModelManager.get_q() === undefined ? new Array() : new Array(ModelManager.get_q());				
 				
 				q.push(search_string); 			
 				
@@ -236,12 +242,13 @@
 				if (!default_teaser_view)
 					model.fq = ModelManager.current_value_joker;
 
-				ModelManager.updateView(model);					
+				ModelManager.update(model);					
 			};
 		};
 
-		/**
+		/*
 		 * search string removed in Currentsearch
+		 * @result:  model update 
 		 * */
 		this.smk_search_remove_one_search_string = function(event){
 
@@ -249,7 +256,7 @@
 
 			Manager.store.removeElementFrom_q(facet);   			
 
-			var qvalue = Manager.store.extract_q_from_manager();
+			var qvalue = ModelManager.get_q();
 			var model = {};
 			model.q = qvalue;
 			model.fq = ModelManager.current_value_joker;;
@@ -257,11 +264,12 @@
 			model.view = ModelManager.current_value_joker;
 			model.category = ModelManager.current_value_joker;
 
-			ModelManager.updateView(model);   	    	
+			ModelManager.update(model);   	    	
 		};  
 
-		/**
+		/*
 		 * search filter added / removed (only in "collection" tab/category)
+		 * @result:  model update 
 		 * */
 		this.smk_search_filter_changed = function (caller, params){
 
@@ -286,12 +294,13 @@
 				model.view = ModelManager.current_value_joker;
 				model.category = ModelManager.current_value_joker;
 
-				ModelManager.updateView(model);
+				ModelManager.update(model);
 			}
 		};
 
-		/**
+		/*
 		 * sorting changed
+		 * @result:  model update  
 		 * */
 		this.smk_search_sorter_changed = function(params, searchFieldsTypes){
 
@@ -312,23 +321,24 @@
 			model.view = ModelManager.current_value_joker;
 			model.category = ModelManager.current_value_joker;
 
-			ModelManager.updateView(model);			
+			ModelManager.update(model);			
 		};		
 
-		/** 
-		 * switch grid/list in teasers view		 
+		/* 
+		 * switch grid/list in teasers view	
+		 * @result:  view changes  	 
 		 */
 		this.switch_list_grid = function(value){ 			
 			StateManager.callWidgetFn('teasers', 'switch_list_grid', {params: [value]});
 		};	
 
 
-		/*
+		/**
 		 * Finish loading events
 		 * 
 		 * */
 
-		//* searchfilters has finished loading
+		//* searchfilters has finished loading	
 		this.remove_modal_loading_from_widget = function(value){
 			StateManager.remove_modal_loading_from_widget(value);
 		};

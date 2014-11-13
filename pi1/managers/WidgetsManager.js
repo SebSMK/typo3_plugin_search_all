@@ -346,7 +346,7 @@ var EventsManager;
 			var model = {};
 			model.q = postedSearchString;		 		 
 			ModelManager.setModel(model);
-			ModelManager.updateView();    	
+			ModelManager.update();    	
 		}else{
 			//* people coming through direct link to SMK's search               
 			if (typeof _gaq !== undefined)

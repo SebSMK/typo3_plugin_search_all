@@ -176,6 +176,14 @@
 		
 		getCurrentThumb_selec: function(){
 			return this.thumbnails_subWidget.getCurrent_selec();
+		},
+		
+		verticalAlignThumbs: function(){
+			this.thumbnails_subWidget.verticalAlign();
+		},
+		
+		removeAllRelated: function(){
+			this.related_subWidget.removeAllArticles();
 		}
 
 	});

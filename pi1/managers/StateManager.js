@@ -50,30 +50,19 @@
 		 * @param {String} [widget] Widget name
 		 * @param {String} [fn] function name
 		 * @params {Json} [options]		 
-		 * * * @param {String} [subwidget] name of the subwidget
 		 * * * @param {String[]} [params] array of function's parameters
 		 */
 		callWidgetFn: function(widget, fn, options){	
 			var options = options || {};
-			var params = options.params;
-			var subwidget = options.subwidget;
-
-			if(subwidget === undefined){
-				if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
-					console.log(sprintf("%s - %s not defined", widget, fn));
-					return;
-				}						
-				return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);		    	
-			}else{		    	
-				if(Manager.widgets[widget] === undefined || 
-						Manager.widgets[widget][subwidget] === undefined || 
-						typeof(Manager.widgets[widget][subwidget][fn]) !== "function"){
-
-					console.log(sprintf("%s - %s - %s not defined", widget, subwidget, fn));
-					return;
-				}						
-				return Manager.widgets[widget][subwidget][fn].apply(Manager.widgets[widget][subwidget], params);
-			}		    			
+			var params = options.params;			
+		
+			if(Manager.widgets[widget] === undefined || typeof(Manager.widgets[widget][fn]) !== "function"){
+				console.log(sprintf("%s - %s not defined", widget, fn));
+				return;
+			}	
+			
+			return Manager.widgets[widget][fn].apply(Manager.widgets[widget], params);		    	
+		
 		},
 
 		/**
@@ -154,7 +143,7 @@
 		smk_thumbs_img_loaded: function(){
 			//* check if there are still images loading in "teaser"
 			if ($(this.callWidgetTarget('details', 'thumbnails_subWidget')).find('.image_loading').length == 0){				 
-				this.callWidgetFn('details', 'verticalAlign', {subwidget: 'thumbnails_subWidget'});
+				this.callWidgetFn('details', 'verticalAlignThumbs');
 			}  	  
 		},
 
@@ -180,7 +169,7 @@
 				$(self.callWidgetTarget('details')).empty().hide();
 				$(self.callWidgetTarget('details', 'related_subWidget')).empty().hide();
 				
-				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});				
+				self.callWidgetFn('details', 'removeAllRelated');				
 
 				self.showWidget($target.find("#pager-header"));
 				self.showWidget($(self.callWidgetTarget('currentsearch')));
@@ -213,7 +202,7 @@
 				// We hide footer here, and show it back one images are loaded in detail
 				this.hide_footer();		  
 				
-				self.callWidgetFn('details', 'removeAllArticles', {subwidget: 'related_subWidget'});
+				self.callWidgetFn('details', 'removeAllRelated');
 				
 				$target.find("#pager-header").hide();
 				$target.find("#search-filters").hide();
