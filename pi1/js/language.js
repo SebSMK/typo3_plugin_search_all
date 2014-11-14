@@ -45,7 +45,10 @@
 									  
 								  case "config":		 			  			  			  
 									  if(item.hasOwnProperty("default"))						    		
-								    		this.default_lang = item.default;				  			  			  
+								    		this.default_lang = item.default;
+									  
+									  if(item.hasOwnProperty("version"))						    		
+								    		this.current_version = item.version;
 									  break;		  
 							  }
 						};					  					  
@@ -120,6 +123,10 @@
 		this.getLanguage = function(){
 			return this.current_lang;
 		};
+		
+		this.getVersion = function(){
+			return this.current_version;
+		};
 	
 		/*
 		 * variables
@@ -128,6 +135,7 @@
 		this.collections = {}; // list of collections by location in different languages
 		this.current_lang = null; // current language
 		this.default_lang = null; // default language
+		this.current_version = null;
 		
 	}
 	

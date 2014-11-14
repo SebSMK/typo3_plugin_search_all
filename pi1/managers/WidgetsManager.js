@@ -343,9 +343,8 @@ var EventsManager;
 				_gaq.push(['_trackEvent','Search', 'Regular search', postedSearchString, 0, true]);
 
 			var model = {};
-			model.q = postedSearchString;		 		 
-			ModelManager.setModel(model);
-			ModelManager.update();    	
+			model.q = postedSearchString;		 		 			
+			ModelManager.update(model);    	
 		}else{
 			//* people coming through direct link to SMK's search               
 			if (typeof _gaq !== undefined)

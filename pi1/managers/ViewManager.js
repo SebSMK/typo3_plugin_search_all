@@ -31,7 +31,10 @@
 			var html = self.template_integration_json({}, '#generalTemplate');    	  	  
 			$target.empty();	  
 			$target.html(html);	
-
+			
+			//* add version number
+			$target.find('#smk_search_version').text(Manager.translator.getVersion());
+			
 			//* fix cufon problem in footer
 			this.fixCrappyfooter();
 		};
