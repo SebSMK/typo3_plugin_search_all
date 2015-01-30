@@ -12,12 +12,21 @@
 		</div>
 	
 	    <!-- Copyright notice -->
-		{{#copyright_default}}
-	    	<div class="gallery__copyright"><a target="_blank" class="cc0" onclick="window.open('http://creativecommons.org/publicdomain/zero/1.0/')">&nbsp;</a></div>
-		{{/copyright_default}}
-		{{#copyright_valid}}
-	    	<div class="gallery__copyright">{{{copyright}}}</div>
-		{{/copyright_valid}}
+		
+	    	<div class="gallery__copyright">
+				{{#copyright_default}}
+				<span>
+					<a target="_blank" class="cc0" onclick="window.open('http://creativecommons.org/publicdomain/zero/1.0/')">&nbsp;</a>
+				</span>
+				{{/copyright_default}}
+
+				<span>
+					<div class="def-cp">				
+						{{{copyright}}}
+					</div>
+				</span>
+			</div>
+		
 	
 		<!-- thumbnails -->
 		<div id="thumbnails"></div>  	  

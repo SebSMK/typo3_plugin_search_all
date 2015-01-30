@@ -18,6 +18,13 @@
 	display: none;
 }
 
+
+/* public domain label*/
+.pd{
+	text-decoration: underline;
+	cursor: pointer;	
+}
+
 /* info window */
 .tooltipster-shadow {
 	border-radius: 5px;
@@ -83,12 +90,24 @@
 
 .cc0{
 	cursor: pointer;
-	background-image: url("../images/cc0.png");		
+	background-image: url("../images/cc0.png");	
+	background-repeat: no-repeat;	
 	display: block;
     height: 31px;
     text-indent: -9999em;
-    width: 88px;
+    width: 80px;
     opacity: 0.2;
+}
+
+.gallery__copyright span{
+	display: inline-block;
+    margin-right: 3px;
+    vertical-align: top;
+}
+
+.gallery__copyright div.def-cp{
+	height: 31px;
+    width: 310px;
 }
 
 /* When the body has the loading class, we turn

@@ -159,6 +159,22 @@
         return row;
        };
       
+      
+      /**
+       * Remove all non public location       
+       **/
+       
+       function process_location(row){
+        var loc = new String(row.get("location_name"));
+        
+        if(loc.toUpperCase().indexOf("SAL") == -1)
+          row.remove("location_name");
+                 
+        return row;
+       };
+      
+      
+      
       /**
        * Process Acquisitions
        **/       
@@ -1014,7 +1030,8 @@
               script:concat_reference,
               script:process_titles,
               script:process_producents,
-              script:extract_century
+              script:extract_century,
+              script:process_location
               "
       >  
       
@@ -1049,4 +1066,4 @@
     "/>    
 
   </document>
-</dataConfig> 
+</dataConfig>

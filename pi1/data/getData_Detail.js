@@ -24,7 +24,7 @@
 										smkCommon.computeCopyright(doc) != false ?
 											smkCommon.computeCopyright(doc)
 										:
-											this.caller.manager.translator.getLabel('copyright_def')
+											decodeURIComponent(this.caller.manager.translator.getLabel('copyright_def'))
 									: 
 										this.caller.manager.translator.getLabel("detail_no_photo"),
 						copyright_default: !smkCommon.computeCopyright(doc) && doc.medium_image_url !== undefined,
